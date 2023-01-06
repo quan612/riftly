@@ -1,0 +1,243 @@
+.sidebar {
+    background      : $white; // darken($primary, 10%);
+    position        : fixed;
+    left            : 0px;
+    height          : calc(100% - 20px);
+    width           : $sidebar-width;
+    top             : 0px;
+    z-index         : 3;
+    bottom          : 0px;
+    border-radius   : 0px;
+    box-shadow      : $shadow;
+    // border-right : 1px solid $border-color;
+
+
+    // @include respond("md") {
+    //     width: $sidebar-width;
+    // }
+
+    @include respond("sm") {
+        top          : auto;
+        bottom       : 0;
+        width        : 100%;
+        height       : 50px;
+        left         : 0;
+        border-radius: 0px;
+
+    }
+
+
+
+}
+
+.brand-logo {
+    // text-align: center;
+    margin    : 20px 25px 20px;
+
+    img {
+        // max-width: 35px;
+        // filter: brightness(100);
+    }
+
+    // .mini-logo {
+    //     display: none;
+    // }
+
+    // @include respond("md") {
+    //     text-align: center;
+
+    //     .full-logo {
+    //         display: none;
+    //     }
+
+    //     .mini-logo {
+    //         display: block;
+    //     }
+    // }
+
+    @include respond("sm") {
+        display: none;
+    }
+}
+
+.menu {
+    margin-top: 30px;
+    padding   : 20px;
+    position  : relative;
+
+    @include respond("sm") {
+        margin-top   : 0px;
+        padding      : 0px;
+        // background: $primary;
+    }
+
+    ul {
+        @include respond("sm") {
+            display        : flex;
+            justify-content: space-around;
+            align-items    : center;
+        }
+
+        li {
+            // text-align: center;
+            margin-bottom: 10px;
+            border-radius: $radius;
+
+
+
+            &:hover,
+            &:focus,
+            &:active {
+
+                //    background: lighten($primary, 30%);
+                a {
+                    color: $white;
+
+                    .nav-text {
+                        display   : block;
+                        // background: white;
+                        color     : $primary;
+
+                        @include respond("md") {
+                            display: none;
+
+                        }
+                    }
+                }
+
+                i {
+                    color  : $primary;
+                    opacity: 1;
+                }
+            }
+
+            &.active {
+                // background: lighten($primary, 30%)
+
+                i {
+                    color       : $primary;
+                    opacity     : 1;
+                    // @include respond("sm") {
+                    //     color: $white;
+                    // }
+                }
+
+                span {
+                    color: $primary;
+                }
+            }
+
+            i {
+                // color       : $headings-color;
+                font-size         : 20px;
+                // opacity           : 0.75;
+                // font-weight    : 600;
+                margin-right      : 15px;
+                // line-height : 0px;
+
+
+                @include respond("md") {
+                    margin-right: 0px;
+
+                }
+            }
+
+            a {
+                padding              : 5px 8px;
+                display              : flex;
+                align-items          : center;
+                min-height           : 3.5rem;
+                // font-weight       : 600;
+                color                : $body-color;
+                // justify-content: center;
+
+                @include respond("sm") {
+                    justify-content: center;
+                }
+
+                .nav-text {
+                    // display      : none;
+                    padding         : 3px 8px;
+                    border-radius   : 4px;
+                    // box-shadow   : $shadow;
+                    font-weight     : 600;
+
+                    @include respond("sm") {
+                        display: none;
+
+                    }
+                }
+
+
+            }
+
+            &.logout {
+                position: fixed;
+                bottom  : 50px;
+                left    : 0;
+                right   : 0;
+                width   : 80px;
+
+                a {
+                    padding-left: 30px;
+                }
+
+                @include respond("md") {
+                    right          : auto;
+                    justify-content: center;
+                    left           : 10px;
+                    width          : auto;
+                }
+
+                @include respond("sm") {
+                    position: relative;
+                    bottom  : 0;
+                    left    : auto;
+                    right   : auto;
+                    width   : auto;
+
+                    a {
+                        padding-left: 0px;
+                    }
+                }
+            }
+        }
+    }
+
+}
+
+.card-limit-progress {
+    display: none;
+
+    @include respond("lg") {
+        display: none;
+    }
+
+    // background   : lighten($secondary, 5%);
+    background   : url('/images/bg/6.jpg');
+    position     : absolute;
+    bottom       : 150px;
+    padding      : 15px 20px;
+    margin       : 20px;
+    left         : 0;
+    right        : 0;
+    border-radius: $radius;
+
+    h5 {
+        font-size: 14px;
+        color    : $white;
+    }
+
+    p {
+        font-size: 12px;
+
+        strong {
+            color: $white;
+        }
+    }
+
+    .progress {
+        height          : 6px;
+        background-color: darken($light, 10%);
+    }
+}

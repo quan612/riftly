@@ -1,0 +1,43 @@
+// .auth-form {
+//     padding: 30px 20px 10px;
+// }
+
+
+.privacy-link {
+    a {
+        display    : inline-block;
+        font-size  : 14px;
+        line-height: 28px;
+        color      : $dark;
+    }
+}
+
+.identity-content {
+    text-align: center;
+
+    .icon {
+        display        : flex;
+        width          : 75px;
+        height         : 75px;
+        border-radius  : 100px;
+        margin         : 0 auto;
+        background     : $white;
+        color          : $primary;
+        font-size      : 30px;
+        padding        : 10px;
+        align-items    : center;
+        justify-content: center;
+        margin-bottom  : 30px;
+        border         : 1px solid $primary;
+    }
+
+    h4 {
+        max-width: 350px;
+        margin   : 0 auto 15px;
+    }
+
+    p {
+        max-width: 350px;
+        margin   : 0 auto 30px;
+    }
+}

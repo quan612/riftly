@@ -1,0 +1,67 @@
+.questModal_card {
+  position: relative;
+  width: 100%;
+  background-color: rgb(255, 255, 255);
+  border-radius: 12px;
+  margin: 10px;
+  padding: 0px;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  min-width: -webkit-fit-content;
+  min-width: -moz-fit-content;
+  min-width: fit-content;
+  max-height: 100%;
+  overflow: auto;
+  box-sizing: border-box !important;
+}
+.questModal_wrapper {
+  width: 100%;
+  padding: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  cursor: pointer;
+  border-radius: 0px;
+  border: 1px solid rgba(195, 195, 195, 0.14);
+}
+.questModal_container {
+  transition: background-color 0.2s ease-in-out 0s;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(255, 255, 255);
+  border-radius: 12px;
+  padding: 24px 16px;
+}
+.questModal_providerIcon {
+  width: 45px;
+  height: 45px;
+  display: flex;
+  border-radius: 50%;
+  overflow: visible;
+  box-shadow: none;
+  justify-content: center;
+  align-items: center;
+}
+.questModal_providerName {
+  width: 45px;
+  height: 45px;
+  display: flex;
+  border-radius: 50%;
+  overflow: visible;
+  box-shadow: none;
+  justify-content: center;
+  align-items: center;
+}
+.questModal_providerDescription {
+  width: 100%;
+  font-size: 18px;
+  margin: 0.333em 0px;
+  color: rgb(169, 169, 188);
+}/*# sourceMappingURL=quest.module.css.map */

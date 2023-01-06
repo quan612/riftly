@@ -1,0 +1,43 @@
+button,
+.btn {
+    color         : #fff;
+    padding       : 5px 15px;
+    // line-height: 0px;
+    font-weight   : 700;
+    // display    : inline-block;
+    // border-radius : 12px;
+
+    &:hover,
+    &:focus,
+    &:active {
+        // background: $white;
+        color: #fff;
+    }
+
+}
+
+.btn-outline-primary,
+.btn-outline-secondary,
+.btn-outline-success,
+.btn-outline-info,
+.btn-outline-warning,
+.btn-outline-danger,
+.btn-outline-light {
+    color: $dark;
+
+    &:hover,
+    &:focus,
+    &:active {
+        color: $white;
+    }
+}
+
+.btn-outline-dark {
+    color: $dark;
+
+    &:hover,
+    &:focus,
+    &:active {
+        color: $white;
+    }
+}

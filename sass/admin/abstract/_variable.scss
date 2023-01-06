@@ -1,0 +1,51 @@
+// stylelint-disable-next-line scss/dollar-variable-default
+$primary  : #008AFF;
+$secondary: #f73164 !default;
+$success  : #51BB25 !default;
+$info     : #A927F9 !default;
+$warning  : #F8D62B !default;
+$danger   : #DC3545 !default;
+$light    : #fafbfe !default;
+$dark     : #0E0B2B;
+$purple   : #5848BB;
+
+// Body
+$body-bg   : #fff;
+$body-color: #62759d;
+
+// Typography
+$font-family-base: 'Nunito Sans',
+sans-serif;
+$headings-font-weight : 700;
+$font-size-base       : 1rem !default;
+$font-weight-base     : 400 !default;
+$line-height-base     : 1.7;
+$headings-line-height : 1.6;
+$h1-font-size         : 2.25rem;
+$h2-font-size         : 1.875rem;
+$h3-font-size         : 1.5rem;
+$h4-font-size         : 1.125rem;
+$h5-font-size         : 1rem;
+$h6-font-size         : 1rem;
+
+$text-muted: #718096;
+
+
+
+$heading-primary-size : 1.8rem;
+$sub-heading-size     : 1.6rem !default;
+$grid-gutter-width    : 30px;
+
+$dropdown-lik-color   : $body-color;
+$border-color         : #eaecf3;
+$headings-color       : #152c5b !default;
+$table-striped-bg     : $body-bg;
+$border-radius        : 8px !default;
+$input-btn-focus-width: 0rem !default;
+
+// custom
+$radius    : $border-radius;
+$shadow    : 0 0 1.25rem rgba(31, 45, 61, 0.05);
+$shadow-sm : 0 0.125rem 0.25rem rgba(227, 230, 236, 0.9);
+$shadow-lg : 0 1rem 3rem rgba(31, 45, 61, 0.125);
+$sidebar-width : 240px;

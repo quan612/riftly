@@ -1,0 +1,25 @@
+// http://sassdoc.com/annotations/#parameter for annotations.
+// http://sassdoc.com/ for comment systems with mixins using Sass Doc.
+
+/// Mixin for quick parallax layers
+/// @param {z-index} $z-index
+/// @param {background-image} $background-image
+/// @param {padding-bottom} $pb [40%] - This padding is added to prevent over scrolling in a virtaul dom. Without extra padding the parallax layers can cause issues with scroll bars.
+@mixin z-layers($z-index, $background-image, $pb: 40%) {
+	width: 100%;
+	background-image: url($background-image);
+	background-size: cover;
+	position: absolute;
+	z-index: $z-index;
+	padding-bottom: $pb;
+}
+/// Mixin for quick flex assignment.
+/// @param {flex-direction} $direction [row]
+/// @param {justify-content} $justify-content [normal]
+/// @param {align-items} $align-items [normal]
+@mixin flex-master($direction: row, $justify-content: normal, $align-items: normal) {
+	display: flex;
+	flex-direction: $direction;
+	justify-content: $justify-content;
+	align-items: $align-items;
+}

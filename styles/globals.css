@@ -1,0 +1,65 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@font-face {
+	src: url("/challenger/fonts/AtlantisInternational.ttf") format("TrueType");
+	font-family: "Atlantis";
+	font-display: swap;
+}
+@font-face {
+	src: url("/challenger/fonts/ronda_revised.ttf") format("TrueType");
+	font-family: "PFRondaSeven";
+	font-display: swap;
+}
+@font-face {
+	src: url("/challenger/fonts/Safety Goggles.otf");
+	font-family: "Safety Goggles";
+	/* font-display: swap; */
+}
+* {
+	box-sizing: border-box;
+	padding: 0;
+	margin: 0;	
+}
+html,
+body {
+	width: 100%;
+}
+
+input[type="text"]:focus {
+	outline: none;
+}
+ul {
+	list-style: none;
+}
+a {
+	text-decoration: none;
+	color: #fff;
+}
+
+/* Going to put this in a css module for NFTs*/
+.card {
+	border-radius: 0.8rem;
+	box-shadow: 0 16px 38px -12px rgba(225, 225, 225, 0.56),
+		0 4px 25px 0px rgba(225, 225, 225, 0.12), 0 8px 10px -5px rgba(225, 225, 225, 0.2);
+}
+
+.table th.up {
+	background-image: url("/challenger/img/sharing-ui/up_arrow.png");
+  }
+  .table th.down {
+	background-image: url("/challenger/img/sharing-ui/down_arrow.png");
+  }
+  .table th.default {
+	background-image: url("/challenger/img/sharing-ui/default.png");
+  }
+  th.up,
+  th.default,
+  th.down {
+	cursor: pointer;
+	background-repeat: no-repeat;
+	background-position: center right;
+	padding-right: 18px!important;
+  }

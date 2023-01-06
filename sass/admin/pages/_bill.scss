@@ -1,0 +1,29 @@
+#chart-1 {
+    height: 365px !important;
+}
+
+.unpaid-content {
+    li {
+        padding        : 15px 0px;
+        display        : flex;
+        justify-content: space-between;
+        border-bottom  : 1px solid $border-color;
+
+        &:first-child {
+            padding-top: 0px;
+        }
+
+        &:last-child {
+            padding-bottom: 0px;
+            border        : 0px;
+        }
+
+        h5 {
+            font-size: 14px;
+        }
+    }
+}
+
+#activityBar {
+    height: 287px !important;
+}

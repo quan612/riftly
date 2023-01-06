@@ -1,0 +1,121 @@
+.profile-page {
+    margin-bottom: 150px;
+}
+
+.user-info {
+    margin: 15px 0px;
+
+    span {
+        margin-bottom: 5px;
+        display      : inline-block;
+    }
+}
+
+
+.welcome-profile {
+    // background: $primary !important;
+
+    .card-body {
+        // background: $primary !important;
+
+        img {
+            border       : 4px solid $white;
+            border-radius: 100px;
+            width        : 60px;
+        }
+
+        // text-align: center;
+
+        h4 {
+            // color     : $white;
+            margin-top: 10px;
+            font-size : 18px;
+        }
+
+        p {
+            // color          : $white;
+            opacity        : 0.75;
+            // max-width   : 300px;
+            // margin   : 0 auto;
+
+        }
+
+        ul {
+            text-align: left;
+
+            li {
+                padding      : 15px 0px;
+                border-bottom: 1px solid $border-color;
+
+                &:last-child {
+                    border        : 0px;
+                    padding-bottom: 0px;
+                }
+
+                a {
+                    // color      : darken($white, 5%);
+                    display    : flex;
+                    align-items: center;
+                    transition : all 0.25 ease-in-out;
+
+                    span {
+                        // background     : $primary;
+                        padding        : 5px;
+                        border-radius  : 50px;
+                        width          : 30px;
+                        height         : 30px;
+                        display        : inline-flex;
+                        align-items    : center;
+                        justify-content: center;
+                        margin-right   : 10px;
+                        transition     : all 0.25 ease-in-out;
+
+                        &.verified {
+                            background: $success;
+                            color     : $white;
+                        }
+
+                        &.not-verified {
+                            background: $primary;
+                            color     : $white;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+///// 
+
+.profile-page {
+    .settings-menu {
+        // background   : $primary;
+        padding      : 20px 0px;
+        // border-radius: $radius;
+        margin-top   : 10px;
+        border-bottom: 1px solid $border-color;
+
+        li {
+
+            &:hover,
+            &:focus,
+            &.active {
+                a {
+                    color     : $white;
+                    background: $primary;
+                }
+            }
+        }
+
+        a {
+            // color       : $white;
+            // margin-right: 30px;
+            padding      : 5px 15px;
+            border-radius: $radius;
+            font-weight: 600;
+
+        }
+    }
+}

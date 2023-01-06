@@ -1,0 +1,289 @@
+.intro1 {
+    .intro-content {
+        h1 {
+            font-size  : 3rem;
+            font-weight: 700;
+            line-height: 1.3;
+
+            span {
+                color: $primary;
+            }
+        }
+
+        p {
+            font-size: 1.125rem;
+            color    : $text-muted;
+        }
+
+        .intro-btn {
+            .btn {
+                margin-right: 20px;
+                min-width   : 150px;
+                font-weight : 600;
+                font-size   : 16px;
+                padding     : 8px;
+
+                i {
+                    margin-left: 20px;
+                    position   : relative;
+                    top        : -2px;
+                }
+            }
+        }
+
+        .more {
+            display    : flex;
+            align-items: center;
+            margin-top : 30px;
+
+            span {
+                margin-right   : 15px;
+                width          : 30px;
+                height         : 30px;
+                border         : 1px dashed $primary;
+                display        : flex;
+                align-items    : center;
+                justify-content: center;
+                border-radius  : 50px;
+                font-size      : 20px;
+
+                i {
+                    line-height: 0;
+                }
+            }
+        }
+    }
+}
+
+.intro-slider {
+    position: relative;
+
+    .slider-item {
+        padding          : 25px 20px;
+        transform        : scale(1) perspective(1040px) rotateY(-18deg) rotateX(0) rotate(0);
+        position         : relative;
+        // &::after{
+        //     content: '';
+        //     position: absolute;
+        //     left: 0;
+        //     right: 0;
+        //     bottom: 0;
+        //     background: #000;
+        //     z-index: 999;
+        //     height: 150px;
+        //     box-shadow: inset 0px 20px 15px #f00;
+        // }
+
+        img {
+            border-radius: $radius;
+        }
+
+        .slider-item-avatar {
+            position: relative;
+            padding : 20px;
+            display : flex;
+
+            img {
+                width        : 35px;
+                height       : 35px;
+                border-radius: 100px;
+                margin-right : 15px;
+            }
+
+            h5 {
+                // color        : $headings-color;
+                margin-bottom: 0px;
+            }
+
+            p {
+                margin-bottom: 0px;
+            }
+        }
+    }
+
+    .arrows {
+        position: absolute;
+        bottom  : 50px;
+        right   : 20px;
+        z-index : 999;
+
+        span {
+            background   : $primary;
+            box-shadow   : $shadow;
+            display      : inline-block;
+            padding      : 5px 10px;
+            margin-left  : 10px;
+            border-radius: 100px;
+            cursor       : pointer;
+
+            i {
+                line-height: 0px;
+                color      : $white;
+                position   : relative;
+                top        : -2px;
+            }
+        }
+    }
+}
+.trending-slider,
+.notable-drops-slider {
+    position: relative;
+
+    .arrows {
+        position: absolute;
+        right   : 0;
+        top     : -70px;
+
+        span {
+            background   : $primary;
+            box-shadow   : $shadow;
+            display      : inline-block;
+            padding      : 5px 10px;
+            margin-left  : 10px;
+            border-radius: 100px;
+            cursor       : pointer;
+
+            i {
+                line-height: 0px;
+                color      : $white;
+                position   : relative;
+                top        : -2px;
+            }
+        }
+    }
+}
+
+
+
+
+
+
+
+.top-collection-content {
+    border       : 1px solid $border-color;
+    border-radius: $radius;
+    padding      : 20px;
+    margin-bottom: 30px;
+    box-shadow   : $shadow;
+
+    .serial {
+        display     : inline-block;
+        margin-right: 10px;
+        font-weight : 700;
+        color       : $headings-color;
+    }
+
+    .top-img {
+
+        img {
+            height       : 50px;
+            width        : 50px;
+            border-radius: 100px;
+        }
+    }
+
+    h5 {
+        margin-bottom   : 0px;
+        font-size       : 1rem;
+        // font-weight  : 600;
+    }
+
+    p {
+        margin-bottom: 0px;
+        font-size    : 14px;
+        font-weight  : 600;
+    }
+}
+
+.create-sell-content {
+    box-shadow   : $shadow-lg;
+    padding      : 50px 30px 30px;
+    border-radius: .75rem;
+    margin-bottom: 50px;
+    margin-top   : 50px;
+    position     : relative;
+
+    .create-sell-content-icon {
+        width          : 75px;
+        height         : 75px;
+        background     : lighten($primary, 0%);
+        color          : $white;
+        font-size      : 30px;
+        border-radius  : $radius;
+        margin-bottom  : 20px;
+        display        : flex;
+        align-items    : center;
+        justify-content: center;
+        position       : absolute;
+        top            : -40px;
+
+
+        i {
+            line-height: 0px;
+        }
+    }
+}
+
+.browse-cat {
+    text-align: center;
+
+    h4 {
+        margin-bottom: 0px;
+    }
+}
+
+
+
+
+// .intro-video-play {
+//     background-color   : $white;
+//     background-image   : url('./../images/bg/1.jpg');
+//     background-size    : cover;
+//     background-position: 0 0;
+//     min-height         : 465px;
+//     // max-width: 800px;
+//     margin             : 0 auto;
+//     position           : relative;
+//     border-radius      : 5px;
+//     z-index            : 1;
+//     margin-bottom      : 30px;
+//     box-shadow         : 0 1.5rem 4rem rgba(22, 28, 45, 0.1);
+
+//     &::after {
+//         content         : '';
+//         position        : absolute;
+//         top             : 0;
+//         left            : 0;
+//         right           : 0;
+//         bottom          : 0;
+//         // background   : $primary;
+//         // opacity      : 0.45;
+//         border-radius   : 5px;
+//         z-index         : -1;
+//     }
+// }
+
+.play-btn {
+    position       : absolute;
+    display        : flex;
+    align-items    : center;
+    justify-content: center;
+    height         : 100%;
+    width          : 100%;
+
+    a {
+        background   : $primary;
+        width        : 75px;
+        height       : 75px;
+        border-radius: 100px;
+        padding      : 22px 0;
+        text-align   : center;
+        cursor       : pointer;
+
+        i {
+            color      : $white;
+            font-size  : 30px;
+            line-height: 0px;
+        }
+    }
+}

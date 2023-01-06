@@ -1,0 +1,68 @@
+https://www.prisma.io/docs/guides/general-guides/database-workflows/unique-constraints-and-indexes/postgresql
+
+
+TRUNCATE ONLY .....
+RESTART IDENTITY;
+
+
+TRUNCATE <table_name> RESTART IDENTITY CASCADE;
+
+locally:  
+dotenv -e .env.development -- npx prisma migrate dev --name postgres-init
+
+npx prisma format
+
+locally to apply on production:
+dotenv -e .env.staging -- npx prisma migrate deploy
+dotenv -e .env.production -- npx prisma migrate deploy
+
+
+````````Apply manually```````````
++ generate a file
+dotenv -e .env.development -- npx prisma migrate dev --create-only 
+
++ edit the file with some extras postgresql code
+
++ apply changes 
+dotenv -e .env.development -- npx prisma migrate dev
+
+-- fixing advisory lock
+
+SELECT * FROM pg_stat_activity
+SELECT pg_terminate_backend(9696) 
+SELECT pg_terminate_backend(pg_stat_activity.procpid) --  
+ FROM pg_stat_get_activity(NULL::integer) 
+ WHERE datid=(SELECT oid from pg_database where datname = 'db name ');
+
+Might need to manually delete a record in "public._prisma_migrations" where it says fail....
+
+``` seeding ```
+dotenv -e .env.development -- node ./prisma/seed/whitelist.js
+dotenv -e .env.development -- node ./prisma/seed/admin.js
+dotenv -e .env.development -- node ./prisma/seed/rewardType.js
+
+``` baselining existing database
+dotenv -e .env.production -- npx prisma introspect
+dotenv -e .env.development -- npx prisma db pull
+dotenv -e .env.development -- npx prisma migrate dev --name initial-migration --create-only
+dotenv -e .env.development -- npx prisma migrate dev
+
+dotenv -e .env.production -- npx prisma migrate resolve --applied 20220406232532_initial_migration
+dotenv -e .env.production -- npx prisma migrate deploy
+
+// to reinitialize the migration file
+on dev
++ dotenv -e .env.development -- npx prisma migrate reset
++ dotenv -e .env.development -- npx prisma migrate dev
+
++ dotenv -e .env.development -- npx prisma migrate resolve --applied "20220426034248_new_migration_history"
++ dotenv -e .env.staging -- npx prisma migrate resolve --applied "20220426034248_new_migration_history"
++ dotenv -e .env.production -- npx prisma migrate deploy
+
+
+// Fixing contrainst Id when adding manually
+
+https://github.com/prisma/prisma/discussions/5256
+
+SELECT setval(pg_get_serial_sequence('"Orders"', 'id'), coalesce(max(id)+1, 1), false) FROM "Orders";
+

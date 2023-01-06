@@ -1,0 +1,25 @@
+{
+    /*
+        If using Next.js switch src with a . in the include and compiler options.
+        This is because Next JS folder structure doesn't use src like normal react compiling.
+    */
+    "compilerOptions": {
+        "baseUrl": ".",
+        "paths": {
+            "@components/*": ["components/*"],
+            "@styles/*": ["styles/*"],
+            "@utils/*": ["utils/*"],
+            "@repository/*": ["repository/*"],
+            "@context/*": ["context/*"],
+            "@shared/*": ["shared/*"],
+            "@middlewares/*": ["middlewares/*"],
+            "@hooks/*": ["hooks/*"],
+            "@sass/*": ["sass/*"],
+            "@enums/*": ["enums/*"],
+            "@pages/*": ["pages/*"]
+          }
+    },
+     "include": [
+         "."
+     ]
+}

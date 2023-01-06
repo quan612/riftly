@@ -1,0 +1,19 @@
+.filter-sidebar-content {
+    margin-bottom: 30px;
+
+    h5 {
+        border-bottom: 1px solid $border-color;
+        padding      : 5px 0px;
+        font-weight  : 700;
+        font-size    : 18px;
+        margin-bottom: 15px;
+    }
+
+    .form-check {
+        margin-bottom: 5px;
+    }
+
+    label {
+        font-size: 15px;
+    }
+}

@@ -1,0 +1,79 @@
+//MEDIA QUERY MANAGER
+// 0 - 600: xs 
+// 600 - 900: Tablet portrait
+// 900 - 1200: Tablet landscape
+// 1200 - 1800: Normal styles
+// 1800+ : Big xl
+// 1em = 16px
+// The smaller device rules always should write below the bigger device rules
+// Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Component
+@mixin respond($breakpoint) {
+    @if($breakpoint=="xs") {
+
+        // xs
+        @media only screen and (max-width: 575px) {
+            @content;
+        }
+    }
+
+    @if($breakpoint=="sm") {
+
+        // sm
+        @media only screen and (max-width: 767px) {
+            @content;
+        }
+    }
+
+    @if($breakpoint=="md") {
+
+        // md
+        @media only screen and (max-width: 991px) {
+            @content;
+        }
+    }
+
+    @if($breakpoint=="lg") {
+
+        // lg
+        @media only screen and (max-width: 1199px) {
+            @content;
+        }
+    }
+
+    @if ($breakpoint=="xl") {
+
+        // xl
+        @media only screen and (min-width: 1200px) {
+            @content;
+        }
+    }
+
+    @if($breakpoint=="xxl") {
+
+        // xxl
+        @media only screen and (min-width: 1800px) {
+            @content;
+        }
+    }
+}
+
+//don't use it untill you need this too much
+@mixin custommq($min: null, $max: null) {
+    @if ($min !=null and $max !=null) {
+        @media only screen and (min-width: $min) and (max-width: $max) {
+            @content;
+        }
+    }
+
+    @if ($min==null and $max !=null) {
+        @media only screen and (max-width: $max) {
+            @content;
+        }
+    }
+
+    @if ($min !=null and $max==null) {
+        @media only screen and (min-width: $min) {
+            @content;
+        }
+    }
+}

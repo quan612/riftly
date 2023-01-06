@@ -1,0 +1,1043 @@
+@use "../mixins" as m;
+
+$bp-small: 384px; // 384   24em
+$bp-small-2: 500px; // 500   31.25em
+$bp-small-3: 636px; // 636   39.8em
+$bp-med: 748px; // 748   46.8em
+$bp-med-2: 800px; // 800   50em
+$bp-large: 872px; // 872   54.5em
+$bp-large-2: 1200px; // 1200  75em
+$bp-xl: 1440px; // 1440  90em
+$bp-xl-2: 1980px; // 1980  123.75em
+$bp-xl-3: 2560px; // 2560  160em
+$bp-xl-4: 3840px; // 2560  160em
+
+$heading-font-size-small: 3.75vh;
+$heading-font-size-small-2: 1.65rem;
+$heading-font-size-med: 2.25rem;
+$heading-font-size-large: 2.75rem;
+
+$text-font-size-small: 0.6rem;
+$text-font-size-small-2: 1.125rem;
+$text-font-size-med: 1.35rem;
+$text-font-size-large: 1.5rem;
+
+$list-text-font-size-small: 0.6rem;
+$list-text-font-size-small-2: 0.675rem;
+$list-text-font-size-med: 1rem;
+$list-text-font-size-large: 1.25rem;
+
+@mixin heading() {
+  font-size: $heading-font-size-small;
+  font-family: PFRondaSeven; // PFRondaSeven Safety Goggles Atlantis
+  text-align: center;
+
+  @media (min-width: $bp-small-3) {
+    font-size: $heading-font-size-small-2;
+  }
+  @media (min-width: $bp-med-2) {
+    font-size: $heading-font-size-med;
+  }
+  @media (min-width: $bp-large-2) {
+    font-size: $heading-font-size-med;
+  }
+  @media (min-width: $bp-xl) {
+    font-size: $heading-font-size-large;
+  }
+  @media (min-width: $bp-xl-2) {
+    font-size: $heading-font-size-large;
+  }
+}
+
+@mixin boardHeading() {
+  font-size: 1.75vh;
+  font-family: Safety Goggles; // PFRondaSeven Safety Goggles Atlantis
+  font-weight: 500;
+  text-align: center;
+  color: #35464f;
+  line-height: 1rem;
+
+  @media (min-width: $bp-small) {
+    font-size: 1.25rem;
+    line-height: 1.25rem;
+  }
+  @media (min-width: $bp-small-2) {
+    line-height: 1.35rem;
+    font-size: 1.55rem;
+  }
+  @media (min-width: $bp-small-3) {
+    font-size: $heading-font-size-small-2;
+    line-height: 1.5rem;
+  }
+  @media (min-width: $bp-med-2) {
+    font-size: $heading-font-size-med;
+    line-height: 2rem;
+  }
+  @media (min-width: $bp-large-2) {
+    font-size: $heading-font-size-med;
+  }
+  @media (min-width: $bp-xl-2) {
+    line-height: 2.5rem;
+  }
+}
+
+@mixin goneFishHeading() {
+  font-size: 1rem;
+  font-family: Safety Goggles; // PFRondaSeven Safety Goggles Atlantis
+  font-weight: 500;
+  text-align: center;
+  color: #35464f;
+  line-height: 1rem;
+
+  @media (min-width: $bp-small) {
+    font-size: 1.25rem;
+    line-height: 1.25rem;
+  }
+  @media (min-width: $bp-small-2) {
+    line-height: 1.35rem;
+    font-size: 1.55rem;
+  }
+  @media (min-width: $bp-small-3) {
+    font-size: $heading-font-size-small-2;
+    line-height: 1.5rem;
+  }
+  @media (min-width: $bp-med) {
+    font-size: 2.25rem;
+  }
+  @media (min-width: $bp-med-2) {
+    font-size: 2.35rem;
+    line-height: 2rem;
+  }
+  @media (min-width: $bp-large) {
+    font-size: 2.35rem;
+  }
+  @media (min-width: $bp-xl) {
+    font-size: 2.5rem;
+  }
+  @media (min-width: $bp-xl-2) {
+    font-size: 2.75rem;
+  }
+  @media (min-width: $bp-xl-3) {
+    font-size: 3rem;
+  }
+}
+
+@mixin goneFishText() {
+  font-size: 0.45rem;
+  font-family: PFRondaSeven; // PFRondaSeven Safety Goggles Atlantis
+  font-weight: 400;
+  text-align: center;
+  color: #35464f;
+  line-height: 1rem;
+  width: 88%;
+
+  @media (min-width: $bp-small-2) {
+    font-size: 0.5rem;
+    line-height: 1.25rem;
+  }
+  @media (min-width: $bp-med) {
+    font-size: 0.95rem;
+    line-height: 1.85rem;
+  }
+  @media (min-width: $bp-xl) {
+    font-size: 1rem;
+  }
+  @media (min-width: $bp-xl-2) {
+    font-size: 1.1rem;
+  }
+  @media (min-width: $bp-xl-3) {
+    font-size: 1.2rem;
+  }
+}
+
+@mixin boardText() {
+  font-size: $text-font-size-small;
+  font-family: PFRondaSeven; // PFRondaSeven Safety Goggles Atlantis
+  font-weight: 400;
+  text-align: center;
+  color: #35464f;
+  line-height: 1.55rem;
+  @media (min-width: $bp-small-2) {
+    font-size: $text-font-size-small-2;
+  }
+  @media (min-width: $bp-med-2) {
+    font-size: $text-font-size-med;
+    line-height: 1.85rem;
+  }
+  @media (min-width: $bp-xl) {
+    font-size: $text-font-size-large;
+  }
+  @media (min-width: $bp-xl-2) {
+    font-size: $text-font-size-large;
+  }
+}
+
+@mixin listText() {
+  font-size: $list-text-font-size-small;
+  font-family: PFRondaSeven; // PFRondaSeven Safety Goggles Atlantis
+  font-weight: 400;
+  text-align: center;
+
+  @media (min-width: $bp-small) {
+    font-size: $list-text-font-size-small-2;
+  }
+
+  @media (min-width: $bp-small-2) {
+    font-size: $list-text-font-size-small-2;
+  }
+
+  @media (min-width: $bp-small-3) {
+    //font-size: $list-text-font-size-small-2;
+    font-size: $list-text-font-size-med;
+  }
+  @media (min-width: $bp-med-2) {
+    font-size: $list-text-font-size-med;
+  }
+
+  @media (min-width: $bp-xl-2) {
+    font-size: $list-text-font-size-large;
+  }
+}
+@mixin text() {
+  font-family: PFRondaSeven;
+  text-align: center;
+  font-size: $text-font-size-small;
+  @media (min-width: $bp-small-3) {
+    font-size: $text-font-size-small;
+  }
+  @media (min-width: $bp-med-2) {
+    font-size: $text-font-size-small;
+  }
+  @media (min-width: $bp-large-2) {
+    font-size: $text-font-size-small;
+  }
+  @media (min-width: $bp-xl) {
+    font-size: $text-font-size-small;
+  }
+  @media (min-width: $bp-xl-2) {
+    font-size: $text-font-size-small;
+  }
+}
+@mixin large_button() {
+  position: relative;
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  padding: 0;
+  color: #ffffff;
+
+  @media (min-width: $bp-small) {
+    width: 55%;
+  }
+  @media (min-width: $bp-small-2) {
+    width: 50%;
+  }
+  @media (min-width: $bp-med-2) {
+    width: 60%;
+  }
+
+  & > div {
+    position: absolute;
+    display: flex;
+    text-align: center;
+    align-items: center;
+    height: 90%;
+    & > span {
+      width: 100%;
+      font-size: 0.9rem;
+      font-family: Safety Goggles;
+      font-weight: 400;
+      text-align: center;
+
+      line-height: 1.05rem;
+      @media (min-width: $bp-small) {
+        font-size: 1rem;
+      }
+      @media (min-width: $bp-small-2) {
+        font-size: 1.15rem;
+      }
+      @media (min-width: $bp-small-3) {
+        font-size: 1.55rem;
+        line-height: 1.35rem;
+      }
+      @media (min-width: $bp-med-2) {
+        font-size: 1.75rem;
+      }
+      @media (min-width: $bp-xl) {
+        font-size: $heading-font-size-med;
+      }
+    }
+    & > img {
+      margin-left: 0.3rem;
+      max-height: 50%;
+      width: auto !important;
+
+      @media (min-width: $bp-small-3) {
+        max-height: 65%;
+      }
+      @media (min-width: $bp-med-2) {
+        max-height: 65%;
+      }
+      @media (min-width: $bp-large-2) {
+        max-height: 65%;
+      }
+    }
+    & > img:nth-child(2) {
+      margin-left: 0.25rem;
+    }
+  }
+  &:disabled {
+    cursor: not-allowed !important;
+    color: #a2b7b6;
+    &:hover {
+      color: #a2b7b6;
+    }
+  }
+}
+@mixin disconnect_button() {
+  margin-top: 1rem;
+  position: relative;
+  width: 40%; //10.375rem;
+  display: flex;
+  justify-content: center;
+  padding: 0;
+  color: #bed3d2;
+
+  & > div {
+    position: absolute;
+    display: flex;
+    text-align: center;
+    align-items: center;
+    height: 90%;
+    & > span {
+      font-size: 5vw;
+      font-family: Safety Goggles;
+      font-weight: 500;
+      text-align: center;
+
+      line-height: 1.15rem;
+      @media (min-width: $bp-small-2) {
+        font-size: $heading-font-size-small-2;
+      }
+    }
+  }
+  &:hover {
+    color: #35454f;
+  }
+  &:disabled {
+    cursor: not-allowed !important;
+    color: #a2b7b6;
+    &:hover {
+      color: #a2b7b6;
+    }
+  }
+}
+@mixin pointer() {
+  cursor: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAzElEQVRYR+2X0Q6AIAhF5f8/2jYXZkwEjNSVvVUjDpcrGgT7FUkI2D9xRfQETwNIiWO85wfINfQUEyxBG2ArsLwC0jioGt5zFcwF4OYDPi/mBYKm4t0U8ATgRm3ThFoAqkhNgWkA0jJLvaOVSs7j3qMnSgXWBMiWPXe94QqMBMBc1VZIvaTu5u5pQewq0EqNZvIEMCmxAawK0DNkay9QmfFNAJUXfgGgUkLaE7j/h8fnASkxHTz0DGIBMCnBeeM7AArpUd3mz2x3C7wADglA8BcWMZhZAAAAAElFTkSuQmCC)
+      14 0,
+    pointer;
+}
+@mixin pointerDisabled() {
+  cursor: not-allowed;
+}
+
+.redemption {
+  @include m.flex-master(null, center, center);
+  width: 100%;
+  height: 100vh;
+  background: 50% 30% / cover url("/challenger/img/redemption/machine_bg_x4.png");
+  position: relative;
+
+  &_loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    color: #fff;
+    font-size: 3vh;
+    font-family: Safety Goggles;
+  }
+  &_machine {
+    @include m.flex-master(column, center, center);
+    position: relative;
+    width: 75%;
+    margin-top: -10%;
+    height: auto; //70vh
+    color: #fff;
+
+    @media (min-width: $bp-small) {
+      width: 80%;
+    }
+    @media (min-width: $bp-small-2) {
+      width: min(30em, 72%);
+    }
+    @media (min-width: $bp-small-3) {
+      width: min(32em, 80%);
+    }
+    @media (min-width: $bp-med) {
+      width: min(25em, 60%);
+    }
+    @media (min-width: $bp-med-2) {
+      // width: 35%;
+      width: min(26em, 50%);
+      margin-top: 0;
+    }
+    @media (min-width: $bp-large) {
+      width: min(25em, 27%);
+    }
+    @media (min-width: $bp-large-2) {
+      width: min(25em, 30%);
+    }
+    @media (min-width: $bp-xl) {
+      width: min(32em, 70%);
+    }
+    @media (min-width: $bp-xl-2) {
+      width: min(32em, 70%);
+    }
+    @media (min-width: $bp-xl-3) {
+      width: min(37em, 28%);
+    }
+    @media (min-width: $bp-xl-4) {
+      width: min(55em, 26%);
+    }
+
+    &_container {
+      position: relative;
+
+      width: 100%;
+      height: 0;
+      padding-top: 156.2%;
+    }
+    &_idle {
+      background: url("/challenger/img/redemption/machine_idle_x4.gif") no-repeat;
+      background-size: contain;
+    }
+    &_punch {
+      background: url("/challenger/img/redemption/machine_punch_x4.gif") no-repeat;
+      background-size: contain;
+    }
+    &_stuck {
+      background: url("/challenger/img/redemption/machine_stuck_x4.gif") no-repeat;
+      background-size: contain;
+    }
+    &_wrapper {
+      @include m.flex-master(column, center, center);
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0%;
+      left: 0%;
+    }
+
+    &_content {
+      @include m.flex-master(column, center, center);
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    &_shell {
+      position: absolute;
+      @include m.flex-master(column, center, center);
+      width: 58%;
+      height: 7%;
+      top: 62%;
+      left: 12%;
+      color: #11657e;
+      font-size: 2.85vh;
+      font-family: Safety Goggles;
+      opacity: 0.4;
+
+      @media (min-width: $bp-small) {
+        font-size: 2.75vh;
+      }
+      @media (min-width: $bp-small-2) {
+        font-size: min(3.2vh, 2.75rem);
+      }
+      @media (min-width: $bp-xl) {
+        font-size: 2.35rem;
+      }
+      @media (min-width: $bp-xl-2) {
+        font-size: 2.35rem;
+      }
+      @media (min-width: $bp-xl-3) {
+        font-size: 3rem;
+      }
+      @media (min-width: $bp-xl-4) {
+        font-size: 4rem;
+      }
+    }
+    &_roll {
+      position: absolute;
+      width: 27%;
+      height: 18%;
+      left: 12%;
+      top: 72%;
+      padding: 0;
+      z-index: 12;
+
+      &:hover {
+        @include pointer();
+      }
+      &:disabled {
+        cursor: not-allowed !important;
+
+        &:hover {
+          cursor: not-allowed !important;
+        }
+      }
+    }
+  }
+  &_footer {
+    @include m.flex-master(column, center, center);
+    position: absolute;
+    width: 100%;
+    height: 8rem;
+    max-height: 25%;
+    bottom: 1.5%;
+    z-index: 14;
+
+    @media (min-width: $bp-small) {
+      height: 13rem;
+      max-height: 22%;
+    }
+    @media (min-width: $bp-small-3) {
+      max-height: 21%;
+    }
+    @media (min-width: $bp-med) {
+      bottom: 4%;
+      max-height: 9%;
+    }
+    @media (min-width: $bp-large-2) {
+      height: 11%;
+      bottom: 7%;
+      max-height: none;
+    }
+
+    &_wrapper {
+      @include m.flex-master(column, center, center);
+      position: relative;
+      width: 85%;
+      height: 100%;
+
+      @media (min-width: $bp-small) {
+      }
+      @media (min-width: $bp-small-2) {
+      }
+      @media (min-width: $bp-small-3) {
+        width: 75%;
+      }
+      @media (min-width: $bp-med) {
+        @include m.flex-master(row, center, center);
+        margin-left: -15%;
+        height: 100%;
+      }
+      @media (min-width: $bp-large) {
+        margin-left: -10%;
+      }
+      @media (min-width: $bp-large-2) {
+        margin-left: 0;
+        width: 40%;
+      }
+    }
+    &_octopus {
+      position: relative;
+      height: 40%;
+      z-index: 1;
+      @media (min-width: $bp-med) {
+        position: absolute;
+        right: 0;
+        top: 0;
+        height: 100%;
+      }
+
+      & > img {
+        height: 100%;
+        margin-left: -20%;
+        @media (min-width: $bp-med) {
+          height: 100%;
+          margin-left: 100%;
+        }
+      }
+    }
+    &_boxes {
+      @include m.flex-master(column, center, null);
+      position: relative;
+      height: 100%;
+      width: 100%;
+      padding: 0;
+      color: #ffffff;
+      z-index: 2;
+
+      // @media (min-width: $bp-small) {
+      //     width: 55%;
+      // }
+      // @media (min-width: $bp-small-2) {
+      //     width: 50%;
+      // }
+      // @media (min-width: $bp-med-2) {
+      //     width: 60%;
+      // }
+
+      & > div {
+        position: absolute;
+        @include m.flex-master(row, null, null);
+        height: 95%;
+        width: 100%;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        gap: 0.5rem;
+
+        @media (min-width: $bp-med) {
+          @include m.flex-master(row, center, null);
+          padding-bottom: 0;
+        }
+        @media (min-width: $bp-med) {
+          width: 95%;
+        }
+        @media (min-width: $bp-xl) {
+          padding-left: 1.5rem;
+          padding-right: 1.5rem;
+        }
+        @media (min-width: $bp-xl-3) {
+          padding-left: 2.5rem;
+          padding-right: 2.5rem;
+        }
+
+        & > span {
+          max-width: 100%;
+          @include m.flex-master(row, center, null);
+          height: 70%;
+          font-size: 0.525rem;
+          font-family: PFRondaSeven;
+          font-weight: 400;
+          overflow-wrap: break-word;
+          line-height: 1rem;
+          margin-top: 1%;
+
+          @media (min-width: $bp-small) {
+            font-size: 0.6rem;
+          }
+          @media (min-width: $bp-small-2) {
+            font-size: 0.6rem;
+          }
+          @media (min-width: $bp-med) {
+            font-size: 0.875rem;
+            line-height: 1.25rem;
+          }
+          @media (min-width: $bp-xl) {
+            font-size: 1.65vh;
+            line-height: 1.75rem;
+          }
+          @media (min-width: $bp-xl-3) {
+            font-size: 1.55rem;
+            line-height: 2.75rem;
+          }
+          @media (min-width: $bp-xl-4) {
+            font-size: 2.25rem;
+            line-height: 3.25rem;
+          }
+          & > img {
+            height: 0.5rem;
+            margin-top: auto;
+            @media (min-width: $bp-small) {
+              height: 0.675rem;
+            }
+            @media (min-width: $bp-xl) {
+              height: 1rem;
+            }
+            @media (min-width: $bp-xl-3) {
+              height: 1.25rem;
+            }
+          }
+          // & > span {
+          //     @include m.flex-master(row, center, flex-end);
+          //     & > img {
+          //         height: 1.5rem;
+          //     }
+          // }
+        }
+      }
+      & > img {
+        height: 100%;
+        width: auto !important;
+
+        // @media (min-width: $bp-small-3) {
+        //     max-height: 65%;
+        // }
+        // @media (min-width: $bp-med-2) {
+        //     max-height: 65%;
+        // }
+
+        // @media (min-width: $bp-large-2) {
+        //     max-height: 65%;
+        // }
+      }
+      &:disabled {
+        cursor: not-allowed !important;
+        color: #a2b7b6;
+        &:hover {
+          color: #a2b7b6;
+        }
+      }
+    }
+  }
+  &_bubble {
+    @include m.flex-master(column, center, center);
+    position: absolute;
+    width: 100%;
+    bottom: 15%;
+
+    z-index: 11;
+    opacity: 0.5;
+    height: 60%;
+
+    @media (min-width: $bp-small-3) {
+      height: 50%;
+      width: 100vw;
+    }
+
+    &_wrapper {
+      width: 100%;
+      @media (min-width: $bp-small-3) {
+        width: 60%;
+      }
+    }
+    pointer-events: none;
+  }
+  &_reward {
+    @include m.flex-master(column, center, center);
+    position: relative;
+    width: 85%;
+    margin-top: -10%;
+    height: auto; //70vh
+    color: #fff;
+
+    @media (min-width: $bp-small) {
+      width: 85%;
+    }
+    @media (min-width: $bp-small-2) {
+      width: min(34em, 72%);
+    }
+    @media (min-width: $bp-small-3) {
+      width: min(36em, 80%);
+    }
+    @media (min-width: $bp-med) {
+      width: min(36em, 80%);
+    }
+    @media (min-width: $bp-med-2) {
+      width: 72%;
+      margin-top: 0;
+    }
+    @media (min-width: $bp-large) {
+      width: 600px;
+      margin-top: 0;
+    }
+    @media (min-width: $bp-large-2) {
+      width: min(25em, 32%);
+      margin-top: 0;
+    }
+    @media (min-width: $bp-xl) {
+      margin-top: 0;
+      width: min(34em, 70%);
+    }
+    @media (min-width: $bp-xl-2) {
+      width: min(36em, 70%);
+    }
+    @media (min-width: $bp-xl-3) {
+      width: min(48em, 28%);
+    }
+    @media (min-width: $bp-xl-4) {
+      width: min(65em, 30%);
+    }
+
+    &_container {
+      position: relative;
+      width: 100%;
+      height: 0;
+      padding-top: 140.27%;
+
+      background: url("/challenger/img/redemption/Reward bg with text_animated_3x.gif") no-repeat;
+      background-size: contain;
+    }
+
+    &_wrapper {
+      @include m.flex-master(column, center, center);
+      position: absolute;
+      width: 100%;
+      height: 69%;
+      top: 28%;
+      left: 0;
+    }
+
+    &_content {
+      @include m.flex-master(column, space-between, center);
+      position: relative;
+      width: 88%;
+      height: 100%;
+      padding-top: 5%;
+      padding-bottom: 5%;
+    }
+    &_description {
+      @include m.flex-master(column, center, center);
+      position: relative;
+      width: 90%;
+      height: 20%;
+      color: #ad6b34;
+      font-family: PFRondaSeven;
+      font-size: 0.45rem;
+      text-align: center;
+
+      @media (min-width: $bp-small) {
+        font-size: 0.575rem;
+      }
+      @media (min-width: $bp-small-3) {
+        width: 80%;
+        font-size: 0.8rem;
+      }
+      @media (min-width: $bp-med-2) {
+        font-size: 0.85rem;
+      }
+      @media (min-width: $bp-large-2) {
+        font-size: 0.9rem;
+      }
+      @media (min-width: $bp-xl) {
+        // font-size: 1.05rem;
+      }
+      @media (min-width: $bp-xl-3) {
+        font-size: 1.2rem;
+      }
+      @media (min-width: $bp-xl-4) {
+        font-size: 1.5rem;
+      }
+    }
+    &_scroll {
+      @include m.flex-master(row, center, center);
+      position: relative;
+      width: 85%;
+      flex: 1;
+
+      &_left {
+        width: 15%;
+        &_wrapper {
+          margin-left: auto;
+          width: 50%;
+        }
+        &_enable {
+          &:hover {
+            @include pointer();
+          }
+        }
+        &_disable {
+          &:hover {
+            @include pointerDisabled();
+          }
+        }
+      }
+      &_right {
+        width: 15%;
+        &_wrapper {
+          margin-right: auto;
+          width: 50%;
+        }
+        &_enable {
+          &:hover {
+            @include pointer();
+          }
+        }
+        &_disable {
+          &:hover {
+            @include pointerDisabled();
+          }
+        }
+      }
+      &_img {
+        flex: 1;
+        @include m.flex-master(row, center, center);
+        &_wrapper {
+          position: relative;
+          @include m.flex-master(row, center, center);
+          width: 75%;
+        }
+        &_asset {
+          position: absolute;
+          top: 0;
+          z-index: 2;
+          width: 100%;
+          height: 100%;
+
+          @include m.flex-master(row, center, center);
+
+          & > img {
+            height: auto;
+            width: 67%;
+          }
+        }
+        &_star {
+          width: 100%;
+          @media (min-width: $bp-xl-2) {
+            width: 100%;
+            z-index: 1;
+          }
+        }
+      }
+    }
+    &_text {
+      @include m.flex-master(column, center, center);
+      position: relative;
+      width: 100%;
+      height: 16%;
+      color: #2484b2;
+      font-family: Safety Goggles;
+      font-size: 1rem;
+      text-align: center;
+      line-height: 1.15rem;
+
+      @media (min-width: $bp-small-2) {
+        font-size: 1.15rem;
+      }
+      @media (min-width: $bp-small-3) {
+        font-size: 1.25rem;
+      }
+      @media (min-width: $bp-med) {
+        width: 80%;
+        line-height: 1.5rem;
+        font-size: 1.5rem;
+      }
+      @media (min-width: $bp-med-2) {
+        width: 80%;
+        line-height: 1.75rem;
+      }
+      @media (min-width: $bp-large-2) {
+        width: 80%;
+        line-height: 2rem;
+        font-size: 1.75rem;
+      }
+      @media (min-width: $bp-xl-2) {
+        font-size: 1.85rem;
+        line-height: 2.25rem;
+      }
+      @media (min-width: $bp-xl-3) {
+        line-height: 2.5rem;
+        font-size: 2.35rem;
+      }
+      & > span {
+        font-size: 0.5rem;
+        width: 80%;
+        font-family: PFRondaSeven;
+        color: #ad6b34;
+
+        @media (min-width: $bp-small-3) {
+          font-size: 0.6rem;
+        }
+        @media (min-width: $bp-med) {
+          line-height: 1.35rem;
+          font-size: 1rem;
+        }
+        @media (min-width: $bp-large-2) {
+          font-size: 1rem;
+        }
+        @media (min-width: $bp-xl-2) {
+          font-size: 1rem;
+          line-height: 1.5rem;
+        }
+        @media (min-width: $bp-xl-3) {
+          line-height: 1.5rem;
+          font-size: 1.15rem;
+        }
+      }
+    }
+    &_pinkText {
+      color: #ff5fb7;
+      font-size: 2.9vh;
+
+      @media (min-width: $bp-small-2) {
+        font-size: 1.5rem;
+      }
+      @media (min-width: $bp-small-2) {
+        font-size: 1.75rem;
+      }
+      @media (min-width: $bp-med) {
+        font-size: 2rem;
+      }
+      @media (min-width: $bp-med-2) {
+        font-size: 2.25rem;
+      }
+      @media (min-width: $bp-large-2) {
+        font-size: 2.5rem;
+      }
+      @media (min-width: $bp-xl-2) {
+        font-size: 3rem;
+      }
+      @media (min-width: $bp-xl-3) {
+        font-size: 3.75rem;
+      }
+    }
+    &_buttons {
+      @include m.flex-master(column, center, center);
+      position: relative;
+      width: 80%;
+      height: 20%;
+      @media (min-width: $bp-med) {
+        height: 15%;
+      }
+
+      &_wrapper {
+        @include m.flex-master(row, center, center);
+        gap: 1.5rem;
+      }
+
+      &_claim {
+        @include large_button();
+        &:hover {
+          color: #881c64 !important;
+        }
+      }
+      &_share {
+        @include large_button();
+
+        & > div {
+          width: 100%;
+          @include m.flex-master(row, space-evenly, center);
+
+          & > span {
+            width: auto;
+          }
+        }
+        &:hover {
+          color: #0e5b91 !important;
+        }
+      }
+      &_footer {
+        font-family: PFRondaSeven;
+        color: #ad6b34;
+        font-size: 0.65rem;
+        text-align: center;
+
+        @media (min-width: $bp-small-2) {
+          // font-size: 1.5rem;
+        }
+        @media (min-width: $bp-small-2) {
+          // font-size: 1.75rem;
+        }
+        @media (min-width: $bp-med) {
+          font-size: 0.8rem;
+        }
+        @media (min-width: $bp-med-2) {
+          // font-size: 1rem;
+        }
+        @media (min-width: $bp-large-2) {
+          font-size: 0.85rem;
+        }
+        @media (min-width: $bp-xl-2) {
+          font-size: 0.9rem;
+        }
+        @media (min-width: $bp-xl-3) {
+          font-size: 1.05rem;
+        }
+        @media (min-width: $bp-xl-4) {
+          font-size: 1.25rem;
+        }
+      }
+    }
+  }
+}

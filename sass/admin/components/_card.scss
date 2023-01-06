@@ -1,0 +1,87 @@
+.card {
+    border          : 1px solid $border-color;
+    margin-bottom   : 30px;
+    border-radius   : $radius;
+    box-shadow   : $shadow;
+    background      : $white;
+
+    // &::before {
+    //     content       : "";
+    //     position      : absolute;
+    //     top           : 22px;
+    //     left          : 18px;
+    //     right         : 18px;
+    //     bottom        : -40px;
+    //     z-index       : -2;
+    //     background    : #E3E6EC;
+    //     opacity       : 0.91;
+    //     -webkit-filter: blur(86.985px);
+    //     filter        : blur(86.985px);
+    //     border-radius : 24px;
+    // }
+
+    &-header {
+        display        : flex;
+        justify-content: space-between;
+        align-items    : center;
+        border-bottom  : 0px solid $border-color;
+        background     : transparent;
+        padding        : 30px;
+
+        // margin      : 0px 35px;
+        @include respond("xs") {
+            flex-direction: column;
+            align-items   : start;
+        }
+
+        // @include custommq($min: 1200px, $max: 1350px) {
+        //     padding: 30px 0px;
+        // }
+    }
+
+    &-title {
+        font-size    : 18px;
+        margin-bottom: 0px;
+        color        : $headings-color;
+    }
+
+    &.transparent {
+        background: transparent;
+        box-shadow: none;
+        border    : 0px;
+
+        .card-header {
+            border : 0px;
+            padding: 0px;
+        }
+
+        .card-body {
+            padding   : 0px;
+            background: transparent;
+        }
+
+    }
+
+    .card-body {
+        padding         : 30px;
+        background      : $white;
+        border-radius   : $radius;
+        // box-shadow      : $shadow;
+        // border-radius: 15px;
+
+        @include respond("xl") {
+            padding: 20px;
+        }
+
+        // @include custommq($min: 1200px, $max: 1350px) {
+        //     padding: 30px 0px !important;
+        // }
+    }
+
+
+
+    .card-footer {
+        padding   : 30px;
+        background: $white;
+    }
+}

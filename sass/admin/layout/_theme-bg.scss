@@ -1,0 +1,375 @@
+$dbg       : #1F2D3D;
+$dcolor    : rgb(192, 204, 218);
+$dcard     : #253649;
+$dlight    : #1C2836;
+$dborder   : rgb(44, 64, 86);
+// $dborder: darken($primary, 37%);
+
+.dark-theme {
+
+    h1,
+    .h1,
+    h2,
+    .h2,
+    h3,
+    .h3,
+    h4,
+    .h4,
+    h5,
+    .h5,
+    h6,
+    .h6 {
+        color: $white;
+    }
+
+    b,
+    strong {
+        color: $white;
+    }
+
+    .bg-light {
+        background: $dlight !important;
+    }
+
+
+
+
+    .triangle-top-light {
+        &::after {
+            border-color: transparent transparent $dlight transparent;
+        }
+    }
+    .triangle-top-dark {
+        &::after {
+            border-color: transparent transparent $dcard transparent;
+        }
+    }
+
+    .triangle-bottom-light {
+        &::before {
+            border-color: transparent transparent $dlight transparent;
+        }
+    }
+    .triangle-bottom-dark {
+        &::before {
+            border-color: transparent transparent $dcard transparent;
+        }
+    }
+
+
+
+    background-color: $dbg;
+    color           : $dcolor;
+
+    .admin {
+        background: $dbg;
+    }
+
+    .header {
+        background-color: $dbg;
+    }
+
+    .dropdown-menu {
+        background-color: $dcard;
+
+        h4 {
+            border-color: $dborder;
+        }
+
+        p {
+            color: $white !important;
+        }
+
+        a {
+            border-color: $dborder;
+
+
+
+            span {
+                color: $dcolor !important;
+
+                i {
+                    color: $white;
+                }
+            }
+        }
+    }
+
+    .border-top {
+        border-top: 1px solid $dborder !important;
+    }
+
+    .notification .notify-bell i {
+        color: $white;
+    }
+
+    .notification .dropdown-menu a:last-child {
+        color: $white;
+    }
+
+    .profile_log .dropdown-menu .dropdown-item {
+        border-top: 1px solid $dborder;
+        color     : $dcolor;
+    }
+
+    .user-info,
+    .user-balance {
+        span {
+            color: $dcolor;
+        }
+    }
+
+
+
+    .card {
+        border    : 1px solid $dborder !important;
+        background: $dcard;
+
+        .card-header {
+            // border-bottom: 1px solid $dborder;
+
+            .card-title {
+                color: $white;
+            }
+        }
+
+        .card-body {
+            background: $dcard;
+            // border: 1px solid $dborder !important;
+        }
+    }
+
+    .stat-widget {
+        background: $dcard;
+        border    : 1px solid $dborder;
+    }
+
+    .top-creators-content .creator-widget {
+        background: $dcard;
+    }
+
+    .bid-table table td {
+        background: $dcard;
+    }
+
+    .activity-content li {
+        border-color: $dborder;
+    }
+
+    .sidebar {
+        background: $dcard;
+    }
+
+    .balance-stats {
+        background: $dbg;
+    }
+
+    .credit-card.payoneer {
+        background: $dcard;
+    }
+
+    .credit-card.payoneer .cc-number h6,
+    .credit-card.payoneer .cc-number .h6 {
+        color: #fff;
+    }
+
+    .credit-card.payoneer .cc-holder-exp h5,
+    .credit-card.payoneer .cc-holder-exp .h5 {
+        color: #fff;
+    }
+
+
+
+    .credit-card.payoneer .cc-holder-exp .exp strong {
+        color: #fff;
+    }
+
+    .welcome-profile .card-body ul li {
+        padding      : 15px 0px;
+        border-bottom: 1px solid $dborder;
+    }
+
+
+    .search {
+        background: $dcard;
+    }
+
+    .customer-support-content {
+        background: $dcard;
+    }
+
+    .filter-nav a {
+        color: $dcolor;
+    }
+
+    // .trade-form {
+    //     p {
+    //         color: $white;
+    //     }
+    // }
+
+    // .balance-widget li .icon-title span {
+    //     color: $white;
+    // }
+
+    .form-control,
+    .form-select {
+        background  : $dbg;
+        border-color: $dborder;
+        color       : $dcolor;
+
+        &::-webkit-input-placeholder {
+            color: $dcolor;
+        }
+
+        &:-ms-input-placeholder {
+            color: $dcolor;
+        }
+
+        &::placeholder {
+            color: $dcolor;
+        }
+
+        &:hover {
+            border-color: $dborder;
+            color       : $dcolor;
+            background  : $dbg;
+        }
+
+        &:focus,
+        &:active,
+        &.active {
+            border-color: $dborder;
+            color       : $dcolor;
+            background  : $dbg;
+        }
+    }
+
+    .form-file-text {
+        background-color: $dbg;
+        border-color    : $dborder;
+        color           : $dcolor;
+    }
+
+    .form-file-button {
+        border-color: $dborder;
+        background  : $primary;
+        color       : $white;
+    }
+
+    .input-group-text {
+        background  : $dcard;
+        color       : $white;
+        border-color: $dborder;
+    }
+
+    .btn-outline-primary,
+    .btn-outline-secondary,
+    .btn-outline-success,
+    .btn-outline-info,
+    .btn-outline-warning,
+    .btn-outline-danger,
+    .btn-outline-light {
+        color: $white;
+    }
+
+    .balance-widget li {
+        border-bottom: 1px solid $dborder;
+    }
+
+    .table {
+        color: $dcolor;
+
+        th {
+            color        : $white;
+            border-bottom: 1px solid $dborder !important;
+        }
+
+        td {
+            border-color: $dborder;
+
+        }
+    }
+
+    .table-striped>tbody>tr:nth-of-type(odd) {
+        --bs-table-accent-bg: $dbg;
+        background-color    : $dbg;
+        color               : $dcolor;
+    }
+
+    .settings-menu {
+        a {
+            color: $dcolor;
+
+            &:hover,
+            &:focus,
+            &:active,
+            &.active {
+                color     : $white;
+                // opacity: 1;
+            }
+        }
+    }
+
+    .modal-content {
+        background-color: $dcard;
+
+        .modal-header {
+            border-color: $dborder;
+
+            .btn-close {
+                color: $white;
+            }
+
+        }
+    }
+
+    .qr-img {
+        background: $white;
+    }
+
+    .chart-stat {
+        border-color: $dborder;
+    }
+
+    .top-collection-content {
+        border: 1px solid $dborder;
+    }
+
+    .front {
+        .page-title {
+            background: $dlight;
+        }
+    }
+
+    .filter-sidebar-content h5 {
+        border-bottom: 1px solid $dborder;
+    }
+
+    .form-check-input {
+        background-color: $dcard;
+    }
+
+    .profile-page {
+        .settings-menu {
+            border-bottom: 1px solid $dborder;
+        }
+    }
+
+
+
+    .all-notification a {
+        border-bottom: 1px solid $dborder;
+
+    }
+
+    .create-sell-content {
+        background: $dcard;
+    }
+
+    .footer,.bottom{
+        background: $dcard;
+    }
+
+
+}

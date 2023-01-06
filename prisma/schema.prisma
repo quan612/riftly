@@ -1,0 +1,271 @@
+generator client {
+  provider = "prisma-client-js"
+}
+datasource db {
+  provider          = "postgresql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+}
+model WhiteList {
+  id                            Int                   @id @default(autoincrement())
+  wallet                        String?               @unique
+  twitterId                     String?               @default("")
+  twitterUserName               String?               @default("")
+  userId                        String                @unique @default(uuid())
+  discordId                     String?               @default("")
+  discordUserDiscriminator      String?               @default("")
+  createdAt                     DateTime              @default(now())
+  updatedAt                     DateTime              @default(now()) @updatedAt
+  pendingRewards                PendingReward[]
+  rewards                       Reward[]
+  userQuest                     UserQuest[]
+  nonce                         String?
+  whiteListUserData             WhiteListUserData?                                        
+  uathUser                      String?               @default("")
+}
+model WhiteListUserData {
+  id           Int           @id @default(autoincrement())
+  userId       String        @unique
+  user         WhiteList     @relation(fields: [userId], references: [userId])
+  data         Json? 
+}
+model PendingReward {
+  id           Int            @id @default(autoincrement())
+  wallet       String?   
+  generatedURL String         @default(uuid())
+  isClaimed    Boolean        @default(false)
+  rewardTypeId Int    
+  quantity     Int            @default(0)
+  createdAt    DateTime       @default(now())
+  rewardType   RewardType     @relation(fields: [rewardTypeId], references: [id])
+
+  user         WhiteList?      @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  userId       String?         
+
+  @@unique([userId, rewardTypeId, generatedURL])
+}
+model Reward {
+  id           Int        @id @default(autoincrement())
+  rewardTypeId Int
+  wallet       String?
+  quantity     Int        @default(0)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @default(now()) @updatedAt
+  rewardType   RewardType @relation(fields: [rewardTypeId], references: [id])
+
+  user         WhiteList?  @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  userId       String?  
+
+  @@unique([userId, rewardTypeId])
+}
+model RewardType {
+  id             Int             @id @default(autoincrement())
+  reward         String
+  pendingRewards PendingReward[]
+  quests         Quest[]
+  rewards        Reward[]
+  userQuests     UserQuest[]
+}
+model QuestType {
+  id             Int             @id @default(autoincrement())
+  name           String          @unique
+  description    String?
+  quests         Quest[]
+}
+model UserQuest {
+  id                        Int           @id @default(autoincrement())
+  wallet                    String?  
+  questId                   String        @default(uuid())
+  extendedUserQuestData     Json? 
+  createdAt                 DateTime      @default(now())
+  rewardedQty               Int?  
+  rewardedTypeId            Int?  
+  quest                     Quest         @relation(fields: [questId], references: [questId])
+  rewardType                RewardType?   @relation(fields: [rewardedTypeId], references: [id])
+  updatedAt                 DateTime      @default(now()) @updatedAt
+  isHidden                  Boolean       @default(false)
+
+  user                      WhiteList    @relation(fields: [userId], references: [userId])
+  userId                    String 
+
+  @@unique([userId, questId])
+}
+
+model Quest {
+  id                    Int             @id @default(autoincrement())
+  type                  QuestType       @relation(fields: [questTypeId], references: [id])
+  text                  String    
+  completedText         String    
+  rewardTypeId          Int   
+  quantity              Int             @default(0)
+  isEnabled             Boolean         @default(true)
+  isRequired            Boolean         @default(false)
+  isDeleted             Boolean         @default(false)
+  description           String?         @default("")
+  extendedQuestData     Json?   
+  questId               String          @unique @default(uuid())
+  createdAt             DateTime        @default(now())
+  updatedAt             DateTime        @default(now()) @updatedAt
+  rewardType            RewardType      @relation(fields: [rewardTypeId], references: [id])
+  userQuests            UserQuest[]
+  questTypeId           Int
+}
+
+model Admin {
+  id     Int     @id @default(autoincrement())
+  wallet String  @unique
+  nonce  String?
+}
+
+model Anomuras {
+  id                    Int                   @id @default(autoincrement())
+  owner                 String?             
+  crabId                Int                   @unique
+  name                  String?
+  description           String?
+  background            String              
+  legs                  String              
+  shell                 String              
+  claws                 String              
+  body                  String              
+  image                 String                @default("")
+  headpieces            String?               @default("")
+  anomuraEquipments     EquipmentCollection[]
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @default(now()) @updatedAt
+}
+
+model AnomuraPartImage {
+    id     Int        @id @default(autoincrement())
+    name   String?    @unique
+    url    String?
+}
+
+model AnomuraEquipmentContractLog {
+    id                  Int                 @id @default(autoincrement())
+    eventLogId          String
+    address             String
+    eventName           String
+    blockNumber         Int
+    transactionHash     String
+    data                Json?
+    createdAt           DateTime            @default(now())
+    updatedAt           DateTime            @default(now()) @updatedAt
+}
+
+model AnomuraContractLog {
+    id                  Int                 @id @default(autoincrement())
+    eventLogId          String
+    address             String
+    eventName           String
+    blockNumber         Int
+    transactionHash     String
+    data                Json?
+    createdAt           DateTime            @default(now())
+    updatedAt           DateTime            @default(now()) @updatedAt
+}
+
+model MoralisNftData {
+  id                  Int                 @id @default(autoincrement())
+  contractAddress     String              @unique
+  contractData        Json?
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @default(now()) @updatedAt
+}
+
+model WhiteListAddress {
+    id                Int                 @id @default(autoincrement())
+    wallet            String              @unique
+}
+
+model LogError {
+    id                Int                 @id @default(autoincrement())
+    url               String
+    referer           String?
+    userAgent         String?
+    content           Json?
+    createdAt         DateTime            @default(now())
+}
+
+model BullJob {
+  id                  Int                 @id @default(autoincrement())
+  jobId               String              @unique
+  state               String
+  progress            Int?
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @default(now()) @updatedAt
+}
+
+model logRegister {
+    id                Int                 @id @default(autoincrement())
+    url               String
+    referer           String?
+    userAgent         String?
+    wallet            String?             
+    ip                String?
+    createdAt         DateTime            @default(now())
+}
+
+model shellRedeemed {
+    id                Int                 @id @default(autoincrement())
+    wallet            String?             @unique
+    rewards           String[] 
+    rewardPointer     Int                 @default(-1)
+    isRedeemed        Boolean             @default(false)
+    createdAt         DateTime            @default(now())
+    updatedAt         DateTime            @default(now()) @updatedAt
+    userId            String?             @unique
+}
+
+model AnomuraPartSVG {
+    id          Int        @id @default(autoincrement())
+    part        String?    
+    attribute   String?
+    svg         String?
+}
+
+enum EquipmentType {
+  BODY
+  CLAWS
+  LEGS
+  SHELL
+  HEADPIECES
+  HABITAT
+}
+
+enum EquipmentRarity {
+  NORMAL
+  MAGIC
+  RARE
+  LEGENDARY 
+}
+
+model EquipmentCollection {
+  id                      Int                 @id @default(autoincrement())
+  collectionAddress       String
+  equipmentId             Int   
+  equipmentName           String?
+  equipmentType           EquipmentType?
+  equipmentRarity         EquipmentRarity?  
+  image                   String?    
+  anomura                 Anomuras?           @relation(fields: [equipToAnomura], references: [crabId], onDelete: SetNull, onUpdate: Cascade)     
+  equipToAnomura          Int?                
+  owner                   String?
+
+  createdAt               DateTime            @default(now())
+  updatedAt               DateTime            @default(now()) @updatedAt
+  @@unique([collectionAddress, equipmentId])            
+}
+
+model QuestVariables{
+  id                      Int                 @id @default(autoincrement())
+  vercel_env              String
+  discordId               String
+  discordSecret           String
+  discordBackend          String 
+  discordBackendSecret    String
+  twitterId               String
+  twitterSecret           String
+  createdAt               DateTime            @default(now())
+  updatedAt               DateTime            @default(now()) @updatedAt
+}

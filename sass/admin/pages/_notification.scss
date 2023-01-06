@@ -1,0 +1,65 @@
+.all-notification {
+
+
+
+    a {
+        display      : block;
+        border-bottom: 1px solid $border-color;
+        padding      : 10px 0px;
+
+        &:last-child {
+            border            : 0px;
+            // display        : flex;
+            // justify-content: flex-end;
+            // align-items    : center;
+            // color          : $dark;
+            // padding-bottom : 0px;
+
+            // i {
+            //     margin-left: 5px;
+            //     font-size  : 18px;
+            // }
+        }
+
+
+        p {
+            margin-bottom: 0px;
+            color        : $headings-color;
+            font-weight  : $headings-font-weight;
+            font-size    : 14px;
+        }
+
+        span {
+            font-size: 13px;
+            color    : $body-color;
+        }
+
+        span {
+            &.icon {
+                height         : 40px;
+                width          : 40px;
+                color          : $white;
+                display        : flex;
+                align-items    : center;
+                justify-content: center;
+                border-radius  : 50px;
+
+                i {
+                    font-size: 20px;
+                }
+            }
+
+            &.success {
+                background: $success;
+            }
+
+            &.fail {
+                background: $danger;
+            }
+
+            &.pending {
+                background: $warning;
+            }
+        }
+    }
+}

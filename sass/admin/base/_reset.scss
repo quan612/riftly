@@ -1,0 +1,169 @@
+// @import "../vendor/animate/animate.min.css";
+// @import "../vendor/waves/waves.min.css";
+// @import "../vendor/perfect-scrollbar/perfect-scrollbar.css";
+// @import "../vendor/basic-table/basictable.css";
+
+* {
+    outline: none;
+    padding: 0;
+
+    &::after {
+        margin : 0;
+        padding: 0;
+    }
+
+    &::before {
+        margin : 0;
+        padding: 0;
+    }
+}
+
+body {
+    // &.dashboard {
+    //   background: $light;
+    //   font-size : 14px;
+    // }
+}
+
+#main-wrapper {
+    // opacity      : 0;
+    transition   : all 0.25s ease-in;
+    // overflow  : hidden;
+    position     : relative;
+    z-index      : 1;
+    // height: 100vh;
+
+
+    // &::before {
+    //     content   : "";
+    //     height    : 300px;
+    //     top       : 0;
+    //     left      : 0;
+    //     width     : 100%;
+    //     position  : absolute;
+    //     z-index   : -9;
+    //     background: $primary;
+    // }
+
+    &.show {
+        opacity: 1;
+    }
+}
+
+.content-body {
+    margin-left              : $sidebar-width;
+    // margin-right       : $map-width +30px;
+    // padding-top     : 100px;
+    // margin-top            : 30px;
+    margin-bottom            : 50px;
+
+
+    @include media-breakpoint-up(sm) {
+        margin-left  : 0px;
+        margin-bottom: 50px;
+    }
+}
+
+.details {
+    .content-body {
+        margin-left: 0px;
+    }
+}
+
+.admin {
+    background : $light;
+    padding-top: 110px;
+
+    .content-body {
+        margin-left : $sidebar-width;
+        margin-right: 0px;
+        margin-top  : 0px;
+
+        // @include media-breakpoint-up(sm) {
+        //     margin-left  : 0px;
+        //     margin-bottom: 50px;
+        // }
+
+        // @include respond("md") {
+        //     margin-left: 100px;
+        // }
+
+        @include respond("sm") {
+            margin-left: 0px;
+        }
+    }
+}
+
+.front {
+    padding-top: 85px;
+    ;
+}
+
+ul {
+    padding: 0;
+    margin : 0;
+}
+
+li {
+    list-style: none;
+}
+
+a {
+    color          : $primary;
+    text-decoration: none;
+    outline        : none;
+
+    &:hover,
+    &:focus,
+    &.active {
+        text-decoration: none;
+        outline        : none;
+        color          : $primary;
+    }
+}
+
+b,
+strong {
+    color: $headings-color;
+}
+
+// h1,
+// .h1,
+// h2,
+// .h2,
+// h3,
+// .h3,
+// h4,
+// .h4,
+// h5,
+// .h5,
+// h6,
+// .h6 {
+//     font-family: 'Montserrat', sans-serif;
+//     font-weight: 600;
+// }
+
+// h4,
+// .h4,
+// h5,
+// .h5,
+// h6,
+// .h6 {
+//     font-family: 'Montserrat', sans-serif;
+//     font-weight: 500;
+// }
+
+/* Editable */
+
+// @include media-breakpoint-up(xxl) {
+//     .container-fluid {
+//         max-width: 80%;
+//     }
+// }
+
+// #map {
+//     height : 100%;
+//     width  : 100%;
+//     margin : 0;
+//     z-index: 990;
+// }

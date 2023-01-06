@@ -1,0 +1,29 @@
+.invoice-stats{
+    background: $white;
+    border-radius: 16px;
+    padding: 30px;
+    margin-bottom: 30px;
+    .invoice-stats-content{
+        p{
+            margin-bottom: 0;
+        }
+    }
+    .invoice-stats-icon{
+        span{
+            display: flex;
+            height: 75px;
+            width: 75px;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(53, 70, 171, 0.12);
+            border-radius: 50%;
+            margin-left:1rem;
+            i{
+
+                font-size: 32px;
+                line-height: 0px;
+                // padding: 5px;
+            }
+        };
+    }
+}
