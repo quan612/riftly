@@ -92,28 +92,28 @@ const AddRewardToUser = ({ isSubmitting, onSubmit, mutationError }) => {
             validateOnBlur={true}
             validateOnChange={true}
             onSubmit={async (fields, { setStatus, setErrors, resetForm, setFieldValue }) => {
-                alert("SUCCESS!! :-)\n\n" + JSON.stringify(fields, null, 4));
-                resetForm();
+                // alert("SUCCESS!! :-)\n\n" + JSON.stringify(fields, null, 4));
+                // resetForm();
                 // setFieldValue("postInDiscordChannels", []);
 
-                // const res = await onSubmit(fields);
+                const res = await onSubmit(fields);
 
-                // if (res.data?.isError) {
-                //     generatedRef.current.value = "";
-                //     setStatus(res.data?.message);
-                // } else {
-                //     resetForm();
-                //     setFieldValue("postInDiscordChannels", []);
-                //     generatedRef.current.value = `${res.data.embededLink}`;
+                if (res.data?.isError) {
+                    generatedRef.current.value = "";
+                    setStatus(res.data?.message);
+                } else {
+                    resetForm();
+                    setFieldValue("postInDiscordChannels", []);
+                    generatedRef.current.value = `${res.data.embededLink}`;
 
-                //     if (res.data.errorArray) {
-                //         let statusArray = "";
-                //         res.data.errorArray.map((e) => {
-                //             statusArray = statusArray + `${e.error}`;
-                //         });
-                //         setStatus(statusArray);
-                //     }
-                // }
+                    if (res.data.errorArray) {
+                        let statusArray = "";
+                        res.data.errorArray.map((e) => {
+                            statusArray = statusArray + `${e.error}`;
+                        });
+                        setStatus(statusArray);
+                    }
+                }
             }}
         >
             {({ errors, status, touched, values, setFieldValue }) => {
