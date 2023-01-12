@@ -13,7 +13,7 @@
     "@metamask/eth-sig-util": "^4.0.1",
     "@nsfw-filter/nsfwjs": "^2.2.0",
     "@prisma/client": "^4.1.0",
-    "@tensorflow/tfjs": "^4.2.0",
+   
     "@uauth/js": "^2.4.0",
     "@unstoppabledomains/resolution": "^8.3.3",
     "@vercel/analytics": "^0.1.5",
