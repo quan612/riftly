@@ -22,6 +22,12 @@ const whitelistUserMiddleware = (handler) => {
             });
         }
 
+        if (process.env.NEXT_PUBLIC_ENABLE_CHALLENGER === "false") {
+            return res
+                .status(200)
+                .json({ isError: true, message: "Challenger is not enabled." });
+        }
+
         req.whiteListUser = whiteListUser;
         return handler(req, res);
     };

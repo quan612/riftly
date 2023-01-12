@@ -1,7 +1,7 @@
 import React, { StrictMode, useEffect } from "react";
 import "../styles/globals.css";
 import "../sass/admin/adminBootstrap.css";
-import { Web3Provider } from "@context/Web3Context";
+import { Web3Provider } from "context/Web3Context";
 import { SessionProvider } from "next-auth/react";
 import { AdminGuard } from "containers/admin/AdminGuard";
 import { QueryClient, QueryClientProvider } from "react-query";
@@ -31,7 +31,7 @@ function MyApp({ Component, pageProps }) {
     return (
         <SessionProvider
             session={pageProps.session}
-            basePath={`/challenger/api/auth`}
+            basePath={`/api/auth`}
             refetchInterval={3600} // Re-fetches session when window is focused
             refetchOnWindowFocus={true}
         >

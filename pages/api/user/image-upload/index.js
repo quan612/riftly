@@ -3,16 +3,16 @@ import Enums from "enums";
 let cloudinary = require("cloudinary").v2;
 
 const {
-    NEXT_PUBLIC_CLOUDINARY_CLOUDNAME,
-    NEXT_PUBLIC_CLOUDINARY_API_KEY,
-    NEXT_PUBLIC_CLOUDINARY_API_SECRET,
-    NEXT_PUBLIC_CLOUDINARY_PRESET,
+    CLOUDINARY_CLOUDNAME,
+    CLOUDINARY_API_KEY,
+    CLOUDINARY_API_SECRET,
+    CLOUDINARY_PRESET,
 } = process.env;
 
 cloudinary.config({
-    cloud_name: NEXT_PUBLIC_CLOUDINARY_CLOUDNAME,
-    api_key: NEXT_PUBLIC_CLOUDINARY_API_KEY,
-    api_secret: NEXT_PUBLIC_CLOUDINARY_API_SECRET,
+    cloud_name: CLOUDINARY_CLOUDNAME,
+    api_key: CLOUDINARY_API_KEY,
+    api_secret: CLOUDINARY_API_SECRET,
 });
 
 const ImageUploadAPI = async (req, res) => {
@@ -31,7 +31,7 @@ const ImageUploadAPI = async (req, res) => {
 
                 let uploaded = await cloudinary.uploader.upload(data, {
                     public_id: whiteListUser.userId,
-                    upload_preset: NEXT_PUBLIC_CLOUDINARY_PRESET
+                    upload_preset: CLOUDINARY_PRESET
                 });
                 return res.status(200).json(uploaded);
             } catch (err) {

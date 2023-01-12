@@ -5,7 +5,6 @@ const AdminSearch = ({ session }) => {
     const [formData, setFormData] = useState({});
 
     const [isFetch, setIsFetch] = useState(false);
-    useEffect(() => { }, []);
 
     const onFormSubmit = (data) => {
         setFormData(data);
@@ -13,21 +12,26 @@ const AdminSearch = ({ session }) => {
     };
 
     return (
-        <>
-            <div className="col-xxl-12">
-                <div className="page-title-content mb-4">
-                    <h3>Search</h3>
-                    <p className="mb-2">Lookup wallets and users</p>
-                </div>
-                <h4 className="card-title mb-3">New Search</h4>
-                <div className="card">
-                    <div className="card-body">
-                        <SearchForm onFormSubmit={onFormSubmit} />
+        <div className="profile-page">
+            <div className="container">
+                <div className="col-xxl-12">
+                    <div className="row">
+                        <div className="col-12">
+                            <SearchMenu />
+                        </div>
                     </div>
+                    <div className="page-title-content mb-4">
+
+                        <p className="mb-2">Lookup wallets and users</p>
+                    </div>
+                    <div className="card">
+                        <div className="card-body">
+                            <SearchForm onFormSubmit={onFormSubmit} />
+                        </div>
+                    </div>
+                    {isFetch && <SearchResult formData={formData} />}
                 </div>
-                {isFetch && <SearchResult formData={formData} />}
-            </div>
-        </>
+            </div> </div>
     );
 };
 
@@ -37,6 +41,7 @@ export default AdminSearch;
 
 import { unstable_getServerSession } from "next-auth/next"
 import { authOptions } from 'pages/api/auth/[...nextauth]'
+import SearchMenu from "@components/layout/SearchMenu";
 export async function getServerSideProps(context) {
     const session = await unstable_getServerSession(
         context.req,

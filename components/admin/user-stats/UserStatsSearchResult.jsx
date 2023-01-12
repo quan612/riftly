@@ -7,7 +7,6 @@ import TableFooter from "../elements/Table/TableFooter";
 import { utils } from "ethers";
 const fetcher = async (url, req) => await axios.post(url, req).then((res) => res.data);
 
-const USER_STATS_SEARCH = "/challenger/api/admin/user-stats";
 function sleep(ms = 500) {
     return new Promise((res) => setTimeout(res, ms));
 }
@@ -24,7 +23,7 @@ export default function UserStatsSearchResult({ formData }) {
         do {
             let contractQuery = await axios
                 .get(
-                    `/challenger/api/admin/user-stats/contract/${formData.contract.trim()}/${
+                    `/api/admin/user-stats/contract/${formData.contract.trim()}/${
                         formData.chainId
                     }/${cursor}`,
                     formData
@@ -51,7 +50,7 @@ export default function UserStatsSearchResult({ formData }) {
             if (formData.contract.trim().length === 0 && formData.wallet.trim().length > 0) {
                 // searching individual
                 let res = await axios
-                    .get(`/challenger/api/admin/user-stats/${formData.wallet}/${formData.chainId}`)
+                    .get(`/api/admin/user-stats/${formData.wallet}/${formData.chainId}`)
                     .then((r) => r.data);
 
                 data = [...data, res];
@@ -69,15 +68,13 @@ export default function UserStatsSearchResult({ formData }) {
                         // let searchRes = {};
 
                         // searchRes = await axios
-                        //     .post(`/challenger/api/admin/user-stats/wallets`, { walletOwners })
+                        //     .post(`/api/admin/user-stats/wallets`, { walletOwners })
                         //     .then((r) => r.data);
 
                         // data = [...data, ...searchRes.users];
                         /* this is just searching individual, as it exists on the contract nft */
                         let res = await axios
-                            .get(
-                                `/challenger/api/admin/user-stats/${formData.wallet}/${formData.chainId}`
-                            )
+                            .get(`/api/admin/user-stats/${formData.wallet}/${formData.chainId}`)
                             .then((r) => r.data);
 
                         data = [...data, res];
@@ -91,7 +88,7 @@ export default function UserStatsSearchResult({ formData }) {
                     let searchRes = {};
 
                     searchRes = await axios
-                        .post(`/challenger/api/admin/user-stats/wallets`, { walletOwners })
+                        .post(`/api/admin/user-stats/wallets`, { walletOwners })
                         .then((r) => r.data);
 
                     data = [...data, ...searchRes.users];
@@ -103,10 +100,7 @@ export default function UserStatsSearchResult({ formData }) {
                     searchRes = {};
 
                 do {
-                    searchRes = await axios.post(
-                        `/challenger/api/admin/user-stats?page=${page}`,
-                        formData
-                    );
+                    searchRes = await axios.post(`/api/admin/user-stats?page=${page}`, formData);
 
                     data = [...data, ...searchRes.data.users];
                     page = page + 1;
@@ -287,99 +281,3 @@ function remove_duplicates_es6(arr) {
     let it = s.values();
     return Array.from(it);
 }
-/*
-                console.time();
-                do {
-                    searchRes = await axios
-                        .post(`/challenger/api/admin/user-stats?page=${page}`, formData)
-                        .then((r) => r.data);
-
-                    temp = [...temp, ...searchRes.users];
-                    page = page + 1;
-                } while (searchRes?.shouldContinue);
-
-                console.log("temp.length", temp.length);
-
-                let whitelistUsers = [];
-                let whitelistUserWallet = temp.map((w) => utils.getAddress(w.wallet));
-                let mapOp = walletOwners.map((wallet) => {
-                    console.log("Processing nft owner");
-                    if (whitelistUserWallet.includes(wallet)) {
-                        whitelistUsers.push(wallet);
-                    }
-                  
-                });
-
-                await Promise.all(mapOp);
-                whitelistUsers = remove_duplicates_es6(whitelistUsers);
-                */
-/* if (data) {
-            try {
-              old implement to cache the nft, run very long, may not be feasible, should take another approach
-                if (formData.contract.length > 0) {
-                    let filtered = [];
-                    setIsLoading(true);
-
-                    // request a job to run
-                    let res = await axios.post(`/challenger/api/admin/user-stats/update`, {
-                        contract: formData.contract,
-                        chainId: formData.chainId,
-                    });
-
-                    if (res.data?.isStale == true) {
-                        let request;
-                        do {
-                            request = await axios.get(
-                                `/challenger/api/admin/user-stats/getJobState`
-                            );
-
-                            await timer(3000);
-                        } while (request.data.state !== "completed");
-                    }
-
-                    res = await axios.get(
-                        `/challenger/api/admin/user-stats/getMoralisData?contractAddress=${formData.contract}`
-                    );
-
-                    filtered = data.filter((d) => {
-                        let index = res.data.contractData.findIndex(
-                            (e) => e.toLowerCase() == d.wallet.toLowerCase()
-                        );
-                        if (index !== -1) {
-                            return true;
-                        } else return false;
-                    });
-
-                    setIsLoading(false);
-                    return setTableData(filtered);
-                 
-                }
-         
-            } catch (error) {
-                setApiError(error?.message);
-                setIsLoading(false);
-            }
-        }
-  */
-
-// let data = [],
-//     page = 0,
-//     searchRes = {};
-// setIsLoading(true);
-
-// try {
-//     do {
-//         searchRes = await axios.post(
-//             `/challenger/api/admin/user-stats?page=${page}`,
-//             formData
-//         );
-
-//         data = [...data, ...searchRes.data.users];
-//         page = page + 1;
-//     } while (searchRes?.data?.shouldContinue);
-//     setIsLoading(false);
-//     setTableData(data);
-// } catch (error) {
-//     setIsLoading(false);
-// }
-// setTableData(data);

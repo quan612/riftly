@@ -45,26 +45,28 @@ model PendingReward {
   @@unique([userId, rewardTypeId, generatedURL])
 }
 model Reward {
-  id           Int        @id @default(autoincrement())
-  rewardTypeId Int
-  wallet       String?
-  quantity     Int        @default(0)
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @default(now()) @updatedAt
-  rewardType   RewardType @relation(fields: [rewardTypeId], references: [id])
-
+  id           Int         @id @default(autoincrement())
+  rewardTypeId Int 
+  wallet       String? 
+  quantity     Int         @default(0)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @default(now()) @updatedAt
+  rewardType   RewardType  @relation(fields: [rewardTypeId], references: [id])
   user         WhiteList?  @relation(fields: [userId], references: [userId], onDelete: Cascade)
   userId       String?  
 
   @@unique([userId, rewardTypeId])
 }
 model RewardType {
-  id             Int             @id @default(autoincrement())
-  reward         String
-  pendingRewards PendingReward[]
-  quests         Quest[]
-  rewards        Reward[]
-  userQuests     UserQuest[]
+  id                Int                 @id @default(autoincrement())
+  reward            String              @unique
+  pendingRewards    PendingReward[]
+  quests            Quest[]
+  rewards           Reward[]
+  userQuests        UserQuest[]
+  rewardPreview     String?
+  rewardIcon        String?
+  isEnabled         Boolean         @default(true)
 }
 model QuestType {
   id             Int             @id @default(autoincrement())
@@ -117,65 +119,12 @@ model Admin {
   nonce  String?
 }
 
-model Anomuras {
-  id                    Int                   @id @default(autoincrement())
-  owner                 String?             
-  crabId                Int                   @unique
-  name                  String?
-  description           String?
-  background            String              
-  legs                  String              
-  shell                 String              
-  claws                 String              
-  body                  String              
-  image                 String                @default("")
-  headpieces            String?               @default("")
-  anomuraEquipments     EquipmentCollection[]
-  createdAt             DateTime              @default(now())
-  updatedAt             DateTime              @default(now()) @updatedAt
-}
-
-model AnomuraPartImage {
-    id     Int        @id @default(autoincrement())
-    name   String?    @unique
-    url    String?
-}
-
-model AnomuraEquipmentContractLog {
-    id                  Int                 @id @default(autoincrement())
-    eventLogId          String
-    address             String
-    eventName           String
-    blockNumber         Int
-    transactionHash     String
-    data                Json?
-    createdAt           DateTime            @default(now())
-    updatedAt           DateTime            @default(now()) @updatedAt
-}
-
-model AnomuraContractLog {
-    id                  Int                 @id @default(autoincrement())
-    eventLogId          String
-    address             String
-    eventName           String
-    blockNumber         Int
-    transactionHash     String
-    data                Json?
-    createdAt           DateTime            @default(now())
-    updatedAt           DateTime            @default(now()) @updatedAt
-}
-
 model MoralisNftData {
   id                  Int                 @id @default(autoincrement())
   contractAddress     String              @unique
   contractData        Json?
   createdAt           DateTime            @default(now())
   updatedAt           DateTime            @default(now()) @updatedAt
-}
-
-model WhiteListAddress {
-    id                Int                 @id @default(autoincrement())
-    wallet            String              @unique
 }
 
 model LogError {
@@ -185,15 +134,6 @@ model LogError {
     userAgent         String?
     content           Json?
     createdAt         DateTime            @default(now())
-}
-
-model BullJob {
-  id                  Int                 @id @default(autoincrement())
-  jobId               String              @unique
-  state               String
-  progress            Int?
-  createdAt           DateTime            @default(now())
-  updatedAt           DateTime            @default(now()) @updatedAt
 }
 
 model logRegister {
@@ -217,55 +157,31 @@ model shellRedeemed {
     userId            String?             @unique
 }
 
-model AnomuraPartSVG {
-    id          Int        @id @default(autoincrement())
-    part        String?    
-    attribute   String?
-    svg         String?
-}
-
-enum EquipmentType {
-  BODY
-  CLAWS
-  LEGS
-  SHELL
-  HEADPIECES
-  HABITAT
-}
-
-enum EquipmentRarity {
-  NORMAL
-  MAGIC
-  RARE
-  LEGENDARY 
-}
-
-model EquipmentCollection {
-  id                      Int                 @id @default(autoincrement())
-  collectionAddress       String
-  equipmentId             Int   
-  equipmentName           String?
-  equipmentType           EquipmentType?
-  equipmentRarity         EquipmentRarity?  
-  image                   String?    
-  anomura                 Anomuras?           @relation(fields: [equipToAnomura], references: [crabId], onDelete: SetNull, onUpdate: Cascade)     
-  equipToAnomura          Int?                
-  owner                   String?
-
-  createdAt               DateTime            @default(now())
-  updatedAt               DateTime            @default(now()) @updatedAt
-  @@unique([collectionAddress, equipmentId])            
-}
-
 model QuestVariables{
-  id                      Int                 @id @default(autoincrement())
-  vercel_env              String
-  discordId               String
-  discordSecret           String
-  discordBackend          String 
-  discordBackendSecret    String
-  twitterId               String
-  twitterSecret           String
-  createdAt               DateTime            @default(now())
-  updatedAt               DateTime            @default(now()) @updatedAt
+  id                          Int                 @id @default(autoincrement())
+  vercel_env                  String
+  discordId                   String
+  discordSecret               String
+  discordBackend              String 
+  discordBackendSecret        String
+  twitterId                   String
+  twitterSecret               String
+  pendingRewardImageUrl       String?             @default("")
+  cloudinaryName              String?             @default("")
+  cloudinaryKey               String?             @default("")
+  cloudinarySecret            String?             @default("")
+  discordBotToken             String?             @default("")
+  hostUrl                     String?             @default("")
+  createdAt                   DateTime            @default(now())
+  updatedAt                   DateTime            @default(now()) @updatedAt
+}
+
+model Discord {
+  id                      Int             @id @default(autoincrement())
+  channelId               String          @unique
+  channel                 String?         
+  isEnabled               Boolean         @default(true)
+  isDeleted               Boolean         @default(false)
+  createdAt               DateTime        @default(now())
+  updatedAt               DateTime        @default(now()) @updatedAt
 }

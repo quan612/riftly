@@ -4,17 +4,17 @@
 
 
 @font-face {
-	src: url("/challenger/fonts/AtlantisInternational.ttf") format("TrueType");
+	src: url("/fonts/AtlantisInternational.ttf") format("TrueType");
 	font-family: "Atlantis";
 	font-display: swap;
 }
 @font-face {
-	src: url("/challenger/fonts/ronda_revised.ttf") format("TrueType");
+	src: url("/fonts/ronda_revised.ttf") format("TrueType");
 	font-family: "PFRondaSeven";
 	font-display: swap;
 }
 @font-face {
-	src: url("/challenger/fonts/Safety Goggles.otf");
+	src: url("/fonts/Safety Goggles.otf");
 	font-family: "Safety Goggles";
 	/* font-display: swap; */
 }
@@ -47,13 +47,13 @@ a {
 }
 
 .table th.up {
-	background-image: url("/challenger/img/sharing-ui/up_arrow.png");
+	background-image: url("/img/sharing-ui/up_arrow.png");
   }
   .table th.down {
-	background-image: url("/challenger/img/sharing-ui/down_arrow.png");
+	background-image: url("/img/sharing-ui/down_arrow.png");
   }
   .table th.default {
-	background-image: url("/challenger/img/sharing-ui/default.png");
+	background-image: url("/img/sharing-ui/default.png");
   }
   th.up,
   th.default,

@@ -2,15 +2,15 @@ import { getAllEnableQuestsForUser, getQuestsDoneByThisUser } from "repositories
 import whitelistUserMiddleware from "middlewares/whitelistUserMiddleware";
 import Enums from "enums";
 
-const codeQuestQueryAPI = async (req, res) => {
+const imageQuestQueryAPI = async (req, res) => {
     const { method } = req;
 
     switch (method) {
         case "GET":
             try {
-                const { event } = req.query;
+                const { eventName } = req.query;
 
-                if (!event || event.length < 1) {
+                if (!eventName || eventName.length < 1) {
                     return res.status(200).json({ message: "waiting" });
                 }
                 const whiteListUser = req.whiteListUser;
@@ -25,7 +25,7 @@ const codeQuestQueryAPI = async (req, res) => {
                     .filter((q) => {
                         if (
                             q.type.name == Enums.IMAGE_UPLOAD_QUEST &&
-                            q.extendedQuestData.codeEvent === event
+                            q.extendedQuestData.eventName === eventName
                         ) {
                             return true;
                         }
@@ -55,4 +55,4 @@ const codeQuestQueryAPI = async (req, res) => {
             res.status(405).end(`Method ${method} Not Allowed`);
     }
 };
-export default whitelistUserMiddleware(codeQuestQueryAPI);
+export default whitelistUserMiddleware(imageQuestQueryAPI);

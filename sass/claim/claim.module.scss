@@ -339,7 +339,7 @@ $list-text-font-size-large: 1.25rem;
 .app {
     width: 100%;
     height: 100vh;
-    background: 50% 30% / cover url("/challenger/img/sharing-ui/invite/Background.png");
+    background: 50% 30% / cover url("/img/sharing-ui/invite/Background.png");
     @include m.flex-master(null, center, center);
 }
 
@@ -556,7 +556,7 @@ $list-text-font-size-large: 1.25rem;
         width: 100%;
         height: 0;
         padding-top: 85.53%;
-        background: url("/challenger/img/sharing-ui/invite/board_sm.png") no-repeat;
+        background: url("/img/sharing-ui/invite/board_sm.png") no-repeat;
         background-size: contain;
     }
     &_disconnect {
@@ -790,7 +790,7 @@ $list-text-font-size-large: 1.25rem;
             color: #35454f;
             width: 60%;
             padding-bottom: 3px;
-            background: url("/challenger/img/sharing-ui/invite/Text Input Box.png") no-repeat;
+            background: url("/img/sharing-ui/invite/Text Input Box.png") no-repeat;
             background-size: 100% 100%;
 
             background-color: rgba(0, 0, 0, 0);
@@ -1111,7 +1111,7 @@ $list-text-font-size-large: 1.25rem;
     &_orangeBtn {
         @include text();
         @include m.flex-master(row, center, center);
-        background-image: url("/challenger/img/sharing-ui/invite/button_wallet.png"); // 166 x 31
+        background-image: url("/img/sharing-ui/invite/button_wallet.png"); // 166 x 31
         background-size: cover;
         margin-top: 0.75rem;
         width: 10.375rem;
@@ -1127,7 +1127,7 @@ $list-text-font-size-large: 1.25rem;
             font-size: 1.375rem;
         }
         &:disabled {
-            background-image: url("/challenger/img/sharing-ui/invite/button_wallet-disable.png"); // 166 x 31
+            background-image: url("/img/sharing-ui/invite/button_wallet-disable.png"); // 166 x 31
             background-size: cover;
         }
     }
@@ -1259,7 +1259,7 @@ $list-text-font-size-large: 1.25rem;
         &_container {
             @include m.flex-master(row, null, null);
             @include text();
-            background: url("/challenger/img/sharing-ui/invite/Quest_List bg_Mobile.png") no-repeat;
+            background: url("/img/sharing-ui/invite/Quest_List bg_Mobile.png") no-repeat;
             background-size: 100% 100%;
             text-align: left;
 
@@ -1272,7 +1272,7 @@ $list-text-font-size-large: 1.25rem;
             }
 
             @media (min-width: $bp-small-3) {
-                background: url("/challenger/img/sharing-ui/invite/Quest_List bg.png") no-repeat;
+                background: url("/img/sharing-ui/invite/Quest_List bg.png") no-repeat;
                 background-size: 100% 100%;
                 padding: 0.5rem 1.5rem;
             }
@@ -1438,7 +1438,7 @@ $list-text-font-size-large: 1.25rem;
                 position: relative;
                 @include m.flex-master(row, null, null);
                 @include text();
-                background: url("/challenger/img/sharing-ui/invite/Ranking_List bg.png") no-repeat;
+                background: url("/img/sharing-ui/invite/Ranking_List bg.png") no-repeat;
                 background-size: 100% 100%;
                 text-align: left;
 

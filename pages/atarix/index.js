@@ -17,7 +17,7 @@ function AtariX({ session }) {
                 />
                 <meta
                     property="og:image"
-                    content="https://anomuragame.com/challenger/AtariXCollaboration.png"
+                    content="https://anomuragame.com/AtariXCollaboration.png"
                 />
                 <meta property="og:site_name" content="Anomura x AtariX"></meta>
                 <meta property="keywords" content="Anomura, NFT, Game, DeepSea Challenger" />
@@ -25,9 +25,9 @@ function AtariX({ session }) {
                 <meta name="twitter:card" content="summary_large_image" />
                 <meta
                     property="twitter:image"
-                    content="https://anomuragame.com/challenger/AtariXCollaboration.png"
+                    content="https://anomuragame.com/AtariXCollaboration.png"
                 />
-                <link rel="icon" href="/challenger/faviconShell.png" />
+                <link rel="icon" href="/faviconShell.png" />
             </Head>
             <div className={s.app}>
 

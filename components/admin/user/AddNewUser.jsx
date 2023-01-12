@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { object, array, string, number, ref } from "yup";
 import { utils } from "ethers";
-import { withUserUpsert } from "shared/HOC/user";
+import { useAdminUserMutation, withUserUpsert } from "shared/HOC/user";
 import Enums from "enums";
 
 const avatars = [
@@ -21,21 +21,23 @@ const initialValues = {
 };
 
 const UserSchema = object().shape({
-    wallet: string()
-        .required()
-        .test("valid address", "Wallet Address is not valid!", function () {
-            if (utils.isAddress(this.parent.wallet)) return true;
-            else return false;
-        }),
+    // wallet: string()
+    //     .required()
+    //     .test("valid address", "Wallet Address is not valid!", function () {
+    //         if (utils.isAddress(this.parent.wallet)) return true;
+    //         else return false;
+    //     }),
 });
 
-const AddNewUser = ({ isLoading, mutationError, onUpsert, data }) => {
+const AddNewUser = () => {
     const [avatar, setAvatar] = useState(null);
 
     useEffect(async () => {
         let ava = avatars[Math.floor(Math.random() * avatars.length)];
         setAvatar(ava);
     }, []);
+
+    const [newUserData, isAdding, addUserAsync] = useAdminUserMutation();
 
     const onSubmit = async (fields, { setStatus, resetForm }) => {
         try {
@@ -91,9 +93,9 @@ const AddNewUser = ({ isLoading, mutationError, onUpsert, data }) => {
                         <div className="text-red-500"> {errors && errors.wallet}</div>
                         <div className="text-red-500"> {status && "API error:" + status}</div>
                         <div className="text-green-500 h6">
-                            {data &&
-                                data?.wallet &&
-                                `User with wallet: ${data?.wallet} updated successfully.`}
+                            {newUserData &&
+                                newUserData?.wallet &&
+                                `User with wallet: ${newUserData?.wallet} updated successfully.`}
                         </div>
                     </div>
 
@@ -101,9 +103,9 @@ const AddNewUser = ({ isLoading, mutationError, onUpsert, data }) => {
                         <button
                             type="submit"
                             className="btn btn-primary mr-2 w-100"
-                            disabled={isLoading}
+                            disabled={isAdding}
                         >
-                            {isLoading ? "Submitting..." : "Submit"}
+                            {isAdding ? "Submitting..." : "Submit"}
                         </button>
                     </div>
                 </Form>
@@ -112,4 +114,4 @@ const AddNewUser = ({ isLoading, mutationError, onUpsert, data }) => {
     );
 };
 
-export default withUserUpsert(AddNewUser);
+export default AddNewUser;

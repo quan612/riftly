@@ -22,14 +22,16 @@ const AdminUsers = ({ session }) => {
 
     if (viewable) {
         return (
-            <div className="container">
-                <div className="row justify-content-center">
-                    <div className="col-xxl-8 col-xl-8 col-lg-12">
-                        <h4 className="card-title mb-3">Manual User</h4>
-                        <div className="card">
-                            <div className="card-body">
-                                <AddNewUser />
+            <div className="profile-page">
+                <div className="container">
+                    <div className="col-xxl-12">
+                        <div className="row">
+                            <div className="col-12">
+                                <AdminUserMenu />
                             </div>
+                        </div>
+                        <div className="col-xxl-12">
+                            <AddNewUser />
                         </div>
                     </div>
                 </div>
@@ -47,6 +49,7 @@ export default AdminUsers;
 
 import { unstable_getServerSession } from "next-auth/next"
 import { authOptions } from 'pages/api/auth/[...nextauth]'
+import AdminUserMenu from "@components/layout/AdminUserMenu";
 export async function getServerSideProps(context) {
     const session = await unstable_getServerSession(
         context.req,

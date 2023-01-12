@@ -570,7 +570,7 @@ const ShellRedeem = ({ session, isRolling, rolledData, rollError, onRollSubmit }
                     )}
                 <div className={s.redemption_bubble}>
                     <div className={s.redemption_bubble_wrapper}>
-                        <img src="/challenger/img/redemption/machine_bubbles_x4.gif" />
+                        <img src="/img/redemption/machine_bubbles_x4.gif" />
                     </div>
                 </div>
                 {showFooter && (

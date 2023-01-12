@@ -17,7 +17,7 @@ const adminUpdateUserStatsAPI = async (req, res) => {
 
         if (!moralisQuery || moralisQuery?.contractData?.length < 1) {
             console.log(`No moralis info, trying to fetch...`)
-            await handleGetNftOwnersRequest(contract, chainId)
+            // await handleGetNftOwnersRequest(contract, chainId)
         } else {
             let twoDaysFromUpdateAt = new Date(moralisQuery.updatedAt).getTime() + 86400000 * 2
             let [twoDaysFromLastUpdatedAt] = new Date(twoDaysFromUpdateAt).toISOString().split("T");
@@ -25,7 +25,7 @@ const adminUpdateUserStatsAPI = async (req, res) => {
 
             if (twoDaysFromLastUpdatedAt < today) {
                 console.log(`there is moralisQuery, but it is more than 2 days so we fetch using moralis`)
-                await handleGetNftOwnersRequest(contract, chainId)
+                //   await handleGetNftOwnersRequest(contract, chainId)
             }
             else {
                 console.log(`nft moralisQuery found and is new, return`)
@@ -39,20 +39,20 @@ const adminUpdateUserStatsAPI = async (req, res) => {
 
 export default withExceptionFilter(adminMiddleware(adminUpdateUserStatsAPI));
 
-const handleGetNftOwnersRequest = async (contractAddress, chainId) => {
-    return await axios
-        .post(
-            `${process.env.DISCORD_NODEJS}/api/v1/user-stats/getContractOwnersJobRequest`,
-            {
-                contractAddress, chainId
-            },
-            {
-                headers: {
-                    Authorization: `Bot ${process.env.NODEJS_SECRET}`,
-                    "Content-Type": "application/json",
-                },
-            }
-        ).catch((error) => {
-            throw new ApiError(400, `NodeJs server error: ${error?.message}`)
-        })
-};
+// const handleGetNftOwnersRequest = async (contractAddress, chainId) => {
+//     return await axios
+//         .post(
+//             `${process.env.DISCORD_NODEJS}/api/v1/user-stats/getContractOwnersJobRequest`,
+//             {
+//                 contractAddress, chainId
+//             },
+//             {
+//                 headers: {
+//                     Authorization: `Bot ${process.env.NODEJS_SECRET}`,
+//                     "Content-Type": "application/json",
+//                 },
+//             }
+//         ).catch((error) => {
+//             throw new ApiError(400, `NodeJs server error: ${error?.message}`)
+//         })
+// };

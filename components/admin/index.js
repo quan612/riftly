@@ -6,7 +6,7 @@ export { default as AdminLogin } from "./AdminLogin";
 export { default as UserLogin } from "./UserLogin";
 
 export { default as AddNewUser } from "./user/AddNewUser";
-export { default as AddNewReward } from "./reward/AddNewReward";
+export { default as AddRewardToUser } from "./reward/AddRewardToUser";
 
 export { default as CurrentQuests } from "./quest/CurrentQuests";
 export { default as EditQuest } from "./quest/EditQuest";

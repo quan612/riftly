@@ -17,7 +17,7 @@ function OctoHedz({ session }) {
                 />
                 <meta
                     property="og:image"
-                    content="https://anomuragame.com/challenger/Anomura_x_OctoHedz_preview.png"
+                    content="https://anomuragame.com/Anomura_x_OctoHedz_preview.png"
                 />
                 <meta property="og:site_name" content="Anomura x OctoHedz"></meta>
                 <meta property="keywords" content="Anomura, NFT, Game, DeepSea Challenger" />
@@ -25,9 +25,9 @@ function OctoHedz({ session }) {
                 <meta name="twitter:card" content="summary_large_image" />
                 <meta
                     property="twitter:image"
-                    content="https://anomuragame.com/challenger/Anomura_x_OctoHedz_preview.png"
+                    content="https://anomuragame.com/Anomura_x_OctoHedz_preview.png"
                 />
-                <link rel="icon" href="/challenger/faviconShell.png" />
+                <link rel="icon" href="/faviconShell.png" />
             </Head>
             <div className={s.app}>
                 {!session && <ConnectBoard />}

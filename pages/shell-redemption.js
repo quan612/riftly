@@ -18,7 +18,7 @@ function ShellRedemtionPage({ session }) {
                 />
                 <meta
                     property="og:image"
-                    content="https://anomuragame.com/challenger/Shell_Redemption_Preview.png"
+                    content="https://anomuragame.com/Shell_Redemption_Preview.png"
                 />
                 <meta
                     property="og:site_name"
@@ -29,9 +29,9 @@ function ShellRedemtionPage({ session }) {
                 <meta name="twitter:card" content="summary_large_image" />
                 <meta
                     property="twitter:image"
-                    content="https://anomuragame.com/challenger/Shell_Redemption_Preview.png"
+                    content="https://anomuragame.com/Shell_Redemption_Preview.png"
                 />
-                <link rel="icon" href="/challenger/faviconShell.png" />
+                <link rel="icon" href="/faviconShell.png" />
             </Head>
             <div className={s.redemption}>
                 {!session && <ShellRedeemConnectBoard />}

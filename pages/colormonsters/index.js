@@ -17,7 +17,7 @@ function ColorMonster() {
                 />
                 <meta
                     property="og:image"
-                    content="https://anomuragame.com/challenger/ColorMonsterCollaboration.gif"
+                    content="https://anomuragame.com/ColorMonsterCollaboration.gif"
                 />
                 <meta property="og:site_name" content="Anomura x ColorMonsters"></meta>
                 <meta property="keywords" content="Anomura, NFT, Game, DeepSea Challenger" />
@@ -25,9 +25,9 @@ function ColorMonster() {
                 <meta name="twitter:card" content="summary_large_image" />
                 <meta
                     property="twitter:image"
-                    content="https://anomuragame.com/challenger/ColorMonsterCollaboration.gif"
+                    content="https://anomuragame.com/ColorMonsterCollaboration.gif"
                 />
-                <link rel="icon" href="/challenger/faviconShell.png" />
+                <link rel="icon" href="/faviconShell.png" />
             </Head>
             <div className={s.app}>
 

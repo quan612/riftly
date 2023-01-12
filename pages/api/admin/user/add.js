@@ -1,14 +1,11 @@
-import { prisma } from "@context/PrismaContext";
 import adminMiddleware from "@middlewares/adminMiddleware";
-const ROUTE = "/api/admin/user/add";
 
-const whitelistUserAddAPI = async (req, res) => {
+const AdminUserAddAPI = async (req, res) => {
     const { method } = req;
 
     switch (method) {
         case "POST":
             try {
-                console.log(`**Add New User**`);
                 const { wallet } = req.body;
 
                 let existingUser = await prisma.whiteList.findUnique({ where: { wallet } })
@@ -27,7 +24,6 @@ const whitelistUserAddAPI = async (req, res) => {
                 }
 
             } catch (error) {
-
                 return res.status(200).json({ isError: true, message: error.message });
             }
 
@@ -37,4 +33,4 @@ const whitelistUserAddAPI = async (req, res) => {
             res.status(405).end(`Method ${method} Not Allowed`);
     }
 };
-export default adminMiddleware(whitelistUserAddAPI);
+export default adminMiddleware(AdminUserAddAPI);

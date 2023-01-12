@@ -218,7 +218,7 @@ const AdminQuestUpsertAPI = async (req, res) => {
 // TWITTER_RETWEET: "Retweet a Tweet",
 // FOLLOW_TWITTER: "Follow Twitter Account",
 // FOLLOW_INSTAGRAM: "Follow Instagram Account",
-// IMAGE_UPLOAD_QUEST: "Anomura #SUBMISSION Quest",
+// IMAGE_UPLOAD_QUEST: "Image Upload Quest",
 
 const unstoppableAuthCheck = (existingQuests, type) => {
     if (type != Enums.UNSTOPPABLE_AUTH) return;

@@ -17,7 +17,7 @@ function Polycade({ session }) {
                 />
                 <meta
                     property="og:image"
-                    content="https://anomuragame.com/challenger/Polycade_Preview.gif"
+                    content="https://anomuragame.com/Polycade_Preview.gif"
                 />
                 <meta property="og:site_name" content="Anomura x Polycade"></meta>
                 <meta property="keywords" content="Anomura, NFT, Game, DeepSea Challenger" />
@@ -25,9 +25,9 @@ function Polycade({ session }) {
                 <meta name="twitter:card" content="summary_large_image" />
                 <meta
                     property="twitter:image"
-                    content="https://anomuragame.com/challenger/Polycade_Preview.gif"
+                    content="https://anomuragame.com/Polycade_Preview.gif"
                 />
-                <link rel="icon" href="/challenger/faviconShell.png" />
+                <link rel="icon" href="/faviconShell.png" />
             </Head>
             <div className={s.app}>
                 {!session && <ConnectBoard />}

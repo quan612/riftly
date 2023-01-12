@@ -25,24 +25,25 @@ export default async function discordRedirect(req, res) {
                 const { code } = req.query;
                 if (!code) {
                     let error = "Missing auth code. Please contact the administrator.";
-                    return res.status(200).redirect(`/challenger/quest-redirect?error=${error}`);
+                    return res.status(200).redirect(`/quest-redirect?error=${error}`);
                 }
 
                 let allConfigs = await prisma.questVariables.findFirst();
                 let discordId = allConfigs?.discordId;
                 let discordSecret = allConfigs?.discordSecret;
+                let hostUrl = allConfigs.hostUrl;
 
-                if (!discordId || !discordSecret) {
-                    let error = "Missing Discord Client Configuration. Please contact the administrator.";
-                    return res.status(200).redirect(`/challenger/quest-redirect?error=${error}`);
+                if (!discordId || !discordSecret || hostUrl.trim().length < 1) {
+                    let error = "Missing Server Configuration. Please contact the administrator.";
+                    return res.status(200).redirect(`/quest-redirect?error=${error}`);
                 }
-                let currentDomain = process.env.NEXT_PUBLIC_WEBSITE_HOST;
+
                 const formData = new url.URLSearchParams({
                     client_id: discordId,
                     client_secret: discordSecret,
                     grant_type: "authorization_code",
                     code: code.toString(),
-                    redirect_uri: `${currentDomain}/challenger/api/auth/discord/redirect`,
+                    redirect_uri: `${hostUrl}/api/auth/discord/redirect`,
                 });
 
                 const response = await axios.post(TOKEN_DISCORD_AUTH_URL, formData.toString(), {
@@ -53,7 +54,7 @@ export default async function discordRedirect(req, res) {
 
                 if (!response || !response?.data?.access_token) {
                     let error = "Couldn't authenticate with Discord. Please contact administrator.";
-                    return res.status(200).redirect(`/challenger/quest-redirect?error=${error}`);
+                    return res.status(200).redirect(`/quest-redirect?error=${error}`);
                 }
 
                 const userInfo = await axios.get(USERINFO_DISCORD_AUTH_URL, {
@@ -65,31 +66,31 @@ export default async function discordRedirect(req, res) {
                 if (!userInfo) {
                     let error =
                         "Could not retrieve discord user information. Please contact administrator.";
-                    return res.status(200).redirect(`/challenger/quest-redirect?error=${error}`);
+                    return res.status(200).redirect(`/quest-redirect?error=${error}`);
                 }
 
                 // checked if existed
-                let existingDiscordUser = await prisma.whiteList.findFirst({
-                    where: {
-                        discordId: userInfo.data.id,
-                    },
-                });
-                if (existingDiscordUser) {
-                    let error = "Same discord user authenticated";
-                    return res.status(200).redirect(`/challenger/quest-redirect?error=${error}`);
-                }
+                // let existingDiscordUser = await prisma.whiteList.findFirst({
+                //     where: {
+                //         discordId: userInfo.data.id,
+                //     },
+                // });
+                // if (existingDiscordUser) {
+                //     let error = "Same discord user authenticated";
+                //     return res.status(200).redirect(`/quest-redirect?error=${error}`);
+                // }
 
                 // check if finished
                 let discordAuthQuestType = await getQuestType(Enums.DISCORD_AUTH);
                 if (!discordAuthQuestType) {
                     let error = "Cannot find quest type discord auth";
-                    return res.status(200).redirect(`/challenger/quest-redirect?error=${error}`);
+                    return res.status(200).redirect(`/quest-redirect?error=${error}`);
                 }
 
                 let discordQuest = await getQuestByTypeId(discordAuthQuestType.id);
                 if (!discordQuest) {
                     let error = "Cannot find quest associated with discord auth";
-                    return res.status(200).redirect(`/challenger/quest-redirect?error=${error}`);
+                    return res.status(200).redirect(`/quest-redirect?error=${error}`);
                 }
 
                 const questId = discordQuest.questId;
@@ -104,7 +105,7 @@ export default async function discordRedirect(req, res) {
 
                     if (discordQuestOfThisUser) {
                         let error = "Discord quest has finished.";
-                        return res.status(200).redirect(`/challenger/quest-redirect?error=${error}`);
+                        return res.status(200).redirect(`/quest-redirect?error=${error}`);
                     }
 
                 }
@@ -115,12 +116,12 @@ export default async function discordRedirect(req, res) {
                 );
 
                 let discordSignUp = `Sign Up With Discord Successfully`
-                res.status(200).redirect(`/challenger/quest-redirect?result=${discordSignUp}`);
+                res.status(200).redirect(`/quest-redirect?result=${discordSignUp}`);
 
 
             } catch (err) {
                 console.log(err);
-                res.status(200).json({ error: err.message });
+                res.status(200).json({ isError: true, error: err.message });
             }
             break;
         default:

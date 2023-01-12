@@ -6,11 +6,10 @@ import { useRouter } from "next/router";
 const QUEST_TYPE_QUERY = `${Enums.BASEPATH}/api/admin/quest/type`;
 const USER_QUEST_QUERY = `${Enums.BASEPATH}/api/user/quest/`;
 const USER_QUEST_SUBMIT = `${Enums.BASEPATH}/api/user/quest/submit`;
-const USER_IMAGE_QUEST_SUBMIT = `${Enums.BASEPATH}/api/user/quest/submit-image`;
 
-const ADMIN_QUEST_QUERY = `${Enums.BASEPATH}/api/admin/quest/`;
 const ADMIN_QUEST_UPSERT = `${Enums.BASEPATH}/api/admin/quest/upsert`;
 const ADMIN_QUEST_DELETE = `${Enums.BASEPATH}/api/admin/quest/delete`;
+
 
 export const withQuestUpsert =
     (Component) =>
@@ -225,7 +224,7 @@ export const withUserImageQuestSubmit =
             const queryClient = useQueryClient();
             const { data, error, isError, isLoading, isSuccess, mutate, mutateAsync } = useMutation(
                 "submitImageQuest",
-                (quest) => axios.post(USER_IMAGE_QUEST_SUBMIT, quest),
+                (quest) => axios.post(`${Enums.BASEPATH}/api/user/quest/submit/image-upload`, quest),
                 {
                     onSuccess: () => {
                         queryClient.invalidateQueries("userRewardQuery");
@@ -328,17 +327,17 @@ export const withUserImageQuestQuery =
         ({ ...props }) => {
 
             const router = useRouter();
-            const imageQuestEvent = typeof router.query?.event === "string" ? router.query.event : "";
+            const imageQuestEvent = typeof router.query?.eventName === "string" ? router.query.eventName : "";
 
             const { data, status, isLoading, error } = useQuery("userQueryCollaborationQuest", () =>
-                axios.get(`${Enums.BASEPATH}/api/user/quest/image-quest?event=${imageQuestEvent}`),
-                { enabled: !!imageQuestEvent }
+                axios.get(`${Enums.BASEPATH}/api/user/quest/image-quest?eventName=${imageQuestEvent}`).then(r => r.data),
+                { enabled: imageQuestEvent.length > 0 }
             );
             return (
                 <Component
                     {...props}
                     isFetchingUserQuests={isLoading}
-                    userQuests={data?.data}
+                    userQuests={data}
                     queryError={error}
                 />
             );
@@ -405,11 +404,13 @@ export const withAdminQuestQuery =
     (Component) =>
         ({ ...props }) => {
             const { data, error, status, isLoading } = useQuery("adminQueryQuest", () =>
-                axios.get(ADMIN_QUEST_QUERY)
+                axios.get(`${Enums.BASEPATH}/api/admin/quest/`).then(r => r.data)
             );
 
-            return <Component {...props} isLoading={isLoading} quests={data?.data} error={error} />;
+            return <Component {...props} isLoading={isLoading} quests={data} error={error} />;
         };
+
+
 
 function isNotDoneFirst(a, b) {
     return Number(a.isDone) - Number(b.isDone);

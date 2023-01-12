@@ -5,7 +5,6 @@ import Enums from "enums";
 import { utils } from "ethers";
 
 const REWARD_TYPE_QUERY = `${Enums.BASEPATH}/api/admin/rewardType`;
-const PENDING_REWARD_SUBMIT = `${Enums.BASEPATH}/api/admin/reward/addPending`;
 const PENDING_REWARD_QUERY = `${Enums.BASEPATH}/api/user/reward/getPending`;
 const USER_GET_CLAIMED_REWARD = `${Enums.BASEPATH}/api/user/reward/getClaimed`;
 const USER_CLAIMED_REWARD = `${Enums.BASEPATH}/api/user/reward/claim`;
@@ -32,7 +31,7 @@ export const withPendingRewardSubmit =
         ({ ...props }) => {
             const { data, error, isError, isLoading, isSuccess, mutateAsync } = useMutation(
                 "pendingRewardSubmit",
-                (pendingReward) => axios.post(PENDING_REWARD_SUBMIT, pendingReward)
+                (pendingReward) => axios.post(`${Enums.BASEPATH}/api/admin/reward/addPending`, pendingReward)
             );
 
             const handleOnSubmit = async (pendingReward) => {

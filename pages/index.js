@@ -20,7 +20,7 @@ function Home({ session }) {
                 />
                 <meta
                     property="og:image"
-                    content="https://anomuragame.com/challenger/DeepSeaChallengerThumbnail_2.png"
+                    content="https://anomuragame.com/DeepSeaChallengerThumbnail_2.png"
                 />
                 <meta
                     property="og:site_name"
@@ -31,9 +31,9 @@ function Home({ session }) {
                 <meta name="twitter:card" content="summary_large_image" />
                 <meta
                     property="twitter:image"
-                    content="https://anomuragame.com/challenger/DeepSeaChallengerThumbnail_2.png"
+                    content="https://anomuragame.com/DeepSeaChallengerThumbnail_2.png"
                 />
-                <link rel="icon" href="/challenger/faviconShell.png" />
+                <link rel="icon" href="/faviconShell.png" />
             </Head>
             <div className={s.app}>
                 {!session && <ConnectBoard />}

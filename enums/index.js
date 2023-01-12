@@ -1,5 +1,6 @@
 const Enums = {
-    BASEPATH: "/challenger",
+    BASEPATH: "",
+    WALLET: "Wallet",
     DISCORD: "Discord",
     TWITTER: "Twitter",
     METAMASK: "METAMASK",
@@ -27,10 +28,8 @@ const Enums = {
     TWITTER_RETWEET: "Retweet a Tweet",
     FOLLOW_TWITTER: "Follow Twitter Account",
     FOLLOW_INSTAGRAM: "Follow Instagram Account",
-    ZED_CLAIM: "Own ZED to claim $SHELL", // deprecated
-    NOODS_CLAIM: "Own NOODS to claim $SHELL", // deprecated
     OWNING_NFT_CLAIM: "Claim Reward For Owning NFT",
-    IMAGE_UPLOAD_QUEST: "Anomura #SUBMISSION Quest",
+    IMAGE_UPLOAD_QUEST: "Image Upload Quest",
     LIMITED_FREE_SHELL: "Limited Free $SHELL",
     COLLABORATION_FREE_SHELL: "Free $SHELL On Collaboration", // deprecated, collaboration is determined based on quest.extendedQuestData
     DAILY_SHELL: "Daily Shell Quest",

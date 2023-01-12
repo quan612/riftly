@@ -88,14 +88,10 @@ export default function AdminNavbar() {
                                                     <a className="nav-link">User</a>
                                                 </Link>
                                             </li>
+
                                             <li className="nav-item">
-                                                <Link href="/admin/user-stats">
-                                                    <a className="nav-link">Stats</a>
-                                                </Link>
-                                            </li>
-                                            <li className="nav-item">
-                                                <Link href="/admin/config">
-                                                    <a className="nav-link">Config</a>
+                                                <Link href="/admin/settings-config">
+                                                    <a className="nav-link">Settings</a>
                                                 </Link>
                                             </li>
                                         </ul>

@@ -68,6 +68,7 @@ function SignUp({ session }) {
         else {
             if (typeOfSignUp === Enums.DISCORD_AUTH) {
                 let discordLink = await getDiscordAuthLink();
+
                 return window.open(discordLink, "_self");
             }
 

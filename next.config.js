@@ -1,13 +1,7 @@
-const basePath = "/challenger";
+
 module.exports = {
-    basePath: "/challenger",
-    assetPrefix: "/challenger/",
     env: {
         NEXTAUTH_URL: process.env.NEXTAUTH_URL,
-    },
-
-    publicRuntimeConfig: {
-        basePath: basePath,
     },
     webpack: (config) => {
         config.experiments = config.experiments || {};

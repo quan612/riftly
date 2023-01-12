@@ -226,7 +226,7 @@ export const authOptions = {
                 if (!existingUser) {
                     console.log("Unstoppable domain is not linked.");
                     let error = `Unstoppable domain ${uathUser} is not linked.`;
-                    return `/challenger/quest-redirect?error=${error}`;
+                    return `/quest-redirect?error=${error}`;
                 }
 
                 let credentials = user?.credentials;
@@ -243,7 +243,7 @@ export const authOptions = {
                 ) {
                     console.log("Invalid unstoppable authorization.")
                     let error = `Invalid unstoppable authorization.`;
-                    return `/challenger/quest-redirect?error=${error}`;
+                    return `/quest-redirect?error=${error}`;
                 }
 
 
@@ -260,7 +260,7 @@ export const authOptions = {
 
                 if (!existingUser) {
                     let error = `Discord ${user.profile.username}%23${user.profile.discriminator} not found in our database.`;
-                    return `/challenger/quest-redirect?error=${error}`;
+                    return `/quest-redirect?error=${error}`;
                 }
                 return true;
             }
@@ -276,7 +276,7 @@ export const authOptions = {
 
                 if (!existingUser) {
                     let error = `Twitter account ${user.user.name} not found in our database.`;
-                    return `/challenger/quest-redirect?error=${error}`;
+                    return `/quest-redirect?error=${error}`;
                 }
                 return true;
             }

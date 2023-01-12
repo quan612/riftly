@@ -33,7 +33,7 @@ const IndividualQuestBoard = ({
                 description: `Catch error at questId: ${submittedQuest.questId}. Please contact admin.`,
                 position: "top-right",
                 status: "error",
-                duration: 10000,
+                duration: 5000,
                 isClosable: true,
             });
         }
@@ -51,7 +51,7 @@ const IndividualQuestBoard = ({
             // check if user has authenticated twitter, to show twitter related quests
             userQuests = userQuests.filter((q) => {
                 if (
-                    !twitterAuthQuest.isDone &&
+                    !twitterAuthQuest?.isDone &&
                     (q.type.name === Enums.TWITTER_RETWEET || q.type.name === Enums.FOLLOW_TWITTER)
                 ) {
                     return false;

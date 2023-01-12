@@ -10,7 +10,7 @@ const UserConfigsQueryAPI = async (req, res) => {
     case "GET":
       try {
         const { type } = req.query;
-        console.log(type)
+
         if (type !== "discordId" && type !== "twitterId") {
           return res.status(200).json({ isError: true, message: "Only for querying Id" });
         }
@@ -29,4 +29,4 @@ const UserConfigsQueryAPI = async (req, res) => {
       res.status(405).end(`Method ${method} Not Allowed`);
   }
 };
-export default whitelistUserMiddleware(UserConfigsQueryAPI);
+export default (UserConfigsQueryAPI);

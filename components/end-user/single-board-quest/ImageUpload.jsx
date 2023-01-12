@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useContext, useRef } from "react";
-import { Web3Context } from "@context/Web3Context";
 import s from "/sass/claim/claim.module.css";
 import axios from "axios";
 import { withUserImageQuestQuery, withUserImageQuestSubmit } from "shared/HOC/quest";
@@ -16,18 +15,11 @@ const SUBMITTABLE = 1;
 const SUBMITTED = 2;
 const ERROR = 3;
 
-const ImageUpload = ({
-    session,
-    onSubmitImageQuest,
-    isSubmitting,
-    isFetchingUserQuests,
-    userQuests,
-}) => {
+const ImageUpload = ({ onSubmitImageQuest, isSubmitting, isFetchingUserQuests, userQuests }) => {
     const [currentQuest, setCurrentQuest] = useState(null);
     const [submittedQuest, setSubmittedQuest] = useState(null);
     const [error, setError] = useState(null);
-    const { SignOut } = useContext(Web3Context);
-
+    const [imageArray, setImageArray] = useState(null);
     const [nsfwModel, setNSFWModel] = useState(null);
     const [currentView, setView] = useState(UPLOADABLE);
     const [imageSrc, setImageSrc] = useState();
@@ -40,7 +32,10 @@ const ImageUpload = ({
     const imageEl = useRef(null);
 
     useEffect(async () => {
-        let model = await nsfwjs.load();
+        // let model = await nsfwjs.load("/model/", { type: "graph" });
+        let model = await nsfwjs.load("https://sharing-ui.vercel.app/challenger/model/", {
+            type: "graph",
+        });
         setNSFWModel(model);
     }, []);
 
@@ -58,19 +53,19 @@ const ImageUpload = ({
             }
 
             if (findSubmissionQuest) {
-                let submittedQuestBefore = await axios.get(
-                    `${Enums.BASEPATH}/api/user/quest/${findSubmissionQuest.questId}`
-                );
+                let submittedQuestBefore = await axios
+                    .get(`${Enums.BASEPATH}/api/user/quest/${findSubmissionQuest.questId}`)
+                    .then((r) => r.data);
 
-                if (submittedQuestBefore.data.isError) {
+                if (submittedQuestBefore && submittedQuestBefore.isError) {
                     setView(ERROR);
-                    return setError(submittedQuestBefore?.data?.message);
+                    return setError(submittedQuestBefore?.message);
                 }
 
                 if (submittedQuestBefore) {
-                    setSubmittedQuest(submittedQuestBefore.data);
+                    setSubmittedQuest(submittedQuestBefore);
                 }
-                if (findSubmissionQuest.isDone) {
+                if (findSubmissionQuest && findSubmissionQuest.isDone) {
                     setView(SUBMITTED);
                 }
             }
@@ -84,15 +79,16 @@ const ImageUpload = ({
         hiddenFileInput.current.click();
     };
 
-    function handleOnChange(changeEvent) {
+    async function handleOnChange(changeEvent) {
         const reader = new FileReader();
 
-        reader.onload = function (onLoadEvent) {
+        reader.onload = async function (onLoadEvent) {
             setImageSrc(onLoadEvent.target.result);
         };
 
         reader.readAsDataURL(changeEvent.target.files[0]);
         setImageFile(changeEvent.target.files[0]);
+
         setView(SUBMITTABLE);
     }
 
@@ -104,38 +100,29 @@ const ImageUpload = ({
             /** Checking for NSFW */
             let toContinue = true;
             let imageProcess = predictions.map((p) => {
-                if (p?.className === "Porn" && p.probability >= 0.6) {
+                if (p?.className === "Porn" && p.probability >= 0.3) {
                     toContinue = false;
                 }
-                if (p?.className === "Hentai" && p.probability >= 0.6) {
+                if (p?.className === "Hentai" && p.probability >= 0.3) {
                     toContinue = false;
                 }
+                console.log(p);
             });
 
             await Promise.all(imageProcess);
+
             if (!toContinue) {
-                setError("Image contains NSFW content. Please reupload new image.");
+                setError("Image may contains NSFW content. Please reupload new image.");
+                setIsLoading(false);
                 return;
             }
 
-            const res = await axios.post("/challenger/api/user/image-upload", {
-                data: imageSrc,
-            });
-
-            if (!res?.data?.secure_url) {
-                console.error("Image is not cached");
-                console.error(res);
-                return;
-            }
             /** Submit this quest */
-            const { questId, type, rewardTypeId, quantity, extendedQuestData } = currentQuest;
+            const { questId, extendedQuestData } = currentQuest;
 
             let submission = {
                 questId,
-                type,
-                rewardTypeId,
-                quantity,
-                imageUrl: res?.data?.secure_url,
+                imageBase64: imageSrc,
                 extendedQuestData,
             };
             let questSubmit = await onSubmitImageQuest(submission, userQuests);
@@ -148,6 +135,7 @@ const ImageUpload = ({
             }
             setIsLoading(false);
         } catch (error) {
+            setError(error.message);
             setIsLoading(false);
         }
     }
@@ -204,7 +192,7 @@ const ImageUpload = ({
                                                 <input
                                                     type="file"
                                                     name="file"
-                                                    accept="image/jpeg, image/png"
+                                                    accept="image/*"
                                                     style={{ display: "none" }}
                                                     ref={hiddenFileInput}
                                                 />

@@ -14,11 +14,6 @@ function sleep(ms = 500) {
 const submitIndividualQuestAPI = async (req, res) => {
     const { method } = req;
 
-    if (process.env.NODE_ENV === "production") {
-        console.log("In production, throttle the request");
-        // await sleep();
-    }
-
     switch (method) {
         case "POST":
             if (process.env.NEXT_PUBLIC_ENABLE_CHALLENGER === "false") {
@@ -28,7 +23,7 @@ const submitIndividualQuestAPI = async (req, res) => {
             }
 
             const whiteListUser = req.whiteListUser;
-            const { questId, rewardTypeId, quantity, extendedQuestData } = req.body;
+            const { questId, extendedQuestData } = req.body;
             let userQuest;
             try {
                 // query the type based on questId
@@ -54,7 +49,7 @@ const submitIndividualQuestAPI = async (req, res) => {
                 }
 
                 if (currentQuest.type.name === Enums.DAILY_SHELL) {
-                    console.log(`**In daily shell**`);
+                    console.log(`**In daily quest**`);
 
                     let entry = await prisma.UserQuest.findUnique({
                         where: {
@@ -67,7 +62,7 @@ const submitIndividualQuestAPI = async (req, res) => {
                         if (today <= oldDate) {
                             return res.status(200).json({
                                 isError: true,
-                                message: "This quest already submitted before!",
+                                message: "This quest already submitted today! Wait until next day",
                             });
                         }
                     }
@@ -90,7 +85,7 @@ const submitIndividualQuestAPI = async (req, res) => {
                     userQuest = await submitUserDailyQuestTransaction(
                         questId,
                         currentQuest.type,
-                        rewardTypeId,
+                        currentQuest.rewardTypeId,
                         currentQuest.quantity,
                         extendedUserQuestData,
                         whiteListUser
@@ -118,7 +113,7 @@ const submitIndividualQuestAPI = async (req, res) => {
                             message: "This quest already submitted before!",
                         });
                     } else {
-                        await submitUserQuestTransaction(questId, rewardTypeId, whiteListUser);
+                        await submitUserQuestTransaction(questId, currentQuest.rewardTypeId, whiteListUser);
                     }
 
                     return res.status(200).json(userQuest);

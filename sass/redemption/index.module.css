@@ -4,7 +4,7 @@
   align-items: center;
   width: 100%;
   height: 100vh;
-  background: 50% 30%/cover url("/challenger/img/redemption/machine_bg_x4.png");
+  background: 50% 30%/cover url("/img/redemption/machine_bg_x4.png");
   position: relative;
 }
 .redemption_loading {
@@ -89,15 +89,15 @@
   padding-top: 156.2%;
 }
 .redemption_machine_idle {
-  background: url("/challenger/img/redemption/machine_idle_x4.gif") no-repeat;
+  background: url("/img/redemption/machine_idle_x4.gif") no-repeat;
   background-size: contain;
 }
 .redemption_machine_punch {
-  background: url("/challenger/img/redemption/machine_punch_x4.gif") no-repeat;
+  background: url("/img/redemption/machine_punch_x4.gif") no-repeat;
   background-size: contain;
 }
 .redemption_machine_stuck {
-  background: url("/challenger/img/redemption/machine_stuck_x4.gif") no-repeat;
+  background: url("/img/redemption/machine_stuck_x4.gif") no-repeat;
   background-size: contain;
 }
 .redemption_machine_wrapper {
@@ -502,7 +502,7 @@
   width: 100%;
   height: 0;
   padding-top: 140.27%;
-  background: url("/challenger/img/redemption/Reward bg with text_animated_3x.gif") no-repeat;
+  background: url("/img/redemption/Reward bg with text_animated_3x.gif") no-repeat;
   background-size: contain;
 }
 .redemption_reward_wrapper {

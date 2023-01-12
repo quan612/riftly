@@ -24,9 +24,7 @@ const NotEnabledChallenger = ({ session }) => {
                             <button
                                 className={s.board_pinkBtn}
                                 onClick={() => {
-                                    window.open(
-                                        `https://www.anomuragame.com/challenger/shell-redemption`
-                                    );
+                                    window.open(`https://www.anomuragame.com/shell-redemption`);
                                 }}
                             >
                                 <img

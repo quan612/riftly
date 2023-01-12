@@ -1,7 +1,5 @@
 import { getAllRewardTypes } from "repositories/admin";
 
-const ROUTE = "/api/admin/rewardType";
-
 export default async function rewardTypesQuery(req, res) {
     const { method } = req;
 
@@ -11,8 +9,7 @@ export default async function rewardTypesQuery(req, res) {
                 let types = await getAllRewardTypes();
                 res.status(200).json(types);
             } catch (err) {
-                console.log(err);
-                res.status(500).json({ err });
+                res.status(200).json({ isError: true, error: err.message });
             }
             break;
         default:

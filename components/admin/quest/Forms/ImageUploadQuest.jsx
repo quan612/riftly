@@ -133,40 +133,6 @@ const ImageUploadQuest = ({
                                 />
                             </div>
 
-                            {/* <div className="col-xxl-6 col-xl-6 col-lg-6 mb-3">
-                                <label className="form-label">End Date</label>
-                                <Field name={`extendedQuestData.endDate`}>
-                                    {({ field, meta, form: { setFieldValue } }) => {
-                                        return (
-                                            <DatePicker
-                                                className={
-                                                    "form-control" +
-                                                    (errors.extendedQuestData &&
-                                                    errors.extendedQuestData?.endDate &&
-                                                    touched.extendedQuestData?.endDate
-                                                        ? " is-invalid"
-                                                        : "")
-                                                }
-                                                {...field}
-                                                utcOffset={0}
-                                                dateFormat="yyyy-MM-dd"
-                                                selected={
-                                                    (field.value && new Date(field.value)) || null
-                                                }
-                                                onChange={(val) => {
-                                                    setFieldValue(`extendedQuestData.endDate`, val);
-                                                }}
-                                            />
-                                        );
-                                    }}
-                                </Field>
-                                <ErrorMessage
-                                    name={`extendedQuestData.endDate`}
-                                    component="div"
-                                    className="invalid-feedback"
-                                />
-                            </div> */}
-
                             <QuestFormTemplate
                                 values={values}
                                 errors={errors}

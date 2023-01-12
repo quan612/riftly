@@ -19,7 +19,7 @@ function VoidRunners({ session }) {
                 />
                 <meta
                     property="og:image"
-                    content="https://anomuragame.com/challenger/Void_Runners_preview.png"
+                    content="https://anomuragame.com/Void_Runners_preview.png"
                 />
                 <meta property="og:site_name" content="Anomura x Void Runners"></meta>
                 <meta property="keywords" content="Anomura, NFT, Game, DeepSea Challenger" />
@@ -27,9 +27,9 @@ function VoidRunners({ session }) {
                 <meta name="twitter:card" content="summary_large_image" />
                 <meta
                     property="twitter:image"
-                    content="https://anomuragame.com/challenger/Void_Runners_preview.png"
+                    content="https://anomuragame.com/Void_Runners_preview.png"
                 />
-                <link rel="icon" href="/challenger/faviconShell.png" />
+                <link rel="icon" href="/faviconShell.png" />
             </Head>
             <div className={s.app}>
                 {!session && <ConnectBoard />}

@@ -3,18 +3,21 @@ import useSWR from "swr";
 import axios from "axios";
 import { useRouter } from "next/router";
 import Enums from "enums";
+import { useToast } from "@chakra-ui/react";
 const fetcher = (url) => fetch(url).then((r) => r.json());
-const takeNumber = 100;
+const takeNumber = Enums.ITEM_PER_PAGE;
 
 const ImageUploadApproval = () => {
     const router = useRouter();
+    const toast = useToast();
+
     const { eventName } = router.query;
     const [count, setCount] = useState(0);
     const [pageIndex, setPageIndex] = useState(0);
     const [isWorking, setIsWorking] = useState(false);
     const { data, mutate, isValidating, error } = useSWR(
         eventName
-            ? `${Enums.BASEPATH}/api/user/quest/getUserQuestsByEventName?eventName=${eventName}&page=${pageIndex}`
+            ? `${Enums.BASEPATH}/api/user/quest/getUserImageQuestsByEventName?eventName=${eventName}&page=${pageIndex}`
             : null,
         fetcher
     );
@@ -32,22 +35,33 @@ const ImageUploadApproval = () => {
         }
     }, [router, data]);
 
-    const PostToDiscord = async (userQuest) => {
+    const postToDiscord = async (userQuest) => {
+        setIsWorking(true);
         try {
-            setIsWorking(true);
-            let res = await axios.post(
-                `${Enums.BASEPATH}/api/admin/quest/approve-image`,
-                userQuest
-            );
+            let res = await axios
+                .post(`${Enums.BASEPATH}/api/admin/quest/approve-image`, userQuest)
+                .then((r) => r.data);
 
-            mutate();
+            if (res.isError) {
+                toast({
+                    title: "Exception",
+                    description: `${res.message}`,
+                    position: "bottom-right",
+                    status: "error",
+                    duration: 3000,
+                    isClosable: true,
+                });
+            } else {
+                mutate();
+            }
+
             setIsWorking(false);
         } catch (error) {
             setIsWorking(false);
             console.log(error);
         }
     };
-    const HideSubmission = async (userQuest) => {
+    const hideSubmission = async (userQuest) => {
         try {
             setIsWorking(true);
             let res = await axios.post(
@@ -105,11 +119,11 @@ const ImageUploadApproval = () => {
                             <div className="card-body">
                                 <div>
                                     <a
-                                        href={`${extendedUserQuestData?.imageUrl}`}
+                                        href={`${extendedUserQuestData?.imageBase64}`}
                                         target="_blank"
                                         className="text-red-200"
                                     >
-                                        <img src={extendedUserQuestData?.imageUrl} alt="" />
+                                        <img src={extendedUserQuestData?.imageBase64} alt="" />
                                     </a>
                                     <div className="text-sm break-words">
                                         Wallet: {user?.wallet}
@@ -126,7 +140,7 @@ const ImageUploadApproval = () => {
                                         <>
                                             <button
                                                 className="inline-flex items-center px-3 py-2 text-sm font-semibold leading-6 text-white transition duration-150 ease-in-out bg-indigo-500 rounded-md shadow hover:bg-indigo-400"
-                                                onClick={() => PostToDiscord(uq)}
+                                                onClick={() => postToDiscord(uq)}
                                                 disabled={isValidating || isWorking}
                                             >
                                                 {isValidating ||
@@ -156,7 +170,7 @@ const ImageUploadApproval = () => {
                                             </button>
                                             <button
                                                 className="ml-2 inline-flex items-center px-3 py-2 text-sm font-semibold leading-6 text-white transition duration-150 ease-in-out bg-red-500 rounded-md shadow hover:bg-red-400"
-                                                onClick={() => HideSubmission(uq)}
+                                                onClick={() => hideSubmission(uq)}
                                                 disabled={isValidating || isWorking}
                                             >
                                                 Hide

@@ -29,25 +29,25 @@ export default async function twitterRedirect(req, res) {
                 const { code } = req.query;
                 if (!code) {
                     let error = "Missing auth code. Please contact the administrator.";
-                    return res.status(200).redirect(`/challenger/quest-redirect?error=${error}`);
+                    return res.status(200).redirect(`/quest-redirect?error=${error}`);
                 }
 
                 let allConfigs = await prisma.questVariables.findFirst();
                 let twitterId = allConfigs?.twitterId;
                 let twitterSecret = allConfigs?.twitterSecret;
+                let hostUrl = allConfigs.hostUrl;
 
-                if (!twitterId || !twitterSecret) {
+                if (!twitterId || !twitterSecret || hostUrl.trim().length < 1) {
                     let error = "Missing Twitter Client Configuration. Please contact the administrator.";
-                    return res.status(200).redirect(`/challenger/quest-redirect?error=${error}`);
+                    return res.status(200).redirect(`/quest-redirect?error=${error}`);
                 }
-                let currentDomain = process.env.NEXT_PUBLIC_WEBSITE_HOST;
 
                 const formData = new url.URLSearchParams({
                     client_id: twitterId,
                     client_secret: twitterSecret,
                     grant_type: "authorization_code",
                     code: code.toString(),
-                    redirect_uri: `${currentDomain}/challenger/api/auth/twitter/redirect`,
+                    redirect_uri: `${hostUrl}/api/auth/twitter/redirect`,
                     code_verifier: "challenge",
                 });
 
@@ -60,7 +60,7 @@ export default async function twitterRedirect(req, res) {
                 if (!response || !response?.data?.access_token) {
                     let error =
                         "Couldn't authenticate with Twitter Auth Oath2. Please contact administrator.";
-                    return res.status(200).redirect(`/challenger/quest-redirect?error=${error}`);
+                    return res.status(200).redirect(`/quest-redirect?error=${error}`);
                 }
 
                 const userInfo = await axios.get(USERINFO_TWITTER_URL, {
@@ -71,31 +71,31 @@ export default async function twitterRedirect(req, res) {
 
                 if (!userInfo) {
                     let error = "Couldn't retrieve twitter info, pls retry later!";
-                    return res.status(200).redirect(`/challenger/quest-redirect?error=${error}`);
+                    return res.status(200).redirect(`/quest-redirect?error=${error}`);
                 }
 
                 // checked if existed
-                let existingTwitterUser = await prisma.whiteList.findFirst({
-                    where: {
-                        twitterId: userInfo?.data?.data?.id,
-                    },
-                });
-                if (existingTwitterUser) {
-                    let error = "Same twitter user authenticated";
-                    return res.status(200).redirect(`/challenger/quest-redirect?error=${error}`);
-                }
+                // let existingTwitterUser = await prisma.whiteList.findFirst({
+                //     where: {
+                //         twitterId: userInfo?.data?.data?.id,
+                //     },
+                // });
+                // if (existingTwitterUser) {
+                //     let error = "Same twitter user authenticated";
+                //     return res.status(200).redirect(`/quest-redirect?error=${error}`);
+                // }
 
                 let twitterAuthQuestType = await getQuestType(Enums.TWITTER_AUTH);
                 if (!twitterAuthQuestType) {
                     let error =
                         "Cannot find quest type twitter auth. Pleaes contact administrator.";
-                    return res.status(200).redirect(`/challenger/quest-redirect?error=${error}`);
+                    return res.status(200).redirect(`/quest-redirect?error=${error}`);
                 }
 
                 let twitterQuest = await getQuestByTypeId(twitterAuthQuestType.id);
                 if (!twitterQuest) {
                     let error = "Cannot find any quest associated with twitter auth.";
-                    return res.status(200).redirect(`/challenger/quest-redirect?error=${error}`);
+                    return res.status(200).redirect(`/quest-redirect?error=${error}`);
                 }
 
                 const questId = twitterQuest.questId;
@@ -111,7 +111,7 @@ export default async function twitterRedirect(req, res) {
                         let error = "Twitter quest has finished.";
                         return res
                             .status(200)
-                            .redirect(`/challenger/quest-redirect?error=${error}`);
+                            .redirect(`/quest-redirect?error=${error}`);
                     }
                 }
 
@@ -122,7 +122,7 @@ export default async function twitterRedirect(req, res) {
                 );
 
                 let twitterSignUp = `Sign Up With Twitter Successfully`;
-                res.status(200).redirect(`/challenger/quest-redirect?result=${twitterSignUp}`);
+                res.status(200).redirect(`/quest-redirect?result=${twitterSignUp}`);
 
             } catch (err) {
                 console.log(err);

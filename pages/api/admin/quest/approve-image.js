@@ -2,8 +2,6 @@ import { prisma } from "@context/PrismaContext";
 import adminMiddleware from "middlewares/adminMiddleware";
 import axios from "axios";
 
-const { NODEJS_SECRET, DISCORD_NODEJS } = process.env;
-
 const approveImageQuestAPI = async (req, res) => {
     const { method } = req;
 
@@ -12,6 +10,17 @@ const approveImageQuestAPI = async (req, res) => {
             try {
                 const { questId, extendedUserQuestData, user } = req.body;
                 const { discordChannel, imageUrl } = extendedUserQuestData;
+
+                // query discord backend and backend secret
+                let variables = await prisma.questVariables.findFirst();
+
+                const { discordSecret, discordBackend } = variables;
+
+                if (discordSecret.trim().length < 1 || discordBackend.trim().length < 1) {
+                    return res
+                        .status(200)
+                        .json({ isError: true, message: "Missing Discord Server Config!" });
+                }
 
                 let entry = await prisma.UserQuest.findUnique({
                     where: {
@@ -24,11 +33,27 @@ const approveImageQuestAPI = async (req, res) => {
                         .json({ isError: true, message: "Cannot find this user quest!" });
                 }
 
+                // trying upload on cloudinary
+
                 /**
                  * 1. Post a message to discord channel
                  * 2. Update UserQuest with discord message id
                  */
-                let discordMsg = await discordHelper(user, discordChannel, imageUrl);
+
+                let discordMsg = await axios.post(
+                    `${discordBackend}/api/v1/channels/image-quest`,
+                    {
+                        user,
+                        imageUrl,
+                        discordChannel,
+                    },
+                    {
+                        headers: {
+                            Authorization: `Bot ${discordSecret}`,
+                            "Content-Type": "application/json",
+                        },
+                    }
+                );
 
                 if (!discordMsg) {
                     return res.status(200).json({
@@ -56,6 +81,7 @@ const approveImageQuestAPI = async (req, res) => {
                     },
                     data: {
                         extendedUserQuestData: newExtendedUserQuestData,
+                        isHidden: true, // successful post should hide this image from approval
                     },
                 });
                 if (!updateQuest) {
@@ -76,23 +102,6 @@ const approveImageQuestAPI = async (req, res) => {
     }
 };
 
-const discordHelper = async (user, discordChannel, imageUrl) => {
-    let discordPost = await axios.post(
-        `${DISCORD_NODEJS}/api/v1/channels/image-quest`,
-        {
-            user,
-            imageUrl,
-            discordChannel,
-        },
-        {
-            headers: {
-                Authorization: `Bot ${NODEJS_SECRET}`,
-                "Content-Type": "application/json",
-            },
-        }
-    );
 
-    return discordPost;
-};
 
 export default adminMiddleware(approveImageQuestAPI);

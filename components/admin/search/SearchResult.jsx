@@ -18,11 +18,13 @@ export default function SearchResults({ formData }) {
 
         try {
             do {
-                searchRes = await axios.post(`/challenger/api/admin/search?page=${page}`, formData); //.then((res) => res.data);
+                searchRes = await axios
+                    .post(`/api/admin/search?page=${page}`, formData)
+                    .then((res) => res.data);
 
-                data = [...data, ...searchRes.data.users];
+                data = [...data, ...searchRes.users];
                 page = page + 1;
-            } while (searchRes?.data?.shouldContinue);
+            } while (searchRes?.shouldContinue);
             setIsLoading(false);
             setTableData(data);
         } catch (error) {

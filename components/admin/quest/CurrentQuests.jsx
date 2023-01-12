@@ -15,13 +15,13 @@ const CurrentQuests = ({ quests, isLoading, error }) => {
     const [deleteQuest, deletingQuest, handleOnDelete] = useAdminQuestSoftDelete();
 
     useEffect(() => {
-        if (quests) {
-            setCurrentQuests(quests.sort(shortByText));
+        if (quests && !quests.isError) {
+            setCurrentQuests(quests?.sort(shortByText));
         }
     }, [quests]);
 
     useEffect(() => {
-        if (quests) {
+        if (quests && !quests.isError) {
             let filter = quests.filter((q) => {
                 // search by name
                 if (q.text.toLowerCase().indexOf(currentSearch.toLowerCase()) > -1) {
@@ -126,14 +126,41 @@ const CurrentQuests = ({ quests, isLoading, error }) => {
                                         </div>
                                         <div className="d-flex align-items-center flex-col">
                                             <Link href={`${router.pathname}/?id=${quest.id}`}>
-                                                <button className=" btn btn-dark">Manage</button>
+                                                {/* <button className=" btn btn-dark">Manage</button> */}
+                                                <i
+                                                    className="ri-edit-line"
+                                                    style={{
+                                                        fontSize: "1.5rem",
+                                                    }}
+                                                ></i>
                                             </Link>
-                                            <button
-                                                className=" btn btn-secondary mt-2"
-                                                onClick={() => handleQuestSoftDelete(quest)}
-                                            >
-                                                Delete
-                                            </button>
+
+                                            <span>
+                                                <i
+                                                    className="ri-delete-bin-line"
+                                                    style={{
+                                                        fontSize: "1.5rem",
+                                                    }}
+                                                    onClick={async () => {
+                                                        if (!window.confirm("Proceed To Delete")) {
+                                                            return;
+                                                        }
+                                                        handleQuestSoftDelete(quest);
+                                                    }}
+                                                ></i>
+                                            </span>
+                                            {quest.type.name === Enums.IMAGE_UPLOAD_QUEST && (
+                                                <Link
+                                                    href={`/admin/image-approval/${quest.extendedQuestData.eventName}`}
+                                                >
+                                                    <i
+                                                        className="ri-gallery-fill"
+                                                        style={{
+                                                            fontSize: "1.5rem",
+                                                        }}
+                                                    ></i>
+                                                </Link>
+                                            )}
                                         </div>
                                     </div>
                                     {/* last row */}
