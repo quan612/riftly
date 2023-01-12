@@ -1,4 +1,4 @@
-import { prisma } from "../context/PrismaContext";
+import { prisma } from "@context/PrismaContext";
 
 export const getVariableConfig = async (property) => {
   let config = await prisma.questVariables.findFirst();

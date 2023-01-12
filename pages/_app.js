@@ -1,6 +1,7 @@
 import React, { StrictMode, useEffect } from "react";
 import "../styles/globals.css";
-import "../sass/admin/adminBootstrap.css";
+import "/sass/admin/adminBootstrap.css";
+
 import { Web3Provider } from "context/Web3Context";
 import { SessionProvider } from "next-auth/react";
 import { AdminGuard } from "containers/admin/AdminGuard";
