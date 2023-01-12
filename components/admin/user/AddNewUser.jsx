@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { object, array, string, number, ref } from "yup";
 import { utils } from "ethers";
-import { useAdminUserMutation, withUserUpsert } from "shared/HOC/user";
+import { useAdminUserMutation } from "shared/HOC/user";
 import Enums from "enums";
 
 const avatars = [
@@ -99,7 +99,7 @@ const AddNewUser = () => {
                         </div>
                     </div>
 
-                    <div className="mt-3">
+                    <div className="col-4 mt-3">
                         <button
                             type="submit"
                             className="btn btn-primary me-2 w-100"

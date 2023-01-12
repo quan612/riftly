@@ -1,8 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import Enums from "enums";
-import { Modal } from "/components/admin";
-import { useRouter } from "next/router";
-import Link from "next/link";
+
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { object, array, string, number } from "yup";
 
@@ -12,21 +9,15 @@ import {
     useAdminDiscordChannelsMutation,
     useAdminDiscordChannelsQuery,
 } from "@shared/HOC/settings";
-import axios from "axios";
 
 const AdminDiscordChannels = () => {
-    let router = useRouter();
-
     const [discordChannels, isLoadingDiscordChannels] = useAdminDiscordChannelsQuery();
     const [data, isUpserting, upsertChannelAsync] = useAdminDiscordChannelsMutation();
-
-    if (discordChannels?.length > 0) console.log(discordChannels[0]?.isEnabled);
 
     const handleOnChange = async (e, discord) => {
         e.preventDefault();
         if (discord.isEnabled !== e.target.checked) {
             const payload = { ...discord, isEnabled: e.target.checked, isCreated: false };
-            console.log(payload);
             await upsertChannelAsync(payload);
         }
     };

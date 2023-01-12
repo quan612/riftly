@@ -1,4 +1,5 @@
 import adminMiddleware from "@middlewares/adminMiddleware";
+import { prisma } from "context/PrismaContext";
 
 const AdminUserAddAPI = async (req, res) => {
     const { method } = req;

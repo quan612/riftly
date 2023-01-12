@@ -33,17 +33,13 @@ const AdminConfigVariable = ({ session }) => {
                             </div>
                         </div>
                         <div className="col-xxl-12">
-                            <p className="mb-2">Environment config</p>
 
-                            <div className="card">
-                                <div className="card-body">
-                                    <EnvironmentConfig />
-                                </div>
-                            </div>
+                            <EnvironmentConfig />
+
                         </div>
-
                     </div>
-                </div></div>
+                </div>
+            </div>
         );
     } else {
         return <label>Sorry we can't see this page</label>;

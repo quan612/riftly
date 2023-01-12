@@ -1,17 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { AdminLayout, SearchForm, SearchResult } from "/components/admin";
 
-const AdminSearch = ({ session }) => {
-    const [formData, setFormData] = useState({});
-
-    const [isFetch, setIsFetch] = useState(false);
-    useEffect(() => { }, []);
-
-    const onFormSubmit = (data) => {
-        setFormData(data);
-        setIsFetch(true);
-    };
-
+const AdminSearch = () => {
     return (
         <div className="profile-page">
             <div className="container">

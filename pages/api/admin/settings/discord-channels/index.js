@@ -1,7 +1,6 @@
 import { prisma } from "context/PrismaContext";
 import adminMiddleware from "middlewares/adminMiddleware";
 
-
 const AdminDiscordChannelsQueryAPI = async (req, res) => {
   const { method } = req;
 

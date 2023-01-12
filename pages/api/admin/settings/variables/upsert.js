@@ -1,6 +1,4 @@
 import { prisma } from "context/PrismaContext";
-import Enums from "enums";
-import { questUpsert } from "repositories/quest";
 import adminMiddleware from "middlewares/adminMiddleware";
 
 const AdminConfigsUpsertAPI = async (req, res) => {
