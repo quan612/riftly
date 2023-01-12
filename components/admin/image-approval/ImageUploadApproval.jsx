@@ -146,7 +146,7 @@ const ImageUploadApproval = () => {
                                                 {isValidating ||
                                                     (isWorking && (
                                                         <svg
-                                                            className="w-5 h-5 mr-3 -ml-1 text-white animate-spin"
+                                                            className="w-5 h-5 me-3 -ml-1 text-white animate-spin"
                                                             xmlns="http://www.w3.org/2000/svg"
                                                             fill="none"
                                                             viewBox="0 0 24 24"

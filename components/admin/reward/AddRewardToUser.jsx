@@ -303,7 +303,7 @@ const AddRewardToUser = ({ isSubmitting, onSubmit, mutationError }) => {
                                         <div className="col-4 mt-3">
                                             <button
                                                 type="submit"
-                                                className="btn btn-primary mr-2 w-100"
+                                                className="btn btn-primary me-2 w-100"
                                                 // disabled={isSubmitButtonDisabled(values)}
                                             >
                                                 {isSubmitting ? "Submitting..." : "Submit"}

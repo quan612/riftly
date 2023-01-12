@@ -222,14 +222,14 @@ function SearchUserQuestForm({ handleOnQuery }) {
                         <div className="mt-3">
                             <button
                                 type="submit"
-                                className="btn btn-primary mr-2"
+                                className="btn btn-primary me-2"
                                 disabled={getButtonState(values)}
                             >
                                 Search
                             </button>
                             {/* <button
                                 type="button"
-                                className="btn btn-secondary mr-2"
+                                className="btn btn-secondary me-2"
                                 onClick={() => {
                                     setImageFile(null);
                                     resetForm();

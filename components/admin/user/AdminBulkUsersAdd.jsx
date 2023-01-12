@@ -66,7 +66,7 @@ const AdminBulkUsersAdd = () => {
                                     e.preventDefault();
                                     hiddenFileInput.current.click();
                                 }}
-                                className="btn btn-primary mr-2"
+                                className="btn btn-primary me-2"
                             >
                                 <div>
                                     <span>Choose File</span>
@@ -125,7 +125,7 @@ const AdminBulkUsersAdd = () => {
                             <div className="mt-3">
                                 <button
                                     type="button"
-                                    className="btn btn-primary mr-2"
+                                    className="btn btn-primary me-2"
                                     onClick={async () => {
                                         setInputFile(null);
                                         let payload = {
@@ -138,7 +138,7 @@ const AdminBulkUsersAdd = () => {
                                 >
                                     Bulk Add
                                 </button>
-                                <button type="button" className="btn btn-secondary mr-2">
+                                <button type="button" className="btn btn-secondary me-2">
                                     Cancel
                                 </button>
                             </div>

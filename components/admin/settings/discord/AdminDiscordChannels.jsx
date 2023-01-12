@@ -185,7 +185,7 @@ function CreateDiscordChannel({ upsertChannelAsync }) {
                         </div>
 
                         <div className="mt-3">
-                            <button type="submit" className="btn btn-primary mr-2">
+                            <button type="submit" className="btn btn-primary me-2">
                                 Save
                             </button>
                         </div>

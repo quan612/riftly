@@ -53,7 +53,7 @@ const UserStatsSearchForm = ({ onFormSubmit }) => {
                             </div>
 
                             <div className="mt-3">
-                                <button className="btn btn-primary mr-2" type="submit">
+                                <button className="btn btn-primary me-2" type="submit">
                                     Search
                                 </button>
                             </div>

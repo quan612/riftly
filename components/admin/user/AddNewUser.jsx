@@ -102,7 +102,7 @@ const AddNewUser = () => {
                     <div className="mt-3">
                         <button
                             type="submit"
-                            className="btn btn-primary mr-2 w-100"
+                            className="btn btn-primary me-2 w-100"
                             disabled={isAdding}
                         >
                             {isAdding ? "Submitting..." : "Submit"}

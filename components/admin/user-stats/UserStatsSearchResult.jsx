@@ -130,7 +130,7 @@ export default function UserStatsSearchResult({ formData }) {
                             BuildCsv(tableData)
                         )}`}
                         download={`Search - ${new Date().toISOString()}.csv`}
-                        className="mr-2"
+                        className="me-2"
                     >
                         Export as CSV
                     </a>
@@ -140,7 +140,7 @@ export default function UserStatsSearchResult({ formData }) {
                             JSON.stringify(tableData)
                         )}`}
                         download={`Search - ${new Date().toISOString()}.json`}
-                        className="mr-2"
+                        className="me-2"
                     >
                         Export as Json
                     </a> */}

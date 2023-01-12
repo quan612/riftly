@@ -248,7 +248,7 @@ function CreateRewardTypes({ upsertRewardTypeAsync, createRewardType, createRewa
                                             e.preventDefault();
                                             hiddenFileInput.current.click();
                                         }}
-                                        className="btn btn-primary mr-2"
+                                        className="btn btn-primary me-2"
                                     >
                                         <div>
                                             <span>Choose File</span>
@@ -275,7 +275,7 @@ function CreateRewardTypes({ upsertRewardTypeAsync, createRewardType, createRewa
                                             e.preventDefault();
                                             hiddenIconFileInput.current.click();
                                         }}
-                                        className="btn btn-primary mr-2"
+                                        className="btn btn-primary me-2"
                                     >
                                         <div>
                                             <span>Choose File</span>
@@ -321,14 +321,14 @@ function CreateRewardTypes({ upsertRewardTypeAsync, createRewardType, createRewa
                             <div className="mt-3">
                                 <button
                                     type="submit"
-                                    className="btn btn-primary mr-2"
+                                    className="btn btn-outline-primary me-2"
                                     disabled={getButtonState(values)}
                                 >
                                     {createRewardType.isUpdating ? "Update" : "Save"}
                                 </button>
                                 <button
                                     type="button"
-                                    className="btn btn-secondary mr-2"
+                                    className="btn btn-secondary me-2"
                                     onClick={() => {
                                         setImageFile(null);
                                         setImageIcon(null);

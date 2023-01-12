@@ -96,7 +96,7 @@ const SearchForm = ({ onFormSubmit, rewardTypes }) => {
                                     {(arrayHelpers) => (
                                         <>
                                             <div className="col-xxl-6 col-xl-6 col-lg-6 mb-3 flex items-center">
-                                                <label className="form-label mr-3">Rewards</label>
+                                                <label className="form-label me-3">Rewards</label>
 
                                                 <MultiSelect
                                                     items={rewardTypeItems}
@@ -206,7 +206,7 @@ const SearchForm = ({ onFormSubmit, rewardTypes }) => {
                             </div>
 
                             <div className="mt-3">
-                                <button className="btn btn-primary mr-2" type="submit">
+                                <button className="btn btn-primary me-2" type="submit">
                                     Search
                                 </button>
                             </div>

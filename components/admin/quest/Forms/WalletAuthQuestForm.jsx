@@ -83,7 +83,7 @@ const WalletAuthQuestForm = ({
                             <div className="col-12 mb-3">
                                 <button
                                     type="submit"
-                                    className="btn btn-success mr-2"
+                                    className="btn btn-success me-2"
                                     disabled={isLoading}
                                 >
                                     {isLoading ? "Saving" : "Save"}
