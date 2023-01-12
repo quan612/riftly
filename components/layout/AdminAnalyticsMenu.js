@@ -8,22 +8,22 @@ function AdminAnalyticsMenu() {
       <ul className="settings-menu">
         <li
           className={
-            router.pathname == "/admin/user" ? "active" : ""
+            router.pathname == "/admin" ? "active" : ""
           }
         >
-          <Link href="/admin/user">
-            <a>Single User</a>
+          <Link href="/admin">
+            <a>Google</a>
           </Link>
         </li>
         <li
           className={
-            router.pathname == "/admin/user-bulk"
+            router.pathname == "/admin/place-holder"
               ? "active"
               : ""
           }
         >
-          <Link href="/admin/user-bulk">
-            <a>Bulk</a>
+          <Link href="/admin/place-holder">
+            <a>Placeholder</a>
           </Link>
         </li>
       </ul>

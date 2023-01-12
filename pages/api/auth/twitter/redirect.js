@@ -11,9 +11,6 @@ import { prisma } from "@context/PrismaContext";
 const TOKEN_TWITTER_AUTH_URL = "https://api.twitter.com/2/oauth2/token";
 const USERINFO_TWITTER_URL = "https://api.twitter.com/2/users/me";
 
-
-
-const ROUTE = "/api/auth/twitter/redirect";
 // @dev this is used for twitter auth quest only
 export default async function twitterRedirect(req, res) {
     const { method } = req;
@@ -24,7 +21,6 @@ export default async function twitterRedirect(req, res) {
                 const session = await getSession({ req });
 
                 let whiteListUser = await isWhiteListUser(session);
-
 
                 const { code } = req.query;
                 if (!code) {
