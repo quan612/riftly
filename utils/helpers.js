@@ -13,7 +13,8 @@ export const getDiscordAuthLink = async () => {
   }
   let hostname = getHostName();
 
-  return `https://discord.com/api/oauth2/authorize?client_id=${discordIdConfig}&redirect_uri=${hostname}%2Fapi%2Fauth%2Fdiscord%2Fredirect&response_type=code&scope=identify`;
+  // return `https://discord.com/api/oauth2/authorize?client_id=${discordIdConfig}&redirect_uri=${hostname}%2Fapi%2Fauth%2Fdiscord%2Fredirect&response_type=code&scope=identify`;
+  return `https://discord.com/api/oauth2/authorize?client_id=${discordIdConfig}&redirect_uri=${hostname}/api/auth/discord/redirect&response_type=code&scope=identify`;
 };
 
 export const getTwitterAuthLink = async () => {
@@ -32,9 +33,9 @@ export const getTwitterAuthLink = async () => {
 const getHostName = () => {
   let hostname;
   if (process.env.NODE_ENV !== "development") {
-    hostname = window.location.host;
+    hostname = "https://" + window.location.hostname;
   } else {
-    hostname = window.location.hostname;
+    hostname = "http://" + window.location.host;
   }
   return hostname;
 }
