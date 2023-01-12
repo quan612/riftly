@@ -40,7 +40,7 @@ export default function MultiSelect({ items, onSelectedItem, onDeSelectedItem })
 
 const MultiselectWrapper = ({ selectedItems, toogleDropdown, removeTag }) => {
     return (
-        <div className="flex flex-col items-center relative">
+        <div className="flex flex-column items-center relative">
             <div className="w-full ">
                 <div
                     className="my-2 p-1 flex border border-gray-300 rounded "
@@ -115,7 +115,7 @@ const MultiselectWrapper = ({ selectedItems, toogleDropdown, removeTag }) => {
 const DropdownList = ({ list, addItem }) => {
     return (
         <div className="absolute shadow top-100 bg-white z-40 w-full lef-0 rounded max-h-select overflow-y-auto ">
-            <div className="flex flex-col w-full">
+            <div className="flex flex-column w-full">
                 {list.map((item, key) => {
                     return (
                         <div

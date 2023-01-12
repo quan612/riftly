@@ -124,7 +124,7 @@ const CurrentQuests = ({ quests, isLoading, error }) => {
                                                 )}
                                             </div>
                                         </div>
-                                        <div className="d-flex align-items-center flex-col">
+                                        <div className="d-flex flex-column align-items-center ">
                                             <Link href={`${router.pathname}/?id=${quest.id}`}>
                                                 {/* <button className=" btn btn-dark">Manage</button> */}
                                                 <i

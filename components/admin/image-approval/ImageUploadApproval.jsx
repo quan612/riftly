@@ -78,7 +78,7 @@ const ImageUploadApproval = () => {
     };
 
     return (
-        <div className="flex flex-col items-center">
+        <div className="flex flex-column items-center">
             <span className="text-md text-gray-700 dark:text-gray-400">
                 Showing{" "}
                 <span className="font-semibold text-gray-900 dark:text-white">
