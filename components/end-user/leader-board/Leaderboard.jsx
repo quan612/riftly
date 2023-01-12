@@ -207,7 +207,7 @@ export default function Leaderboard({ questData, isLoading }) {
                                         src={
                                             scroll.canScrollDown
                                                 ? `${Enums.BASEPATH}/img/sharing-ui/invite/Arrow_Down_Blue.png`
-                                                : `${Enums.BASEPATH}/img/sharing-ui/invite/arrow_down.png`
+                                                : `${Enums.BASEPATH}/img/sharing-ui/invite/Down_Arrow.png`
                                         }
                                         alt="scroll down"
                                     />
