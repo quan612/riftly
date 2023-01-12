@@ -92,27 +92,28 @@ const AddRewardToUser = ({ isSubmitting, onSubmit, mutationError }) => {
             validateOnBlur={true}
             validateOnChange={true}
             onSubmit={async (fields, { setStatus, setErrors, resetForm, setFieldValue }) => {
-                // resetForm({});
                 alert("SUCCESS!! :-)\n\n" + JSON.stringify(fields, null, 4));
-                // console.log(fields);
-                const res = await onSubmit(fields);
+                resetForm();
+                // setFieldValue("postInDiscordChannels", []);
 
-                if (res.data?.isError) {
-                    generatedRef.current.value = "";
-                    setStatus(res.data?.message);
-                } else {
-                    resetForm();
-                    setFieldValue("postInDiscordChannels", []);
-                    generatedRef.current.value = `${res.data.embededLink}`;
+                // const res = await onSubmit(fields);
 
-                    if (res.data.errorArray) {
-                        let statusArray = "";
-                        res.data.errorArray.map((e) => {
-                            statusArray = statusArray + `${e.error}`;
-                        });
-                        setStatus(statusArray);
-                    }
-                }
+                // if (res.data?.isError) {
+                //     generatedRef.current.value = "";
+                //     setStatus(res.data?.message);
+                // } else {
+                //     resetForm();
+                //     setFieldValue("postInDiscordChannels", []);
+                //     generatedRef.current.value = `${res.data.embededLink}`;
+
+                //     if (res.data.errorArray) {
+                //         let statusArray = "";
+                //         res.data.errorArray.map((e) => {
+                //             statusArray = statusArray + `${e.error}`;
+                //         });
+                //         setStatus(statusArray);
+                //     }
+                // }
             }}
         >
             {({ errors, status, touched, values, setFieldValue }) => {
@@ -235,18 +236,69 @@ const AddRewardToUser = ({ isSubmitting, onSubmit, mutationError }) => {
                                                     </div>
 
                                                     {discordChannels.map((d, index) => {
+                                                        let isCheck = false;
+                                                        if (
+                                                            values.postInDiscordChannels.length ===
+                                                            0
+                                                        ) {
+                                                            isCheck = false;
+                                                        } else {
+                                                            let checkIndex =
+                                                                values.postInDiscordChannels.findIndex(
+                                                                    (c) =>
+                                                                        c.channelId === d.channelId
+                                                                );
+
+                                                            if (checkIndex === -1) {
+                                                                isCheck = false;
+                                                            } else {
+                                                                if (
+                                                                    values.postInDiscordChannels[
+                                                                        checkIndex
+                                                                    ].toPost
+                                                                )
+                                                                    isCheck = true;
+                                                            }
+                                                        }
+
                                                         return (
                                                             <div className="col-12" key={index}>
                                                                 <div className="form-check form-switch">
                                                                     <input
                                                                         className="form-check-input"
                                                                         type="checkbox"
-                                                                        checked={
-                                                                            values
-                                                                                ?.postInDiscordChannels[
-                                                                                index
-                                                                            ]?.toPost
-                                                                        }
+                                                                        checked={isCheck}
+                                                                        // checked={
+                                                                        //     values
+                                                                        //         ?.postInDiscordChannels[
+                                                                        //         index
+                                                                        //     ]?.toPost
+                                                                        //         ? values
+                                                                        //               ?.postInDiscordChannels[
+                                                                        //               index
+                                                                        //           ]?.toPost
+                                                                        //         : false
+                                                                        // }
+                                                                        // defaultChecked={false}
+                                                                        // defaultChecked={() => {
+                                                                        //     if (
+                                                                        //         values
+                                                                        //             .postInDiscordChannels
+                                                                        //             .length === 0
+                                                                        //     ) {
+                                                                        //         return false;
+                                                                        //     }
+                                                                        //     let checkIndex =
+                                                                        //         values.postInDiscordChannels.findIndex(
+                                                                        //             (c) =>
+                                                                        //                 c.channelId ===
+                                                                        //                 d.channelId
+                                                                        //         );
+                                                                        //     if (checkIndex !== -1) {
+                                                                        //         return false;
+                                                                        //     }
+                                                                        //     return true;
+                                                                        // }}
                                                                         name="postInDiscordChannels"
                                                                         onChange={(event) => {
                                                                             let toPost =
@@ -269,12 +321,12 @@ const AddRewardToUser = ({ isSubmitting, onSubmit, mutationError }) => {
                                                                                         postToThisChannel.channelId
                                                                                 );
 
-                                                                            if (toPost) {
-                                                                                tmp = [
-                                                                                    ...tmp,
-                                                                                    postToThisChannel,
-                                                                                ];
-                                                                            }
+                                                                            // if (toPost) {
+                                                                            tmp = [
+                                                                                ...tmp,
+                                                                                postToThisChannel,
+                                                                            ];
+                                                                            // }
 
                                                                             setFieldValue(
                                                                                 "postInDiscordChannels",

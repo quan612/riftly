@@ -84,32 +84,34 @@ const AddPendingRewardAPI = async (req, res) => {
                 if (postInDiscordChannels.length > 0) {
 
                     let discordOp = postInDiscordChannels.map(async (discord, index) => {
-                        console.log(discord.channelId)
-                        await axios
-                            .post(
-                                `https://discord.com/api/channels/${discord.channelId}/messages`,
-                                {
-                                    content: messageContent,
-                                    embeds: [
-                                        {
-                                            image: {
-                                                url: "https://res.cloudinary.com/deepsea/image/upload/v1673395967/Others/Treasure-Chest_txlqb4.gif",
+                        if (discord.toPost) {
+                            await axios
+                                .post(
+                                    `https://discord.com/api/channels/${discord.channelId}/messages`,
+                                    {
+                                        content: messageContent,
+                                        embeds: [
+                                            {
+                                                image: {
+                                                    url: "https://res.cloudinary.com/deepsea/image/upload/v1673395967/Others/Treasure-Chest_txlqb4.gif",
+                                                },
+                                                description,
                                             },
-                                            description,
-                                        },
-                                    ],
-                                },
-                                {
-                                    headers: {
-                                        Authorization: `Bot ${discordBotToken}`,
-                                        "Content-Type": "application/json",
+                                        ],
                                     },
-                                }
-                            )
-                            .catch((err) => {
-                                // console.log(err.response)
-                                errorArray.push({ index, error: `Catch error for channel ${discord.channel}, ${err?.response.data.message}.` })
-                            });
+                                    {
+                                        headers: {
+                                            Authorization: `Bot ${discordBotToken}`,
+                                            "Content-Type": "application/json",
+                                        },
+                                    }
+                                )
+                                .catch((err) => {
+                                    // console.log(err.response)
+                                    errorArray.push({ index, error: `Catch error for channel ${discord.channel}, ${err?.response.data.message}.` })
+                                });
+                        }
+
                     })
 
                     await Promise.all(discordOp)
