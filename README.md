@@ -98,6 +98,7 @@ Under http://localhost:3000/admin/quest
   <summary> Reward Types Config</summary>
   
 > Add / Edit Reward Type
+
 **This is needed before any reward can be awarded to a user**
 
 Image Preview are used for Preview Mode when reward a user from Admin Reward Page, or when a user goes to claim page and claim a certain reward, then 
@@ -113,6 +114,7 @@ Icon is optional
   <summary> Discord Config</summary>
  
 > Add Discord Bot
+
 **This is needed for bot to post an embeded message on any channel within your server**
 
 [Add a bot application](https://discordjs.guide/preparations/setting-up-a-bot-application.html#creating-your-bot)
@@ -123,6 +125,7 @@ Then the bot token can be used for this config
 [Add bot to server](https://discordjs.guide/preparations/adding-your-bot-to-servers.html#bot-invite-links)
 
 > Add Discord Authentication
+
 **This is needed for Discord Authentication Quest**
 
 [Follow this link under **Getting an OAuth2 URL**] (https://discordjs.guide/oauth2/#setting-up-a-basic-web-server)
@@ -141,6 +144,7 @@ ClientId and Client Secret should be for this config.
   
  
 > Add Twitter Authentication
+
 **This is needed for Twitter Authentication Quest**
 
 [Go to Twitter Developer Portal](https://developer.twitter.com/en/portal)
@@ -162,9 +166,13 @@ Save to server config ![Screenshot](screenshots/twitter_auth_6.png)
  ![Screenshot](screenshots/misc_config_1.png)
  
 > Add Pending Reward Image Url
+
 **This is needed for General Discord Embed message when a reward is awarded to a user but Not Claimed.**
 
+ ![Screenshot](screenshots/misc_config_2.png)
+
 > Add Host Url
+
 A general hostname, without any trailing slash at the end.
 
 </details>
