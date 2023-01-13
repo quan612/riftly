@@ -76,7 +76,7 @@ npm run dev
 Go to admin site on
 http://localhost:3000/admin
 
-Create quest (Should only be done after all below configs are completed)
+Create quest 
 Under http://localhost:3000/admin/quest
 
 - Join Discord Type: server should be name of server (anomuragame, atarix,...)
@@ -92,81 +92,3 @@ Under http://localhost:3000/admin/quest
 - Claim Reward for owning NFT
 
 </details>
-
-
-<details>
-  <summary> Reward Types Config</summary>
-  
-> Add / Edit Reward Type
-**This is needed before any reward can be awarded to a user**
-
-Image Preview are used for Preview Mode when reward a user from Admin Reward Page, or when a user goes to claim page and claim a certain reward, then 
-the image is embded into discord.
-
-![Screenshot](screenshots/reward_config_1.png)
-
-Icon is optional
-</details>
-
-
-<details>
-  <summary> Discord Config</summary>
- 
-> Add Discord Bot
-**This is needed for bot to post an embeded message on any channel within your server**
-
-[Add a bot application](https://discordjs.guide/preparations/setting-up-a-bot-application.html#creating-your-bot)
-
-Then the bot token can be used for this config
-![Screenshot](screenshots/bot_token_config.png)
-
-[Add bot to server](https://discordjs.guide/preparations/adding-your-bot-to-servers.html#bot-invite-links)
-
-> Add Discord Authentication
-**This is needed for Discord Authentication Quest**
-
-[Follow this link under **Getting an OAuth2 URL**] (https://discordjs.guide/oauth2/#setting-up-a-basic-web-server)
-
-There are two links needed:
-![Screenshot](screenshots/discord_oath2_url.png)
-
-ClientId and Client Secret should be for this config.
-![Screenshot](screenshots/discord_oath2_client_config.png)
-
-</details>
-
-
-<details>
-  <summary> Twitter Config</summary>
-  
- 
-> Add Twitter Authentication
-**This is needed for Twitter Authentication Quest**
-
-[Go to Twitter Developer Portal](https://developer.twitter.com/en/portal)
-
-Add a new App ![Screenshot](screenshots/twitter_auth_1.png)
-Edit Authentication Setup ![Screenshot](screenshots/twitter_auth_2.png)
-Edit Type Of App ![Screenshot](screenshots/twitter_auth_3.png)
-Add Callback and Redirect URL ~ two links ![Screenshot](screenshots/twitter_auth_4.png)
-Obtain ClientId and Secret ![Screenshot](screenshots/twitter_auth_5.png)
-Save to server config ![Screenshot](screenshots/twitter_auth_6.png)
-
-</details>
-
-
-
-<details>
-  <summary> Miscellaneous Config</summary>
-  
- ![Screenshot](screenshots/misc_config_1.png)
- 
-> Add Pending Reward Image Url
-**This is needed for General Discord Embed message when a reward is awarded to a user but Not Claimed.**
-
-> Add Host Url
-A general hostname, without any trailing slash at the end.
-
-</details>
-
-
