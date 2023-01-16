@@ -12,6 +12,7 @@
     "@google-analytics/data": "^3.1.2",
     "@hcaptcha/react-hcaptcha": "^1.4.4",
     "@metamask/eth-sig-util": "^4.0.1",
+    "@moralisweb3/evm-api": "^2.11.1",
     "@nsfw-filter/nsfwjs": "^2.2.0",
     "@prisma/client": "^4.1.0",
     "@types/node": "^18.11.18",
