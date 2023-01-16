@@ -70,16 +70,16 @@ export default async function twitterRedirect(req, res) {
                     return res.status(200).redirect(`/quest-redirect?error=${error}`);
                 }
 
-                // checked if existed
-                // let existingTwitterUser = await prisma.whiteList.findFirst({
-                //     where: {
-                //         twitterId: userInfo?.data?.data?.id,
-                //     },
-                // });
-                // if (existingTwitterUser) {
-                //     let error = "Same twitter user authenticated";
-                //     return res.status(200).redirect(`/quest-redirect?error=${error}`);
-                // }
+                //checked if existed
+                let existingUser = await prisma.whiteList.findFirst({
+                    where: {
+                        twitterId: userInfo?.data?.data?.id,
+                    },
+                });
+                if (existingUser && existingUser.userId !== whiteListUser.userId) {
+                    let error = "Attempt to authenticate same twitter Id on different user.";
+                    return res.status(200).redirect(`/quest-redirect?error=${error}`);
+                }
 
                 let twitterAuthQuestType = await getQuestType(Enums.TWITTER_AUTH);
                 if (!twitterAuthQuestType) {

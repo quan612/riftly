@@ -8,11 +8,14 @@ const AdminUserAddAPI = async (req, res) => {
         case "POST":
             try {
                 const { usersArray } = req.body;
-                console.log(usersArray)
 
                 const createMany = await prisma.whiteList.createMany({
                     data:
-                        usersArray
+                        usersArray.map(user => {
+                            return {
+                                wallet: user.wallet
+                            }
+                        })
                     ,
                     skipDuplicates: true,
                 });

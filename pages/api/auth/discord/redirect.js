@@ -69,16 +69,16 @@ export default async function discordRedirect(req, res) {
                     return res.status(200).redirect(`/quest-redirect?error=${error}`);
                 }
 
-                // checked if existed
-                // let existingDiscordUser = await prisma.whiteList.findFirst({
-                //     where: {
-                //         discordId: userInfo.data.id,
-                //     },
-                // });
-                // if (existingDiscordUser) {
-                //     let error = "Same discord user authenticated";
-                //     return res.status(200).redirect(`/quest-redirect?error=${error}`);
-                // }
+                // checked if existed and existed user is different
+                let existingUser = await prisma.whiteList.findFirst({
+                    where: {
+                        discordId: userInfo.data.id,
+                    },
+                });
+                if (existingUser && existingUser.userId !== whiteListUser.userId) {
+                    let error = "Attempt to authenticate same Discord Id on different user";
+                    return res.status(200).redirect(`/quest-redirect?error=${error}`);
+                }
 
                 // check if finished
                 let discordAuthQuestType = await getQuestType(Enums.DISCORD_AUTH);

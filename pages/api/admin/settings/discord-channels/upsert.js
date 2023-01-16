@@ -7,7 +7,7 @@ const AdminDiscordChannelsPostAPI = async (req, res) => {
   switch (method) {
     case "POST":
       try {
-        const { id, channel, channelId, isEnabled, isDeleted, isCreated } = req.body;
+        const { id, channel, channelId, isEnabled, isDeleted, isCreated, postMessageWhenClaimed } = req.body;
 
         if (isCreated) {
           let existingChannelId = await prisma.discord.findUnique({
@@ -33,12 +33,14 @@ const AdminDiscordChannelsPostAPI = async (req, res) => {
             channelId,
             isEnabled: true,
             isDeleted: false,
+            postMessageWhenClaimed
           },
           update: {
             // channel,
             // channelId,
             isEnabled,
             isDeleted,
+            postMessageWhenClaimed
           },
         });
 

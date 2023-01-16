@@ -146,7 +146,7 @@ const ImageUploadQuest = ({
                                 rewardTypes={rewardTypes}
                             />
                             <div
-                                className={`col-12 mb-3 text-red-500 ${
+                                className={`col-12 mb-3 text-danger ${
                                     status ? "d-block" : "d-none"
                                 }`}
                             >

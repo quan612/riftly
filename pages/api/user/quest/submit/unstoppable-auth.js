@@ -7,18 +7,11 @@ import {
 
 const { default: Resolution } = require("@unstoppabledomains/resolution");
 
-
 const submitUnstoppableAuthQuest = async (req, res) => {
   const { method } = req;
 
   switch (method) {
     case "POST":
-      console.log("In Unstoppable Auth Quest Submit");
-      if (process.env.NEXT_PUBLIC_ENABLE_CHALLENGER === "false") {
-        return res
-          .status(200)
-          .json({ isError: true, message: "Challenger is not enabled." });
-      }
 
       const whiteListUser = req.whiteListUser;
       const { questId, rewardTypeId, quantity, extendedQuestData, uauthUser } = req.body;

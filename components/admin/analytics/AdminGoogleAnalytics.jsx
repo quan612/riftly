@@ -1,26 +1,21 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React from "react";
 
-import { ErrorMessage, Field, Form, Formik } from "formik";
-import { object, array, string, number } from "yup";
-
-import { debounce } from "utils/";
-import {} from "@shared/HOC/settings";
-import LineChart from "./shared/LineChart";
-
+import PageViewsChart from "./google/PageViewsChart";
+import UsersByChart from "./google/UsersByChart";
 const AdminGoogleAnalytics = () => {
     return (
         <div className="row">
-            <div className="col-xxl-12">
-                <h4 className="card-title mb-3">Create Channel</h4>
-                <div className="col-xxl-6 col-xl-8 col-lg-6">
-                    <h4 className="card-title mb-3">ETH Price</h4>
-
-                    <div id="user-activity" className="card">
-                        <div className="card-body">
-                            <LineChart
-                                lineData={[0, 105, 92, 155, 138, 205, 120, 92, 155, 138, 205, 320]}
-                            />
-                        </div>
+            <div className="col-xxl-12 col-xl-12 col-lg-12 col-md-12">
+                <div id="user-activity" className="card">
+                    <div className="card-body">
+                        <PageViewsChart />
+                    </div>
+                </div>
+            </div>
+            <div className="col-xxl-6 col-xl-6 col-lg-8 col-md-8">
+                <div id="user-activity" className="card">
+                    <div className="card-body">
+                        <UsersByChart />
                     </div>
                 </div>
             </div>

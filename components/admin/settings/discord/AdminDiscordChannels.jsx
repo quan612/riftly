@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
+import { Tooltip } from "@chakra-ui/react";
 
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { object, array, string, number } from "yup";
@@ -14,7 +15,7 @@ const AdminDiscordChannels = () => {
     const [discordChannels, isLoadingDiscordChannels] = useAdminDiscordChannelsQuery();
     const [data, isUpserting, upsertChannelAsync] = useAdminDiscordChannelsMutation();
 
-    const handleOnChange = async (e, discord) => {
+    const handleOnStatusChange = async (e, discord) => {
         e.preventDefault();
         if (discord.isEnabled !== e.target.checked) {
             const payload = { ...discord, isEnabled: e.target.checked, isCreated: false };
@@ -22,8 +23,25 @@ const AdminDiscordChannels = () => {
         }
     };
 
-    const debouncedChangeHandler = useCallback(
-        debounce((e, discord) => handleOnChange(e, discord), 800),
+    const handleOnPostMessageChange = async (e, discord) => {
+        e.preventDefault();
+        if (discord.postMessageWhenClaimed !== e.target.checked) {
+            const payload = {
+                ...discord,
+                postMessageWhenClaimed: e.target.checked,
+                isCreated: false,
+            };
+            await upsertChannelAsync(payload);
+        }
+    };
+
+    const debouncedStatusChangeHandler = useCallback(
+        debounce((e, discord) => handleOnStatusChange(e, discord), 800),
+        []
+    );
+
+    const debouncedIsPostMessageChangeHandler = useCallback(
+        debounce((e, discord) => handleOnPostMessageChange(e, discord), 800),
         []
     );
 
@@ -47,7 +65,36 @@ const AdminDiscordChannels = () => {
                                     <tr>
                                         <th>Channel</th>
                                         <th>Channel Id</th>
-                                        <th>Status</th>
+                                        <th>
+                                            Status
+                                            <Tooltip
+                                                placement="top"
+                                                label="Disabled Channel will not be listed under Reward User Page"
+                                                aria-label="A tooltip"
+                                                fontSize="md"
+                                            >
+                                                <i
+                                                    className="ms-2 bi bi-info-circle"
+                                                    data-toggle="tooltip"
+                                                    title="Tooltip on top"
+                                                ></i>
+                                            </Tooltip>
+                                        </th>
+                                        <th>
+                                            Post Message
+                                            <Tooltip
+                                                placement="top"
+                                                label="Allow to post an embeded message to this channel once user claimed a reward"
+                                                aria-label="A tooltip"
+                                                fontSize="md"
+                                            >
+                                                <i
+                                                    className="ms-2 bi bi-info-circle"
+                                                    data-toggle="tooltip"
+                                                    title="Tooltip on top"
+                                                ></i>
+                                            </Tooltip>
+                                        </th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -67,7 +114,26 @@ const AdminDiscordChannels = () => {
                                                                     discord.isEnabled ? true : false
                                                                 }
                                                                 onChange={(e) =>
-                                                                    debouncedChangeHandler(
+                                                                    debouncedStatusChangeHandler(
+                                                                        e,
+                                                                        discord
+                                                                    )
+                                                                }
+                                                            />
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div className="form-check form-switch">
+                                                            <input
+                                                                className="form-check-input"
+                                                                type="checkbox"
+                                                                defaultChecked={
+                                                                    discord.postMessageWhenClaimed
+                                                                        ? true
+                                                                        : false
+                                                                }
+                                                                onChange={(e) =>
+                                                                    debouncedIsPostMessageChangeHandler(
                                                                         e,
                                                                         discord
                                                                     )
@@ -167,7 +233,7 @@ function CreateDiscordChannel({ upsertChannelAsync }) {
                                 />
                             </div>
                             <div
-                                className={`col-12 mb-3 text-red-500 ${
+                                className={`col-12 mb-3 text-danger ${
                                     status ? "d-block" : "d-none"
                                 }`}
                             >

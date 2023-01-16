@@ -51,7 +51,7 @@ const AdminRewardTypes = () => {
                                 </thead>
                                 <tbody>
                                     {rewardTypes &&
-                                        rewardTypes.map((rewardType, index) => {
+                                        rewardTypes?.map((rewardType, index) => {
                                             return (
                                                 <tr key={index}>
                                                     <td>{rewardType.reward}</td>
@@ -134,25 +134,11 @@ function CreateRewardTypes({ upsertRewardTypeAsync, createRewardType, createRewa
         reward: string().required("Reward Type is required"),
     });
 
-    const hiddenFileInput = useRef(null);
     const hiddenIconFileInput = useRef(null);
-    const [imageFile, setImageFile] = useState(null);
     const [imageIcon, setImageIcon] = useState(null);
-
-    function handleOnImagePreviewChange(e, setFieldValue) {
-        const reader = new FileReader();
-
-        reader.onload = function (onLoadEvent) {
-            setFieldValue("rewardPreview", onLoadEvent.target.result);
-        };
-
-        reader.readAsDataURL(e.target.files[0]);
-        setImageFile(e.target.files[0]);
-    }
 
     function handleOnRewardIconChange(e, setFieldValue) {
         const reader = new FileReader();
-
         reader.onload = function (onLoadEvent) {
             setFieldValue("rewardIcon", onLoadEvent.target.result);
         };
@@ -164,6 +150,7 @@ function CreateRewardTypes({ upsertRewardTypeAsync, createRewardType, createRewa
     const getButtonState = (values) => {
         if (createRewardType.isUpdating) {
             if (
+                values?.reward === initialValues.reward &&
                 values?.rewardPreview === initialValues.rewardPreview &&
                 values?.rewardIcon === initialValues.rewardIcon &&
                 values?.isEnabled === initialValues.isEnabled
@@ -175,8 +162,7 @@ function CreateRewardTypes({ upsertRewardTypeAsync, createRewardType, createRewa
                 (values?.reward.length === 0 &&
                     values?.rewardPreview?.length === 0 &&
                     values?.rewardIcon?.length === 0) ||
-                (values?.reward.length === 0 &&
-                    values?.rewardPreview === initialValues.rewardPreview &&
+                (values?.rewardPreview === initialValues.rewardPreview &&
                     values?.rewardIcon === initialValues.rewardIcon &&
                     values?.isEnabled === initialValues.isEnabled)
             )
@@ -212,7 +198,7 @@ function CreateRewardTypes({ upsertRewardTypeAsync, createRewardType, createRewa
                             isUpdating: false,
                             isEnabled: true,
                         });
-                        setImageFile(null);
+
                         setImageIcon(null);
                     }
                 }}
@@ -235,35 +221,6 @@ function CreateRewardTypes({ upsertRewardTypeAsync, createRewardType, createRewa
                                         name="reward"
                                         component="div"
                                         className="invalid-feedback"
-                                    />
-                                </div>
-                                <div className="col-xxl-4 col-xl-4 col-lg-4 mb-3">
-                                    <label className="form-label">
-                                        Preview (For Discord Embeded)
-                                    </label>
-                                    <br />
-                                    <button
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            e.preventDefault();
-                                            hiddenFileInput.current.click();
-                                        }}
-                                        className="btn btn-primary me-2"
-                                    >
-                                        <div>
-                                            <span>Choose File</span>
-                                        </div>
-                                    </button>
-                                    {imageFile && imageFile.name}
-                                    <input
-                                        type="file"
-                                        name="file"
-                                        accept="image/jpeg, image/png"
-                                        style={{ display: "none" }}
-                                        ref={hiddenFileInput}
-                                        onChange={(e) =>
-                                            handleOnImagePreviewChange(e, setFieldValue)
-                                        }
                                     />
                                 </div>
                                 <div className="col-xxl-4 col-xl-4 col-lg-4 mb-3">
@@ -291,6 +248,22 @@ function CreateRewardTypes({ upsertRewardTypeAsync, createRewardType, createRewa
                                         onChange={(e) => handleOnRewardIconChange(e, setFieldValue)}
                                     />
                                 </div>
+                                <div className="col-xxl-6 col-xl-6 col-lg-6 mb-3">
+                                    <label className="form-label">
+                                        Image Preview URL (For Discord Embeded)
+                                    </label>
+                                    <br />
+                                    <Field
+                                        name="rewardPreview"
+                                        type="text"
+                                        className={
+                                            "form-control" +
+                                            (errors?.rewardPreview && touched?.rewardPreview
+                                                ? " is-invalid"
+                                                : "")
+                                        }
+                                    />
+                                </div>
                                 <div className="col-12">
                                     <div className="form-check form-switch">
                                         <input
@@ -310,7 +283,7 @@ function CreateRewardTypes({ upsertRewardTypeAsync, createRewardType, createRewa
                                     </label>
                                 </div>
                                 <div
-                                    className={`col-12 mb-3 text-red-500 ${
+                                    className={`col-12 mb-3 text-danger ${
                                         status ? "d-block" : "d-none"
                                     }`}
                                 >
@@ -330,7 +303,6 @@ function CreateRewardTypes({ upsertRewardTypeAsync, createRewardType, createRewa
                                     type="button"
                                     className="btn btn-secondary me-2"
                                     onClick={() => {
-                                        setImageFile(null);
                                         setImageIcon(null);
                                         resetForm();
                                         createRewardTypeSet({

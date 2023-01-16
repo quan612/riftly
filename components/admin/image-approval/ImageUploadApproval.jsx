@@ -79,17 +79,17 @@ const ImageUploadApproval = () => {
 
     return (
         <div className="flex flex-column items-center">
-            <span className="text-md text-gray-700 dark:text-gray-400">
+            <span className="text-md text-secondary 700 dark:text-secondary 400">
                 Showing{" "}
-                <span className="font-semibold text-gray-900 dark:text-white">
+                <span className="font-semibold text-secondary 900 dark:text-white">
                     {pageIndex * takeNumber + 1}
                 </span>{" "}
                 to{" "}
-                <span className="font-semibold text-gray-900 dark:text-white">
+                <span className="font-semibold text-secondary 900 dark:text-white">
                     {pageIndex * takeNumber + takeNumber}
                 </span>{" "}
                 of Total:{" "}
-                <span className="font-semibold text-gray-900 dark:text-white">{count}</span>{" "}
+                <span className="font-semibold text-secondary 900 dark:text-white">{count}</span>{" "}
             </span>
 
             <div className="inline-flex mt-2 xs:mt-0">
@@ -97,7 +97,7 @@ const ImageUploadApproval = () => {
                     <button
                         disabled={pageIndex === 0}
                         onClick={() => setPageIndex(pageIndex - 1)}
-                        className="py-2 px-4 text-sm font-medium text-white bg-gray-800 rounded-l hover:bg-gray-900 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                        className="py-2 px-4 text-sm font-medium text-white bg-gray-800 rounded-l hover:bg-gray-900 dark:bg-gray-800 dark:border-gray-700 dark:text-secondary 400 dark:hover:bg-gray-700 dark:hover:text-white"
                     >
                         Prev
                     </button>
@@ -105,7 +105,7 @@ const ImageUploadApproval = () => {
                 {pageIndex * takeNumber < count && count > takeNumber && (
                     <button
                         onClick={() => setPageIndex(pageIndex + 1)}
-                        className="py-2 px-4 text-sm font-medium text-white bg-gray-800 rounded-r border-0 border-l border-gray-700 hover:bg-gray-900 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                        className="py-2 px-4 text-sm font-medium text-white bg-gray-800 rounded-r border-0 border-l border-gray-700 hover:bg-gray-900 dark:bg-gray-800 dark:border-gray-700 dark:text-secondary 400 dark:hover:bg-gray-700 dark:hover:text-white"
                     >
                         Next
                     </button>
@@ -121,7 +121,7 @@ const ImageUploadApproval = () => {
                                     <a
                                         href={`${extendedUserQuestData?.imageBase64}`}
                                         target="_blank"
-                                        className="text-red-200"
+                                        className="text-danger"
                                     >
                                         <img src={extendedUserQuestData?.imageBase64} alt="" />
                                     </a>

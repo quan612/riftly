@@ -1,18 +1,28 @@
 {
   "compilerOptions": {
-   
     "target": "es6",
+    //   "lib": [
+    //     "dom",
+    //     "dom.iterable",
+    //     "esnext"
+    //   ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": false,
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
-    "incremental": true,
     "esModuleInterop": true,
     "module": "esnext",
+    "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "incremental": true,
     "baseUrl": ".",
     "paths": {
       "@components/*": [
@@ -48,20 +58,20 @@
       "@pages/*": [
         "pages/*"
       ]
-    },
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext",
-      "es2015"
-    ]
+    }
   },
   "include": [
     "next-env.d.ts",
-    "**/*.ts",
+    "**/*",
     "**/*.tsx"
   ],
   "exclude": [
     "node_modules"
-  ]
+  ],
+  "ts-node": {
+        "compilerOptions": {
+          "module": "commonjs"
+       }
+}
+ 
 }

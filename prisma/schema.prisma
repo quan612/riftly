@@ -58,15 +58,16 @@ model Reward {
   @@unique([userId, rewardTypeId])
 }
 model RewardType {
-  id                Int                 @id @default(autoincrement())
-  reward            String              @unique
-  pendingRewards    PendingReward[]
-  quests            Quest[]
-  rewards           Reward[]
-  userQuests        UserQuest[]
-  rewardPreview     String?
-  rewardIcon        String?
-  isEnabled         Boolean         @default(true)
+  id                  Int                 @id @default(autoincrement())
+  reward              String              @unique
+  pendingRewards      PendingReward[]
+  quests              Quest[]
+  rewards             Reward[]
+  userQuests          UserQuest[]
+  rewardPreview       String?
+  rewardIcon          String?
+
+  isEnabled           Boolean         @default(true)
 }
 model QuestType {
   id             Int             @id @default(autoincrement())
@@ -166,22 +167,28 @@ model QuestVariables{
   discordBackendSecret        String
   twitterId                   String
   twitterSecret               String
+  twitterBearerToken          String?             @default("")
   pendingRewardImageUrl       String?             @default("")
   cloudinaryName              String?             @default("")
   cloudinaryKey               String?             @default("")
   cloudinarySecret            String?             @default("")
   discordBotToken             String?             @default("")
   hostUrl                     String?             @default("")
+  googleClientEmail           String?             @default("")
+  googleClientId              String?             @default("")
+  googleProjectId             String?             @default("")
+  googlePropertyId            String?             @default("")
   createdAt                   DateTime            @default(now())
   updatedAt                   DateTime            @default(now()) @updatedAt
 }
 
 model Discord {
-  id                      Int             @id @default(autoincrement())
-  channelId               String          @unique
-  channel                 String?         
-  isEnabled               Boolean         @default(true)
-  isDeleted               Boolean         @default(false)
-  createdAt               DateTime        @default(now())
-  updatedAt               DateTime        @default(now()) @updatedAt
+  id                          Int             @id @default(autoincrement())
+  channelId                   String          @unique
+  channel                     String?         
+  isEnabled                   Boolean         @default(true)
+  isDeleted                   Boolean         @default(false)
+  postMessageWhenClaimed      Boolean         @default(true)
+  createdAt                   DateTime        @default(now())
+  updatedAt                   DateTime        @default(now()) @updatedAt
 }

@@ -16,13 +16,6 @@ const submitNftQuest = async (req, res) => {
 
     switch (method) {
         case "POST":
-            console.log("In NFT Quest Submit");
-            if (process.env.NEXT_PUBLIC_ENABLE_CHALLENGER === "false") {
-                return res
-                    .status(200)
-                    .json({ isError: true, message: "Challenger is not enabled." });
-            }
-
             const whiteListUser = req.whiteListUser;
             const { questId, rewardTypeId, quantity, extendedQuestData, inputCode } = req.body;
             let userQuest;

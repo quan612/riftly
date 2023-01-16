@@ -32,6 +32,11 @@ const EnvironmentConfig = () => {
         cloudinaryKey: configs?.cloudinaryKey || "",
         cloudinarySecret: configs?.cloudinarySecret || "",
         hostUrl: configs?.hostUrl || "",
+        twitterBearerToken: configs?.twitterBearerToken || "",
+        googleClientEmail: configs?.googleClientEmail || "",
+        googleClientId: configs?.googleClientId || "",
+        googleProjectId: configs?.googleProjectId || "",
+        googlePropertyId: configs?.googlePropertyId || "",
     };
 
     return (
@@ -143,7 +148,7 @@ const EnvironmentConfig = () => {
                                 </div>
                             </div>
                             {/* Its children  */}
-                            <div className="col-12 mb-3">
+                            {/* <div className="col-12 mb-3">
                                 <div className="form-group row">
                                     <label className=" col-sm-4 col-form-label">
                                         DISCORD NODEJS
@@ -161,10 +166,10 @@ const EnvironmentConfig = () => {
                                         />
                                     </div>
                                 </div>
-                            </div>
+                            </div> */}
 
                             {/* Its children  */}
-                            <div className="col-12 mb-3">
+                            {/* <div className="col-12 mb-3">
                                 <div className="form-group row">
                                     <label className=" col-sm-4 col-form-label">
                                         DISCORD NODEJS SECRET
@@ -183,10 +188,32 @@ const EnvironmentConfig = () => {
                                         />
                                     </div>
                                 </div>
-                            </div>
+                            </div> */}
                             {/* Type   */}
                             <div className="col-6 mb-3">
                                 <label className="form-label">Twitter</label>
+                            </div>
+                            {/* Its children  */}
+
+                            <div className="col-12 mb-3">
+                                <div className="form-group row">
+                                    <label className=" col-sm-4 col-form-label">
+                                        TWITTER BEARER TOKEN
+                                    </label>
+                                    <div className="col-sm-8">
+                                        <Field
+                                            name="twitterBearerToken"
+                                            type="password"
+                                            className={
+                                                "form-control" +
+                                                (errors?.twitterBearerToken &&
+                                                touched?.twitterBearerToken
+                                                    ? " is-invalid"
+                                                    : "")
+                                            }
+                                        />
+                                    </div>
+                                </div>
                             </div>
                             {/* Its children  */}
                             <div className="col-12 mb-3">
@@ -329,6 +356,86 @@ const EnvironmentConfig = () => {
                                                 "form-control" +
                                                 (errors?.cloudinarySecret &&
                                                 touched?.cloudinarySecret
+                                                    ? " is-invalid"
+                                                    : "")
+                                            }
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                            {/* Type   */}
+                            <div className="col-6 mb-3">
+                                <label className="form-label">Analytics</label>
+                            </div>
+                            {/* Its children  */}
+                            <div className="col-12 mb-3">
+                                <div className="form-group row">
+                                    <label className=" col-sm-4 col-form-label">Client Email</label>
+
+                                    <div className="col-sm-8">
+                                        <Field
+                                            name="googleClientEmail"
+                                            type="text"
+                                            className={
+                                                "form-control" +
+                                                (errors?.googleClientEmail &&
+                                                touched?.googleClientEmail
+                                                    ? " is-invalid"
+                                                    : "")
+                                            }
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-12 mb-3">
+                                <div className="form-group row">
+                                    <label className=" col-sm-4 col-form-label">Client Id</label>
+
+                                    <div className="col-sm-8">
+                                        <Field
+                                            name="googleClientId"
+                                            type="text"
+                                            className={
+                                                "form-control" +
+                                                (errors?.googleClientId && touched?.googleClientId
+                                                    ? " is-invalid"
+                                                    : "")
+                                            }
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="col-12 mb-3">
+                                <div className="form-group row">
+                                    <label className=" col-sm-4 col-form-label">Project Id</label>
+
+                                    <div className="col-sm-8">
+                                        <Field
+                                            name="googleProjectId"
+                                            type="text"
+                                            className={
+                                                "form-control" +
+                                                (errors?.googleProjectId && touched?.googleProjectId
+                                                    ? " is-invalid"
+                                                    : "")
+                                            }
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-12 mb-3">
+                                <div className="form-group row">
+                                    <label className=" col-sm-4 col-form-label">Property Id</label>
+
+                                    <div className="col-sm-8">
+                                        <Field
+                                            name="googlePropertyId"
+                                            type="text"
+                                            className={
+                                                "form-control" +
+                                                (errors?.googlePropertyId &&
+                                                touched?.googlePropertyId
                                                     ? " is-invalid"
                                                     : "")
                                             }

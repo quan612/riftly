@@ -10,23 +10,10 @@ const userClaimRewardAPI = async (req, res) => {
     switch (method) {
         case "POST":
             try {
-                if (process.env.NEXT_PUBLIC_ENABLE_CHALLENGER === "false") {
-                    return res.status(200).json({ isError: true, message: "Challenger is not enabled." });
-                }
+
                 const whiteListUser = req.whiteListUser;
-                const { generatedURL, isClaimed, rewardTypeId, quantity, userId } =
+                const { generatedURL, rewardTypeId, userId } =
                     req.body;
-
-                // query discord backend and backend secret
-                let variables = await prisma.questVariables.findFirst();
-
-                const { discordSecret, discordBackend } = variables;
-
-                if (discordSecret.trim().length < 1 || discordBackend.trim().length < 1) {
-                    return res
-                        .status(200)
-                        .json({ isError: true, message: "Missing Discord Server Config!" });
-                }
 
                 // DO NOT USE THE QUANTITY SENT TO API, USE THE QUANTITY QUERIED FROM DB
                 console.log(`** Checking if proper user ${userId} is claiming the reward **`);
@@ -72,7 +59,6 @@ const userClaimRewardAPI = async (req, res) => {
                     generatedURL
                 );
 
-
                 if (!claimReward) {
                     return res.status(200).json({
                         isError: true,
@@ -80,44 +66,60 @@ const userClaimRewardAPI = async (req, res) => {
                     });
                 }
 
-                // post to discord
-                if (
-                    whiteListUser.discordId != null &&
-                    whiteListUser.discordId.trim().length > 0
-                ) {
-                    pendingReward.claimedUser = `<@${whiteListUser.discordId.trim()}>`;
-                } else if (
-                    whiteListUser.uathUser != null &&
-                    whiteListUser.uathUser.trim().length > 0
-                ) {
-                    pendingReward.claimedUser = whiteListUser.uathUser;
-                } else if (
-                    whiteListUser.twitterUserName != null &&
-                    whiteListUser.twitterUserName.trim().length > 0
-                ) {
-                    pendingReward.claimedUser = whiteListUser.twitterUserName;
-                } else {
-                    pendingReward.claimedUser = whiteListUser.userId;
-                }
-                pendingReward.imageUrl = pendingReward.rewardType.rewardPreview;
+                let discordChannels = await prisma.discord.findMany({
+                    where: {
+                        isEnabled: true,
+                        postMessageWhenClaimed: true
+                    }
+                })
 
-                let discordPost = await axios
-                    .post(
-                        `${discordBackend}/api/v1/channels/claimedReward`,
-                        {
-                            pendingReward,
-                        },
-                        {
-                            headers: {
-                                Authorization: `Bot ${discordSecret}`,
-                                "Content-Type": "application/json",
-                            },
-                        }
-                    )
-                    .catch((err) => {
-                        res.status(200).json({ isError: true, message: err.message });
-                        return
-                    });
+                // need to post embeded message to a discord channel
+                if (discordChannels.length > 0) {
+                    // query discordBotToken backend
+                    let variables = await prisma.questVariables.findFirst();
+                    const { discordBotToken } = variables;
+
+                    if (discordBotToken.trim().length < 1) {
+                        //catch server error to indicate no message can be posted due to missing discord bot token
+                        console.log("Missing bot token")
+                    }
+
+                    // post to discord
+                    let receivingUser = getReceivingUser(whiteListUser);
+                    let messageContent = `** ${receivingUser} has just claimed ${pendingReward.quantity} ${pendingReward?.rewardType?.reward}** `;
+                    let imageUrl = pendingReward.rewardType.rewardPreview;
+
+                    let discordPostOp = discordChannels.map(async (discord, index) => {
+                        await axios
+                            .post(
+                                `https://discord.com/api/channels/${discord.channelId}/messages`,
+                                {
+                                    content: messageContent,
+                                    embeds: [
+                                        {
+                                            image: {
+                                                url: imageUrl,
+                                            },
+
+                                        },
+                                    ],
+                                },
+                                {
+                                    headers: {
+                                        Authorization: `Bot ${discordBotToken}`,
+                                        "Content-Type": "application/json",
+                                    },
+                                }
+                            )
+                            .catch((err) => {
+                                //catch server error to indicate an embeded message cannot be posted into a channel
+                                console.log("error posting message to discord channel")
+                                console.log(err)
+                            });
+                    })
+
+
+                }
 
                 res.status(200).json(pendingReward);
 
@@ -132,3 +134,25 @@ const userClaimRewardAPI = async (req, res) => {
 };
 
 export default whitelistUserMiddleware(userClaimRewardAPI);
+
+const getReceivingUser = (whiteListUser) => {
+
+    if (
+        whiteListUser.discordId != null &&
+        whiteListUser.discordId.trim().length > 0
+    ) {
+        return `<@${whiteListUser.discordId.trim()}>`;
+    } else if (
+        whiteListUser.uathUser != null &&
+        whiteListUser.uathUser.trim().length > 0
+    ) {
+        return whiteListUser.uathUser;
+    } else if (
+        whiteListUser.twitterUserName != null &&
+        whiteListUser.twitterUserName.trim().length > 0
+    ) {
+        return whiteListUser.twitterUserName;
+    } else {
+        return whiteListUser.userId;
+    }
+}

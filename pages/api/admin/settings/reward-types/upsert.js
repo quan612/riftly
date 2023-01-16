@@ -9,22 +9,21 @@ const AdminRewardTypePostAPI = async (req, res) => {
       try {
         const { id, reward, rewardPreview, rewardIcon, isUpdating, isEnabled } = req.body;
 
-        if (!isUpdating) {
-          let existingReward = await prisma.rewardType.findUnique({
-            where: {
-              reward,
-            },
-          });
+        let existingReward = await prisma.rewardType.findUnique({
+          where: {
+            reward,
+          },
+        });
 
-          if (existingReward) {
-            return res.status(200).json({
-              message: `Cannot add more than one reward: "${reward}".`,
-              isError: true,
-            });
-          }
+        if (existingReward && !isUpdating) {
+          return res.status(200).json({
+            message: `Cannot add more than one reward: "${reward}".`,
+            isError: true,
+          });
         }
 
-        let upsertRes = await prisma.rewardType.upsert({
+
+        await prisma.rewardType.upsert({
           where: {
             id: id || -1,
           },

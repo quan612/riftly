@@ -3,6 +3,9 @@ module.exports = {
     env: {
         NEXTAUTH_URL: process.env.NEXTAUTH_URL,
     },
+    images: {
+        domains: ['res.cloudinary.com'],
+    },
     webpack: (config) => {
         config.experiments = config.experiments || {};
         config.experiments.topLevelAwait = true;

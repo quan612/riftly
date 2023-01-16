@@ -21,6 +21,11 @@ const AdminConfigsUpsertAPI = async (req, res) => {
           cloudinarySecret,
           hostUrl,
           discordBotToken,
+          twitterBearerToken,
+          googleClientEmail,
+          googleClientId,
+          googleProjectId,
+          googlePropertyId,
         } = req.body;
 
 
@@ -44,6 +49,11 @@ const AdminConfigsUpsertAPI = async (req, res) => {
             cloudinaryName,
             cloudinaryKey,
             cloudinarySecret,
+            twitterBearerToken,
+            googleClientEmail,
+            googleClientId,
+            googleProjectId,
+            googlePropertyId,
           },
           update: {
             hostUrl,
@@ -58,6 +68,11 @@ const AdminConfigsUpsertAPI = async (req, res) => {
             cloudinaryName,
             cloudinaryKey,
             cloudinarySecret,
+            twitterBearerToken,
+            googleClientEmail,
+            googleClientId,
+            googleProjectId,
+            googlePropertyId,
           },
         });
 

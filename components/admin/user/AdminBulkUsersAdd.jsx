@@ -4,23 +4,16 @@ import { object, array, string, number, ref } from "yup";
 
 import { useAdminBulkUsersMutation } from "shared/HOC/user";
 import Enums from "enums";
-
+import { utils } from "ethers";
 import { read, utils as excelUtils } from "xlsx";
+import { Tooltip, useToast } from "@chakra-ui/react";
 
 const initialValues = {
     wallet: "",
 };
 
-const UserSchema = object().shape({
-    // wallet: string()
-    //     .required()
-    //     .test("valid address", "Wallet Address is not valid!", function () {
-    //         if (utils.isAddress(this.parent.wallet)) return true;
-    //         else return false;
-    //     }),
-});
-
 const AdminBulkUsersAdd = () => {
+    const toast = useToast();
     const [newUsersData, isAdding, bulkUsersAsync] = useAdminBulkUsersMutation();
     const [usersArray, usersArraySet] = useState([]);
     const hiddenFileInput = useRef(null);
@@ -28,18 +21,21 @@ const AdminBulkUsersAdd = () => {
     const [inputFile, setInputFile] = useState(null);
 
     function handleOnLoadFile(e, setFieldValue) {
+        if (!e.target.files[0]) {
+            return;
+        }
         const reader = new FileReader();
 
         reader.readAsBinaryString(e.target.files[0]);
         reader.onload = function (onLoadEvent) {
             let data = onLoadEvent.target.result;
-            let workbook = read(data, { type: "binary" });
+            let workbook = read(data, { type: "string", raw: true });
 
             let currentWorkBook = workbook.Sheets[workbook.SheetNames[0]];
+
             let arrayData = excelUtils.sheet_to_json(currentWorkBook).map((r) => {
                 let value = Object.values(r)[0];
-
-                return { wallet: value };
+                return { wallet: value, isValid: utils.isAddress(value) };
             });
 
             usersArraySet(arrayData);
@@ -49,16 +45,22 @@ const AdminBulkUsersAdd = () => {
     return (
         <Formik
             initialValues={initialValues}
-            validationSchema={UserSchema}
-            validateOnBlur={true}
+            validateOnBlur={false}
             validateOnChange={false}
             // onSubmit={onSubmit}
         >
             {({ errors, status, touched, setFieldValue }) => (
                 <Form>
                     <div className="row">
-                        <div className="col-xxl-4 col-xl-4 col-lg-4 mb-3">
-                            <label className="form-label">Select Source File</label>
+                        <div className="col-xxl-4 col-xl-4 col-lg-4 mb-3 ">
+                            <label className="form-label me-3">Select Source File</label>
+                            <a
+                                href={`data:csv;charset=utf-8,${encodeURIComponent(getTemplate())}`}
+                                download={`Wallet Bulk.csv`}
+                                className="me-2 text-primary"
+                            >
+                                Template
+                            </a>
                             <br />
                             <button
                                 onClick={(e) => {
@@ -76,7 +78,7 @@ const AdminBulkUsersAdd = () => {
                             <input
                                 type="file"
                                 name="file"
-                                accept="text/plain"
+                                accept="text/csv"
                                 style={{ display: "none" }}
                                 ref={hiddenFileInput}
                                 onChange={(e) => handleOnLoadFile(e, setFieldValue)}
@@ -90,7 +92,30 @@ const AdminBulkUsersAdd = () => {
                     </div>
                     {usersArray && usersArray.length > 0 && (
                         <>
-                            <h4 className="card-title mb-3">Adding {usersArray.length} users</h4>
+                            <h4 className="card-title mb-2 ">
+                                Valid
+                                <span className="text-success ms-1">
+                                    {usersArray.filter((user) => user.isValid).length}
+                                </span>{" "}
+                                users, Invalid
+                                <span className="text-danger ms-1 me-1">
+                                    {usersArray.filter((user) => !user.isValid).length}
+                                </span>
+                                users{" "}
+                                <Tooltip
+                                    placement="top"
+                                    label="Valid users would not be added if exists"
+                                    aria-label="A tooltip"
+                                    fontSize="md"
+                                >
+                                    <i
+                                        className="ms-1 bi bi-info-circle"
+                                        data-toggle="tooltip"
+                                        title="Tooltip on top"
+                                    ></i>
+                                </Tooltip>
+                            </h4>
+
                             <div className="card">
                                 <div className="card-body">
                                     <div className="table-responsive api-table">
@@ -98,24 +123,32 @@ const AdminBulkUsersAdd = () => {
                                             <thead>
                                                 <tr>
                                                     <th>Wallet</th>
-                                                    <th>Wallet</th>
+                                                    <th>Is Valid</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 {usersArray.map((row, index) => {
-                                                    if (index % 2 === 0) {
-                                                        return (
-                                                            <tr key={index}>
-                                                                <td>{usersArray[index].wallet}</td>
-                                                                <td>
-                                                                    {index + 1 < usersArray.length
-                                                                        ? usersArray[index + 1]
-                                                                              .wallet
-                                                                        : ""}
-                                                                </td>
-                                                            </tr>
-                                                        );
-                                                    }
+                                                    return (
+                                                        <tr key={index}>
+                                                            <td>{usersArray[index].wallet}</td>
+                                                            <td>
+                                                                {usersArray[index].isValid && (
+                                                                    <i
+                                                                        className="ri-check-line"
+                                                                        style={{
+                                                                            fontSize: "2rem",
+                                                                            color: "green",
+                                                                        }}
+                                                                    ></i>
+                                                                )}
+                                                                {!usersArray[index].isValid && (
+                                                                    <span className="text-danger">
+                                                                        Not a valid address
+                                                                    </span>
+                                                                )}
+                                                            </td>
+                                                        </tr>
+                                                    );
                                                 })}
                                             </tbody>
                                         </table>
@@ -133,12 +166,38 @@ const AdminBulkUsersAdd = () => {
                                         };
 
                                         let createManyOp = await bulkUsersAsync(payload);
-                                        console.log(createManyOp);
+
+                                        if (createManyOp.isError) {
+                                            toast({
+                                                title: "Error",
+                                                description: ` ${createManyOp.message}`,
+                                                position: "bottom-right",
+                                                status: "error",
+                                                duration: 3000,
+                                            });
+                                        } else {
+                                            toast({
+                                                title: "Succeed",
+                                                description: `Added ${createManyOp.count} users`,
+                                                position: "bottom-right",
+                                                status: "success",
+                                                duration: 3000,
+                                            });
+                                        }
+                                        setInputFile(null);
+                                        usersArraySet([]);
                                     }}
                                 >
                                     Bulk Add
                                 </button>
-                                <button type="button" className="btn btn-secondary me-2">
+                                <button
+                                    type="button"
+                                    className="btn btn-secondary me-2"
+                                    onClick={async () => {
+                                        setInputFile(null);
+                                        usersArraySet([]);
+                                    }}
+                                >
                                     Cancel
                                 </button>
                             </div>
@@ -151,3 +210,15 @@ const AdminBulkUsersAdd = () => {
 };
 
 export default AdminBulkUsersAdd;
+
+const getTemplate = () => {
+    const csvString = [
+        ["wallet"],
+        ["0xe90344F1526B04a59294d578e85a8a08D4fD6e0b"],
+        ["0xe90344F1526B04a59294d578e85a8a08D4fD6e0c"],
+    ]
+        .map((e) => e.join(","))
+        .join("\n");
+
+    return csvString;
+};

@@ -5,7 +5,9 @@ function ThemeSwitch() {
         () => JSON.parse(localStorage.getItem("toggleTheme")) || "light-theme"
     );
     useEffect(() => {
+
         localStorage.setItem("toggleTheme", JSON.stringify(toggleTheme));
+        window.dispatchEvent(new Event("toggleTheme"));
         document.body.classList.add(toggleTheme);
         return () => {
             document.body.classList.remove(toggleTheme);

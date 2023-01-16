@@ -10,7 +10,6 @@ export const getVariableConfig = async (property) => {
   if (!configProperty) {
     throw new Error(`Cannot find property of `)
   }
-  console.log("Getting variable config")
 
   return configProperty
 };

@@ -24,13 +24,13 @@ const AdminUsers = ({ session }) => {
         return (
             <div className="profile-page">
                 <div className="container">
-                    <div className="col-xxl-12">
-                        <div className="row">
+                    <div className="row justify-content-center">
+                        <div className="col-xxl-8 col-xl-8 col-lg-8">
                             <div className="col-12">
                                 <AdminUserMenu />
                             </div>
                         </div>
-                        <div className="col-xxl-12">
+                        <div className="col-xxl-12 ">
                             <AddNewUser />
                         </div>
                     </div>

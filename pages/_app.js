@@ -1,4 +1,6 @@
 import React, { StrictMode, useEffect } from "react";
+import "../styles/bootstrap-icons.css";
+import "../styles/remixicon.css";
 import "/sass/admin/adminBootstrap.css";
 import "../styles/globals.css";
 
@@ -22,6 +24,8 @@ import {
     Title,
     Tooltip,
     Legend,
+    BarElement,
+    ArcElement
 } from 'chart.js';
 
 ChartJS.register(
@@ -31,7 +35,9 @@ ChartJS.register(
     LineElement,
     Title,
     Tooltip,
-    Legend
+    Legend,
+    BarElement,
+    ArcElement
 );
 
 const queryClient = new QueryClient();

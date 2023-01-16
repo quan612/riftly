@@ -5,7 +5,7 @@ export function AdminGuard({ children }) {
     const { web3Error, session } = useContext(Web3Context);
     if (web3Error) {
         return (
-            <div className="d-flex justify-content-center align-items-center fs-1 text-red-500">
+            <div className="d-flex justify-content-center align-items-center fs-1 text-danger">
                 {web3Error}
             </div>
         );

@@ -35,6 +35,8 @@ const approveImageQuestAPI = async (req, res) => {
 
                 // trying upload on cloudinary
 
+
+
                 /**
                  * 1. Post a message to discord channel
                  * 2. Update UserQuest with discord message id

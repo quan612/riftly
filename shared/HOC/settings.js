@@ -3,13 +3,11 @@ import axios from "axios";
 import Enums from "enums";
 import { useRouter } from "next/router";
 
-const AdminDiscordChannelsQuery = `${Enums.BASEPATH}/api/admin/settings/discord-channels`
-
 export const useAdminDiscordChannelsQuery = () => {
 
     const { data, isLoading } = useQuery(["AdminDiscordChannelsQuery"], () => {
         return axios
-            .get(AdminDiscordChannelsQuery)
+            .get(`${Enums.BASEPATH}/api/admin/settings/discord-channels`)
             .then((r) => r.data);
 
     }, { staleTime: 5 * 60 });

@@ -17,11 +17,8 @@ function Admin() {
             </div>
           </div>
           <div className="col-xxl-12">
-
             <AdminGoogleAnalytics />
-
           </div>
-
         </div>
       </div>
     </div>
@@ -30,9 +27,7 @@ function Admin() {
 
 Admin.requireAdmin = true;
 Admin.Layout = AdminLayout;
-
 export default Admin;
-
 
 import { unstable_getServerSession } from "next-auth/next"
 import { authOptions } from 'pages/api/auth/[...nextauth]'

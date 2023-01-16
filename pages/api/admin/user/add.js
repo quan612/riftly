@@ -1,5 +1,7 @@
 import adminMiddleware from "@middlewares/adminMiddleware";
+import Enums from "enums";
 import { prisma } from "context/PrismaContext";
+import axios from "axios";
 
 const AdminUserAddAPI = async (req, res) => {
     const { method } = req;
@@ -7,23 +9,96 @@ const AdminUserAddAPI = async (req, res) => {
     switch (method) {
         case "POST":
             try {
-                const { wallet } = req.body;
+                const { user, type } = req.body;
 
-                let existingUser = await prisma.whiteList.findUnique({ where: { wallet } })
-                if (existingUser) {
-                    return res.status(200).json(existingUser);
-                }
+                if (type === Enums.DISCORD) {
+                    let existingUser = await prisma.whiteList.findFirst({ where: { discordId: user } })
+                    if (existingUser) {
+                        return res.status(200).json({ isError: true, message: `${user} existed on database.` });
+                    }
 
-                else {
-                    const user = await prisma.whiteList.create({
+                    let variables = await prisma.questVariables.findFirst();
+                    const { discordBotToken, twitterBearerToken } = variables;
+
+                    if (discordBotToken.trim().length < 1 || twitterBearerToken.trim().length < 1) {
+                        return res.status(200).json({ isError: true, message: "Missing config for querying discord / twitter user." });
+                    }
+
+                    //resolving discordId into Discord Username
+                    let discordUserQuery = await axios.get(`https://discord.com/api/users/${user}`,
+                        {
+                            headers: {
+                                Authorization: `Bot ${discordBotToken}`,
+                                "Content-Type": "application/json",
+                            },
+                        }).catch((err) => {
+                            let message = err?.response.data.message;
+                            throw new Error(message)
+                        })
+
+                    let { username, discriminator } = discordUserQuery.data
+                    const newUser = await prisma.whiteList.create({
                         data: {
-                            wallet
+                            discordId: user,
+                            discordUserDiscriminator: `${username}#${discriminator}`
                         },
                     });
 
-                    res.status(200).json(user);
+                    return res.status(200).json(newUser);
+                }
+                if (type === Enums.TWITTER) {
+                    let existingUser = await prisma.whiteList.findFirst({ where: { twitterId: user } })
+                    if (existingUser) {
+                        return res.status(200).json({ isError: true, message: `${user} existed on database.` });
+                    }
+
+                    let twitterUserQuery = await axios
+                        .get(`https://api.twitter.com/2/users/by?usernames=${user}`,
+                            {
+                                headers: {
+                                    Authorization: `Bearer ${twitterBearerToken}`,
+                                    "Content-Type": "application/json",
+                                },
+                            })
+                        .catch((err) => {
+                            let message = err?.response.data.message;
+                            throw new Error(message)
+                        })
+
+                    let { id, name, username } = twitterUserQuery.data.data[0];
+
+                    if (id && username) {
+                        const newUser = await prisma.whiteList.create({
+                            data: {
+                                twitterId: id,
+                                twitterUserName: username
+                            },
+                        });
+
+                        return res.status(200).json(newUser);
+                    } else {
+                        return res.status(200).json({ isError: true, message: `Cannot resolve Twitter Handle ${user} to TwitterId` });
+                    }
+
+                }
+                if (type === Enums.WALLET) {
+                    let existingUser = await prisma.whiteList.findUnique({ where: { wallet } })
+                    if (existingUser) {
+                        return res.status(200).json({ isError: true, message: `${user} existed on database.` });
+                    }
+
+                    else {
+                        const user = await prisma.whiteList.create({
+                            data: {
+                                wallet
+                            },
+                        });
+
+                        res.status(200).json(user);
+                    }
                 }
 
+                res.status(200).json({ isError: true, message: "Unexpected User Type" });
             } catch (error) {
                 return res.status(200).json({ isError: true, message: error.message });
             }

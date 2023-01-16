@@ -96,7 +96,7 @@ const CurrentQuests = ({ quests, isLoading, error }) => {
                                                     )}
 
                                                     {quest.type.name === Enums.FOLLOW_INSTAGRAM && (
-                                                        <span className="text-red-500 ml-1">
+                                                        <span className="text-danger ml-1">
                                                             {quest.extendedQuestData.followAccount}
                                                         </span>
                                                     )}

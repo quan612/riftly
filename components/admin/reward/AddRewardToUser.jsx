@@ -148,9 +148,15 @@ const AddRewardToUser = ({ isSubmitting, onSubmit, mutationError }) => {
                                                     as="select"
                                                     className={"form-control"}
                                                 >
-                                                    <option value="Wallet">Wallet</option>
-                                                    <option value="Discord">Discord</option>
-                                                    <option value="Twitter">Twitter</option>
+                                                    <option value={Enums.WALLET}>
+                                                        {Enums.WALLET}
+                                                    </option>
+                                                    <option value={Enums.DISCORD}>
+                                                        {Enums.DISCORD}
+                                                    </option>
+                                                    <option value={Enums.TWITTER}>
+                                                        {Enums.TWITTER}
+                                                    </option>
                                                 </Field>
                                             </div>
 
@@ -344,7 +350,6 @@ const AddRewardToUser = ({ isSubmitting, onSubmit, mutationError }) => {
 
                                             {errors && (
                                                 <div className="text-red-500">
-                                                    {" "}
                                                     {errors?.message}
                                                 </div>
                                             )}

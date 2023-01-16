@@ -14,7 +14,7 @@ function Unauthorized() {
                         <BoardSmallDollarSign />
                         <div className={s.board_wrapper}>
                             <div className={s.board_content}>
-                                {/* <div className="flex justify-center content-center h1 text-red-400">
+                                {/* <div className="flex justify-center content-center h1 text-danger">
                                     Unauthorized access
                                 </div> */}
                                 <>

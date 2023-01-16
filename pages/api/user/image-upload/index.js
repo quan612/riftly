@@ -9,11 +9,7 @@ const {
     CLOUDINARY_PRESET,
 } = process.env;
 
-cloudinary.config({
-    cloud_name: CLOUDINARY_CLOUDNAME,
-    api_key: CLOUDINARY_API_KEY,
-    api_secret: CLOUDINARY_API_SECRET,
-});
+
 
 const ImageUploadAPI = async (req, res) => {
     const { method } = req;
@@ -22,9 +18,6 @@ const ImageUploadAPI = async (req, res) => {
         case "POST":
             try {
 
-                if (process.env.NEXT_PUBLIC_ENABLE_CHALLENGER === "false") {
-                    return res.status(200).json({ isError: true, message: "Challenger is not enabled." });
-                }
                 console.log(`** Uploading image to cloudinary **`);
                 const whiteListUser = req.whiteListUser;
                 const { data } = req.body;

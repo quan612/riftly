@@ -81,13 +81,13 @@ const MultiselectWrapper = ({ selectedItems, toogleDropdown, removeTag }) => {
                         {/* <div className="flex-1">
                                             <input
                                                 placeholder=""
-                                                className="bg-transparent p-1 px-2 appearance-none outline-none h-full w-full text-gray-800"
+                                                className="bg-transparent p-1 px-2 appearance-none outline-none h-full w-full text-secondary"
                                             />
                                         </div> */}
                     </div>
-                    <div className="text-gray-300 w-8 py-1 pl-1 pr-2 border-l flex items-center justify-center border-gray-200">
+                    <div className="text-secondary 300 w-8 py-1 pl-1 pr-2 border-l flex items-center justify-center border-gray-200">
                         <button
-                            className="cursor-pointer w-4 h-6 text-gray-600 outline-none focus:outline-none"
+                            className="cursor-pointer w-4 h-6 text-secondary outline-none focus:outline-none"
                             type="button"
                         >
                             <svg
