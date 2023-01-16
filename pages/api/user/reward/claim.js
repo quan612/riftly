@@ -75,7 +75,8 @@ const userClaimRewardAPI = async (req, res) => {
 
                 // need to post embeded message to a discord channel
                 if (discordChannels.length > 0) {
-                    // query discordBotToken backend
+                    console.log("Posting embeded message to discord channels...")
+                    console.log(discordChannels[0])
                     let variables = await prisma.questVariables.findFirst();
                     const { discordBotToken } = variables;
 
@@ -88,6 +89,7 @@ const userClaimRewardAPI = async (req, res) => {
                     let receivingUser = getReceivingUser(whiteListUser);
                     let messageContent = `** ${receivingUser} has just claimed ${pendingReward.quantity} ${pendingReward?.rewardType?.reward}** `;
                     let imageUrl = pendingReward.rewardType.rewardPreview;
+
 
                     let discordPostOp = discordChannels.map(async (discord, index) => {
                         await axios

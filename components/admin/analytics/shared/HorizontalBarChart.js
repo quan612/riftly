@@ -8,7 +8,6 @@ const HorizontalBarChart = ({ clientData }) => {
         let currentTheme = JSON.parse(localStorage.getItem("toggleTheme")) || "light-theme";
         const chart = chartRef.current;
 
-        // console.log(chart)
         let chartOption = chart?.options;
         if (!chartOption) return;
         if (currentTheme === "light-theme") {
