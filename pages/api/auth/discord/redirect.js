@@ -2,11 +2,10 @@ import { prisma } from "@context/PrismaContext";
 import axios from "axios";
 import url from "url";
 import { getSession } from "next-auth/react";
-import { utils } from "ethers";
 import Enums from "enums";
 import { isWhiteListUser } from "repositories/session-auth";
 import { getQuestType, getQuestByTypeId } from "repositories/quest";
-import { updateDiscordUserAndAddRewardTransaction } from "repositories/transactions";
+import { updateDiscordUserQuestTransaction } from "repositories/transactions";
 
 const TOKEN_DISCORD_AUTH_URL = "https://discord.com/api/oauth2/token";
 const USERINFO_DISCORD_AUTH_URL = "https://discord.com/api/users/@me";
@@ -46,11 +45,20 @@ export default async function discordRedirect(req, res) {
                     redirect_uri: `${hostUrl}/api/auth/discord/redirect`,
                 });
 
-                const response = await axios.post(TOKEN_DISCORD_AUTH_URL, formData.toString(), {
-                    headers: {
-                        "Content-type": `application/x-www-form-urlencoded`,
-                    },
-                });
+                let response;
+                try {
+                    response = await axios.post(TOKEN_DISCORD_AUTH_URL, formData.toString(), {
+                        headers: {
+                            "Content-type": `application/x-www-form-urlencoded`,
+                        },
+                    });
+                } catch (error) {
+
+                    if (error.response.statusText === "Unauthorized") {
+                        return res.status(200).redirect(`/quest-redirect?error=${error.response.statusText}`);
+                    } else
+                        throw error
+                }
 
                 if (!response || !response?.data?.access_token) {
                     let error = "Couldn't authenticate with Discord. Please contact administrator.";
@@ -76,7 +84,7 @@ export default async function discordRedirect(req, res) {
                     },
                 });
                 if (existingUser && existingUser.userId !== whiteListUser.userId) {
-                    let error = "Attempt to authenticate same Discord Id on different user";
+                    let error = "Attempt to authenticate same Discord Id on different users";
                     return res.status(200).redirect(`/quest-redirect?error=${error}`);
                 }
 
@@ -99,7 +107,7 @@ export default async function discordRedirect(req, res) {
                         where: {
 
                             userId: whiteListUser?.userId,
-                            questId: questId,
+                            questId,
                         },
                     });
 
@@ -109,18 +117,18 @@ export default async function discordRedirect(req, res) {
                     }
 
                 }
-                await updateDiscordUserAndAddRewardTransaction(
+                await updateDiscordUserQuestTransaction(
                     discordQuest,
-                    whiteListUser,
+                    whiteListUser.userId,
                     userInfo.data
                 );
 
-                let discordSignUp = `Sign Up With Discord Successfully`
+                let discordSignUp = `Authenticated ith Discord successfully`
                 res.status(200).redirect(`/quest-redirect?result=${discordSignUp}`);
 
 
             } catch (err) {
-                console.log(err);
+                // console.log(err);
                 res.status(200).json({ isError: true, error: err.message });
             }
             break;

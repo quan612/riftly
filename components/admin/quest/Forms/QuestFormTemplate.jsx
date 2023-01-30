@@ -1,6 +1,36 @@
 import React from "react";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 
+import {
+    Heading,
+    Box,
+    Flex,
+    Link,
+    List,
+    ListItem,
+    Text,
+    Button,
+    useColorMode,
+    useColorModeValue,
+    SimpleGrid,
+    FormControl,
+    FormLabel,
+    FormErrorMessage,
+    Input,
+    Switch,
+    Select,
+    Checkbox,
+    GridItem,
+    Table,
+    Tbody,
+    Th,
+    Thead,
+    Tr,
+    Td,
+    Icon,
+    ButtonGroup,
+} from "@chakra-ui/react";
+
 const QuestFormTemplate = ({
     values,
     errors,
@@ -16,97 +46,202 @@ const QuestFormTemplate = ({
 }) => {
     return (
         <>
-            <div className="col-xxl-6 col-xl-6 col-lg-6 mb-3">
-                <label className="form-label">Quest Text (to be shown on user-end)</label>
-                <Field
-                    name="text"
-                    type="text"
-                    className={
-                        "form-control" + (errors?.text && touched?.text ? " is-invalid" : "")
-                    }
-                    onChange={(e) => onTextChange(e.target.value)}
-                />
-                <ErrorMessage name="text" component="div" className="invalid-feedback" />
-            </div>
+            <GridItem colSpan={1}>
+                <FormControl>
+                    <FormLabel ms="4px" fontSize="md" fontWeight="bold">
+                        Quest Text
+                    </FormLabel>
+                    <Field
+                        name="text"
+                        type="text"
+                        as={Input}
+                        fontSize="md"
+                        variant="riftly"
+                        ms="4px"
+                        onChange={(e) => onTextChange(e.target.value)}
+                    />
 
-            <div className="col-xxl-6 col-xl-6 col-lg-6 mb-3">
-                <label className="form-label">Completed</label>
-                <Field
-                    name="completedText"
-                    type="text"
-                    className={
-                        "form-control" +
-                        (errors?.completedText && touched?.completedText ? " is-invalid" : "")
-                    }
-                    onChange={(e) => onCompletedTextChange(e.target.value)}
-                />
-                <ErrorMessage name="completedText" component="div" className="invalid-feedback" />
-            </div>
+                    <FormErrorMessage fontSize="md" name="text">
+                        {errors.username}
+                    </FormErrorMessage>
+                </FormControl>
+            </GridItem>
 
-            <div className="col-xxl-12 col-xl-12 col-lg-12 mb-3">
-                <label className="form-label">Description</label>
-                <Field
-                    name="description"
-                    type="text"
-                    className={
-                        "form-control" +
-                        (errors?.description && touched?.description ? " is-invalid" : "")
-                    }
-                    onChange={(e) => onDescriptionChange(e.target.value)}
-                />
-                <ErrorMessage name="description" component="div" className="invalid-feedback" />
-            </div>
+            <GridItem colSpan={1}>
+                <FormControl>
+                    <FormLabel ms="4px" fontSize="md" fontWeight="bold">
+                        Completed
+                    </FormLabel>
+                    <Field
+                        name="completedText"
+                        type="text"
+                        as={Input}
+                        fontSize="md"
+                        variant="riftly"
+                        ms="4px"
+                        onChange={(e) => onCompletedTextChange(e.target.value)}
+                    />
 
-            <div className="col-6 mb-3">
-                <label className="form-label">Reward Type</label>
-                <Field
-                    name="rewardTypeId"
-                    as="select"
-                    className={
-                        "form-control" +
-                        (errors?.rewardTypeId && touched?.rewardTypeId ? " is-invalid" : "")
-                    }
-                    onChange={(e) => onRewardTypeChange(e.target.value)}
-                >
-                    {rewardTypes &&
-                        rewardTypes.map((type, index) => {
-                            return (
-                                <option key={index} value={parseInt(type.id)}>
-                                    {type.reward}
-                                </option>
-                            );
-                        })}
-                </Field>
-            </div>
+                    <FormErrorMessage fontSize="md" name="completedText">
+                        {errors.completedText}
+                    </FormErrorMessage>
+                </FormControl>
+            </GridItem>
 
-            <div className="col-6 mb-3">
-                <label className="form-label">Quantity</label>
-                <Field
-                    name="quantity"
-                    type="number"
-                    className={
-                        "form-control" +
-                        (errors?.quantity && touched?.quantity ? " is-invalid" : "")
-                    }
-                    onChange={(e) => onRewardQuantityChange(parseInt(e.target.value))}
-                />
-                <ErrorMessage name="quantity" component="div" className="invalid-feedback" />
-            </div>
+            <GridItem colSpan={2}>
+                <FormControl>
+                    <FormLabel ms="4px" fontSize="md" fontWeight="bold">
+                        Description
+                    </FormLabel>
+                    <Field
+                        name="description"
+                        type="text"
+                        as={Input}
+                        fontSize="md"
+                        variant="riftly"
+                        ms="4px"
+                        onChange={(e) => onDescriptionChange(e.target.value)}
+                    />
 
-            <div className="col-6 mb-3">
-                <div className="form-check form-switch">
-                    <input
+                    <FormErrorMessage fontSize="md" name="description">
+                        {errors.description}
+                    </FormErrorMessage>
+                </FormControl>
+            </GridItem>
+
+            <GridItem colSpan={1}>
+                <FormControl>
+                    <FormLabel ms="4px" fontSize="md" fontWeight="bold">
+                        Reward Type
+                    </FormLabel>
+                    <Field
+                        name="type"
+                        as={Select}
+                        fontSize="md"
+                        ms="4px"
+                        size="lg"
+                        value={values.rewardTypeId}
+                        onChange={(e) => {
+                            e.preventDefault();
+                            console.log(e.target.value);
+                            onRewardTypeChange(e.target.value);
+                        }}
+                    >
+                        {rewardTypes &&
+                            rewardTypes.map((type, index) => {
+                                return (
+                                    <option key={index} value={parseInt(type.id)}>
+                                        {type.reward}
+                                    </option>
+                                );
+                            })}
+                    </Field>
+                </FormControl>
+            </GridItem>
+
+            <GridItem colSpan={1}>
+                <FormControl>
+                    <FormLabel ms="4px" fontSize="md" fontWeight="bold">
+                        Quantity
+                    </FormLabel>
+                    <Field
+                        maxW="200px"
+                        name="quantity"
+                        type="number"
+                        as={Input}
+                        fontSize="md"
+                        variant="riftly"
+                        ms="4px"
+                        onChange={(e) => onRewardQuantityChange(parseInt(e.target.value))}
+                    />
+
+                    <FormErrorMessage fontSize="md" name="quantity">
+                        {errors.quantity}
+                    </FormErrorMessage>
+                </FormControl>
+            </GridItem>
+
+            <GridItem colSpan={1}>
+                <FormControl>
+                    {/* <input
                         className="form-check-input"
                         type="checkbox"
                         defaultChecked={values.isEnabled}
                         name="isEnabled"
                         onChange={onIsEnabledChange}
-                    />
-                    Enabled
-                </div>
-            </div>
+                    /> */}
+
+                    <Checkbox
+                        onChange={onIsEnabledChange}
+                        name="isEnabled"
+                        defaultChecked={values.isEnabled}
+                    >
+                        Enabled
+                    </Checkbox>
+                </FormControl>
+            </GridItem>
         </>
     );
 };
 
 export default QuestFormTemplate;
+
+export const AdminQuestFormikWrapper = ({
+    isCreate,
+    text,
+    status,
+    isLoading,
+    closeModal,
+    children,
+}) => {
+    return (
+        <Box w="100%">
+            <Form>
+                <Flex
+                    flexDirection={{
+                        base: "row",
+                    }}
+                    w="100%"
+                    h="100%"
+                    justifyContent="center"
+                    mb="20px"
+                    mt={{ base: "50px", md: "20px" }}
+                    gap="1%"
+                >
+                    <Box
+                        w={{ base: "100%" }}
+                        minW="100%"
+                        display={"flex"}
+                        flexDirection={"column"}
+                        gap={"16px"}
+                    >
+                        <Heading size="lg">{isCreate ? "Create" : "Edit"} Quest</Heading>
+                        <Text fontSize={"md"}>{text}</Text>
+
+                        <SimpleGrid columns={"2"} columnGap={8} rowGap={4} w="full" gap="12px">
+                            {children}
+                        </SimpleGrid>
+                        {status && <Text colorScheme={"red"}>API error: {status}</Text>}
+
+                        <ButtonGroup>
+                            <Button
+                                w={"150px"}
+                                variant="discord"
+                                type="submit"
+                                isLoading={isLoading}
+                                disabled={isLoading}
+                                me="3"
+                            >
+                                Save
+                            </Button>
+
+                            <Button w={"150px"} type="button" variant="signIn" onClick={closeModal}>
+                                Close
+                            </Button>
+                        </ButtonGroup>
+                    </Box>
+                </Flex>
+            </Form>
+        </Box>
+    );
+};

@@ -22,6 +22,8 @@ model WhiteList {
   nonce                         String?
   whiteListUserData             WhiteListUserData?                                        
   uathUser                      String?               @default("")
+  email                         String?               @unique
+  password                      String?               @default("")
 }
 model WhiteListUserData {
   id           Int           @id @default(autoincrement())
@@ -76,20 +78,20 @@ model QuestType {
   quests         Quest[]
 }
 model UserQuest {
-  id                        Int           @id @default(autoincrement())
-  wallet                    String?  
-  questId                   String        @default(uuid())
-  extendedUserQuestData     Json? 
-  createdAt                 DateTime      @default(now())
-  rewardedQty               Int?  
-  rewardedTypeId            Int?  
-  quest                     Quest         @relation(fields: [questId], references: [questId])
-  rewardType                RewardType?   @relation(fields: [rewardedTypeId], references: [id])
-  updatedAt                 DateTime      @default(now()) @updatedAt
-  isHidden                  Boolean       @default(false)
-
-  user                      WhiteList    @relation(fields: [userId], references: [userId])
-  userId                    String 
+  id                        Int                 @id @default(autoincrement())      
+  questId                   String              @default(uuid())
+  extendedUserQuestData     Json?       
+  createdAt                 DateTime            @default(now())
+  rewardedQty               Int?        
+  rewardedTypeId            Int?        
+  quest                     Quest               @relation(fields: [questId], references: [questId])
+  rewardType                RewardType?         @relation(fields: [rewardedTypeId], references: [id])
+  updatedAt                 DateTime            @default(now())  @updatedAt
+  isHidden                  Boolean             @default(false)
+  hasClaimed                Boolean             @default(false)
+  isClaimable               Boolean             @default(false)
+  user                      WhiteList           @relation(fields: [userId], references: [userId])
+  userId                    String      
 
   @@unique([userId, questId])
 }

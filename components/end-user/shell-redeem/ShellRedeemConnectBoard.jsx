@@ -18,7 +18,7 @@ export const AUTHENTICATING = 5;
 
 export default function ShellRedeemConnectBoard() {
     let router = useRouter();
-    const { web3Error, tryConnectAsUser, setWeb3Error } = useContext(Web3Context);
+    const { web3Error, signInWithWallet, setWeb3Error } = useContext(Web3Context);
     const [currentPrompt, setPrompt] = useState(WELCOME);
 
     const [isMetamaskDisabled, setIsMetamaskDisabled] = useState(false);
@@ -34,7 +34,7 @@ export default function ShellRedeemConnectBoard() {
 
     const authenticateUsingWallet = async (walletType) => {
         changeView(AUTHENTICATING);
-        tryConnectAsUser(walletType);
+        signInWithWallet(walletType);
     };
 
     const GoBack = () => {

@@ -22,19 +22,23 @@ const Enums = {
 
     // quest related
     JOIN_DISCORD: "Join our Discord",
-    DISCORD_AUTH: "Discord Authenticate",
-    TWITTER_AUTH: "Twitter Authenticate",
-    WALLET_AUTH: "Wallet Authenticate",
+
     TWITTER_RETWEET: "Retweet a Tweet",
     FOLLOW_TWITTER: "Follow Twitter Account",
     FOLLOW_INSTAGRAM: "Follow Instagram Account",
+
+    DAILY_SHELL: "Daily Shell Quest",
+
     OWNING_NFT_CLAIM: "Claim Reward For Owning NFT",
     IMAGE_UPLOAD_QUEST: "Image Upload Quest",
     LIMITED_FREE_SHELL: "Limited Free $SHELL",
-    COLLABORATION_FREE_SHELL: "Free $SHELL On Collaboration", // deprecated, collaboration is determined based on quest.extendedQuestData
-    DAILY_SHELL: "Daily Shell Quest",
+
+
     CODE_QUEST: "Code Quest",
     UNSTOPPABLE_AUTH: "Unstoppable Domain Authenticate",
+    DISCORD_AUTH: "Discord Authenticate",
+    TWITTER_AUTH: "Twitter Authenticate",
+    WALLET_AUTH: "Wallet Authenticate",
 
     // Image approval
     ITEM_PER_PAGE: 100,

@@ -4,8 +4,20 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import { object, array, string, number } from "yup";
 import { withQuestUpsert } from "shared/HOC/quest";
 import DatePicker from "react-datepicker";
-import QuestFormTemplate from "./QuestFormTemplate";
+import QuestFormTemplate, { AdminQuestFormikWrapper } from "./QuestFormTemplate";
 import "react-datepicker/dist/react-datepicker.css";
+import { FormControl, FormLabel, FormErrorMessage, Input, GridItem } from "@chakra-ui/react";
+
+const ImageUploadSchema = object().shape({
+    extendedQuestData: object().shape({
+        eventName: string().required("An event name is required!"),
+        discordChannel: string().required("An discord channel Id is required!"),
+        // endDate: string().required("An end date is required!"),
+    }),
+    text: string().required("Quest text is required"),
+    completedText: string().required("Complete Text is required"),
+    quantity: number().required().min(0), //optional
+});
 
 const ImageUploadQuest = ({
     quest = null,
@@ -33,16 +45,6 @@ const ImageUploadQuest = ({
         isRequired: quest?.isRequired ?? false,
         id: quest?.id || 0,
     };
-    const ImageUploadSchema = object().shape({
-        extendedQuestData: object().shape({
-            eventName: string().required("An event name is required!"),
-            discordChannel: string().required("An discord channel Id is required!"),
-            // endDate: string().required("An end date is required!"),
-        }),
-        text: string().required("Quest text is required"),
-        completedText: string().required("Complete Text is required"),
-        quantity: number().required().min(0), //optional
-    });
 
     const onSubmit = async (fields, { setStatus }) => {
         try {
@@ -65,114 +67,91 @@ const ImageUploadQuest = ({
             onSubmit={onSubmit}
         >
             {({ values, errors, status, touched, handleChange, setFieldValue }) => {
+                const childrenProps = {
+                    isCreate,
+                    text: "Image Upload",
+                    isLoading,
+                    status,
+                    closeModal,
+                };
                 return (
-                    <Form>
-                        <h4 className="card-title mb-3">{isCreate ? "Create" : "Edit"} Quest</h4>
-                        <small>Create an app submission</small>
-                        <div className="row">
-                            {/* Anomura Event */}
-                            <div className="col-xxl-6 col-xl-6 col-lg-6 mb-3">
-                                <label className="form-label">Event Name (No spaces)</label>
+                    <AdminQuestFormikWrapper {...childrenProps}>
+                        <GridItem colSpan={1}>
+                            <FormControl>
+                                <FormLabel ms="4px" fontSize="md" fontWeight="bold">
+                                    Event Name (No spaces)
+                                </FormLabel>
                                 <Field
-                                    name={`extendedQuestData.eventName`}
+                                    name="extendedQuestData.eventName"
                                     type="text"
-                                    className={
-                                        "form-control" +
-                                        (errors?.extendedQuestData &&
-                                        errors?.extendedQuestData?.eventName &&
-                                        touched?.extendedQuestData?.eventName
-                                            ? " is-invalid"
-                                            : "")
-                                    }
+                                    as={Input}
+                                    fontSize="md"
+                                    variant="riftly"
+                                    ms="4px"
                                 />
-                                <ErrorMessage
-                                    name={`extendedQuestData.eventName`}
-                                    component="div"
-                                    className="invalid-feedback"
-                                />
-                            </div>
 
-                            <div className="col-xxl-6 col-xl-6 col-lg-6 mb-3">
-                                <label className="form-label">Discord Channel</label>
+                                <FormErrorMessage fontSize="md" name="extendedQuestData.eventName">
+                                    {errors.extendedQuestData?.eventName}
+                                </FormErrorMessage>
+                            </FormControl>
+                        </GridItem>
+
+                        <GridItem colSpan={1}>
+                            <FormControl>
+                                <FormLabel ms="4px" fontSize="md" fontWeight="bold">
+                                    Event Name (No spaces)
+                                </FormLabel>
                                 <Field
-                                    name={`extendedQuestData.discordChannel`}
+                                    name="extendedQuestData.discordChannel"
                                     type="text"
-                                    className={
-                                        "form-control" +
-                                        (errors.extendedQuestData &&
-                                        errors.extendedQuestData?.discordChannel &&
-                                        touched.extendedQuestData?.discordChannel
-                                            ? " is-invalid"
-                                            : "")
-                                    }
+                                    as={Input}
+                                    fontSize="md"
+                                    variant="riftly"
+                                    ms="4px"
                                 />
-                                <ErrorMessage
-                                    name={`extendedQuestData.discordChannel`}
-                                    component="div"
-                                    className="invalid-feedback"
-                                />
-                            </div>
-                            <div className="col-xxl-6 col-xl-6 col-lg-6 mb-3">
-                                <label className="form-label">Collaboration</label>
-                                <Field
-                                    name={`extendedQuestData.collaboration`}
-                                    type="text"
-                                    className={
-                                        "form-control" +
-                                        (errors.extendedQuestData &&
-                                        errors.extendedQuestData?.collaboration &&
-                                        touched.extendedQuestData?.collaboration
-                                            ? " is-invalid"
-                                            : "")
-                                    }
-                                />
-                                <ErrorMessage
-                                    name={`extendedQuestData.collaboration`}
-                                    component="div"
-                                    className="invalid-feedback"
-                                />
-                            </div>
 
-                            <QuestFormTemplate
-                                values={values}
-                                errors={errors}
-                                touched={touched}
-                                onTextChange={(t) => setFieldValue("text", t)}
-                                onCompletedTextChange={(c) => setFieldValue("completedText", c)}
-                                onDescriptionChange={(d) => setFieldValue("description", d)}
-                                onRewardTypeChange={(rt) => setFieldValue("rewardTypeId", rt)}
-                                onRewardQuantityChange={(rq) => setFieldValue("quantity", rq)}
-                                onIsEnabledChange={handleChange}
-                                rewardTypes={rewardTypes}
-                            />
-                            <div
-                                className={`col-12 mb-3 text-danger ${
-                                    status ? "d-block" : "d-none"
-                                }`}
-                            >
-                                <label className="form-label">API error: {status}</label>
-                            </div>
-
-                            <div className="col-12 mb-3">
-                                <button
-                                    type="submit"
-                                    className="btn btn-success me-2"
-                                    disabled={isLoading}
+                                <FormErrorMessage
+                                    fontSize="md"
+                                    name="extendedQuestData.discordChannel"
                                 >
-                                    {isLoading ? "Saving..." : "Save"}
-                                </button>
+                                    {errors.extendedQuestData?.discordChannel}
+                                </FormErrorMessage>
+                            </FormControl>
+                        </GridItem>
 
-                                <button
-                                    type="button"
-                                    className="btn btn-primary"
-                                    onClick={closeModal}
-                                    disabled={isLoading}
-                                >
-                                    Close
-                                </button>
-                            </div>
-                        </div>
-                    </Form>
+                        <GridItem colSpan={1}>
+                            <FormControl>
+                                <FormLabel ms="4px" fontSize="md" fontWeight="bold">
+                                    Chain (mainnet, polygon)
+                                </FormLabel>
+                                <Field
+                                    name="extendedQuestData.chain"
+                                    type="text"
+                                    as={Input}
+                                    fontSize="md"
+                                    variant="riftly"
+                                    ms="4px"
+                                />
+
+                                <FormErrorMessage fontSize="md" name="extendedQuestData.chain">
+                                    {errors.extendedQuestData?.chain}
+                                </FormErrorMessage>
+                            </FormControl>
+                        </GridItem>
+
+                        <QuestFormTemplate
+                            values={values}
+                            errors={errors}
+                            touched={touched}
+                            onTextChange={(t) => setFieldValue("text", t)}
+                            onCompletedTextChange={(c) => setFieldValue("completedText", c)}
+                            onDescriptionChange={(d) => setFieldValue("description", d)}
+                            onRewardTypeChange={(rt) => setFieldValue("rewardTypeId", rt)}
+                            onRewardQuantityChange={(rq) => setFieldValue("quantity", rq)}
+                            onIsEnabledChange={handleChange}
+                            rewardTypes={rewardTypes}
+                        />
+                    </AdminQuestFormikWrapper>
                 );
             }}
         </Formik>

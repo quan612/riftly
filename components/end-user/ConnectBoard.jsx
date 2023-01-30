@@ -18,7 +18,7 @@ export const GONE_FISHING = 10;
 
 export default function ConnectBoard() {
     let router = useRouter();
-    const { web3Error, tryConnectAsUser, setWeb3Error, tryConnectAsUnstoppable } =
+    const { web3Error, signInWithWallet, setWeb3Error, tryConnectAsUnstoppable } =
         useContext(Web3Context);
     const [currentPrompt, setPrompt] = useState(WELCOME);
     const [isMetamaskDisabled, setIsMetamaskDisabled] = useState(false);
@@ -41,7 +41,7 @@ export default function ConnectBoard() {
 
     const authenticateUsingWallet = async (walletType) => {
         changeView(AUTHENTICATING);
-        tryConnectAsUser(walletType);
+        signInWithWallet(walletType);
     };
 
     const authenticateUsingUnstoppable = async () => {

@@ -90,7 +90,6 @@ const userClaimRewardAPI = async (req, res) => {
                     let messageContent = `** ${receivingUser} has just claimed ${pendingReward.quantity} ${pendingReward?.rewardType?.reward}** `;
                     let imageUrl = pendingReward.rewardType.rewardPreview;
 
-
                     let discordPostOp = discordChannels.map(async (discord, index) => {
                         await axios
                             .post(

@@ -3,7 +3,16 @@ import React from "react";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { object, array, string, number } from "yup";
 import { withQuestUpsert } from "shared/HOC/quest";
-import QuestFormTemplate from "./QuestFormTemplate";
+import QuestFormTemplate, { AdminQuestFormikWrapper } from "./QuestFormTemplate";
+import { FormControl, FormLabel, FormErrorMessage, Input, GridItem } from "@chakra-ui/react";
+const TwitterRetweetQuestSchema = object().shape({
+    extendedQuestData: object().shape({
+        tweetId: string().required("An id of the tweet is required!"),
+    }),
+    text: string().required("Quest text is required"),
+    completedText: string().required("Complete Text is required"),
+    quantity: number().required().min(0), //optional
+});
 
 const TwitterRetweetQuest = ({
     quest = null,
@@ -26,26 +35,6 @@ const TwitterRetweetQuest = ({
         isRequired: quest?.isRequired ?? false,
         id: quest?.id || 0,
     };
-    const TwitterRetweetQuestSchema = object().shape({
-        extendedQuestData: object().shape({
-            tweetId: string().required("An id of the tweet is required!"),
-        }),
-        text: string().required("Quest text is required"),
-        completedText: string().required("Complete Text is required"),
-        quantity: number().required().min(0), //optional
-    });
-
-    const onSubmit = async (fields, { setStatus }) => {
-        try {
-            let res = await onUpsert(fields);
-
-            if (res.data.isError) {
-                setStatus(res.data.message);
-            } else {
-                closeModal();
-            }
-        } catch (error) {}
-    };
 
     return (
         <Formik
@@ -53,102 +42,77 @@ const TwitterRetweetQuest = ({
             validationSchema={TwitterRetweetQuestSchema}
             validateOnBlur={true}
             validateOnChange={false}
-            onSubmit={onSubmit}
+            onSubmit={async (fields, { setStatus }) => {
+                try {
+                    let res = await onUpsert(fields);
+
+                    if (res.data.isError) {
+                        setStatus(res.data.message);
+                    } else {
+                        closeModal();
+                    }
+                } catch (error) {}
+            }}
         >
             {({ values, errors, status, touched, handleChange, setFieldValue }) => {
+                const childrenProps = {
+                    isCreate,
+                    text: "Twitter Retweet",
+                    isLoading,
+                    status,
+                    closeModal,
+                };
                 return (
-                    <Form>
-                        <h4 className="card-title mb-3">{isCreate ? "Create" : "Edit"} Quest</h4>
-                        <small>Create a Twitter Retweet Requirement</small>
-                        <div className="row">
-                            {/* Retweet a Tweet */}
-
-                            <div className="col-xxl-6 col-xl-6 col-lg-6 mb-3">
-                                <label className="form-label">
-                                    Retweet a tweet (Enter id of the original tweet)
-                                </label>
+                    <AdminQuestFormikWrapper {...childrenProps}>
+                        <GridItem colSpan={1}>
+                            <FormControl>
+                                <FormLabel ms="4px" fontSize="md" fontWeight="bold">
+                                    Tweet Id (Enter id ~ 1597626502308306949)
+                                </FormLabel>
                                 <Field
                                     name="extendedQuestData.tweetId"
                                     type="text"
-                                    className={
-                                        "form-control" +
-                                        (errors?.extendedQuestData &&
-                                        errors?.extendedQuestData?.tweetId &&
-                                        touched?.extendedQuestData?.tweetId
-                                            ? " is-invalid"
-                                            : "")
-                                    }
+                                    as={Input}
+                                    fontSize="md"
+                                    variant="riftly"
+                                    ms="4px"
                                 />
-                                <ErrorMessage
-                                    name="extendedQuestData.tweetId"
-                                    component="div"
-                                    className="invalid-feedback"
-                                />
-                            </div>
-                            <div className="col-xxl-6 col-xl-6 col-lg-6 mb-3">
-                                <label className="form-label">
-                                    Part of Collaboration (colormonsters, or leave blank if not
-                                    collaborate)
-                                </label>
+
+                                <FormErrorMessage fontSize="md" name="extendedQuestData.tweetId">
+                                    {errors.extendedQuestData?.tweetId}
+                                </FormErrorMessage>
+                            </FormControl>
+                        </GridItem>
+
+                        <GridItem colSpan={1}>
+                            <FormControl>
+                                <FormLabel ms="4px" fontSize="md" fontWeight="bold">
+                                    Collaboration (leaving blank for non specific collaboration)
+                                </FormLabel>
                                 <Field
                                     name="extendedQuestData.collaboration"
                                     type="text"
-                                    className={
-                                        "form-control" +
-                                        (errors.extendedQuestData &&
-                                        errors.extendedQuestData.collaboration &&
-                                        touched.extendedQuestData.collaboration
-                                            ? " is-invalid"
-                                            : "")
-                                    }
+                                    as={Input}
+                                    fontSize="md"
+                                    variant="riftly"
+                                    ms="4px"
                                 />
-                                <ErrorMessage
-                                    name="extendedQuestData.collaboration"
-                                    component="div"
-                                    className="invalid-feedback"
-                                />
-                            </div>
+                            </FormControl>
+                        </GridItem>
 
-                            <QuestFormTemplate
-                                values={values}
-                                errors={errors}
-                                touched={touched}
-                                onTextChange={(t) => setFieldValue("text", t)}
-                                onCompletedTextChange={(c) => setFieldValue("completedText", c)}
-                                onDescriptionChange={(d) => setFieldValue("description", d)}
-                                onRewardTypeChange={(rt) => setFieldValue("rewardTypeId", rt)}
-                                onRewardQuantityChange={(rq) => setFieldValue("quantity", rq)}
-                                onIsEnabledChange={handleChange}
-                                rewardTypes={rewardTypes}
-                            />
-                            <div
-                                className={`col-12 mb-3 text-red-500 ${
-                                    status ? "d-block" : "d-none"
-                                }`}
-                            >
-                                <label className="form-label">API error: {status}</label>
-                            </div>
-
-                            <div className="col-12 mb-3">
-                                <button
-                                    type="submit"
-                                    className="btn btn-success me-2"
-                                    disabled={isLoading}
-                                >
-                                    {isLoading ? "Saving..." : "Save"}
-                                </button>
-
-                                <button
-                                    type="button"
-                                    className="btn btn-primary"
-                                    onClick={closeModal}
-                                    disabled={isLoading}
-                                >
-                                    Close
-                                </button>
-                            </div>
-                        </div>
-                    </Form>
+                        <QuestFormTemplate
+                            values={values}
+                            errors={errors}
+                            touched={touched}
+                            onTextChange={(t) => setFieldValue("text", t)}
+                            onCompletedTextChange={(c) => setFieldValue("completedText", c)}
+                            onDescriptionChange={(d) => setFieldValue("description", d)}
+                            onRewardTypeChange={(rt) => setFieldValue("rewardTypeId", rt)}
+                            onRewardQuantityChange={(rq) => setFieldValue("quantity", rq)}
+                            onIsEnabledChange={handleChange}
+                            rewardTypes={rewardTypes}
+                        />
+                    </AdminQuestFormikWrapper>
                 );
             }}
         </Formik>

@@ -92,7 +92,7 @@ const submitUnstoppableAuthQuest = async (req, res) => {
       }
       break;
     default:
-      res.setHeader("Allow", ["GET", "PUT"]);
+      res.setHeader("Allow", ["PUT"]);
       res.status(405).end(`Method ${method} Not Allowed`);
   }
 };

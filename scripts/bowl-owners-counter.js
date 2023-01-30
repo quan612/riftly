@@ -17,7 +17,12 @@ const timer = ms => new Promise(res => setTimeout(res, ms))
 
 async function main() {
 
-  await Moralis.start({ apiKey: process.env.MORALIS_API_KEY });
+  if (!Moralis.Core.isStarted) {
+    await Moralis.start({
+      apiKey: process.env.MORALIS_API_KEY,
+      // ...other configuration
+    });
+  }
 
   let csvData = [];;
 

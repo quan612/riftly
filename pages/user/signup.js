@@ -21,7 +21,7 @@ export const SIGNUP_ERROR = 7;
 function SignUp({ session }) {
     const [currentPrompt, setPrompt] = useState(SIGNUP);
 
-    const { web3Error, TrySignUpWithWallet, setWeb3Error } = useContext(Web3Context);
+    const { web3Error, signUpWithWallet, setWeb3Error } = useContext(Web3Context);
     const router = useRouter();
     let redirectTimeout;
     const [isMetamaskDisabled, setIsMetamaskDisabled] = useState(false);
@@ -53,7 +53,7 @@ function SignUp({ session }) {
 
         if (typeOfSignUp == Enums.WALLETCONNECT || typeOfSignUp == Enums.METAMASK) {
             let signUpResult
-            signUpResult = await TrySignUpWithWallet(typeOfSignUp);
+            signUpResult = await signUpWithWallet(typeOfSignUp);
             if (signUpResult === true) {
                 changeView(SIGNUP_SUCCESS);
 

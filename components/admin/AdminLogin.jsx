@@ -5,7 +5,7 @@ import Enums from "enums";
 import { useDeviceDetect } from "lib/hooks";
 
 const AdminLogin = ({ closeModal }) => {
-    const { TryConnectAsAdmin } = useContext(Web3Context);
+    const { adminSignIn } = useContext(Web3Context);
     const [isMetamaskDisabled, setIsMetamaskDisabled] = useState(false);
     const { isMobile } = useDeviceDetect();
 
@@ -22,7 +22,7 @@ const AdminLogin = ({ closeModal }) => {
                     <div
                         className={s.nonPixelModal_container}
                         onClick={async () => {
-                            await TryConnectAsAdmin(Enums.METAMASK);
+                            await adminSignIn(Enums.METAMASK);
                             closeModal();
                         }}
                     >
@@ -61,7 +61,7 @@ const AdminLogin = ({ closeModal }) => {
                 <div
                     className={s.nonPixelModal_container}
                     onClick={async () => {
-                        let res = await TryConnectAsAdmin(Enums.WALLETCONNECT);
+                        let res = await adminSignIn(Enums.WALLETCONNECT);
 
                         closeModal();
                     }}

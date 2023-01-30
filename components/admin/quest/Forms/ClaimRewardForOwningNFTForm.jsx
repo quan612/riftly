@@ -3,9 +3,22 @@ import React from "react";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { object, array, string, number } from "yup";
 import { withQuestUpsert } from "shared/HOC/quest";
-import QuestFormTemplate from "./QuestFormTemplate";
+import QuestFormTemplate, { AdminQuestFormikWrapper, Wrapper } from "./QuestFormTemplate";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+
+import { FormControl, FormLabel, FormErrorMessage, Input, GridItem } from "@chakra-ui/react";
+
+const OwningNftQuestSchema = object().shape({
+    extendedQuestData: object().shape({
+        nft: string().required("A nft name is required!"),
+        contract: string().required("A contract address is required!"),
+        chain: string().required("A chain network is required!"),
+    }),
+    text: string().required("Quest text is required"),
+    completedText: string().required("Complete Text is required"),
+    quantity: number().required().min(0), //optional
+});
 
 const ClaimRewardForOwningNFTForm = ({
     quest = null,
@@ -35,16 +48,6 @@ const ClaimRewardForOwningNFTForm = ({
         isRequired: quest?.isRequired ?? false,
         id: quest?.id || 0,
     };
-    const OwningNftQuestSchema = object().shape({
-        extendedQuestData: object().shape({
-            nft: string().required("A nft name is required!"),
-            contract: string().required("A contract address is required!"),
-            chain: string().required("A chain network is required!"),
-        }),
-        text: string().required("Quest text is required"),
-        completedText: string().required("Complete Text is required"),
-        quantity: number().required().min(0), //optional
-    });
 
     const onSubmit = async (fields, { setStatus }) => {
         try {
@@ -69,138 +72,104 @@ const ClaimRewardForOwningNFTForm = ({
             onSubmit={onSubmit}
         >
             {({ values, errors, status, touched, handleChange, setFieldValue }) => {
+                const childrenProps = {
+                    isCreate,
+                    text: "Own NFT Quest",
+                    isLoading,
+                    status,
+                    closeModal,
+                };
                 return (
-                    <Form>
-                        <h4 className="card-title mb-3">{isCreate ? "Create" : "Edit"} Quest</h4>
-                        <small>Create a Owning NFT Quest Event</small>
-                        <div className="row">
-                            {/* Owning NFT Quest */}
-                            <div className="col-xxl-6 col-xl-6 col-lg-6 mb-3">
-                                <label className="form-label">
-                                    NFT name (to be accessed as /nft-quest?nft=)
-                                </label>
+                    <AdminQuestFormikWrapper {...childrenProps}>
+                        <GridItem colSpan={1}>
+                            <FormControl>
+                                <FormLabel ms="4px" fontSize="md" fontWeight="bold">
+                                    NFT name
+                                </FormLabel>
                                 <Field
-                                    name={`extendedQuestData.nft`}
+                                    name="extendedQuestData.nft"
                                     type="text"
-                                    className={
-                                        "form-control" +
-                                        (errors.extendedQuestData &&
-                                        errors.extendedQuestData?.nft &&
-                                        touched.extendedQuestData?.nft
-                                            ? " is-invalid"
-                                            : "")
-                                    }
+                                    as={Input}
+                                    fontSize="md"
+                                    variant="riftly"
+                                    ms="4px"
                                 />
-                                <ErrorMessage
-                                    name={`extendedQuestData.name`}
-                                    component="div"
-                                    className="invalid-feedback"
-                                />
-                            </div>
-                            <div className="col-xxl-6 col-xl-6 col-lg-6 mb-3">
-                                <label className="form-label">Contract Address</label>
-                                <Field
-                                    name={`extendedQuestData.contract`}
-                                    type="text"
-                                    className={
-                                        "form-control" +
-                                        (errors.extendedQuestData &&
-                                        errors.extendedQuestData?.contract &&
-                                        touched.extendedQuestData?.contract
-                                            ? " is-invalid"
-                                            : "")
-                                    }
-                                />
-                                <ErrorMessage
-                                    name={`extendedQuestData.contract`}
-                                    component="div"
-                                    className="invalid-feedback"
-                                />
-                            </div>
 
-                            <div className="col-xxl-6 col-xl-6 col-lg-6 mb-3">
-                                <label className="form-label">Chain</label>
+                                <FormErrorMessage fontSize="md" name="extendedQuestData.nft">
+                                    {errors.extendedQuestData?.nft}
+                                </FormErrorMessage>
+                            </FormControl>
+                        </GridItem>
+
+                        <GridItem colSpan={1}>
+                            <FormControl>
+                                <FormLabel ms="4px" fontSize="md" fontWeight="bold">
+                                    Contract Address
+                                </FormLabel>
                                 <Field
-                                    name={`extendedQuestData.chain`}
+                                    name="extendedQuestData.contract"
                                     type="text"
-                                    className={
-                                        "form-control" +
-                                        (errors.extendedQuestData &&
-                                        errors.extendedQuestData?.chain &&
-                                        touched.extendedQuestData?.chain
-                                            ? " is-invalid"
-                                            : "")
-                                    }
+                                    as={Input}
+                                    fontSize="md"
+                                    variant="riftly"
+                                    ms="4px"
                                 />
-                                <ErrorMessage
-                                    name={`extendedQuestData.chain`}
-                                    component="div"
-                                    className="invalid-feedback"
+
+                                <FormErrorMessage fontSize="md" name="extendedQuestData.contract">
+                                    {errors.extendedQuestData?.contract}
+                                </FormErrorMessage>
+                            </FormControl>
+                        </GridItem>
+
+                        <GridItem colSpan={1}>
+                            <FormControl>
+                                <FormLabel ms="4px" fontSize="md" fontWeight="bold">
+                                    Chain (mainnet, polygon)
+                                </FormLabel>
+                                <Field
+                                    name="extendedQuestData.chain"
+                                    type="text"
+                                    as={Input}
+                                    fontSize="md"
+                                    variant="riftly"
+                                    ms="4px"
                                 />
-                            </div>
-                            <div className="col-xxl-6 col-xl-6 col-lg-6 mb-3">
-                                <label className="form-label">
+
+                                <FormErrorMessage fontSize="md" name="extendedQuestData.chain">
+                                    {errors.extendedQuestData?.chain}
+                                </FormErrorMessage>
+                            </FormControl>
+                        </GridItem>
+
+                        <GridItem colSpan={1}>
+                            <FormControl>
+                                <FormLabel ms="4px" fontSize="md" fontWeight="bold">
                                     Collaboration (leaving blank for non specific collaboration)
-                                </label>
+                                </FormLabel>
                                 <Field
-                                    name={`extendedQuestData.collaboration`}
+                                    name="extendedQuestData.collaboration"
                                     type="text"
-                                    className={
-                                        "form-control" +
-                                        (errors?.extendedQuestData &&
-                                        errors?.extendedQuestData?.collaboration &&
-                                        touched?.extendedQuestData?.collaboration
-                                            ? " is-invalid"
-                                            : "")
-                                    }
+                                    as={Input}
+                                    fontSize="md"
+                                    variant="riftly"
+                                    ms="4px"
                                 />
-                                <ErrorMessage
-                                    name={`extendedQuestData.collaboration`}
-                                    component="div"
-                                    className="invalid-feedback"
-                                />
-                            </div>
+                            </FormControl>
+                        </GridItem>
 
-                            <QuestFormTemplate
-                                values={values}
-                                errors={errors}
-                                touched={touched}
-                                onTextChange={(t) => setFieldValue("text", t)}
-                                onCompletedTextChange={(c) => setFieldValue("completedText", c)}
-                                onDescriptionChange={(d) => setFieldValue("description", d)}
-                                onRewardTypeChange={(rt) => setFieldValue("rewardTypeId", rt)}
-                                onRewardQuantityChange={(rq) => setFieldValue("quantity", rq)}
-                                onIsEnabledChange={handleChange}
-                                rewardTypes={rewardTypes}
-                            />
-                            <div
-                                className={`col-12 mb-3 text-danger ${
-                                    status ? "d-block" : "d-none"
-                                }`}
-                            >
-                                <label className="form-label">API error: {status}</label>
-                            </div>
-
-                            <div className="col-12 mb-3">
-                                <button
-                                    type="submit"
-                                    className="btn btn-success me-2"
-                                    disabled={isLoading}
-                                >
-                                    {isLoading ? "Saving..." : "Save"}
-                                </button>
-
-                                <button
-                                    type="button"
-                                    className="btn btn-primary"
-                                    onClick={closeModal}
-                                    disabled={isLoading}
-                                >
-                                    Close
-                                </button>
-                            </div>
-                        </div>
-                    </Form>
+                        <QuestFormTemplate
+                            values={values}
+                            errors={errors}
+                            touched={touched}
+                            onTextChange={(t) => setFieldValue("text", t)}
+                            onCompletedTextChange={(c) => setFieldValue("completedText", c)}
+                            onDescriptionChange={(d) => setFieldValue("description", d)}
+                            onRewardTypeChange={(rt) => setFieldValue("rewardTypeId", rt)}
+                            onRewardQuantityChange={(rq) => setFieldValue("quantity", rq)}
+                            onIsEnabledChange={handleChange}
+                            rewardTypes={rewardTypes}
+                        />
+                    </AdminQuestFormikWrapper>
                 );
             }}
         </Formik>

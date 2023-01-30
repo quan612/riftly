@@ -1,18 +1,44 @@
 import React, { useEffect, useState, useCallback, useRef } from "react";
 import Enums from "enums";
 import { Modal } from "/components/admin";
-import { useRouter } from "next/router";
-import Link from "next/link";
+import { utils } from "ethers";
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import { object, array, string, number } from "yup";
 
-import { debounce } from "utils/";
+import {
+    Heading,
+    Box,
+    Flex,
+    Link,
+    List,
+    ListItem,
+    Text,
+    Button,
+    useColorMode,
+    useColorModeValue,
+    SimpleGrid,
+    FormControl,
+    FormLabel,
+    FormErrorMessage,
+    Input,
+    Switch,
+    Select,
+    Checkbox,
+    GridItem,
+    Table,
+    Tbody,
+    Th,
+    Thead,
+    Tr,
+    Td,
+    Icon,
+} from "@chakra-ui/react";
+import Card from "@components/chakra/card/Card";
 
 import { useAdminUserQuestsQuery, useAdminUserQuestDelete } from "@shared/HOC/user-quests";
+import AdminCard from "@components/chakra/card/AdminCard";
 
 const AdminUserQuestsSearch = () => {
     const [queryData, isQuerying, queryUserQuestsAsync] = useAdminUserQuestsQuery();
-    const [deleteData, isDeleting, deleteUserQuestsAsync] = useAdminUserQuestDelete();
     const [userQuests, userQuestsSet] = useState([]);
 
     const handleOnQuery = async (payload) => {
@@ -25,6 +51,31 @@ const AdminUserQuestsSearch = () => {
         }
     }, [queryData]);
 
+    return (
+        <Flex
+            flexDirection={{
+                base: "column",
+            }}
+            w="100%"
+            h="100%"
+            justifyContent="center"
+            gap="1%"
+        >
+            <SearchUserQuestForm handleOnQuery={handleOnQuery} isQuerying={isQuerying} />
+            <QuestsOfUserTable userQuests={userQuests} />
+        </Flex>
+    );
+};
+export default AdminUserQuestsSearch;
+
+import { AiFillDelete } from "react-icons/ai";
+
+const QuestsOfUserTable = ({ userQuests }) => {
+    const bg = useColorModeValue("white", "#1B254B");
+    const shadow = useColorModeValue("0px 18px 40px rgba(112, 144, 176, 0.12)", "none");
+    const textColor = useColorModeValue("gray.700", "white");
+    const [deleteData, isDeleting, deleteUserQuestsAsync] = useAdminUserQuestDelete();
+
     const getRewardedInfo = (rewardedQty, rewardType) => {
         if (rewardType?.rewardIcon?.length > 0) {
             return (
@@ -34,124 +85,95 @@ const AdminUserQuestsSearch = () => {
                 </div>
             );
         } else {
-            return rewardedQty + rewardType.reward;
+            return rewardedQty + " " + rewardType.reward;
         }
     };
-
     return (
-        <div className="row">
-            <div className="col-xxl-12">
-                <h4 className="card-title mb-3">Search</h4>
-                <div className="card">
-                    <div className="card-body">
-                        <SearchUserQuestForm handleOnQuery={handleOnQuery} />
-                    </div>
-                </div>
-            </div>
-            <div className="col-xl-12">
-                <h4 className="card-title mb-3">Quest of User</h4>
-                <div className="card">
-                    <div className="card-body">
-                        <div className="table-responsive api-table">
-                            <table className="table">
-                                <thead>
-                                    <tr>
-                                        <th className="col-4">Quest</th>
-                                        <th className="col-1">Rewarded</th>
-                                        <th className="col-3">Completed</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {userQuests &&
-                                        userQuests.length > 0 &&
-                                        userQuests.map((userQuest, index) => {
-                                            const {
-                                                quest,
-                                                rewardType,
-                                                rewardedQty,
-                                                updatedAt,
-                                                id,
-                                                userId,
-                                                questId,
-                                            } = userQuest;
+        <Box w="100%">
+            <h4 className="card-title mb-3">Result</h4>
+            <Card boxShadow={shadow} py="8" bg={bg}>
+                <Table variant="simple" color={textColor}>
+                    <Thead>
+                        <Tr my=".8rem" pl="0px" color="gray.400" fontSize="18px">
+                            <Th pl="0px" color="gray.500" colSpan={2}>
+                                Quest
+                            </Th>
+                            <Th color="gray.500">Rewarded</Th>
+                            <Th color="gray.500">Completed</Th>
+                            <Th color="gray.500">Actions</Th>
+                        </Tr>
+                    </Thead>
+                    <Tbody>
+                        {userQuests &&
+                            userQuests.length > 0 &&
+                            userQuests.map((userQuest, index) => {
+                                const {
+                                    quest,
+                                    rewardType,
+                                    rewardedQty,
+                                    updatedAt,
+                                    id,
+                                    userId,
+                                    questId,
+                                } = userQuest;
 
-                                            let date = new Date(updatedAt);
-                                            let updateAtInLocale =
-                                                date.toLocaleDateString("en-US") +
-                                                " " +
-                                                date.toLocaleTimeString("en-US");
+                                let date = new Date(updatedAt);
+                                let updateAtInLocale =
+                                    date.toLocaleDateString("en-US") +
+                                    " " +
+                                    date.toLocaleTimeString("en-US");
 
-                                            return (
-                                                <tr key={index}>
-                                                    <td>{quest.text}</td>
-                                                    <td>
-                                                        {getRewardedInfo(rewardedQty, rewardType)}
-                                                        {/* {rewardedQty} {rewardType.reward} */}
-                                                    </td>
-                                                    <td>{updateAtInLocale}</td>
-                                                    <td>
-                                                        <span>
-                                                            <i
-                                                                className="ri-delete-bin-line"
-                                                                style={{
-                                                                    fontSize: "2rem",
-                                                                }}
-                                                                onClick={async () => {
-                                                                    let payload = {
-                                                                        id,
-                                                                        userId,
-                                                                        questId,
-                                                                    };
-                                                                    if (
-                                                                        !window.confirm(
-                                                                            "Proceed To Delete"
-                                                                        )
-                                                                    ) {
-                                                                        return;
-                                                                    }
-                                                                    let deleteOp =
-                                                                        await deleteUserQuestsAsync(
-                                                                            payload
-                                                                        );
+                                return (
+                                    <Tr key={index}>
+                                        <Td colSpan={2}>{quest.text}</Td>
+                                        <Td>{getRewardedInfo(rewardedQty, rewardType)}</Td>
+                                        <Td>{updateAtInLocale}</Td>
+                                        <Td>
+                                            <Icon
+                                                transition="0.8s"
+                                                color="red.300"
+                                                boxSize={6}
+                                                as={AiFillDelete}
+                                                _hover={{
+                                                    cursor: "pointer",
+                                                }}
+                                                onClick={async () => {
+                                                    let payload = {
+                                                        id,
+                                                        userId,
+                                                        questId,
+                                                    };
+                                                    if (!window.confirm("Proceed To Delete")) {
+                                                        return;
+                                                    }
+                                                    let deleteOp = await deleteUserQuestsAsync(
+                                                        payload
+                                                    );
 
-                                                                    if (!deleteOp.isError) {
-                                                                        let currentUserQuests =
-                                                                            userQuests.filter(
-                                                                                (q) => q.id !== id
-                                                                            );
-                                                                        userQuestsSet(
-                                                                            currentUserQuests
-                                                                        );
-                                                                    }
-                                                                }}
-                                                            ></i>
-                                                        </span>
-                                                    </td>
-                                                </tr>
-                                            );
-                                        })}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+                                                    if (!deleteOp.isError) {
+                                                        let currentUserQuests = userQuests.filter(
+                                                            (q) => q.id !== id
+                                                        );
+                                                        userQuestsSet(currentUserQuests);
+                                                    }
+                                                }}
+                                            />
+                                        </Td>
+                                    </Tr>
+                                );
+                            })}
+                    </Tbody>
+                </Table>
+            </Card>
+        </Box>
     );
 };
 
-export default AdminUserQuestsSearch;
-
-function SearchUserQuestForm({ handleOnQuery }) {
+function SearchUserQuestForm({ handleOnQuery, isQuerying }) {
     const initialValues = {
         user: "",
         type: Enums.WALLET,
     };
-
-    const UserQuestsSearchSchema = object().shape({
-        user: string().required("User is required"),
-    });
 
     const getButtonState = (values) => {
         if (values.user.length === 0) {
@@ -164,8 +186,7 @@ function SearchUserQuestForm({ handleOnQuery }) {
             <Formik
                 enableReinitialize
                 initialValues={initialValues}
-                validationSchema={UserQuestsSearchSchema}
-                validateOnChange={true}
+                validateOnChange={false}
                 validateOnBlur={false}
                 onSubmit={async (fields, { setStatus, resetForm }) => {
                     setStatus(null);
@@ -178,74 +199,135 @@ function SearchUserQuestForm({ handleOnQuery }) {
                     await handleOnQuery(payload);
                 }}
             >
-                {({ errors, status, touched, setFieldValue, values, resetForm }) => (
-                    <Form>
-                        <div className="row">
-                            {/* Type of social media account  */}
-                            <div className="col-6 mb-3">
-                                <label className="form-label">Type</label>
-                                <Field name="type" as="select" className={"form-control"}>
-                                    <option value={Enums.WALLET}>{Enums.WALLET}</option>
-                                    <option value={Enums.DISCORD}>{Enums.DISCORD}</option>
-                                    <option value={Enums.TWITTER}>{Enums.TWITTER}</option>
-                                </Field>
-                            </div>
-                            {/* Username Input  */}
-                            <div className="col-6 mb-3">
-                                <label className="form-label">
-                                    User (Wallet / Discord / Twitter)
-                                </label>
-                                <Field
-                                    name="user"
-                                    type="text"
-                                    className={
-                                        "form-control" +
-                                        (errors?.user && touched?.user ? " is-invalid" : "")
-                                    }
-                                />
-                                <ErrorMessage
-                                    name="user"
-                                    component="div"
-                                    className="invalid-feedback"
-                                />
-                            </div>
+                {({ errors, status, touched, setFieldValue, values, resetForm }) => {
+                    return (
+                        <Box w="100%">
+                            <Form>
+                                <Flex
+                                    flexDirection={{
+                                        base: "row",
+                                    }}
+                                    w="100%"
+                                    h="100%"
+                                    justifyContent="center"
+                                    mb="60px"
+                                    mt={{ base: "50px", md: "20px" }}
+                                    gap="1%"
+                                >
+                                    <Box w={{ base: "100%" }} minW="100%">
+                                        <AdminCard>
+                                            <SimpleGrid
+                                                minChildWidth={"300px"}
+                                                columns={{ base: 1, xl: 3 }}
+                                                columnGap={8}
+                                                rowGap={4}
+                                                w="full"
+                                            >
+                                                <GridItem colSpan={1}>
+                                                    <FormControl mb="24px">
+                                                        <FormLabel
+                                                            ms="4px"
+                                                            fontSize="md"
+                                                            fontWeight="bold"
+                                                        >
+                                                            User Type
+                                                        </FormLabel>
+                                                        <Field
+                                                            name="type"
+                                                            as={Select}
+                                                            fontSize="md"
+                                                            ms="4px"
+                                                            size="lg"
+                                                        >
+                                                            <option value={Enums.WALLET}>
+                                                                {Enums.WALLET}
+                                                            </option>
+                                                            <option value={Enums.DISCORD}>
+                                                                {Enums.DISCORD}
+                                                            </option>
+                                                            <option value={Enums.TWITTER}>
+                                                                {Enums.TWITTER}
+                                                            </option>
+                                                        </Field>
+                                                    </FormControl>
+                                                </GridItem>
 
-                            <div
-                                className={`col-12 mb-3 text-red-500 ${
-                                    status ? "d-block" : "d-none"
-                                }`}
-                            >
-                                <label className="form-label">API error: {status}</label>
-                            </div>
-                        </div>
+                                                <GridItem colSpan={{ base: 1, xl: 2 }}>
+                                                    <FormControl
+                                                        mb="24px"
+                                                        isRequired
+                                                        isInvalid={
+                                                            errors.username && touched.username
+                                                        }
+                                                    >
+                                                        <FormLabel
+                                                            ms="4px"
+                                                            fontSize="md"
+                                                            fontWeight="bold"
+                                                        >
+                                                            User
+                                                        </FormLabel>
 
-                        <div className="mt-3">
-                            <button
-                                type="submit"
-                                className="btn btn-primary me-2"
-                                disabled={getButtonState(values)}
-                            >
-                                Search
-                            </button>
-                            {/* <button
-                                type="button"
-                                className="btn btn-secondary me-2"
-                                onClick={() => {
-                                    setImageFile(null);
-                                    resetForm();
-                                    createRewardTypeSet({
-                                        id: -1,
-                                        reward: "",
-                                        rewardPreview: "",
-                                        isUpdating: false,
-                                    });
-                                }}
-                            >
-                                Cancel
-                            </button> */}
-                        </div>
-                    </Form>
-                )}
+                                                        <Field
+                                                            as={Input}
+                                                            size="lg"
+                                                            name="user"
+                                                            type="text"
+                                                            variant="auth"
+                                                            placeholder="Wallet / Discord User abc#1234 / Twitter User"
+                                                            validate={(value) => {
+                                                                let error;
+
+                                                                if (
+                                                                    values.type === Enums.WALLET &&
+                                                                    !utils.isAddress(value)
+                                                                ) {
+                                                                    error =
+                                                                        "Invalid address checksum.";
+                                                                }
+                                                                if (
+                                                                    (values.type ===
+                                                                        Enums.DISCORD ||
+                                                                        values.type ===
+                                                                            Enums.TWITTER) &&
+                                                                    value.length < 1
+                                                                ) {
+                                                                    error = "User cannot be blank.";
+                                                                }
+                                                                return error;
+                                                            }}
+                                                        />
+                                                        <FormErrorMessage fontSize="md">
+                                                            {errors.username}
+                                                        </FormErrorMessage>
+                                                    </FormControl>
+                                                </GridItem>
+                                            </SimpleGrid>
+
+                                            {status && (
+                                                <Text colorScheme={"red"}>API error: {status}</Text>
+                                            )}
+
+                                            <Button
+                                                w={{ base: "200px" }}
+                                                my="16px"
+                                                type="submit"
+                                                colorScheme="orange"
+                                                size="lg"
+                                                fontWeight="semibold"
+                                                fontSize="18px"
+                                                isLoading={isQuerying}
+                                                disabled={getButtonState(values)}
+                                            >
+                                                Search
+                                            </Button>
+                                        </AdminCard>
+                                    </Box>
+                                </Flex>
+                            </Form>
+                        </Box>
+                    );
+                }}
             </Formik>
         </>
     );

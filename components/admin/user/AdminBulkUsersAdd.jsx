@@ -6,19 +6,55 @@ import { useAdminBulkUsersMutation } from "shared/HOC/user";
 import Enums from "enums";
 import { utils } from "ethers";
 import { read, utils as excelUtils } from "xlsx";
-import { Tooltip, useToast } from "@chakra-ui/react";
+import {
+    ButtonGroup,
+    Icon,
+    Table,
+    Tbody,
+    Td,
+    Th,
+    Thead,
+    Tooltip,
+    Tr,
+    useToast,
+} from "@chakra-ui/react";
 
-const initialValues = {
-    wallet: "",
-};
+import {
+    Heading,
+    Box,
+    Flex,
+    Link,
+    List,
+    ListItem,
+    Text,
+    Button,
+    useColorMode,
+    useColorModeValue,
+    SimpleGrid,
+    FormControl,
+    FormLabel,
+    FormErrorMessage,
+    Input,
+    Switch,
+    Select,
+    Checkbox,
+    GridItem,
+} from "@chakra-ui/react";
+
+import Card from "@components/chakra/card/Card";
+import { BsCheckLg } from "react-icons/bs";
 
 const AdminBulkUsersAdd = () => {
+    const bg = useColorModeValue("white", "#1B254B");
+    const shadow = useColorModeValue("0px 18px 40px rgba(112, 144, 176, 0.12)", "none");
     const toast = useToast();
     const [newUsersData, isAdding, bulkUsersAsync] = useAdminBulkUsersMutation();
     const [usersArray, usersArraySet] = useState([]);
     const hiddenFileInput = useRef(null);
 
     const [inputFile, setInputFile] = useState(null);
+    const textColor = useColorModeValue("gray.700", "white");
+    const borderColor = useColorModeValue("gray.200", "gray.600");
 
     function handleOnLoadFile(e, setFieldValue) {
         if (!e.target.files[0]) {
@@ -44,166 +80,211 @@ const AdminBulkUsersAdd = () => {
     }
     return (
         <Formik
-            initialValues={initialValues}
             validateOnBlur={false}
             validateOnChange={false}
             // onSubmit={onSubmit}
         >
             {({ errors, status, touched, setFieldValue }) => (
-                <Form>
-                    <div className="row">
-                        <div className="col-xxl-4 col-xl-4 col-lg-4 mb-3 ">
-                            <label className="form-label me-3">Select Source File</label>
-                            <a
-                                href={`data:csv;charset=utf-8,${encodeURIComponent(getTemplate())}`}
-                                download={`Wallet Bulk.csv`}
-                                className="me-2 text-primary"
-                            >
-                                Template
-                            </a>
-                            <br />
-                            <button
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    e.preventDefault();
-                                    hiddenFileInput.current.click();
-                                }}
-                                className="btn btn-primary me-2"
-                            >
-                                <div>
-                                    <span>Choose File</span>
-                                </div>
-                            </button>
-                            {inputFile && inputFile.name}
-                            <input
-                                type="file"
-                                name="file"
-                                accept="text/csv"
-                                style={{ display: "none" }}
-                                ref={hiddenFileInput}
-                                onChange={(e) => handleOnLoadFile(e, setFieldValue)}
-                            />
-                        </div>
-                        <div
-                            className={`col-12 mb-3 text-red-500 ${status ? "d-block" : "d-none"}`}
+                <Box w="100%">
+                    <Form>
+                        <Flex
+                            flexDirection={{
+                                base: "row",
+                            }}
+                            w="100%"
+                            h="100%"
+                            justifyContent="center"
+                            mb="60px"
+                            mt={{ base: "20px", md: "20px" }}
+                            gap="1%"
                         >
-                            <label className="form-label">API error: {status}</label>
-                        </div>
-                    </div>
-                    {usersArray && usersArray.length > 0 && (
-                        <>
-                            <h4 className="card-title mb-2 ">
-                                Valid
-                                <span className="text-success ms-1">
-                                    {usersArray.filter((user) => user.isValid).length}
-                                </span>{" "}
-                                users, Invalid
-                                <span className="text-danger ms-1 me-1">
-                                    {usersArray.filter((user) => !user.isValid).length}
-                                </span>
-                                users{" "}
-                                <Tooltip
-                                    placement="top"
-                                    label="Valid users would not be added if exists"
-                                    aria-label="A tooltip"
-                                    fontSize="md"
-                                >
-                                    <i
-                                        className="ms-1 bi bi-info-circle"
-                                        data-toggle="tooltip"
-                                        title="Tooltip on top"
-                                    ></i>
-                                </Tooltip>
-                            </h4>
+                            <Box w={{ base: "100%" }} minW="100%">
+                                {/* <Heading fontSize="xl" mb="4">
+                                        Reward
+                                    </Heading> */}
 
-                            <div className="card">
-                                <div className="card-body">
-                                    <div className="table-responsive api-table">
-                                        <table className="table">
-                                            <thead>
-                                                <tr>
-                                                    <th>Wallet</th>
-                                                    <th>Is Valid</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
+                                <Card boxShadow={shadow} py="8" bg={bg}>
+                                    <SimpleGrid
+                                        minChildWidth={"300px"}
+                                        columns={{ base: 3 }}
+                                        columnGap={10}
+                                        rowGap={4}
+                                        w="full"
+                                        mb="24px"
+                                    >
+                                        <GridItem colSpan={{ base: 1 }}>
+                                            <FormControl>
+                                                <FormLabel
+                                                    ms="4px"
+                                                    fontSize="md"
+                                                    fontWeight="bold"
+                                                    color="green.500"
+                                                >
+                                                    <Link
+                                                        href={`data:csv;charset=utf-8,${encodeURIComponent(
+                                                            getTemplate()
+                                                        )}`}
+                                                        download={`Wallet Bulk.csv`}
+                                                    >
+                                                        Template File
+                                                    </Link>
+                                                </FormLabel>
+                                            </FormControl>
+                                        </GridItem>
+
+                                        <GridItem colSpan={{ base: 2 }}>
+                                            <Button
+                                                w={"192px"}
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    e.preventDefault();
+                                                    hiddenFileInput.current.click();
+                                                }}
+                                                variant="blue"
+                                                me="4"
+                                            >
+                                                <div>
+                                                    <span>Choose File</span>
+                                                </div>
+                                            </Button>
+                                            {inputFile && inputFile.name}
+                                            <input
+                                                type="file"
+                                                name="file"
+                                                accept="text/csv"
+                                                style={{ display: "none" }}
+                                                ref={hiddenFileInput}
+                                                onChange={(e) => handleOnLoadFile(e, setFieldValue)}
+                                            />
+                                        </GridItem>
+                                    </SimpleGrid>
+                                    {status && (
+                                        <Text colorScheme={"red"}>API error: {status} </Text>
+                                    )}
+
+                                    <Text fontSize="md">
+                                        Valid
+                                        <Text as={"span"} color="green.500" me={"1"} ms="1">
+                                            {usersArray.filter((user) => user.isValid).length}
+                                        </Text>{" "}
+                                        users, Invalid
+                                        <Text as={"span"} color="red.500" me={"1"} ms="1">
+                                            {usersArray.filter((user) => !user.isValid).length}
+                                        </Text>
+                                        users
+                                        <Tooltip
+                                            placement="top"
+                                            label="Valid users would not be added if exists"
+                                            aria-label="A tooltip"
+                                            fontSize="md"
+                                        >
+                                            <i
+                                                className="ms-1 bi bi-info-circle"
+                                                data-toggle="tooltip"
+                                                title="Tooltip on top"
+                                            ></i>
+                                        </Tooltip>
+                                    </Text>
+
+                                    {usersArray && usersArray.length > 0 && (
+                                        <Table variant="simple">
+                                            <Thead>
+                                                <Tr my=".8rem" color="gray.400">
+                                                    <Th
+                                                        pl="0px"
+                                                        borderColor={borderColor}
+                                                        color="gray.400"
+                                                        fontSize={"md"}
+                                                    >
+                                                        Wallet
+                                                    </Th>
+                                                    <Th
+                                                        borderColor={borderColor}
+                                                        color="gray.400"
+                                                        fontSize={"md"}
+                                                    >
+                                                        Is Valid
+                                                    </Th>
+                                                </Tr>
+                                            </Thead>
+
+                                            <Tbody>
                                                 {usersArray.map((row, index) => {
                                                     return (
-                                                        <tr key={index}>
-                                                            <td>{usersArray[index].wallet}</td>
-                                                            <td>
+                                                        <Tr key={index}>
+                                                            <Td>{usersArray[index].wallet}</Td>
+                                                            <Td>
                                                                 {usersArray[index].isValid && (
-                                                                    <i
-                                                                        className="ri-check-line"
-                                                                        style={{
-                                                                            fontSize: "2rem",
-                                                                            color: "green",
-                                                                        }}
-                                                                    ></i>
+                                                                    <Icon
+                                                                        transition="0.8s"
+                                                                        color="green.300"
+                                                                        as={BsCheckLg}
+                                                                    />
                                                                 )}
                                                                 {!usersArray[index].isValid && (
-                                                                    <span className="text-danger">
+                                                                    <Text color="red.300">
                                                                         Not a valid address
-                                                                    </span>
+                                                                    </Text>
                                                                 )}
-                                                            </td>
-                                                        </tr>
+                                                            </Td>
+                                                        </Tr>
                                                     );
                                                 })}
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="mt-3">
-                                <button
-                                    type="button"
-                                    className="btn btn-primary me-2"
-                                    onClick={async () => {
-                                        setInputFile(null);
-                                        let payload = {
-                                            usersArray,
-                                        };
+                                            </Tbody>
 
-                                        let createManyOp = await bulkUsersAsync(payload);
+                                            <ButtonGroup mt="16px">
+                                                <Button
+                                                    variant="twitter"
+                                                    onClick={async () => {
+                                                        setInputFile(null);
+                                                        let payload = {
+                                                            usersArray,
+                                                        };
 
-                                        if (createManyOp.isError) {
-                                            toast({
-                                                title: "Error",
-                                                description: ` ${createManyOp.message}`,
-                                                position: "bottom-right",
-                                                status: "error",
-                                                duration: 3000,
-                                            });
-                                        } else {
-                                            toast({
-                                                title: "Succeed",
-                                                description: `Added ${createManyOp.count} users`,
-                                                position: "bottom-right",
-                                                status: "success",
-                                                duration: 3000,
-                                            });
-                                        }
-                                        setInputFile(null);
-                                        usersArraySet([]);
-                                    }}
-                                >
-                                    Bulk Add
-                                </button>
-                                <button
-                                    type="button"
-                                    className="btn btn-secondary me-2"
-                                    onClick={async () => {
-                                        setInputFile(null);
-                                        usersArraySet([]);
-                                    }}
-                                >
-                                    Cancel
-                                </button>
-                            </div>
-                        </>
-                    )}
-                </Form>
+                                                        let createManyOp = await bulkUsersAsync(
+                                                            payload
+                                                        );
+
+                                                        if (createManyOp.isError) {
+                                                            toast({
+                                                                title: "Error",
+                                                                description: ` ${createManyOp.message}`,
+                                                                position: "bottom-right",
+                                                                status: "error",
+                                                                duration: 3000,
+                                                            });
+                                                        } else {
+                                                            toast({
+                                                                title: "Succeed",
+                                                                description: `Added ${createManyOp.count} users`,
+                                                                position: "bottom-right",
+                                                                status: "success",
+                                                                duration: 3000,
+                                                            });
+                                                        }
+                                                        setInputFile(null);
+                                                        usersArraySet([]);
+                                                    }}
+                                                >
+                                                    Bulk Add
+                                                </Button>
+                                                <Button
+                                                    variant="discord"
+                                                    onClick={async () => {
+                                                        setInputFile(null);
+                                                        usersArraySet([]);
+                                                    }}
+                                                >
+                                                    Cancel
+                                                </Button>
+                                            </ButtonGroup>
+                                        </Table>
+                                    )}
+                                </Card>
+                            </Box>
+                        </Flex>
+                    </Form>
+                </Box>
             )}
         </Formik>
     );

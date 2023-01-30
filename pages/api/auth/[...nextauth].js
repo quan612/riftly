@@ -11,9 +11,9 @@ import { utils } from "ethers";
 import Enums from "enums";
 import DiscordProvider from "next-auth/providers/discord";
 import TwitterProvider from "next-auth/providers/twitter";
-
 import UAuth from "@uauth/js";
 import { getVariableConfig } from "repositories/config";
+import { validateEmail } from "@utils/index";
 const { default: Resolution } = require("@unstoppabledomains/resolution");
 const resolution = new Resolution();
 
@@ -24,12 +24,9 @@ const uauth = new UAuth({
 });
 
 const CryptoJS = require("crypto-js");
+const bcrypt = require("bcrypt");
 
-const {
-    NEXT_PUBLIC_NEXTAUTH_SECRET,
-} = process.env;
-
-
+const { NEXTAUTH_SECRET } = process.env;
 
 export const authOptions = {
     providers: [
@@ -132,11 +129,10 @@ export const authOptions = {
 
                     console.log("Authenticated as user successfully");
 
-
-
                     return { address: originalAddress, isAdmin: false, userId: user.userId };
                 } catch (error) {
                     console.log(error);
+                    throw error;
                 }
             },
         }),
@@ -146,7 +142,6 @@ export const authOptions = {
             type: "credentials",
             authorize: async (credentials, req) => {
                 try {
-
                     console.log("Authenticating as unstoppable user");
                     let { uathUser, address, message, signature, authorization } = credentials;
 
@@ -173,7 +168,11 @@ export const authOptions = {
                         address: originalAddress,
                         message: originalMessage,
                         signature: originalSignature,
-                    } = await uauth.getAuthorizationAccount(JSON.parse(authorization), type, version);
+                    } = await uauth.getAuthorizationAccount(
+                        JSON.parse(authorization),
+                        type,
+                        version
+                    );
 
                     console.log("Authenticated as user successfully");
 
@@ -193,10 +192,79 @@ export const authOptions = {
                 }
             },
         }),
+        CredentialsProvider({
+            id: "email",
+            // The name to display on the sign in form (e.g. 'Sign in with...')
+            name: "Email",
+            credentials: {
+                email: {
+                    label: "email",
+                    type: "email",
+                    placeholder: "jsmith@example.com",
+                },
+                password: { label: "Password", type: "password" },
+            },
+            async authorize(credentials, req) {
+                const { email, password } = credentials;
+
+                // sanitize email field
+
+                //check user and password
+                if (!validateEmail(email)) {
+                    throw new Error("Invalid email.");
+                }
+                if (password.trim().length === 0) {
+                    throw new Error("Blank password.");
+                }
+
+                const currentUser = await prisma.whiteList.findFirst({
+                    where: {
+                        email,
+                    },
+                });
+
+                if (!currentUser) {
+                    throw new Error("This email account is not in our record.");
+                }
+
+                // bcrypt check
+                const comparePassword = await bcrypt.compare(password, currentUser.password);
+                if (!comparePassword) {
+                    throw new Error("Wrong password entered.");
+                }
+
+                return {
+                    address: currentUser?.wallet,
+                    isAdmin: false,
+                    userId: currentUser.userId,
+                    email: currentUser.email,
+                };
+
+                //   const res = await fetch('http://localhost:5287/api/tokens', {
+                //     method: 'POST',
+                //     body: JSON.stringify(payload),
+                //     headers: {
+                //       'Content-Type': 'application/json',
+                //     },
+                //   })
+
+                //   const user = await res.json()
+                //   if (!res.ok) {
+                //     throw new Error(user.message)
+                //   }
+                //   // If no error and we have user data, return it
+                //   if (res.ok && user) {
+                //     return user
+                //   }
+
+                //   // Return null if user data could not be retrieved
+                //   return null
+            },
+        }),
         DiscordProvider({
             /* default should be [origin]/api/auth/callback/[provider] ~ https://next-auth.js.org/configuration/providers/oauth */
             clientId: await getVariableConfig("discordId"),
-            clientSecret: await getVariableConfig("discordSecret")
+            clientSecret: await getVariableConfig("discordSecret"),
         }),
         TwitterProvider({
             clientId: await getVariableConfig("twitterId"),
@@ -207,10 +275,10 @@ export const authOptions = {
     debug: false,
     session: {
         jwt: true,
-        maxAge: 60 * 60 * 24 * 7, // 7 days
+        maxAge: 60 * 60 * 24, // 7 days
     },
     jwt: {
-        signingKey: NEXT_PUBLIC_NEXTAUTH_SECRET,
+        signingKey: NEXTAUTH_SECRET,
     },
     callbacks: {
         signIn: async (user, account, profile) => {
@@ -224,8 +292,8 @@ export const authOptions = {
                     },
                 });
                 if (!existingUser) {
-                    console.log("Unstoppable domain is not linked.");
                     let error = `Unstoppable domain ${uathUser} is not linked.`;
+                    console.log(error);
                     return `/quest-redirect?error=${error}`;
                 }
 
@@ -241,13 +309,10 @@ export const authOptions = {
                     credentials.message != userInfo.message ||
                     credentials.signature != userInfo.signature
                 ) {
-                    console.log("Invalid unstoppable authorization.")
+                    console.log("Invalid unstoppable authorization.");
                     let error = `Invalid unstoppable authorization.`;
                     return `/quest-redirect?error=${error}`;
                 }
-
-
-
                 return true;
             }
             if (user?.account?.provider === "discord") {
@@ -331,7 +396,7 @@ export const authOptions = {
             }
         },
     },
-    secret: NEXT_PUBLIC_NEXTAUTH_SECRET,
+    secret: NEXTAUTH_SECRET,
 };
 
 export default (req, res) => {

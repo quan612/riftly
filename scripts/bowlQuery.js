@@ -18,7 +18,12 @@ const csvWriter = createCsvWriter({
 
 async function main() {
 
-  await Moralis.start({ apiKey: process.env.MORALIS_API_KEY });
+  if (!Moralis.Core.isStarted) {
+    await Moralis.start({
+      apiKey: process.env.MORALIS_API_KEY,
+      // ...other configuration
+    });
+  }
   try {
     let data = [];;
     for (let i = 1; i <= 500; i++) {

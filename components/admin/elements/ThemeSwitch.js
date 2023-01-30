@@ -1,6 +1,25 @@
 import React, { useEffect, useState } from "react";
 
+import {
+    Box,
+    Button,
+    Drawer,
+    DrawerBody,
+    DrawerCloseButton,
+    DrawerContent,
+    DrawerHeader,
+    Flex,
+    Switch,
+    Text,
+    useColorMode,
+    useColorModeValue,
+} from "@chakra-ui/react";
+
+
 function ThemeSwitch() {
+
+    const { colorMode, toggleColorMode } = useColorMode();
+
     const [toggleTheme, setToggleTheme] = useState(
         () => JSON.parse(localStorage.getItem("toggleTheme")) || "light-theme"
     );
@@ -14,21 +33,28 @@ function ThemeSwitch() {
         };
     }, [toggleTheme]);
 
+
+    const handleSwitchTheme = () => {
+        if (toggleTheme === "light-theme") {
+            setToggleTheme("dark-theme")
+        } else {
+            setToggleTheme("light-theme")
+        }
+        toggleColorMode()
+    }
     return (
-        <div
-            className="theme-switch"
-            onClick={() =>
-                toggleTheme === "light-theme"
-                    ? setToggleTheme("dark-theme")
-                    : setToggleTheme("light-theme")
-            }
-        >
-            {toggleTheme === "light-theme" ? (
-                <i className="ri-moon-line"></i>
-            ) : (
-                <i className="ri-sun-line"></i>
-            )}
-        </div>
+        <>
+            <div
+                className="theme-switch"
+                onClick={() => handleSwitchTheme()}
+            >
+                {toggleTheme === "light-theme" ? (
+                    <i className="ri-moon-line"></i>
+                ) : (
+                    <i className="ri-sun-line"></i>
+                )}
+            </div>
+        </>
     );
 }
 

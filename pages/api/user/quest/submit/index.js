@@ -6,22 +6,16 @@ import {
     submitUserDailyQuestTransaction,
 } from "repositories/transactions";
 
-function sleep(ms = 500) {
-    return new Promise((res) => setTimeout(res, ms));
-}
-
-//General user quest submit
 const submitIndividualQuestAPI = async (req, res) => {
     const { method } = req;
 
     switch (method) {
         case "POST":
+            const { userId } = req.whiteListUser;
+            const { questId } = req.body;
 
-            const whiteListUser = req.whiteListUser;
-            const { questId, extendedQuestData } = req.body;
             let userQuest;
             try {
-                // query the type based on questId
                 let currentQuest = await prisma.quest.findUnique({
                     where: {
                         questId,
@@ -31,95 +25,85 @@ const submitIndividualQuestAPI = async (req, res) => {
                     },
                 });
 
-                if (
-                    currentQuest.type.name === Enums.IMAGE_UPLOAD_QUEST ||
-                    currentQuest.type.name === Enums.CODE_QUEST ||
-                    currentQuest.type.name === Enums.OWNING_NFT_CLAIM ||
-                    currentQuest.type.name === Enums.UNSTOPPABLE_AUTH
-                ) {
-                    return res.status(200).json({
-                        isError: true,
-                        message: "This route is only for general quest!",
-                    });
-                }
+                const { type } = currentQuest;
 
-                if (currentQuest.type.name === Enums.DAILY_SHELL) {
-                    console.log(`**In daily quest**`);
-
-                    let entry = await prisma.UserQuest.findUnique({
-                        where: {
-                            userId_questId: { userId: whiteListUser.userId, questId },
-                        },
-                    });
-                    if (entry) {
-                        let oldDate = entry.extendedUserQuestData?.date || entry.updatedAt;
-                        let [today] = new Date().toISOString().split("T");
-                        if (today <= oldDate) {
+                let currentUserQuest = await prisma.UserQuest.findUnique({
+                    where: {
+                        userId_questId: { userId, questId },
+                    },
+                });
+                switch (type.name) {
+                    case Enums.JOIN_DISCORD:
+                    case Enums.TWITTER_RETWEET:
+                    case Enums.FOLLOW_TWITTER:
+                    case Enums.FOLLOW_INSTAGRAM:
+                        if (currentUserQuest) {
+                            let error = "This quest has been submitted before";
+                            console.log(error);
                             return res.status(200).json({
                                 isError: true,
-                                message: "This quest already submitted today! Wait until next day",
+                                message: error,
                             });
                         }
-                    }
 
-                    let extendedUserQuestData = { ...extendedQuestData };
-                    if (
-                        extendedUserQuestData.frequently &&
-                        extendedUserQuestData.frequently === "daily"
-                    ) {
-                        const [withoutTime] = new Date().toISOString().split("T");
-                        extendedUserQuestData.date = withoutTime;
-                    }
-
-                    let currentQuest = await prisma.quest.findUnique({
-                        where: {
+                        userQuest = await submitUserQuestTransaction(
                             questId,
-                        },
-                    });
+                            userId
+                        );
 
-                    userQuest = await submitUserDailyQuestTransaction(
-                        questId,
-                        currentQuest.type,
-                        currentQuest.rewardTypeId,
-                        currentQuest.quantity,
-                        extendedUserQuestData,
-                        whiteListUser
-                    );
-                    if (!userQuest) {
-                        return res.status(200).json({
-                            isError: true,
-                            message: "User Quest cannot be submitted!",
-                        });
-                    }
+                        break;
+                    case Enums.DAILY_SHELL:
+                        console.log(`**Submit Daily quest**`);
 
-                    return res.status(200).json(userQuest);
-                } else {
-                    /* Rest of other quest */
-                    let entry = await prisma.UserQuest.findUnique({
-                        where: {
-                            userId_questId: { userId: whiteListUser.userId, questId },
-                        },
-                    });
+                        let extendedUserQuestData = {};
 
-                    if (entry) {
-                        console.log("This quest has been submitted before");
-                        return res.status(200).json({
-                            isError: true,
-                            message: "This quest already submitted before!",
-                        });
-                    } else {
-                        await submitUserQuestTransaction(questId, currentQuest.rewardTypeId, whiteListUser);
-                    }
+                        if (currentUserQuest) {
+                            let lastStarted =
+                                currentUserQuest.extendedUserQuestData?.lastStarted ||
+                                currentUserQuest.createdAt;
+                            let [today] = new Date().toISOString().split("T");
+                            if (today <= lastStarted) {
+                                return res.status(200).json({
+                                    isError: true,
+                                    message: "This quest already started today! Let's claim.",
+                                });
+                            }
 
-                    return res.status(200).json(userQuest);
+                            extendedUserQuestData = { ...currentUserQuest.extendedUserQuestData };
+                        } else {
+                            extendedUserQuestData = { ...currentQuest.extendedQuestData };
+                        }
+
+                        if (extendedUserQuestData?.frequently === "daily") {
+                            const [currentDay] = new Date().toISOString().split("T");
+                            extendedUserQuestData.lastStarted = currentDay;
+                        }
+
+                        userQuest = await submitUserDailyQuestTransaction(
+                            questId,
+                            extendedUserQuestData,
+                            userId
+                        );
+                        break;
+                    default:
+                        return res.status(200).json({ isError: true, message: "Unsupported quest type submit" });
                 }
+
+                if (!userQuest) {
+                    return res.status(200).json({
+                        isError: true,
+                        message: "User quest cannot be submitted!",
+                    });
+                }
+
+                return res.status(200).json(userQuest);
             } catch (error) {
                 console.log(error);
                 return res.status(200).json({ isError: true, message: error.message, questId });
             }
             break;
         default:
-            res.setHeader("Allow", ["GET", "PUT"]);
+            res.setHeader("Allow", ["PUT"]);
             res.status(405).end(`Method ${method} Not Allowed`);
     }
 };

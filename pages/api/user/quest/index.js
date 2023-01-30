@@ -2,28 +2,30 @@ import { getAllEnableQuestsForUser, getQuestsDoneByThisUser } from "repositories
 import whitelistUserMiddleware from "middlewares/whitelistUserMiddleware";
 import Enums from "enums";
 
-const questQueryAPI = async (req, res) => {
+const userQuestQueryHandler = async (req, res) => {
     const { method } = req;
 
     switch (method) {
         case "GET":
             try {
-                const whiteListUser = req.whiteListUser;
-                console.log(`** Get all enabled quests for user **`);
+                const { userId } = req.whiteListUser;
+
                 let availableQuests = await getAllEnableQuestsForUser();
 
+
+
                 console.log(`** Get quests done by this user **`);
-                let finishedQuest = await getQuestsDoneByThisUser(whiteListUser.userId);
+                let finishedQuest = await getQuestsDoneByThisUser(userId);
 
                 let quests = availableQuests
                     .filter((q) => {
-                        if (
-                            q.type.name === Enums.CODE_QUEST ||
-                            q.type.name === Enums.IMAGE_UPLOAD_QUEST
-                            // q.type.name === Enums.UNSTOPPABLE_AUTH // comment this to show the quest later
-                        ) {
-                            return false;
-                        }
+                        // if (
+                        //     // q.type.name === Enums.CODE_QUEST ||
+                        //     // q.type.name === Enums.IMAGE_UPLOAD_QUEST
+                        //     // q.type.name === Enums.UNSTOPPABLE_AUTH // comment this to show the quest later
+                        // ) {
+                        //     return false;
+                        // }
                         if (
                             q.extendedQuestData.collaboration &&
                             q.extendedQuestData.collaboration.length > 0
@@ -41,29 +43,43 @@ const questQueryAPI = async (req, res) => {
                                 relatedQuest?.quest.type.name === Enums.DAILY_SHELL &&
                                 relatedQuest?.extendedUserQuestData?.frequently === Enums.DAILY
                             ) {
-                                let oldDate = relatedQuest?.extendedUserQuestData?.date;
+                                let lastStarted = relatedQuest?.extendedUserQuestData?.lastStarted;
+                                let lastClaimed = relatedQuest?.extendedUserQuestData?.lastClaimed;
                                 let [today] = new Date().toISOString().split("T");
-                                if (today > oldDate) {
-                                    aq.isDone = false;
-                                } else aq.isDone = true;
+
+                                if (today > lastStarted || !lastStarted) {
+                                    aq.isClaimable = false;
+                                } else {
+                                    aq.isClaimable = true;
+                                }
+                                if ((today > lastClaimed) || (!lastClaimed)) {
+                                    aq.hasClaimed = false;
+                                } else {
+                                    aq.hasClaimed = true;
+                                }
                             }
 
                             // THE REST
                             else {
-                                aq.isDone = true;
+                                aq.isClaimable = relatedQuest.isClaimable;
+                                aq.hasClaimed = relatedQuest.hasClaimed;
                                 aq.rewardedQty = relatedQuest.rewardedQty;
                             }
                         } else {
-                            aq.isDone = false;
+                            aq.isClaimable = false;
+                            aq.hasClaimed = false;
                             aq.rewardedQty = 0;
                         }
+                        if (relatedQuest?.quest.type.name === Enums.CODE_QUEST) {
+                            delete aq.extendedQuestData;
+                        }
+
                         return aq;
                     });
 
                 return res.status(200).json(quests);
             } catch (err) {
-                // console.log(err);
-                res.status(500).json({ error: err.message });
+                res.status(200).json({ isError: true, message: err.message });
             }
             break;
 
@@ -72,4 +88,4 @@ const questQueryAPI = async (req, res) => {
             res.status(405).end(`Method ${method} Not Allowed`);
     }
 };
-export default whitelistUserMiddleware(questQueryAPI);
+export default whitelistUserMiddleware(userQuestQueryHandler);

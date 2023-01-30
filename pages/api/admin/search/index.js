@@ -1,4 +1,5 @@
-import { prisma } from "@context/PrismaContext";
+import Enums from "@enums/index";
+import { prisma } from "context/PrismaContext";
 import adminMiddleware from "middlewares/adminMiddleware";
 
 const adminSearchAPI = async (req, res) => {
@@ -7,44 +8,13 @@ const adminSearchAPI = async (req, res) => {
 
     switch (method) {
         case "POST":
-            const { wallet, twitter, discord, rewards } = req.body;
-
-            let searchRes = {}, userCondition = {
-
-            },
-                rewardCondition = [], mintAddress = [];
-
-            if (wallet !== "") {
-                userCondition.wallet = { contains: wallet.trim() };
-            }
-            if (twitter !== "") {
-                userCondition.twitterUserName = { contains: twitter.trim() };
-            }
-            if (discord !== "") {
-                userCondition.discordUserDiscriminator = { contains: discord.trim() };
-            }
-
-            if (rewards.length > 0) {
-                rewards.forEach((reward) => {
-                    rewardCondition.push({
-                        rewardTypeId: reward.typeId,
-                        AND: [
-                            {
-                                quantity: {
-                                    gte: parseInt(reward.minQty),
-                                    lte: parseInt(reward.maxQty),
-                                },
-                            },
-                        ],
-                    });
-                });
-            }
+            let searchRes = {}, userCondition = {};
 
             try {
-
+                // console.time()
                 const userCount = await prisma.whiteList.count();
                 let users = await prisma.whiteList.findMany({
-                    where: userCondition,
+                    // where: userCondition,
                     skip: currentPage * 10000,
                     take: 10000,
                     orderBy: [
@@ -58,7 +28,11 @@ const adminSearchAPI = async (req, res) => {
                         twitterUserName: true,
                         discordUserDiscriminator: true,
                         rewards: {
-                            where: rewardCondition.length === 0 ? {} : { OR: rewardCondition },
+                            where: {
+                                rewardType: {
+                                    isEnabled: true
+                                }
+                            },
                             select: {
                                 quantity: true,
                                 rewardType: true,
@@ -66,6 +40,60 @@ const adminSearchAPI = async (req, res) => {
                         },
                     },
                 });
+
+                let rewardTypes = await prisma.rewardType.findMany({
+                    where: {
+                        isEnabled: true
+                    }
+                })
+
+                // console.log(rewardTypes)
+
+                // let usersOp = users.map((user, i) => {
+                //     rewardTypes.map((r) => {
+                //         let rewardIndex = user.rewards.findIndex(userReward => userReward.rewardType.id === r.id)
+                //         // console.log(found)
+
+                //         if (rewardIndex === -1) {
+                //             user[r.reward] = 0;
+                //         } else {
+                //             user[r.reward] = user.rewards[rewardIndex].quantity;
+                //         }
+                //     })
+                //     return users
+                // })
+
+                // await Promise.all(usersOp)
+                // users.forEach((user, i) => {
+                //     rewardTypes.forEach((r) => {
+                //         let found = user.rewards.some(userReward => userReward.rewardType.id === r.id)
+                //         // console.log(found)
+
+                //         if (!found) {
+                //             user[r.reward] = 0;
+                //         } else {
+                //             user[r.reward] = 1;
+                //             // user[r.reward] = user.rewards[indexOfReward].quantity
+                //         }
+                //     })
+                //     // return users
+
+                // })
+                for (let i = 0; i < users.length; i++) {
+                    // Do stuff with arr[i] or i
+                    rewardTypes.map((r) => {
+                        let user = users[i];
+                        let rewardIndex = user.rewards.findIndex(userReward => userReward.rewardType.id === r.id)
+
+                        if (rewardIndex === -1) {
+                            user[r.reward] = 0;
+                        } else {
+                            user[r.reward] = user.rewards[rewardIndex].quantity
+                        }
+                    })
+                }
+
+                // console.log(users[0])
                 searchRes.userCount = userCount;
                 searchRes.users = users;
 
@@ -75,30 +103,14 @@ const adminSearchAPI = async (req, res) => {
                     searchRes.shouldContinue = true;
                 }
 
-                /*
-                    Filtering white list address
-                    let mintAddresses = await prisma.whiteListAddress.findMany();
-                    let mintAddressArray = mintAddresses.map(el => el['wallet'])
- 
-                    searchRes = searchRes.filter((r) => {
-                        if (mintAddressArray.includes(r.wallet))
-                            return true;
-                        else {
-                            return false;
-                        }
-                    });
-                */
+                res.setHeader('Cache-Control', 'max-age=0, s-maxage=300, stale-while-revalidate');
+                // console.timeEnd()
 
-                if (rewardCondition.length > 0) {
-                    searchRes.users = searchRes.users.filter((r) => r.rewards.length > 0);
-
-                }
-                res.setHeader('Cache-Control', 'max-age=0, s-maxage=60, stale-while-revalidate');
                 res.status(200).json(searchRes);
 
             } catch (err) {
                 console.log(err);
-                res.status(500).json({ err });
+                res.status(200).json({ isError: true, message: err.message });
             }
             break;
         default:

@@ -28,7 +28,12 @@ const handler = async (req, res) => {
 
                 console.log(`Querying contract ${contract}`)
 
-                await Moralis.start({ apiKey: process.env.MORALIS_API_KEY });
+                if (!Moralis.Core.isStarted) {
+                    await Moralis.start({
+                        apiKey: process.env.MORALIS_API_KEY,
+                        // ...other configuration
+                    });
+                }
 
                 const response = await Moralis.EvmApi.nft.getNFTOwners({
                     address: contract,

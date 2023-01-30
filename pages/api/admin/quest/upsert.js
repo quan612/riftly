@@ -3,7 +3,6 @@ import Enums from "enums";
 import { questUpsert } from "repositories/quest";
 import adminMiddleware from "middlewares/adminMiddleware";
 
-const ROUTE = "/api/admin/quest/upsert";
 const AdminQuestUpsertAPI = async (req, res) => {
     const { method } = req;
 
@@ -130,18 +129,6 @@ const AdminQuestUpsertAPI = async (req, res) => {
                         });
                     }
 
-                    let existingCollaboration = collaborationClaimQuestCheck(
-                        existingQuests,
-                        extendedQuestData,
-                        questType.name
-                    );
-                    if (existingCollaboration) {
-                        return res.status(200).json({
-                            message: `Cannot add more than one "${type}" type of quest for same collaboration "${extendedQuestData.collaboration}".`,
-                            isError: true,
-                        });
-                    }
-
                     let existingCodeQuest = codeQuestCheck(
                         existingQuests,
                         extendedQuestData,
@@ -213,13 +200,6 @@ const AdminQuestUpsertAPI = async (req, res) => {
     }
 };
 
-// DISCORD_AUTH: "Discord Authenticate",
-// TWITTER_AUTH: "Twitter Authenticate",
-// TWITTER_RETWEET: "Retweet a Tweet",
-// FOLLOW_TWITTER: "Follow Twitter Account",
-// FOLLOW_INSTAGRAM: "Follow Instagram Account",
-// IMAGE_UPLOAD_QUEST: "Image Upload Quest",
-
 const unstoppableAuthCheck = (existingQuests, type) => {
     if (type != Enums.UNSTOPPABLE_AUTH) return;
 
@@ -290,16 +270,7 @@ const owningNftCheck = (existingQuests, extendedQuestData, type) => {
     return owningNftQuests.some((q) => q.extendedQuestData.nft === extendedQuestData.nft);
 };
 
-const collaborationClaimQuestCheck = (existingQuests, extendedQuestData, type) => {
-    if (type !== Enums.COLLABORATION_FREE_SHELL) return;
-    let collaborationClaim = existingQuests.filter(
-        (q) => q.type.name === Enums.COLLABORATION_FREE_SHELL
-    );
 
-    return collaborationClaim.some(
-        (q) => q.extendedQuestData.collaboration === extendedQuestData.collaboration
-    );
-};
 const codeQuestCheck = (existingQuests, extendedQuestData, type) => {
     if (type !== Enums.CODE_QUEST) return;
 

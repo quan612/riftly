@@ -38,93 +38,90 @@ export const withQuestUpsert =
                 />
             );
         };
-export const withUserQuestSubmit =
-    (Component) =>
-        ({ ...props }) => {
-            const queryClient = useQueryClient();
-            const { data, error, isError, isLoading, isSuccess, mutate, mutateAsync } = useMutation(
-                "submitQuest",
-                (quest) => axios.post(USER_QUEST_SUBMIT, quest),
-                {
-                    onSuccess: () => {
-                        queryClient.invalidateQueries("userRewardQuery");
-                        queryClient.invalidateQueries("userQueryQuest");
-                    },
-                }
-            );
+export const useAdminQuestSoftDelete = () => {
+    const queryClient = useQueryClient();
+    const { data, isLoading, mutateAsync } = useMutation(
+        "adminQuestDelete",
+        (quest) => axios.post(ADMIN_QUEST_DELETE, quest).then((r) => r.data),
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries("adminQueryQuest");
+            },
+        }
+    );
 
-            const handleOnSubmit = async (quest, currentQuests) => {
-                let submitted = await mutateAsync(quest);
+    const handleOnDelete = async (quest) => {
+        return await mutateAsync(quest);
+    };
 
-                if (submitted) {
-                    let updatedQuests = currentQuests.map((q) => {
-                        if (q.questId == quest.questId) {
-                            q.isDone = true;
-                        }
-                        return q;
-                    });
+    return [data, isLoading, handleOnDelete];
+};
 
-                    return await Promise.all(updatedQuests).then(() => {
-                        updatedQuests.sort(isNotDoneFirst);
-                        return updatedQuests;
-                    });
-                }
-            };
+export const useUserQuestSubmit = () => {
+    const queryClient = useQueryClient();
 
-            return (
-                <Component
-                    {...props}
-                    isSubmitting={isLoading}
-                    submittedQuest={data?.data}
-                    mutationError={error}
-                    onSubmit={(quest, currentQuests) => handleOnSubmit(quest, currentQuests)}
-                />
-            );
-        };
+    const { data, error, isError, isLoading, isSuccess, mutate, mutateAsync } = useMutation((payload) => {
+        return axios
+            .post(USER_QUEST_SUBMIT, payload)
+            .then((r) => r.data);
 
-export const withUserCodeQuestSubmit =
-    (Component) =>
-        ({ ...props }) => {
-            const queryClient = useQueryClient();
-            const { data, error, isError, isLoading, isSuccess, mutate, mutateAsync } = useMutation(
-                "submitCodeQuest",
-                (quest) => axios.post(`${Enums.BASEPATH}/api/user/quest/submit/code-quest`, quest),
-                {
-                    onSuccess: () => {
-                        queryClient.invalidateQueries("userRewardQuery");
-                        queryClient.invalidateQueries("userQueryQuest");
-                    },
-                }
-            );
+    }, {
+        onSuccess: () => {
 
-            const handleOnSubmit = async (quest, currentQuests) => {
-                let submitted = await mutateAsync(quest);
+            queryClient.invalidateQueries("userQueryQuest");
+        },
+    });
 
-                if (submitted) {
-                    let updatedQuests = currentQuests.map((q) => {
-                        if (q.questId == quest.questId) {
-                            q.isDone = true;
-                        }
-                        return q;
-                    });
+    return [data, isLoading, mutateAsync];
+}
 
-                    return await Promise.all(updatedQuests).then(() => {
-                        updatedQuests.sort(isNotDoneFirst);
-                        return updatedQuests;
-                    });
-                }
-            };
+export const useCodeQuestSubmit = () => {
+    const queryClient = useQueryClient();
 
-            return (
-                <Component
-                    {...props}
-                    isSubmitting={isLoading}
-                    submittedQuest={data?.data}
-                    mutationError={error}
-                    onSubmit={(quest, currentQuests) => handleOnSubmit(quest, currentQuests)}
-                />
-            );
-        };
+    const { data, error, isError, isLoading, isSuccess, mutate, mutateAsync } = useMutation((payload) => {
+        return axios
+            .post(`${Enums.BASEPATH}/api/user/quest/submit/code-quest`, payload)
+            .then((r) => r.data);
+
+    }, {
+        onSuccess: () => {
+            queryClient.invalidateQueries("userQueryQuest");
+        },
+    });
+
+    return [data, isLoading, mutateAsync];
+}
+
+export const useNftOwningQuestSubmit = () => {
+    const queryClient = useQueryClient();
+
+    const { data, error, isError, isLoading, isSuccess, mutate, mutateAsync } = useMutation((payload) => {
+        return axios
+            .post(`${Enums.BASEPATH}/api/user/quest/submit/nft-quest`, payload)
+            .then((r) => r.data);
+
+    }, {
+        onSuccess: () => {
+            queryClient.invalidateQueries("userQueryQuest");
+        },
+    });
+
+    return [data, isLoading, mutateAsync];
+}
+
+export const useUserQuestClaim = () => {
+
+    const { data, error, isError, isLoading, isSuccess, mutate, mutateAsync } = useMutation((payload) => {
+        return axios
+            .post(`/api/user/quest/claim`, payload)
+            .then((r) => r.data);
+
+    },);
+
+    return [data, isLoading, mutateAsync];
+}
+
+
 
 export const withUserOwningNftQuestSubmit =
     (Component) =>
@@ -147,7 +144,7 @@ export const withUserOwningNftQuestSubmit =
                 if (!submitted.isError) {
                     let updatedQuests = currentQuests.map((q) => {
                         if (q.questId == quest.questId) {
-                            q.isDone = true;
+                            q.hasStarted = true;
                         }
                         return q;
                     });
@@ -193,7 +190,7 @@ export const withUserUnstoppableAuthQuestSubmit =
                 if (!submitted.isError) {
                     let updatedQuests = currentQuests.map((q) => {
                         if (q.questId == quest.questId) {
-                            q.isDone = true;
+                            q.hasStarted = true;
                         }
                         return q;
                     });
@@ -247,8 +244,6 @@ export const withUserImageQuestSubmit =
             );
         };
 
-
-
 export const withUserQuestQuery =
     (Component) =>
         ({ ...props }) => {
@@ -281,26 +276,6 @@ export const withUserCollaborationQuestQuery =
             );
         };
 
-export const withUserCodeQuestQuery =
-    (Component) =>
-        ({ ...props }) => {
-
-            const router = useRouter();
-            const codeQuestEvent = typeof router.query?.event === "string" ? router.query.event : "";
-
-            const { data, status, isLoading, error } = useQuery("userQueryCollaborationQuest", () =>
-                axios.get(`${Enums.BASEPATH}/api/user/quest/code-quest?event=${codeQuestEvent}`),
-                { enabled: !!codeQuestEvent }
-            );
-            return (
-                <Component
-                    {...props}
-                    isFetchingUserQuests={isLoading}
-                    userQuests={data?.data}
-                    queryError={error}
-                />
-            );
-        };
 
 
 export const withUserUnstoppableAuthQuestQuery =
@@ -381,24 +356,7 @@ export const withQuestTypeQuery =
             );
         };
 
-export const useAdminQuestSoftDelete = () => {
-    const queryClient = useQueryClient();
-    const { data, isLoading, mutateAsync } = useMutation(
-        "adminQuestDelete",
-        (quest) => axios.post(ADMIN_QUEST_DELETE, quest).then((r) => r.data),
-        {
-            onSuccess: () => {
-                queryClient.invalidateQueries("adminQueryQuest");
-            },
-        }
-    );
 
-    const handleOnDelete = async (quest) => {
-        return await mutateAsync(quest);
-    };
-
-    return [data, isLoading, handleOnDelete];
-};
 
 export const withAdminQuestQuery =
     (Component) =>
@@ -413,5 +371,5 @@ export const withAdminQuestQuery =
 
 
 function isNotDoneFirst(a, b) {
-    return Number(a.isDone) - Number(b.isDone);
+    return Number(a.hasStarted) - Number(b.hasStarted);
 }

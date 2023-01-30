@@ -1,26 +1,22 @@
 import { prisma } from "@context/PrismaContext";
 import whitelistUserMiddleware from "middlewares/whitelistUserMiddleware";
 import Enums from "enums";
-import {
-    submitUserQuestTransaction,
-    submitUserDailyQuestTransaction,
-} from "repositories/transactions";
+import { submitUserQuestTransaction } from "repositories/transactions";
 import { getWhiteListUserByUserId } from "repositories/user";
-import { ethers, utils } from "ethers";
+import { utils } from "ethers";
 import { EvmChain } from "@moralisweb3/evm-utils";
+import Moralis from "moralis";
 
-const Moralis = require("moralis").default;
-
+// ADD GUARD TO THIS QUEST, Like require more reward point to initiate
 const submitNftQuest = async (req, res) => {
     const { method } = req;
 
     switch (method) {
         case "POST":
-            const whiteListUser = req.whiteListUser;
-            const { questId, rewardTypeId, quantity, extendedQuestData, inputCode } = req.body;
+            const { userId } = req.whiteListUser;
+            const { questId } = req.body;
             let userQuest;
             try {
-                // query the type based on questId
                 let currentQuest = await prisma.quest.findUnique({
                     where: {
                         questId,
@@ -39,20 +35,20 @@ const submitNftQuest = async (req, res) => {
 
                 let entry = await prisma.UserQuest.findUnique({
                     where: {
-                        userId_questId: { userId: whiteListUser.userId, questId },
+                        userId_questId: { userId, questId },
                     },
                 });
 
                 if (entry) {
-                    console.log("This quest has been submitted before");
+                    let error = "This quest has been submitted.";
                     return res.status(200).json({
                         isError: true,
-                        message: "This quest already submitted before!",
+                        message: error,
                     });
                 }
 
                 // check if user session has wallet address
-                const currentUser = await getWhiteListUserByUserId(whiteListUser.userId);
+                const currentUser = await getWhiteListUserByUserId(userId);
                 const userWallet = currentUser?.wallet;
 
                 if (
@@ -82,23 +78,35 @@ const submitNftQuest = async (req, res) => {
 
                     let haveNft = false;
 
-                    await Moralis.start({
-                        apiKey: process.env.MORALIS_API_KEY,
-                        // ...other configuration
-                    });
+                    if (!Moralis.Core.isStarted) {
+                        await Moralis.start({
+                            apiKey: process.env.MORALIS_API_KEY,
+                            // ...other configuration
+                        });
+                    }
+
+                    const { extendedQuestData } = currentQuest;
 
                     // since there is a limit of 100 per query, we need to continue until the cursor is null in case a user owns more than 100 nfts
                     let response;
                     let cursor = "";
                     let result = [];
+                    let tokenAddresses = [];
+
+                    tokenAddresses.push(utils.getAddress(extendedQuestData.contract)); // adding filter to fasten the search instead of going through all nfts
+
                     do {
                         response = await Moralis.EvmApi.nft
                             .getWalletNFTs({
                                 address: userWallet,
-                                chain: chain,
+                                chain,
+                                tokenAddresses,
                                 cursor,
                             })
-                            .then((r) => r.data);
+                            .then((r) => r.jsonResponse)
+                            .catch((err) => {
+                                throw err;
+                            });
 
                         for (const nft of response.result) {
                             result = [...result, nft];
@@ -108,33 +116,31 @@ const submitNftQuest = async (req, res) => {
 
                     // moralis does not retrieve the correct upper case wallet address so we need to get the correct ones from ethers
                     haveNft = result.some(
-                        (r) => utils.getAddress(r.token_address) === utils.getAddress(currentQuest.extendedQuestData.contract)
+                        (r) =>
+                            utils.getAddress(r.token_address) ===
+                            utils.getAddress(extendedQuestData.contract)
                     );
 
                     if (haveNft) {
-                        await submitUserQuestTransaction(questId, rewardTypeId, whiteListUser);
+                        await submitUserQuestTransaction(questId, userId);
                         return res.status(200).json(userQuest);
                     }
-                    return res
-                        .status(200)
-                        .json({
-                            isError: true,
-                            message: "User does not own this Nft.",
-                        });
-                }
-                return res
-                    .status(200)
-                    .json({
+                    return res.status(200).json({
                         isError: true,
-                        message: "Session not linked to a wallet.",
+                        message: "You don't own this Nft.",
                     });
+                }
+                return res.status(200).json({
+                    isError: true,
+                    message: "Session not linked to a wallet for contract verification.",
+                });
             } catch (error) {
                 console.log(error);
                 return res.status(200).json({ isError: true, message: error.message, questId });
             }
             break;
         default:
-            res.setHeader("Allow", ["GET", "PUT"]);
+            res.setHeader("Allow", ["PUT"]);
             res.status(405).end(`Method ${method} Not Allowed`);
     }
 };

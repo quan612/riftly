@@ -65,7 +65,7 @@ const ImageUpload = ({ onSubmitImageQuest, isSubmitting, isFetchingUserQuests, u
                 if (submittedQuestBefore) {
                     setSubmittedQuest(submittedQuestBefore);
                 }
-                if (findSubmissionQuest && findSubmissionQuest.isDone) {
+                if (findSubmissionQuest && findSubmissionQuest.hasStarted) {
                     setView(SUBMITTED);
                 }
             }
@@ -240,7 +240,7 @@ const ImageUpload = ({ onSubmitImageQuest, isSubmitting, isFetchingUserQuests, u
                                                 className={s.board_pinkBtn}
                                                 onClick={handleOnSubmit}
                                                 disabled={
-                                                    currentQuest?.isDone ||
+                                                    currentQuest?.hasStarted ||
                                                     isSubmitting ||
                                                     isFetchingUserQuests ||
                                                     error
@@ -248,7 +248,7 @@ const ImageUpload = ({ onSubmitImageQuest, isSubmitting, isFetchingUserQuests, u
                                             >
                                                 <img
                                                     src={
-                                                        !currentQuest?.isDone
+                                                        !currentQuest?.hasStarted
                                                             ? `${Enums.BASEPATH}/img/sharing-ui/invite/Button_Small.png`
                                                             : `${Enums.BASEPATH}/img/sharing-ui/invite/Button_Small 2.png`
                                                     }

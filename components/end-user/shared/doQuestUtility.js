@@ -1,7 +1,5 @@
 import Enums from "enums";
-import axios from "axios";
 import { getDiscordAuthLink, getTwitterAuthLink } from "@utils/helpers";
-
 
 /*@dev
  * if DISCORD_AUTH || TWITTER_AUTH, we do separated quest through redirect links
@@ -10,6 +8,7 @@ import { getDiscordAuthLink, getTwitterAuthLink } from "@utils/helpers";
  */
 export const doQuestUtility = async (router, quest, currentQuests, onSubmit) => {
   const { questId, type, quantity, rewardTypeId, extendedQuestData } = quest;
+
   if (type.name === Enums.UNSTOPPABLE_AUTH) {
     return router.push("/unstoppable/domain-auth");
   }
@@ -21,22 +20,15 @@ export const doQuestUtility = async (router, quest, currentQuests, onSubmit) => 
     let path = `/nft-quest?nft=${extendedQuestData.nft}`
     return router.push(path);
   }
-  if (type.name === Enums.COLLABORATION_FREE_SHELL) {
-    switch (extendedQuestData.collaboration) {
-      case "colormonster":
-        return router.push("/colormonster");
-      default:
-        return router.push("/");
-    }
-  }
+
   if (type.name === Enums.DISCORD_AUTH) {
     let discordLink = await getDiscordAuthLink();
 
-    return window.open(discordLink, "_self");
+    return window.open(discordLink, "_blank");
   }
   if (type.name === Enums.TWITTER_AUTH) {
     let twitterLink = await getTwitterAuthLink();
-    return window.open(twitterLink, "_self");
+    return window.open(twitterLink, "_blank");
   }
   if (type.name === Enums.JOIN_DISCORD) {
     let discordServer = extendedQuestData.discordServer;
@@ -59,10 +51,6 @@ export const doQuestUtility = async (router, quest, currentQuests, onSubmit) => 
   }
   let submission = {
     questId,
-    type,
-    rewardTypeId,
-    quantity,
-    extendedQuestData,
   };
 
   try {

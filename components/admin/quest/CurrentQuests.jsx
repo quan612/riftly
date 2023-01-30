@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import Enums from "enums";
 import { Modal } from "/components/admin";
 import { useRouter } from "next/router";
@@ -7,12 +7,62 @@ import { EditQuest, AddQuest } from "..";
 import { useAdminQuestSoftDelete, withAdminQuestQuery } from "shared/HOC/quest";
 import { debounce } from "utils/";
 
+import {
+    Heading,
+    Box,
+    Flex,
+    List,
+    ListItem,
+    Text,
+    Button,
+    useColorMode,
+    useColorModeValue,
+    SimpleGrid,
+    FormControl,
+    FormLabel,
+    FormErrorMessage,
+    Input,
+    Switch,
+    Select,
+    Checkbox,
+    GridItem,
+    Table,
+    Tbody,
+    Th,
+    Thead,
+    Tr,
+    Td,
+    Tooltip,
+    IconButton,
+    NumberInput,
+    NumberInputField,
+    NumberInputStepper,
+    NumberIncrementStepper,
+    NumberDecrementStepper,
+    useDisclosure,
+    Divider,
+    ButtonGroup,
+    Icon,
+} from "@chakra-ui/react";
+import AdminCard from "@components/chakra/card/AdminCard";
+import { BsCheckLg } from "react-icons/bs";
+import { BiEdit } from "react-icons/bi";
+import { AiFillDelete } from "react-icons/ai";
+import { MdPreview } from "react-icons/md";
+import EditQuestModal from "./EditQuestModal";
+import AddQuestModal from "./AddQuestModal";
+
 const CurrentQuests = ({ quests, isLoading, error }) => {
     let router = useRouter();
     const [isModalOpen, setModalOpen] = useState(false);
     const [currentQuests, setCurrentQuests] = useState(null);
     const [currentSearch, setCurrentSearch] = useState("");
     const [deleteQuest, deletingQuest, handleOnDelete] = useAdminQuestSoftDelete();
+
+    const editQuestModal = useDisclosure();
+    const editQuestRef = useRef();
+
+    const addQuestModal = useDisclosure();
 
     useEffect(() => {
         if (quests && !quests.isError) {
@@ -56,77 +106,143 @@ const CurrentQuests = ({ quests, isLoading, error }) => {
         }
     };
     return (
-        <div className="col-xxl-6 col-xl-6 col-lg-6">
-            <button
-                type="button"
-                className="btn btn-primary m-2"
-                onClick={() => setModalOpen(true)}
-            >
-                Add New Quest
-            </button>
-            <h4 className="card-title mb-3">Customize Quests</h4>
-            <div>
-                <input
-                    type="text"
-                    className="form-control mb-2"
-                    placeholder="Search Quests"
-                    onChange={debouncedChangeHandler}
-                />
-            </div>
+        <Box w="100%">
+            <AdminCard>
+                <Flex>
+                    <ButtonGroup spacing="6" mb="15px">
+                        <Button
+                            w={{ base: "150px" }}
+                            onClick={() => addQuestModal.onOpen()}
+                            colorScheme="teal"
+                            size="sm"
+                            fontWeight="semibold"
+                            fontSize="15px"
+                        >
+                            Add Quest
+                        </Button>
 
-            <div className="card">
-                {currentQuests && currentQuests.length > 0 && (
-                    <div className="card-body">
-                        {isLoading && <div> Get quests info...</div>}
-                        {currentQuests.map((quest, index, row) => {
-                            return (
-                                <React.Fragment key={index}>
-                                    <div className="verify-content">
-                                        <div className="d-flex align-items-center">
-                                            <span className="me-3 icon-circle bg-primary text-white">
-                                                <i className="ri-bank-line"></i>
-                                            </span>
-                                            <div className="primary-number">
-                                                <h5 className="mb-0">
-                                                    {quest.text}
-                                                    {quest.type.name === Enums.FOLLOW_TWITTER && (
-                                                        <span className="text-teal-500 ml-1">
-                                                            {quest.extendedQuestData.followAccount}
-                                                        </span>
+                        {/* <Button
+                                leftIcon={<BsFilter />}
+                                onClick={openFilterSidebar}
+                                variant="outline"
+                                size="sm"
+                                fontWeight="semibold"
+                                fontSize="16px"
+                            >
+                                Filter
+                            </Button> */}
+                    </ButtonGroup>
+                </Flex>
+                {isLoading && <div> Get quests info...</div>}
+                <Table variant="simple">
+                    <Thead>
+                        <Tr my=".8rem" pl="0px" color="gray.400" fontSize="18px">
+                            <Th pl="0px" color="gray.500">
+                                Quest
+                            </Th>
+                            <Th color="gray.500">Is Enabled</Th>
+                            <Th color="gray.500">Actions</Th>
+                        </Tr>
+                    </Thead>
+
+                    <Tbody>
+                        {currentQuests &&
+                            currentQuests.length > 0 &&
+                            currentQuests.map((quest, index, row) => {
+                                const { text, type, description } = quest;
+
+                                return (
+                                    <Tr key={index} pl="0px">
+                                        <Td pl="0px" colSpan={1}>
+                                            {quest.text}
+                                            {quest.type.name === Enums.FOLLOW_TWITTER && (
+                                                <Text as={"span"} color="teal.400" ms="2">
+                                                    {quest.extendedQuestData.followAccount}
+                                                </Text>
+                                            )}
+
+                                            {quest.type.name === Enums.FOLLOW_INSTAGRAM && (
+                                                <Text color="red.400">
+                                                    {quest.extendedQuestData.followAccount}
+                                                </Text>
+                                            )}
+
+                                            {quest.type.name === Enums.TWITTER_RETWEET && (
+                                                <Text color="blue.400">
+                                                    {quest.extendedQuestData.tweetId}
+                                                </Text>
+                                            )}
+                                        </Td>
+                                        <Td>
+                                            {quest.isEnabled && (
+                                                <Icon
+                                                    transition="0.8s"
+                                                    color="green.300"
+                                                    as={BsCheckLg}
+                                                />
+                                            )}
+                                        </Td>
+
+                                        <Td>
+                                            <Flex gap="2">
+                                                <Icon
+                                                    transition="0.8s"
+                                                    color="green.300"
+                                                    boxSize={5}
+                                                    as={BiEdit}
+                                                    _hover={{
+                                                        cursor: "pointer",
+                                                    }}
+                                                    onClick={() => {
+                                                        editQuestRef.current = quest;
+                                                        editQuestModal.onOpen();
+                                                    }}
+                                                />
+
+                                                <Icon
+                                                    transition="0.8s"
+                                                    color="red.300"
+                                                    boxSize={5}
+                                                    as={AiFillDelete}
+                                                    _hover={{
+                                                        cursor: "pointer",
+                                                    }}
+                                                    onClick={async () => {
+                                                        if (
+                                                            !window.confirm(
+                                                                "Proceed to delete quest"
+                                                            )
+                                                        ) {
+                                                            return;
+                                                        }
+                                                        handleQuestSoftDelete(quest);
+                                                    }}
+                                                />
+
+                                                {quest.type.name === Enums.IMAGE_UPLOAD_QUEST &&
+                                                    quest.extendedQuestData.eventName && (
+                                                        <Icon
+                                                            transition="0.8s"
+                                                            color="red.300"
+                                                            boxSize={5}
+                                                            as={MdPreview}
+                                                            _hover={{
+                                                                cursor: "pointer",
+                                                            }}
+                                                            onClick={async () => {
+                                                                // href={`/admin/image-approval/${quest.extendedQuestData.eventName}`}
+                                                                router.push(
+                                                                    `/admin/image-approval/${quest.extendedQuestData.eventName}`
+                                                                );
+                                                            }}
+                                                        />
                                                     )}
+                                            </Flex>
+                                        </Td>
 
-                                                    {quest.type.name === Enums.FOLLOW_INSTAGRAM && (
-                                                        <span className="text-danger ml-1">
-                                                            {quest.extendedQuestData.followAccount}
-                                                        </span>
-                                                    )}
-
-                                                    {quest.type.name === Enums.TWITTER_RETWEET && (
-                                                        <span className="text-teal-500 ml-1">
-                                                            {quest.extendedQuestData.tweetId}
-                                                        </span>
-                                                    )}
-                                                    {quest.type.name ===
-                                                        Enums.CollaborationFreeShell && (
-                                                        <span className="text-teal-500 ml-1">
-                                                            {quest.extendedQuestData.collaboration}
-                                                        </span>
-                                                    )}
-                                                </h5>
-
-                                                <small>{quest.description}</small>
-                                                <br />
-
-                                                {quest.isEnabled ? (
-                                                    <span className="text-success">Enabled</span>
-                                                ) : (
-                                                    <span className="text-danger">Disabled</span>
-                                                )}
-                                            </div>
-                                        </div>
-                                        <div className="d-flex flex-column align-items-center ">
+                                        {/* <div className="d-flex flex-column align-items-center ">
                                             <Link href={`${router.pathname}/?id=${quest.id}`}>
-                                                {/* <button className=" btn btn-dark">Manage</button> */}
+                                      
                                                 <i
                                                     className="ri-edit-line"
                                                     style={{
@@ -135,47 +251,35 @@ const CurrentQuests = ({ quests, isLoading, error }) => {
                                                 ></i>
                                             </Link>
 
-                                            <span>
-                                                <i
-                                                    className="ri-delete-bin-line"
-                                                    style={{
-                                                        fontSize: "1.5rem",
-                                                    }}
-                                                    onClick={async () => {
-                                                        if (!window.confirm("Proceed To Delete")) {
-                                                            return;
-                                                        }
-                                                        handleQuestSoftDelete(quest);
-                                                    }}
-                                                ></i>
-                                            </span>
-                                            {quest.type.name === Enums.IMAGE_UPLOAD_QUEST && (
-                                                <Link
-                                                    href={`/admin/image-approval/${quest.extendedQuestData.eventName}`}
-                                                >
-                                                    <i
-                                                        className="ri-gallery-fill"
-                                                        style={{
-                                                            fontSize: "1.5rem",
-                                                        }}
-                                                    ></i>
-                                                </Link>
-                                            )}
-                                        </div>
-                                    </div>
-                                    {/* last row */}
-                                    {index + 1 !== row.length && (
-                                        <hr className="dropdown-divider my-4" />
-                                    )}
-                                </React.Fragment>
-                            );
-                        })}
-                    </div>
-                )}
-            </div>
+                                            
+                                            
+                                        </div> */}
+                                    </Tr>
+                                );
+                            })}
+                    </Tbody>
+                </Table>
+            </AdminCard>
 
-            {/* {router.query.typeId && ( */}
-            <Modal
+            {editQuestRef?.current && (
+                <EditQuestModal
+                    isOpen={editQuestModal.isOpen}
+                    onClose={() => {
+                        editQuestModal.onClose();
+                    }}
+                    quest={editQuestRef.current}
+                />
+            )}
+            {addQuestModal.isOpen && (
+                <AddQuestModal
+                    isOpen={addQuestModal.isOpen}
+                    onClose={() => {
+                        addQuestModal.onClose();
+                    }}
+                />
+            )}
+
+            {/* <Modal
                 isOpen={router.query?.id ? true : isModalOpen}
                 onClose={() => {
                     router.push(`${router.pathname}`);
@@ -206,11 +310,23 @@ const CurrentQuests = ({ quests, isLoading, error }) => {
                     }
                 }}
                 isConfirm={true}
-            />
-            {/* )} */}
-        </div>
+            /> */}
+        </Box>
     );
 };
+
+{
+    /* 
+            <h4 className="card-title mb-3">Customize Quests</h4>
+            <div>
+                <input
+                    type="text"
+                    className="form-control mb-2"
+                    placeholder="Search Quests"
+                    onChange={debouncedChangeHandler}
+                />
+            </div> */
+}
 
 function shortByText(a, b) {
     if (a.text?.toLowerCase() < b.text?.toLowerCase()) {

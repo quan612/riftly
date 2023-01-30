@@ -3,7 +3,23 @@ import React, { useEffect } from "react";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { object, array, string, number } from "yup";
 import { withQuestUpsert } from "shared/HOC/quest";
-import QuestFormTemplate from "./QuestFormTemplate";
+import QuestFormTemplate, { AdminQuestFormikWrapper } from "./QuestFormTemplate";
+import {
+    FormControl,
+    FormLabel,
+    FormErrorMessage,
+    Input,
+    Switch,
+    Select,
+    Checkbox,
+    GridItem,
+} from "@chakra-ui/react";
+
+const FreeTokenQuestSchema = object().shape({
+    text: string().required("Quest text is required"),
+    completedText: string().required("Completed Text is required"),
+    quantity: number().required().min(0), // optional
+});
 
 const FreeLimitedShell = ({
     quest = null,
@@ -27,12 +43,6 @@ const FreeLimitedShell = ({
         id: quest?.id || 0,
     };
 
-    const FreeShellQuestSchema = object().shape({
-        text: string().required("Quest text is required"),
-        completedText: string().required("Completed Text is required"),
-        quantity: number().required().min(0), // optional
-    });
-
     const onSubmit = async (fields, { setStatus }) => {
         try {
             let res = await onUpsert(fields);
@@ -48,80 +58,50 @@ const FreeLimitedShell = ({
     return (
         <Formik
             initialValues={initialValues}
-            validationSchema={FreeShellQuestSchema}
+            validationSchema={FreeTokenQuestSchema}
             validateOnBlur={true}
             validateOnChange={false}
             onSubmit={onSubmit}
         >
             {({ values, errors, status, touched, handleChange, setFieldValue }) => {
+                const childrenProps = {
+                    isCreate,
+                    text: "Seasonal Free Limited Token",
+                    isLoading,
+                    status,
+                    closeModal,
+                };
                 return (
-                    <Form>
-                        <h4 className="card-title mb-3">{isCreate ? "Create" : "Edit"} Quest</h4>
-                        <small>Seasonal Free Limited $SHELL</small>
-                        <div className="row">
-                            <div className="col-xxl-6 col-xl-6 col-lg-6 mb-3">
-                                <label className="form-label">
-                                    Part of Collaboration (colormonsters, or leave blank if not
-                                    collaborate)
-                                </label>
+                    <AdminQuestFormikWrapper {...childrenProps}>
+                        <GridItem colSpan={1}>
+                            <FormControl>
+                                <FormLabel ms="4px" fontSize="md" fontWeight="bold">
+                                    Collaboration (leaving blank for non specific collaboration)
+                                </FormLabel>
                                 <Field
                                     name="extendedQuestData.collaboration"
                                     type="text"
-                                    className={
-                                        "form-control" +
-                                        (errors?.extendedQuestData &&
-                                        errors?.extendedQuestData?.collaboration &&
-                                        touched?.extendedQuestData?.collaboration
-                                            ? " is-invalid"
-                                            : "")
-                                    }
+                                    as={Input}
+                                    fontSize="md"
+                                    variant="riftly"
+                                    ms="4px"
                                 />
-                                <ErrorMessage
-                                    name="extendedQuestData.collaboration"
-                                    component="div"
-                                    className="invalid-feedback"
-                                />
-                            </div>
-                            <QuestFormTemplate
-                                values={values}
-                                errors={errors}
-                                touched={touched}
-                                onTextChange={(t) => setFieldValue("text", t)}
-                                onCompletedTextChange={(c) => setFieldValue("completedText", c)}
-                                onDescriptionChange={(d) => setFieldValue("description", d)}
-                                onRewardTypeChange={(rt) => setFieldValue("rewardTypeId", rt)}
-                                onRewardQuantityChange={(rq) => setFieldValue("quantity", rq)}
-                                onIsEnabledChange={handleChange}
-                                rewardTypes={rewardTypes}
-                            />
+                            </FormControl>
+                        </GridItem>
 
-                            <div
-                                className={`col-12 mb-3 text-danger ${
-                                    status ? "d-block" : "d-none"
-                                }`}
-                            >
-                                <label className="form-label">API error: {status}</label>
-                            </div>
-
-                            <div className="col-12 mb-3">
-                                <button
-                                    type="submit"
-                                    className="btn btn-success me-2"
-                                    disabled={isLoading}
-                                >
-                                    {isLoading ? "Saving" : "Save"}
-                                </button>
-
-                                <button
-                                    type="button"
-                                    className="btn btn-primary"
-                                    onClick={closeModal}
-                                >
-                                    Close
-                                </button>
-                            </div>
-                        </div>
-                    </Form>
+                        <QuestFormTemplate
+                            values={values}
+                            errors={errors}
+                            touched={touched}
+                            onTextChange={(t) => setFieldValue("text", t)}
+                            onCompletedTextChange={(c) => setFieldValue("completedText", c)}
+                            onDescriptionChange={(d) => setFieldValue("description", d)}
+                            onRewardTypeChange={(rt) => setFieldValue("rewardTypeId", rt)}
+                            onRewardQuantityChange={(rq) => setFieldValue("quantity", rq)}
+                            onIsEnabledChange={handleChange}
+                            rewardTypes={rewardTypes}
+                        />
+                    </AdminQuestFormikWrapper>
                 );
             }}
         </Formik>

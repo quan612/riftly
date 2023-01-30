@@ -35,11 +35,11 @@ const collaborationQuestQueryAPI = async (req, res) => {
                 }).map((aq) => {
                     let relatedQuest = finishedQuest.find((q) => q.questId === aq.questId);
                     if (relatedQuest) {
-                        aq.isDone = true;
+                        aq.hasStarted = true;
                         aq.rewardedQty = relatedQuest.rewardedQty;
 
                     } else {
-                        aq.isDone = false;
+                        aq.hasStarted = false;
                         aq.rewardedQty = 0;
                     }
                     return aq

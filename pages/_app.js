@@ -1,7 +1,7 @@
 import React, { StrictMode, useEffect } from "react";
-import "../styles/bootstrap-icons.css";
-import "../styles/remixicon.css";
-import "/sass/admin/adminBootstrap.css";
+// import "../styles/bootstrap-icons.css";
+// import "../styles/remixicon.css";
+// import "/sass/admin/adminBootstrap.css";
 import "../styles/globals.css";
 
 import { Web3Provider } from "context/Web3Context";
@@ -14,6 +14,7 @@ import { useRouter } from "next/router";
 import { ChakraProvider } from "@chakra-ui/react";
 import { useChallengerPageLoading } from "lib/hooks/useChallengerPageLoading";
 import { Analytics } from "@vercel/analytics/react";
+import theme from "theme/theme";
 
 import {
     Chart as ChartJS,
@@ -27,6 +28,7 @@ import {
     BarElement,
     ArcElement
 } from 'chart.js';
+import AdminLayout from "../components/admin/AdminLayout";
 
 ChartJS.register(
     CategoryScale,
@@ -81,13 +83,15 @@ function MyApp({ Component, pageProps }) {
                                 });
                             `}
                         </Script>
-                        <ChakraProvider>
+                        <ChakraProvider theme={theme}>
                             {Component.requireAdmin ? (
-                                <Component.Layout>
+                                <AdminLayout>
+                                    {/* <Component.Layout> */}
                                     <AdminGuard>
                                         <Component {...pageProps} />
                                     </AdminGuard>
-                                </Component.Layout>
+                                    {/* </Component.Layout> */}
+                                </AdminLayout>
                             ) : (
                                 <>
                                     <Component {...pageProps} />

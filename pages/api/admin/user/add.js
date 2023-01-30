@@ -2,6 +2,7 @@ import adminMiddleware from "@middlewares/adminMiddleware";
 import Enums from "enums";
 import { prisma } from "context/PrismaContext";
 import axios from "axios";
+import { utils } from "ethers";
 
 const AdminUserAddAPI = async (req, res) => {
     const { method } = req;
@@ -10,6 +11,7 @@ const AdminUserAddAPI = async (req, res) => {
         case "POST":
             try {
                 const { user, type } = req.body;
+
 
                 if (type === Enums.DISCORD) {
                     let existingUser = await prisma.whiteList.findFirst({ where: { discordId: user } })
@@ -82,24 +84,26 @@ const AdminUserAddAPI = async (req, res) => {
 
                 }
                 if (type === Enums.WALLET) {
+                    let wallet = utils.getAddress(user)
                     let existingUser = await prisma.whiteList.findUnique({ where: { wallet } })
                     if (existingUser) {
-                        return res.status(200).json({ isError: true, message: `${user} existed on database.` });
+                        return res.status(200).json({ isError: true, message: `${wallet} existed on database.` });
                     }
 
                     else {
-                        const user = await prisma.whiteList.create({
+                        const newUser = await prisma.whiteList.create({
                             data: {
                                 wallet
                             },
                         });
 
-                        res.status(200).json(user);
+                        return res.status(200).json(newUser);
                     }
                 }
 
-                res.status(200).json({ isError: true, message: "Unexpected User Type" });
+                return res.status(200).json({ isError: true, message: "Unexpected User Type" });
             } catch (error) {
+                console.log(error)
                 return res.status(200).json({ isError: true, message: error.message });
             }
 

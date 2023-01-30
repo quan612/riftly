@@ -5,7 +5,7 @@ export const isWhiteListUser = async (session) => {
     if (!session) {
         return null;
     }
-    // session login through discord
+
     let user;
 
     if (session?.provider === "discord") {
@@ -21,6 +21,14 @@ export const isWhiteListUser = async (session) => {
         user = await prisma.whiteList.findFirst({
             where: {
                 twitterId: session?.user?.id,
+            },
+        });
+    }
+
+    if (session?.provider === "email") {
+        user = await prisma.whiteList.findUnique({
+            where: {
+                email: session?.user?.email,
             },
         });
     }

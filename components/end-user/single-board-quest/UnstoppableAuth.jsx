@@ -52,7 +52,7 @@ const UnstoppableAuth = ({ session, onSubmit, isSubmitting, isFetchingUserQuests
 
             setSubmissionQuest(unstoppableAuthQuest);
 
-            if (unstoppableAuthQuest.isDone) {
+            if (unstoppableAuthQuest.hasStarted) {
                 return setView(SUBMITTED);
             }
         }
@@ -230,7 +230,7 @@ const ClaimButton = ({ onClick, isSubmitting, isFetchingUserQuests, submissionQu
         <div className={s.claimBtn}>
             <button
                 onClick={onClick}
-                disabled={submissionQuest.isDone || isSubmitting || isFetchingUserQuests}
+                disabled={submissionQuest.hasStarted || isSubmitting || isFetchingUserQuests}
             >
                 <img
                     src={`${Enums.BASEPATH}/img/sharing-ui/invite/Button_Large.png`}

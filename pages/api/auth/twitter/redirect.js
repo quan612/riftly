@@ -1,11 +1,10 @@
 import axios from "axios";
 import url from "url";
 import { getSession } from "next-auth/react";
-import { utils } from "ethers";
 import Enums from "enums";
 import { isWhiteListUser } from "repositories/session-auth";
 import { getQuestType, getQuestByTypeId } from "repositories/quest";
-import { updateTwitterUserAndAddRewardTransaction } from "repositories/transactions";
+import { updateTwitterUserQuestTransaction } from "repositories/transactions";
 import { prisma } from "@context/PrismaContext";
 
 const TOKEN_TWITTER_AUTH_URL = "https://api.twitter.com/2/oauth2/token";
@@ -77,14 +76,14 @@ export default async function twitterRedirect(req, res) {
                     },
                 });
                 if (existingUser && existingUser.userId !== whiteListUser.userId) {
-                    let error = "Attempt to authenticate same twitter Id on different user.";
+                    let error = "Attempt to authenticate same twitter Id on different users.";
                     return res.status(200).redirect(`/quest-redirect?error=${error}`);
                 }
 
                 let twitterAuthQuestType = await getQuestType(Enums.TWITTER_AUTH);
                 if (!twitterAuthQuestType) {
                     let error =
-                        "Cannot find quest type twitter auth. Pleaes contact administrator.";
+                        "Cannot find any quest of type twitter auth. Pleaes contact administrator.";
                     return res.status(200).redirect(`/quest-redirect?error=${error}`);
                 }
 
@@ -99,30 +98,30 @@ export default async function twitterRedirect(req, res) {
                     let twitterQuestOfThisUser = await prisma.userQuest.findFirst({
                         where: {
                             userId: whiteListUser?.userId,
-                            questId: questId,
+                            questId,
                         },
                     });
 
                     if (twitterQuestOfThisUser) {
-                        let error = "Twitter quest has finished.";
+                        let error = "Twitter quest has finished before.";
                         return res
                             .status(200)
                             .redirect(`/quest-redirect?error=${error}`);
                     }
                 }
 
-                await updateTwitterUserAndAddRewardTransaction(
+                await updateTwitterUserQuestTransaction(
                     twitterQuest,
-                    whiteListUser,
+                    whiteListUser.userId,
                     userInfo.data.data
                 );
 
-                let twitterSignUp = `Sign Up With Twitter Successfully`;
+                let twitterSignUp = `Authenticated with Twitter successfully`;
                 res.status(200).redirect(`/quest-redirect?result=${twitterSignUp}`);
 
             } catch (err) {
                 console.log(err);
-                res.status(200).json({ error: err.message });
+                res.status(200).json({ isError: true, message: err.message });
             }
             break;
         default:

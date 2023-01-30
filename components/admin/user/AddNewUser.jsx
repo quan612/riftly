@@ -4,7 +4,31 @@ import { object, array, string, number, ref } from "yup";
 import { utils } from "ethers";
 import { useAdminUserMutation } from "shared/HOC/user";
 import Enums from "enums";
-import { Tooltip, useToast } from "@chakra-ui/react";
+
+import {
+    Heading,
+    Box,
+    Flex,
+    Link,
+    List,
+    ListItem,
+    Text,
+    Button,
+    useColorMode,
+    useColorModeValue,
+    SimpleGrid,
+    FormControl,
+    FormLabel,
+    FormErrorMessage,
+    Input,
+    Switch,
+    Select,
+    Checkbox,
+    GridItem,
+    Tooltip,
+    useToast,
+} from "@chakra-ui/react";
+import Card from "@components/chakra/card/Card";
 
 const avatars = [
     `${Enums.BASEPATH}/img/sharing-ui/invite/ava1.png`,
@@ -26,13 +50,19 @@ const UserSchema = object().shape({
     user: string()
         .required()
         .test("valid address", "Wallet Address is not valid!", function () {
-            if (Enums.DISCORD || Enums.TWITTER) return true;
-            if (Enums.WALLET && utils.isAddress(this.parent.user)) return true;
+            if (this.parent.type === Enums.DISCORD || this.parent.type === Enums.TWITTER) {
+                return true;
+            }
+            if (this.parent.type === Enums.WALLET && utils.isAddress(this.parent.user)) {
+                return true;
+            }
             return false;
         }),
 });
 
 const AddNewUser = () => {
+    const bg = useColorModeValue("white", "#1B254B");
+    const shadow = useColorModeValue("0px 18px 40px rgba(112, 144, 176, 0.12)", "none");
     const toast = useToast();
     const [avatar, setAvatar] = useState(null);
 
@@ -45,9 +75,7 @@ const AddNewUser = () => {
 
     const onSubmit = async (fields, { setStatus, resetForm, validate }) => {
         try {
-            validate(fields);
             let res = await addUserAsync(fields);
-
             if (res.isError) {
                 setStatus(`Catch error adding new ${fields.type} user: ${res.message}`);
             } else {
@@ -70,7 +98,9 @@ const AddNewUser = () => {
                 });
                 resetForm();
             }
-        } catch (error) {}
+        } catch (error) {
+            console.log(error);
+        }
     };
     return (
         <Formik
@@ -80,37 +110,45 @@ const AddNewUser = () => {
             validateOnChange={false}
             onSubmit={onSubmit}
         >
-            {({ errors, status, touched, isValid, dirty }) => {
+            {({ errors, status, touched, isValid, dirty, values }) => {
                 return (
-                    <div className="row justify-content-center">
-                        <div className="col-xxl-8 col-xl-8 col-lg-8">
-                            <div className="card">
-                                <div className="card-body">
-                                    <div className="row">
-                                        <Form>
-                                            <div className="row">
-                                                <div className="col-xxl-12 col-xl-12 col-lg-1">
-                                                    <div className="d-flex align-items-center mb-3">
-                                                        <img
-                                                            className="me-3 rounded-circle me-0 me-sm-3"
-                                                            src={avatar}
-                                                            width="55"
-                                                            height="55"
-                                                            alt=""
-                                                        />
-                                                        <div className="media-body">
-                                                            <h5 className="mb-0">Add new user</h5>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                {/* Type of social media account  */}
-                                                <div className="col-xxl-4 col-xl-4 col-lg-4 mb-3">
-                                                    <label className="form-label">Type</label>
+                    <Box w="100%">
+                        <Form>
+                            <Flex
+                                flexDirection={{
+                                    base: "row",
+                                }}
+                                w="100%"
+                                h="100%"
+                                justifyContent="center"
+                                mb="60px"
+                                mt={{ base: "20px", md: "20px" }}
+                                gap="1%"
+                            >
+                                <Box w={{ base: "100%" }} minW="100%">
+                                    <Card boxShadow={shadow} py="8" bg={bg}>
+                                        <SimpleGrid
+                                            minChildWidth={"300px"}
+                                            columns={{ base: 1, lg: 3 }}
+                                            columnGap={10}
+                                            rowGap={4}
+                                            w="full"
+                                        >
+                                            <GridItem>
+                                                <FormControl mb="24px">
+                                                    <FormLabel
+                                                        ms="4px"
+                                                        fontSize="md"
+                                                        fontWeight="bold"
+                                                    >
+                                                        User Type
+                                                    </FormLabel>
                                                     <Field
                                                         name="type"
-                                                        as="select"
-                                                        className={"form-control"}
+                                                        as={Select}
+                                                        fontSize="md"
+                                                        ms="4px"
+                                                        size="lg"
                                                     >
                                                         <option value={Enums.WALLET}>
                                                             {Enums.WALLET}
@@ -122,86 +160,85 @@ const AddNewUser = () => {
                                                             {Enums.TWITTER}
                                                         </option>
                                                     </Field>
-                                                </div>
+                                                </FormControl>
+                                            </GridItem>
 
-                                                {/* User Info */}
-                                                <div className="col-xxl-8 col-xl-8 col-lg-8 mb-3">
-                                                    <label className="form-label">
-                                                        Wallet{" "}
-                                                        <Tooltip
-                                                            placement="top"
-                                                            label="Checksum Web3 Wallet"
-                                                            aria-label="A tooltip"
-                                                            fontSize="md"
-                                                        >
-                                                            <i
-                                                                className="ms-1 bi bi-info-circle"
-                                                                data-toggle="tooltip"
-                                                                title="Tooltip on top"
-                                                            ></i>
-                                                        </Tooltip>{" "}
-                                                        / Discord Id{" "}
-                                                        <Tooltip
-                                                            placement="top"
-                                                            label="Discord Unique Id (Not Discord Username or Discriminator)"
-                                                            aria-label="A tooltip"
-                                                            fontSize="md"
-                                                        >
-                                                            <i
-                                                                className="ms-1 bi bi-info-circle"
-                                                                data-toggle="tooltip"
-                                                                title="Tooltip on top"
-                                                            ></i>
-                                                        </Tooltip>{" "}
-                                                        / Twitter Handle{" "}
-                                                        <Tooltip
-                                                            placement="top"
-                                                            label="Twitter Username (https://twitter.com/Whale_Drop)"
-                                                            aria-label="A tooltip"
-                                                            fontSize="md"
-                                                        >
-                                                            <i
-                                                                className="ms-1 bi bi-info-circle"
-                                                                data-toggle="tooltip"
-                                                                title="Tooltip on top"
-                                                            ></i>
-                                                        </Tooltip>{" "}
-                                                    </label>
+                                            <GridItem colSpan={{ base: 1, lg: 2 }}>
+                                                <FormControl
+                                                    mb="24px"
+                                                    isRequired
+                                                    isInvalid={errors.user && touched.user}
+                                                >
+                                                    <FormLabel
+                                                        ms="4px"
+                                                        fontSize="md"
+                                                        fontWeight="bold"
+                                                    >
+                                                        User (Wallet / Discord Id / Twitter User)
+                                                    </FormLabel>
+
                                                     <Field
+                                                        as={Input}
+                                                        size="lg"
                                                         name="user"
                                                         type="text"
-                                                        className={
-                                                            "form-control" +
-                                                            (errors.user && touched.user
-                                                                ? " is-invalid"
-                                                                : "")
-                                                        }
+                                                        variant="auth"
+                                                        placeholder="Wallet / Discord Id / Twitter User"
+                                                        validate={(value) => {
+                                                            let error;
+
+                                                            if (
+                                                                values?.type === Enums.WALLET &&
+                                                                !utils.isAddress(value)
+                                                            ) {
+                                                                error = "Invalid address checksum.";
+                                                            }
+                                                            if (
+                                                                (values?.type === Enums.DISCORD ||
+                                                                    values?.type ===
+                                                                        Enums.TWITTER) &&
+                                                                value?.length < 1
+                                                            ) {
+                                                                error = "User cannot be blank.";
+                                                            }
+                                                            return error;
+                                                        }}
                                                     />
-                                                </div>
+                                                    <FormErrorMessage fontSize="md">
+                                                        {errors.user}
+                                                    </FormErrorMessage>
+                                                </FormControl>
+                                            </GridItem>
 
-                                                <div className="text-danger">
+                                            {/* {errors && errors.user && (
+                                                <Text fontSize="md" color="red.500">
                                                     {errors && errors.user}
-                                                </div>
-                                                <div className="text-danger">
-                                                    {status && status}
-                                                </div>
-                                            </div>
+                                                </Text>
+                                            )} */}
+                                        </SimpleGrid>
+                                        {status && (
+                                            <Text fontSize="md" color="red.500" width={"100%"}>
+                                                {status}
+                                            </Text>
+                                        )}
 
-                                            <div className="col-3 mt-3">
-                                                <button
-                                                    type="submit"
-                                                    className="btn btn-primary me-2 w-100"
-                                                    disabled={isAdding || !dirty}
-                                                >
-                                                    {isAdding ? "Submitting..." : "Submit"}
-                                                </button>
-                                            </div>
-                                        </Form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                                        <Button
+                                            w={{ base: "200px" }}
+                                            my="16px"
+                                            type="submit"
+                                            colorScheme="teal"
+                                            size="lg"
+                                            isLoading={isAdding}
+                                            disabled={isAdding}
+                                            // disabled={isSubmitButtonDisabled(values)}
+                                        >
+                                            Submit
+                                        </Button>
+                                    </Card>
+                                </Box>
+                            </Flex>
+                        </Form>
+                    </Box>
                 );
             }}
         </Formik>

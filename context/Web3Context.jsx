@@ -9,7 +9,6 @@ import WalletConnectProvider from "@walletconnect/web3-provider";
 const util = require("util");
 const API_ADMIN = `${Enums.BASEPATH}/api/admin`;
 const API_USER = `${Enums.BASEPATH}/api/user`;
-const API_SIGNUP = `${Enums.BASEPATH}/api/user/signup`;
 
 import UAuth from "@uauth/js";
 const { default: Resolution } = require("@unstoppabledomains/resolution");
@@ -60,12 +59,12 @@ export function Web3Provider({ session, children }) {
     useEffect(async () => {
         if (session && window?.ethereum) {
             if (window?.ethereum) {
-                SubscribeProvider(window.ethereum);
+                subscribeProvider(window.ethereum);
             }
         }
     }, [session]);
 
-    const SubscribeProvider = async (provider) => {
+    const subscribeProvider = async (provider) => {
         try {
             provider.on("error", (e) => console.error("WS Error", e));
             provider.on("end", (e) => console.error("WS End", e));
@@ -86,7 +85,7 @@ export function Web3Provider({ session, children }) {
         } catch (error) {}
     };
 
-    const TryConnectAsAdmin = async (walletType) => {
+    const adminSignIn = async (walletType) => {
         if (!walletType) {
             throw new Error("Missing type of wallet when trying to setup wallet provider");
         }
@@ -95,7 +94,7 @@ export function Web3Provider({ session, children }) {
         if (walletType === Enums.METAMASK) {
             providerInstance = new ethers.providers.Web3Provider(window.ethereum);
             addresses = await providerInstance.send("eth_requestAccounts", []);
-            SubscribeProvider(window.ethereum);
+            subscribeProvider(window.ethereum);
         } else if (walletType === Enums.WALLETCONNECT) {
             let provider = new WalletConnectProvider({
                 infuraId: process.env.NEXT_PUBLIC_INFURA_ID,
@@ -109,7 +108,7 @@ export function Web3Provider({ session, children }) {
             providerInstance = new ethers.providers.Web3Provider(provider);
             addresses = provider.accounts;
 
-            SubscribeProvider(provider);
+            subscribeProvider(provider);
         }
 
         try {
@@ -145,9 +144,9 @@ export function Web3Provider({ session, children }) {
         } catch (error) {}
     };
 
-    const tryConnectAsUser = async (walletType) => {
+    const signInWithWallet = async (walletType) => {
         if (!walletType) {
-            throw new Error("Missing type of wallet when trying to setup wallet provider");
+            throw new Error("Missing wallet type.");
         }
         try {
             let addresses, providerInstance;
@@ -155,7 +154,7 @@ export function Web3Provider({ session, children }) {
             if (walletType === Enums.METAMASK) {
                 providerInstance = new ethers.providers.Web3Provider(window.ethereum);
                 addresses = await providerInstance.send("eth_requestAccounts", []);
-                SubscribeProvider(window.ethereum);
+                subscribeProvider(window.ethereum);
             } else if (walletType === Enums.WALLETCONNECT) {
                 let provider = new WalletConnectProvider({
                     infuraId: process.env.NEXT_PUBLIC_INFURA_ID,
@@ -169,7 +168,7 @@ export function Web3Provider({ session, children }) {
                 providerInstance = new ethers.providers.Web3Provider(provider);
 
                 addresses = provider?.accounts;
-                SubscribeProvider(provider);
+                subscribeProvider(provider);
             }
 
             if (addresses.length === 0) {
@@ -187,38 +186,52 @@ export function Web3Provider({ session, children }) {
                 return;
             }
 
-            signMessageTimeout = setTimeout(async () => {
-                const signer = await providerInstance.getSigner();
+            const promise = new Promise((resolve, reject) => {
+                let timeout = setTimeout(async function () {
+                    try {
+                        let signer, signature;
 
-                const signature = await signer
-                    .signMessage(`${Enums.USER_SIGN_MSG}`)
-                    .catch((err) => {
-                        setWeb3Error(err.message);
-                    });
+                        signer = await providerInstance.getSigner();
 
-                const address = await signer.getAddress();
+                        signature = await signer
+                            .signMessage(`${Enums.USER_SIGN_MSG}`)
+                            .catch((err) => {
+                                console.log(1);
+                                throw new Error("User rejects signing.");
+                            });
 
-                signIn("non-admin-authenticate", {
-                    redirect: true,
-                    signature,
-                    address,
-                })
-                    .then(({ ok, error }) => {
-                        if (ok) {
-                            return true;
-                        } else {
-                            console.log("Authentication failed");
-                            return false;
+                        if (signature && addresses[0]) {
+                            signIn("non-admin-authenticate", {
+                                redirect: true,
+                                signature,
+                                address: addresses[0],
+                            }).catch((error) => {
+                                setWeb3Error(error.message);
+                                reject(error.message);
+                            });
+                            clearTimeout(timeout);
+                            resolve(); // if the previous line didn't always throw
                         }
-                    })
-                    .catch((err) => {});
-            }, 1000);
+                        clearTimeout(timeout);
+                        reject("Missing address or signature");
+                    } catch (e) {
+                        clearTimeout(timeout);
+                        reject(e);
+                    }
+                }, 500);
+            });
+
+            return promise;
         } catch (error) {
-            setWeb3Error(error.message);
+            if (error.message.indexOf("user rejected signing") !== -1) {
+                setWeb3Error("User rejected signing message.");
+            } else {
+                setWeb3Error(error.message);
+            }
         }
     };
 
-    const TrySignUpWithWallet = async (walletType) => {
+    const signUpWithWallet = async (walletType) => {
         try {
             if (!walletType) {
                 throw new Error("Missing type of wallet when trying to setup wallet provider");
@@ -229,7 +242,6 @@ export function Web3Provider({ session, children }) {
             if (walletType === Enums.METAMASK) {
                 providerInstance = new ethers.providers.Web3Provider(window.ethereum);
                 addresses = await providerInstance.send("eth_requestAccounts", []);
-                // SubscribeProvider(window.ethereum);
             } else if (walletType === Enums.WALLETCONNECT) {
                 let provider = new WalletConnectProvider({
                     infuraId: process.env.NEXT_PUBLIC_INFURA_ID,
@@ -242,7 +254,6 @@ export function Web3Provider({ session, children }) {
 
                 providerInstance = new ethers.providers.Web3Provider(provider);
                 addresses = provider.accounts;
-                // SubscribeProvider(provider);
             }
 
             if (addresses.length === 0) {
@@ -250,20 +261,44 @@ export function Web3Provider({ session, children }) {
                 return;
             }
 
-            let signUpRes = await signUp(providerInstance, addresses[0]).catch((err) => {
-                setWeb3Error(err.message);
-                return false;
+            const promise = new Promise((resolve, reject) => {
+                let timeout = setTimeout(async function () {
+                    try {
+                        let signer, signature;
+
+                        signer = await providerInstance.getSigner();
+
+                        signature = await signer
+                            .signMessage(`${Enums.USER_SIGN_MSG}`)
+                            .catch((err) => {
+                                console.log(1);
+                                throw new Error("User rejects signing.");
+                            });
+
+                        if (signature && addresses[0]) {
+                            const newUser = await axios
+                                .post(`${Enums.BASEPATH}/api/user/wallet-sign-up`, {
+                                    address: addresses[0],
+                                    signature,
+                                })
+                                .then((r) => r.data);
+
+                            if (newUser?.data?.isError) {
+                                clearTimeout(timeout);
+                                throw new Error(newUser?.data?.message);
+                            }
+                            resolve(newUser); // if the previous line didn't always throw
+                        }
+                        reject("Missing address or signature");
+                    } catch (e) {
+                        reject(e);
+                    }
+                }, 500);
             });
 
-            if (signUpRes === "User sign up successful") {
-                return true;
-            } else {
-                setWeb3Error(signUpRes);
-            }
-
-            return false;
+            return promise;
         } catch (error) {
-            setWeb3Error(error.message);
+            throw error;
         }
     };
 
@@ -271,123 +306,6 @@ export function Web3Provider({ session, children }) {
         removeLocalStorageWalletConnect();
         removeLocalStorageUath();
         signOut();
-    };
-
-    const signUp = (providerInstance, address) => {
-        var promise = new Promise(function (resolve, reject) {
-            let timeout = setTimeout(async () => {
-                const signer = await providerInstance.getSigner();
-                const signature = await signer
-                    .signMessage(`${Enums.USER_SIGN_MSG}`)
-                    .catch((err) => {
-                        reject(err.message);
-                    });
-
-                const newUser = await axios.post(
-                    API_SIGNUP,
-
-                    {
-                        address,
-                        signature,
-                    }
-                );
-
-                if (newUser?.data?.isError) {
-                    setWeb3Error(newUser?.data?.message);
-                    resolve(newUser?.data?.message);
-                    clearTimeout(timeout);
-                } else {
-                    resolve("User sign up successful");
-                    clearTimeout(timeout);
-                }
-            }, 1000);
-        });
-        return promise;
-    };
-
-    const doWalletAuth = async (walletType) => {
-        try {
-            if (!walletType) {
-                throw new Error("Missing type of wallet when trying to setup wallet provider");
-            }
-
-            let addresses, providerInstance;
-
-            if (walletType === Enums.METAMASK) {
-                providerInstance = new ethers.providers.Web3Provider(window.ethereum);
-                addresses = await providerInstance.send("eth_requestAccounts", []);
-            } else if (walletType === Enums.WALLETCONNECT) {
-                let provider = new WalletConnectProvider({
-                    infuraId: process.env.NEXT_PUBLIC_INFURA_ID,
-                    qrcodeModalOptions: {
-                        mobileLinks: ["trust"],
-                        desktopLinks: ["encrypted ink"],
-                    },
-                });
-                await provider.enable();
-
-                providerInstance = new ethers.providers.Web3Provider(provider);
-                addresses = provider.accounts;
-            }
-
-            if (addresses.length === 0) {
-                setWeb3Error("Account is locked, or is not connected, or is in pending request.");
-                return;
-            }
-            let doQuest = await walletAuth(providerInstance, addresses[0]).catch((err) => {
-                console.log(err.message);
-                setWeb3Error(err.message);
-                return false;
-            });
-
-            if (doQuest == "Wallet Auth successful") {
-                return true;
-            } else {
-                setWeb3Error(doQuest);
-            }
-
-            return false;
-        } catch (error) {
-            setWeb3Error(error.message);
-        }
-    };
-
-    const walletAuth = (providerInstance, address) => {
-        try {
-            var promise = new Promise(function (resolve, reject) {
-                let timeout = setTimeout(async () => {
-                    const signer = await providerInstance.getSigner();
-                    const signature = await signer
-                        .signMessage(`${Enums.USER_SIGN_MSG}`)
-                        .catch((err) => {
-                            reject(err.message);
-                        });
-
-                    const doQuest = await axios
-                        .post(`${Enums.BASEPATH}/api/user/quest/submit/wallet-auth`, {
-                            address,
-                            signature,
-                        })
-                        .catch((err) => {
-                            console.log(err.message);
-                            reject(err.message);
-                        });
-
-                    if (doQuest?.data?.isError) {
-                        setWeb3Error(doQuest?.data?.message);
-                        resolve(doQuest?.data?.message);
-                        clearTimeout(timeout);
-                    } else {
-                        resolve("Wallet Auth successful");
-                        clearTimeout(timeout);
-                    }
-                }, 1000);
-            });
-            return promise;
-        } catch (error) {
-            setWeb3Error(error.message);
-            reject(error.message);
-        }
     };
 
     const tryConnectAsUnstoppable = async () => {
@@ -437,15 +355,14 @@ export function Web3Provider({ session, children }) {
     return (
         <Web3Context.Provider
             value={{
-                TryConnectAsAdmin,
-                tryConnectAsUser,
+                adminSignIn,
+                signInWithWallet,
                 SignOut,
-                TrySignUpWithWallet,
+                signUpWithWallet,
                 tryConnectAsUnstoppable,
                 web3Error,
                 setWeb3Error,
                 session,
-                doWalletAuth,
             }}
         >
             {children}
@@ -478,19 +395,3 @@ const removeLocalStorageUath = () => {
         localStorage.removeItem("username");
     }
 };
-
-/*
-let uathUser = "quan612.wallet";
-let address = "0x9128c112f6bb0b2d888607ae6d36168930a37087";
-let message = `identity.unstoppabledomains.com wants you to sign in with your Ethereum account:
-0x9128C112f6BB0B2D888607AE6d36168930a37087
-
-I consent to giving access to: openid wallet
-
-URI: uns:quan612.wallet
-Version: 1
-Chain ID: 1
-Nonce: 0x7c9a651b1bcb7c7b53dca2100c4ca149b15e536b53c3b57b541b808e6b80a942
-Issued At: 2022-11-15T22:17:21.730Z`;
-let signature = `0x812de194fc10fd7b680021e4fd1bf5e23836aa4dc857581e660868441400556c501cc57bb5696cfce760835bd7f8f6a1eb24b3f16b5dc1c546a7ce8c907dc71e1b`;
-*/
