@@ -297,7 +297,7 @@ const SignInSignUpWrapper = React.forwardRef(({ currentView, goBack, goNext }, r
                 <WalletSignInModal
                     isOpen={walletModal.isOpen}
                     onClose={() => {
-                        walletAuthQuestModal.onClose();
+                        walletModal.onClose();
                     }}
                 />
             )}
