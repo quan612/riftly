@@ -6,7 +6,7 @@ const whitelistUserMiddleware = (handler) => {
     return async (req, res) => {
 
         const session = await unstable_getServerSession(req, res, authOptions)
-        console.log(session)
+
         if (!session) {
             return res.status(200).json({
                 message: "Missing session auth",

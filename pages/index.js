@@ -36,7 +36,7 @@ function Home({ session }) {
                 />
                 <link rel="icon" href="/faviconShell.png" />
             </Head>
-            <Box w="100%" h="100vh" display={"flex"} position={"relative"}>
+            <Box w="100%" minH="100vh" h="auto" display={"flex"} position={"relative"}>
                 {!session && <RiftlyConnectBoard />}
                 {/* {session && process.env.NEXT_PUBLIC_ENABLE_CHALLENGER === "false" && <NotEnabledChallenger session={session} />} */}
                 {session && process.env.NEXT_PUBLIC_ENABLE_CHALLENGER === "true" && (

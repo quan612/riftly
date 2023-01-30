@@ -46,6 +46,7 @@ import debounce from "@utils/debounce";
 import { getDiscordAuthLink, getTwitterAuthLink } from "@utils/helpers";
 import axios from "axios";
 import { ChakraBox } from "@theme/additions/framer/FramerChakraComponent";
+import WalletSignInModal from "./shared/riftly/WalletSignInModal";
 
 export default function RiftlyConnectBoard() {
     let router = useRouter();
@@ -288,8 +289,18 @@ const RiftlyLogo = () => {
 };
 
 const SignInSignUpWrapper = React.forwardRef(({ currentView, goBack, goNext }, ref) => {
+    const walletModal = useDisclosure();
+
     return (
         <>
+            {walletModal?.isOpen && (
+                <WalletSignInModal
+                    isOpen={walletModal.isOpen}
+                    onClose={() => {
+                        walletAuthQuestModal.onClose();
+                    }}
+                />
+            )}
             <Flex
                 flexDirection={"column"}
                 gap="8px"
@@ -378,6 +389,7 @@ const SignInSignUpWrapper = React.forwardRef(({ currentView, goBack, goNext }, r
                     onClick={() => {
                         if (currentView === SIGNIN_OPTIONS) {
                             // signIn("google");signIn("twitter");
+                            walletModal.onOpen();
                         } else {
                             // let twitterLink = await getTwitterAuthLink();
                             // return window.open(twitterLink, "_self");

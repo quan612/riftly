@@ -101,7 +101,7 @@ export default function AdminNavigation() {
                 fontWeight={600}
                 color={'white'}
                 bg={'pink.400'}
-                onClick={() => handleLogout()}
+                onClick={() => SignOut()}
                 _hover={{
                   bg: 'pink.300',
                 }}>

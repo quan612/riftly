@@ -17,8 +17,9 @@ import { ChakraBox } from "@theme/additions/framer/FramerChakraComponent";
 import { RiftlyIcon } from "../shared/riftly/RiftlyIcon";
 
 const FeatureQuests = ({ featureQuests, featureQuestsSet }) => {
-    const onDoFeatureQuest = (id) => {
-        let filterQuest = featureQuests.filter((q) => q.id !== id);
+    const onDoFeatureQuest = (key) => {
+        console.log(key);
+        let filterQuest = featureQuests.filter((q) => q.id !== key);
         featureQuestsSet(filterQuest);
     };
     return (
@@ -28,35 +29,27 @@ const FeatureQuests = ({ featureQuests, featureQuestsSet }) => {
             gap={"16px"}
             exit={{ opacity: 0 }}
             // transition={{ type: "spring" }}
-            // layout="position"
-            layout
+            layout="position"
+            // layout
         >
             <Heading color="white" fontWeight="600" size="md">
                 Featured
             </Heading>
-            {/* <Box minW="100%"> */}
-            {/* <SimpleGrid columns={{ base: 3 }} gap="16px" w="100%">
-               
-                    {featureQuests.map((quest, index) => {
-                        return (
-                            <FeatureCard
-                                image={"/img/user/feature-1.png"}
-                                quest={quest}
-                                key={quest.id}
-                                doFeatureQuest={onDoFeatureQuest}
-                            />
-                        );
-                    })}
-               
-                </SimpleGrid> */}
 
-            <Box display={"flex"} overflow={"auto"} position="relative" gap="16px">
+            <Box
+                display={"flex"}
+                overflowX={"auto"}
+                position="relative"
+                gap="16px"
+                overflowY={"none"}
+            >
                 {featureQuests.map((quest, index) => {
                     return (
                         <FeatureCard
                             image={"/img/user/feature-1.png"}
                             quest={quest}
                             key={quest.id}
+                            id={quest.id}
                             doFeatureQuest={onDoFeatureQuest}
                         />
                         // <Box bg={"brand.neutral4"} borderRadius="16px" h="259px" minW="200px"></Box>
@@ -71,10 +64,10 @@ const FeatureQuests = ({ featureQuests, featureQuestsSet }) => {
 
 export default FeatureQuests;
 
-const FeatureCard = ({ image, quest, doFeatureQuest }) => {
+const FeatureCard = ({ image, id, doFeatureQuest }) => {
     return (
-        <Box bg={"brand.neutral4"} borderRadius="16px" h="259px" w="200px">
-            {/* <Flex direction={{ base: "column" }}>
+        <Box bg={"brand.neutral4"} borderRadius="16px" h="259px" w="auto" minW="200px" maxW="33%">
+            <Flex direction={{ base: "column" }} h="100%">
                 <Box position="relative" h="37%" minH={"37%"} maxH="37%!important">
                     <Image
                         boxSize={"100px"}
@@ -86,9 +79,9 @@ const FeatureCard = ({ image, quest, doFeatureQuest }) => {
                 </Box>
                 <Flex flexDirection="column" justify="space-between" h="63%" py="4" px="4">
                     <Body />
-                    <Footer doFeatureQuest={doFeatureQuest} />
+                    <Footer id={id} doFeatureQuest={doFeatureQuest} />
                 </Flex>
-            </Flex> */}
+            </Flex>
         </Box>
     );
 };
@@ -98,18 +91,18 @@ const Body = ({ quest }) => {
         <Flex justify="space-between">
             <Flex direction="column" gap="5px">
                 <HeadingSm color={"white"} fontWeight="bold">
-                    Daily Reward
+                    Place Holder
                 </HeadingSm>
 
                 <TextSm color="whiteAlpha.700" opacity="0.64" fontWeight="400">
-                    Sign in every day for more rewards!
+                    A Very long Place Holder Text Description......
                 </TextSm>
             </Flex>
         </Flex>
     );
 };
 
-const Footer = ({ doFeatureQuest }) => {
+const Footer = ({ id, doFeatureQuest }) => {
     return (
         <Flex align="start" alignItems={"center"} justify="space-between" mt="25px">
             <Flex alignItems={"center"} gap="5px">
@@ -129,9 +122,9 @@ const Footer = ({ doFeatureQuest }) => {
                 borderRadius="48px"
                 px="24px"
                 py="5px"
-                onClick={() => doFeatureQuest(1)}
+                onClick={() => doFeatureQuest(id)}
             >
-                Claim
+                Test
             </Button>
         </Flex>
     );

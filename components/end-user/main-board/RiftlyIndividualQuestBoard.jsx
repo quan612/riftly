@@ -46,7 +46,7 @@ import {
     Container,
 } from "@chakra-ui/react";
 
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, AnimateSharedLayout, LayoutGroup } from "framer-motion";
 
 import UserTierLevel from "./UserTierLevel";
 import FeatureQuests from "./FeaturedQuests";
@@ -55,8 +55,8 @@ import { ChakraBox } from "@theme/additions/framer/FramerChakraComponent";
 
 const RiftlyIndividualQuestBoard = ({ session, userQuests }) => {
     const [currentQuests, setCurrentQuests] = useState([]);
-    const [featureQuests, featureQuestsSet] = useState([{ id: 1 }, { id: 2 }, { id: 3 }]);
-
+    // const [featureQuests, featureQuestsSet] = useState([{ id: 1 }, { id: 2 }, { id: 3 }]);
+    const [featureQuests, featureQuestsSet] = useState([{ id: 1 }]);
     useEffect(async () => {
         handleRenderUserQuest();
     }, [userQuests]);
@@ -91,32 +91,27 @@ const RiftlyIndividualQuestBoard = ({ session, userQuests }) => {
             color="#262626"
             borderTopRadius={"16px"}
             position="absolute"
-            // top={"23.47%"}
             top={"160px"}
-            minH="calc(100% - 160px)"
+            zIndex="2"
+            minH="auto"
+            maxH="auto"
             pb="24px"
         >
             <Container
-                w="auto"
-                h="100%"
                 position={"relative"}
                 maxW="container.sm"
                 minW={{ sm: "100%", md: "container.sm" }}
                 padding={{ sm: "0px 16px", md: "0" }}
             >
-                <ChakraBox
+                <Box
                     display={"flex"}
                     flexDirection={"column"}
-                    h="100%"
                     w="100%"
                     position="relative"
                     top="-16px"
                     gap="16px"
                 >
-                    <AnimatePresence
-                        // mode="popLayout"
-                        mode="sync"
-                    >
+                    <AnimatePresence mode="sync">
                         <UserTierLevel session={session} key="user-tier" />
                         {featureQuests.length > 0 && (
                             <FeatureQuests
@@ -126,8 +121,15 @@ const RiftlyIndividualQuestBoard = ({ session, userQuests }) => {
                             />
                         )}
                         <ChallengeQuests currentQuests={currentQuests} key="challenges-section" />
+                        <ChakraBox
+                            h="50px"
+                            minH="50px"
+                            bg="brand.neutral5"
+                            key="challenges-layout-hack"
+                            layout="position"
+                        />
                     </AnimatePresence>
-                </ChakraBox>
+                </Box>
             </Container>
         </Box>
     );

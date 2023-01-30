@@ -25,6 +25,7 @@ const UNCLAIMABLE = 2;
 import { CloseButton } from "@chakra-ui/react";
 import { AnimatePresence, AnimateSharedLayout, motion } from "framer-motion";
 import { useNftOwningQuestSubmit } from "@shared/HOC/quest";
+import { RiftlyModalCloseButton } from "@components/riftly/Buttons";
 
 const NftOwnerQuestModal = ({ isOpen, onClose, currentQuest }) => {
     const [nftQuestData, isSubmittingQuest, submit] = useNftOwningQuestSubmit();
@@ -48,56 +49,18 @@ const NftOwnerQuestModal = ({ isOpen, onClose, currentQuest }) => {
     };
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose} closeOnOverlayClick={false}>
+        <Modal isOpen={isOpen} onClose={handleOnClose} closeOnOverlayClick={false}>
             <ModalOverlay />
             <ModalContent
                 borderRadius="16px"
                 bg="brand.neutral4"
                 minH="35%"
                 w="33%"
-                // maxH={"384px"}
                 maxW="container.sm"
                 mt="16%"
                 transition={"1.25s"}
             >
-                <CloseButton
-                    onClick={handleOnClose}
-                    outline={"none"}
-                    display={"flex"}
-                    alignItems="center"
-                    justifyContent="center"
-                    // flexShrink={0}
-                    position={"absolute"}
-                    top={2}
-                    right={2}
-                    transition="1s"
-                    color={"brand.blue"}
-                    fontSize={{ sm: "7px", md: "8px", lg: "10px" }}
-                    border="1px solid"
-                    borderColor={"brand.blue"}
-                    borderRadius={{ base: "50%", md: "35%" }}
-                    boxSize={{ sm: "16px", md: "32px", lg: "40px" }}
-                    _hover={{
-                        border: "1px solid",
-                        bg: "brand.blue",
-                        transition: "1s",
-                        color: "#fff",
-                    }}
-                    _active={{
-                        outline: "none",
-                        bg: "brand.blue",
-                        transition: "1s",
-                        color: "#fff",
-                        border: "1px solid",
-                        borderColor: "#fff",
-                    }}
-                    _focus={{
-                        outline: "none",
-                        border: "1px solid",
-                        borderColor: "#fff",
-                        bg: "brand.blue",
-                    }}
-                />
+                <RiftlyModalCloseButton onClose={handleOnClose} />
 
                 <ModalBody
                     display={"flex"}

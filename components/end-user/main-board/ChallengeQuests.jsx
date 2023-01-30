@@ -8,53 +8,18 @@ import {
     Heading,
     Box,
     Flex,
-    Link,
-    List,
-    ListItem,
     Text,
     Button,
-    useColorMode,
-    useColorModeValue,
-    SimpleGrid,
-    FormControl,
-    FormLabel,
-    FormErrorMessage,
-    Input,
-    Switch,
-    Select,
-    Checkbox,
-    GridItem,
-    Table,
-    Tbody,
-    Th,
-    Thead,
-    Tr,
-    Td,
-    Tooltip,
-    IconButton,
-    NumberInput,
-    NumberInputField,
-    NumberInputStepper,
-    NumberIncrementStepper,
-    NumberDecrementStepper,
     useDisclosure,
     Divider,
     ButtonGroup,
     Icon,
     Container,
     useToast,
-    Modal,
-    ModalOverlay,
-    ModalContent,
-    ModalHeader,
-    ModalFooter,
-    ModalBody,
-    ModalCloseButton,
-    Image,
 } from "@chakra-ui/react";
 import { ChakraBox } from "@theme/additions/framer/FramerChakraComponent";
 
-import { AnimatePresence, motion, AnimateSharedLayout } from "framer-motion";
+import { AnimatePresence, motion, AnimateSharedLayout, LayoutGroup } from "framer-motion";
 import { useQueryClient } from "react-query";
 import { RiftlyIcon } from "../shared/riftly/RiftlyIcon";
 import CodeQuestModal from "../shared/riftly/CodeQuestModal";
@@ -63,85 +28,38 @@ import WalletAuthQuestModal from "../shared/riftly/WalletAuthQuestModal";
 import NftOwnerQuestModal from "../shared/riftly/NftOwnerQuestModal";
 import { HeadingLg, HeadingSm, TextSm } from "@components/riftly/Typography";
 
-// const UnderlinedMenu = () => {
-//     const [selected, setSelected] = useState(0);
-//     return (
-//         <div className="underlined-menu">
-//             <Box display={"flex"} flexDirection="row" justifyContent={"space-evenly"}>
-//                 <AnimateSharedLayout>
-//                     {menuItems.map((el, i) => (
-//                         <MenuItem
-//                             text={el}
-//                             key={i}
-//                             selected={selected === i}
-//                             onClick={() => setSelected(i)}
-//                         />
-//                     ))}
-//                 </AnimateSharedLayout>
-//             </Box>
-//         </div>
-//     );
-// };
-
-// const menuItems = ["Lorem", "ipsum", "dolor", "sit"];
-// const MenuItem = ({ text, selected, onClick }) => (
-//     <motion.div
-//         onClick={onClick}
-//         animate={{ opacity: selected ? 1 : 0.5 }}
-//         style={{ color: "white", position: "relative" }}
-//     >
-//         {text}
-//         {selected && (
-//             <motion.div
-//                 layoutId="underline"
-//                 style={{
-//                     position: "absolute",
-//                     top: "100%",
-//                     left: "0",
-//                     width: "100%",
-//                     height: "4px",
-//                     background: "white",
-//                     borderRadius: "15px",
-//                 }}
-//             />
-//         )}
-//     </motion.div>
-// );
-
 const ChallengeQuests = ({ currentQuests }) => {
     const [filterCompleted, filterCompletedSet] = useState(false);
-    const [minHeight, minHeightSet] = useState(0);
-
     const trackFirstRender = useRef(true);
-
+    const [newQuests, newQuestsSet] = useState([]);
+    const [completedQuests, completedQuestsSet] = useState([]);
     useEffect(() => {
-        if (currentQuests && !filterCompleted) {
+        if (currentQuests) {
             // trackFirstRender.current = false;
+            let completed = currentQuests.filter((q) => q.hasClaimed === true);
+            completedQuestsSet(completed);
+            let newQ = currentQuests.filter((q) => q.hasClaimed === false);
+            newQuestsSet(newQ);
         }
-    }, []);
+    }, [currentQuests, filterCompleted]);
 
     return (
         <ChakraBox
             display="flex"
             flexDirection={"column"}
             gap={"16px"}
-            // layout
-            // animate={{ scale: 1, opacity: 1 }}
-            // exit={{ opacity: 0 }}
-            // layout
+            position={"relative"}
+            // layout="position"
+            minH="auto"
+            h="900px"
+            layout
         >
             <ChallengesHeader
                 filterCompleted={filterCompleted}
                 filterCompletedSet={filterCompletedSet}
             />
 
-            <Box
-                display={"flex"}
-                flexDirection={"column"}
-                gap={"16px"}
-                h
-                // minH={minHeight}
-            >
+            <Box h="auto" display={"flex"} flexDirection={"column"} gap={"16px"}>
                 {currentQuests
                     .filter((q) => {
                         if (filterCompleted) {
@@ -152,64 +70,43 @@ const ChallengeQuests = ({ currentQuests }) => {
                     })
                     .map((quest, index) => {
                         return (
-                            <Box
+                            <ChakraBox
                                 key={quest.id}
-                                // custom={index}
-                                // variants={{
-                                //     hidden: (index) => ({
-                                //         opacity: 0,
-                                //         y: -25 * index,
-                                //     }),
-                                //     visible: (index) => ({
-                                //         opacity: 1,
-                                //         y: 0,
-                                //         transition: {
-                                //             delay: index * 0.15,
-                                //         },
-                                //     }),
-                                //     removed: (index) => ({
-                                //         opacity: 0,
-                                //         // scale: 0.8,
-                                //         transition: {
-                                //             type: "spring",
-                                //         },
-                                //     }),
-                                // }}
-                                // initial="hidden"
-                                // animate="visible"
-                                // exit="removed"
-                                // initial={
-                                //     trackFirstRender.current
-                                //         ? { opacity: 0, height: "auto" }
-                                //         : { opacity: 1, height: "auto" }
-                                // }
-                                // initial={{ opacity: 0 }}
-                                // animate={{ opacity: 1 }}
-                                // // animate={{ opacity: 1 }}
-                                // transition={{ duration: 1 }}
-                                // exit={{
-                                //     opacity: 0,
-                                //     transition: { duration: 1 },
-                                //     height: 0,
-                                // }}
-                                // className="quest-row"
-                                // h="96px"
-                                // maxHeight={{ sm: "112px", md: "96px" }}
-                                // minHeight={{ sm: "112px", md: "96px" }}
                                 h={{ base: "112px", md: "96px" }}
+                                maxH={{ base: "112px", md: "96px" }}
                                 w="100%"
                                 bg="brand.neutral4"
                                 border="1px solid"
                                 borderColor="brand.neutral3"
                                 borderRadius={"16px"}
                             >
-                                <Box
-                                    // minH="96px"
-                                    display="flex"
-                                    flexDirection={"row"}
-                                    h="100%"
-                                    w="100%"
-                                >
+                                <Box display="flex" flexDirection={"row"} w="100%">
+                                    <UserQuestBox
+                                        quest={quest}
+                                        index={index}
+                                        key={index}
+                                        currentQuests={currentQuests}
+                                        filterCompleted={filterCompleted}
+                                    />
+                                </Box>
+                            </ChakraBox>
+                        );
+                    })}
+
+                {/* {!filterCompleted &&
+                    newQuests.map((quest, index) => {
+                        return (
+                            <Box
+                                key={quest.id}
+                                h={{ base: "112px", md: "96px" }}
+                                maxH={{ base: "112px", md: "96px" }}
+                                w="100%"
+                                bg="brand.neutral4"
+                                border="1px solid"
+                                borderColor="brand.neutral3"
+                                borderRadius={"16px"}
+                            >
+                                <Box display="flex" flexDirection={"row"} w="100%">
                                     <UserQuestBox
                                         quest={quest}
                                         index={index}
@@ -221,6 +118,32 @@ const ChallengeQuests = ({ currentQuests }) => {
                             </Box>
                         );
                     })}
+
+                {filterCompleted &&
+                    completedQuests.map((quest, index) => {
+                        return (
+                            <ChakraBox
+                                key={quest.id}
+                                h={{ base: "112px", md: "96px" }}
+                                maxH={{ base: "112px", md: "96px" }}
+                                w="100%"
+                                bg="brand.neutral4"
+                                border="1px solid"
+                                borderColor="brand.neutral3"
+                                borderRadius={"16px"}
+                            >
+                                <Box display="flex" flexDirection={"row"} w="100%">
+                                    <UserQuestBox
+                                        quest={quest}
+                                        index={index}
+                                        key={index}
+                                        currentQuests={currentQuests}
+                                        filterCompleted={filterCompleted}
+                                    />
+                                </Box>
+                            </ChakraBox>
+                        );
+                    })} */}
             </Box>
         </ChakraBox>
     );
@@ -230,11 +153,15 @@ export default ChallengeQuests;
 
 const ChallengesHeader = ({ filterCompleted, filterCompletedSet }) => {
     return (
-        <Flex justifyContent="space-between" align={{ base: "start", md: "center" }}>
+        <ChakraBox
+            display={"flex"}
+            justifyContent="space-between"
+            // layout="position"
+        >
             <Heading color="white" fontWeight="600" size="md">
                 Challenges
             </Heading>
-            <Flex align="end">
+            <Box display={"flex"} align="end">
                 <Box
                     display={"flex"}
                     flexDirection="row"
@@ -253,8 +180,9 @@ const ChallengesHeader = ({ filterCompleted, filterCompletedSet }) => {
                         position="relative"
                     >
                         <ChakraBox
-                            // layout="position"
-                            layout
+                            layout="position"
+                            // layout
+                            // layoutId="challenges-filter"
                             w="50%"
                             h="100%"
                             bg="brand.neutral3"
@@ -268,6 +196,9 @@ const ChallengesHeader = ({ filterCompleted, filterCompletedSet }) => {
                             left="0"
                             alignItems={"center"}
                             display="flex"
+                            _hover={{
+                                cursor: "pointer",
+                            }}
                         >
                             <Text
                                 transitionDuration="1s"
@@ -287,6 +218,9 @@ const ChallengesHeader = ({ filterCompleted, filterCompletedSet }) => {
                             right="0"
                             alignItems={"center"}
                             display="flex"
+                            _hover={{
+                                cursor: "pointer",
+                            }}
                         >
                             <Text
                                 transitionDuration="1s"
@@ -298,10 +232,11 @@ const ChallengesHeader = ({ filterCompleted, filterCompletedSet }) => {
                                 Completed
                             </Text>
                         </Box>
+                        {/* </AnimateSharedLayout> */}
                     </Flex>
                 </Box>
-            </Flex>
-        </Flex>
+            </Box>
+        </ChakraBox>
     );
 };
 
@@ -334,32 +269,8 @@ const UserQuestBox = ({ quest, index, currentQuests, filterCompleted, onTest }) 
         };
     }, []);
 
-    // useEffect(() => {
-    //     if (submitQuestData?.isError) {
-    //         toast({
-    //             title: "Exception",
-    //             description: `Catch error at questId: ${submitQuestData.questId}. Please contact admin.`,
-    //             position: "top-right",
-    //             status: "error",
-    //             duration: 5000,
-    //             isClosable: true,
-    //         });
-    //     }
-    //     if (claimUserQuestData?.isError) {
-    //         toast({
-    //             title: "Exception",
-    //             description: `Catch error at questId: ${claimUserQuestData.questId}. Please contact admin.`,
-    //             position: "top-right",
-    //             status: "error",
-    //             duration: 5000,
-    //             isClosable: true,
-    //         });
-    //     }
-    // }, [submitQuestData, claimUserQuestData]);
-
     const doQuest = useCallback(
         async (quest) => {
-            console.log(quest);
             try {
                 switch (quest.type.name) {
                     case Enums.CODE_QUEST:
@@ -433,6 +344,7 @@ const UserQuestBox = ({ quest, index, currentQuests, filterCompleted, onTest }) 
             <Box
                 className="reward-quantity-per-quest"
                 w="96px"
+                h={{ base: "112px", md: "96px" }}
                 borderRight={"1px solid"}
                 borderRightColor={"brand.neutral3"}
                 display="flex"
@@ -604,3 +516,48 @@ const UserQuestBox = ({ quest, index, currentQuests, filterCompleted, onTest }) 
         </>
     );
 };
+
+// const UnderlinedMenu = () => {
+//     const [selected, setSelected] = useState(0);
+//     return (
+//         <div className="underlined-menu">
+//             <Box display={"flex"} flexDirection="row" justifyContent={"space-evenly"}>
+//                 <AnimateSharedLayout>
+//                     {menuItems.map((el, i) => (
+//                         <MenuItem
+//                             text={el}
+//                             key={i}
+//                             selected={selected === i}
+//                             onClick={() => setSelected(i)}
+//                         />
+//                     ))}
+//                 </AnimateSharedLayout>
+//             </Box>
+//         </div>
+//     );
+// };
+
+// const menuItems = ["Lorem", "ipsum", "dolor", "sit"];
+// const MenuItem = ({ text, selected, onClick }) => (
+//     <motion.div
+//         onClick={onClick}
+//         animate={{ opacity: selected ? 1 : 0.5 }}
+//         style={{ color: "white", position: "relative" }}
+//     >
+//         {text}
+//         {selected && (
+//             <motion.div
+//                 layoutId="underline"
+//                 style={{
+//                     position: "absolute",
+//                     top: "100%",
+//                     left: "0",
+//                     width: "100%",
+//                     height: "4px",
+//                     background: "white",
+//                     borderRadius: "15px",
+//                 }}
+//             />
+//         )}
+//     </motion.div>
+// );

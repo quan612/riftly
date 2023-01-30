@@ -34,16 +34,16 @@ const AUTHENTICATING = 2;
 const AUTHENTICATED = 3;
 const ERROR = 4;
 
-const WalletAuthQuestModal = ({ isOpen, onClose }) => {
+const WalletSignInModal = ({ isOpen, onClose }) => {
     const { isMobile } = useDeviceDetect();
     const [error, errorSet] = useState();
-    const { web3Error, signUpWithWallet, setWeb3Error } = useContext(Web3Context);
+    const { web3Error, signInWithWallet, setWeb3Error } = useContext(Web3Context);
     const [currentView, setView] = useState(CONNECTABLE);
 
     async function handleConnect(type) {
         setView(AUTHENTICATING);
         try {
-            let res = await signUpWithWallet(type);
+            let res = await signInWithWallet(type);
             if (!res.isError) {
                 setView(AUTHENTICATED);
             } else {
@@ -85,7 +85,7 @@ const WalletAuthQuestModal = ({ isOpen, onClose }) => {
                     maxH={"100%"}
                 >
                     <Flex
-                        gap="24px"
+                        gap="36px"
                         direction="column"
                         alignItems={"center"}
                         justifyContent={"center"}
@@ -145,38 +145,12 @@ const WalletAuthQuestModal = ({ isOpen, onClose }) => {
                                         borderRadius="24px"
                                         w="100%"
                                     >
-                                        Back to Challenges
+                                        Close
                                     </Button>
                                 </>
                             ))}
 
-                        {currentView === AUTHENTICATED && (
-                            <>
-                                <Image
-                                    src="/img/user/riftly-success.gif"
-                                    boxSize={{ sm: "40px", md: "60px", lg: "80px" }}
-                                />
-
-                                <Heading color="white" fontSize={"xl"} align="center" w="100%">
-                                    Congrats!
-                                </Heading>
-
-                                <Text w="100%" color="brand.neutral0" align="center" fontSize="md">
-                                    You finished wallet authentication. Return to challenges to
-                                    claim your reward.
-                                </Text>
-
-                                <Button
-                                    w="100%"
-                                    variant="blue"
-                                    onClick={handleOnClose}
-                                    minW="100%"
-                                    borderRadius="24px"
-                                >
-                                    Back to Challenges
-                                </Button>
-                            </>
-                        )}
+                        {currentView === AUTHENTICATED && <Text>Redirecting...</Text>}
                     </Flex>
                 </ModalBody>
             </ModalContent>
@@ -184,4 +158,4 @@ const WalletAuthQuestModal = ({ isOpen, onClose }) => {
     );
 };
 
-export default WalletAuthQuestModal;
+export default WalletSignInModal;
