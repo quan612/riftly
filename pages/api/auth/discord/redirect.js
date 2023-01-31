@@ -123,7 +123,7 @@ export default async function discordRedirect(req, res) {
                     userInfo.data
                 );
 
-                let discordSignUp = `Authenticated ith Discord successfully`
+                let discordSignUp = `Authenticated with Discord successfully`
                 res.status(200).redirect(`/quest-redirect?result=${discordSignUp}`);
 
 

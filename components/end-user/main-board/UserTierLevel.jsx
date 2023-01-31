@@ -29,6 +29,7 @@ import { shortenAddress } from "@utils/shortenAddress";
 import { RiftlyIcon } from "../shared/riftly/RiftlyIcon";
 import { ChakraBox } from "@theme/additions/framer/FramerChakraComponent";
 import { HeadingSm, TextMd } from "@components/riftly/Typography";
+import { getUserName } from "@utils/index";
 
 function getPoints(level) {
     // return 20 * level * (level + 4);
@@ -147,23 +148,6 @@ const UserTierLevel = ({ session }) => {
             }
         }
     }, [userRewards]);
-
-    const getUserName = useCallback((session) => {
-        switch (session.provider) {
-            case "discord":
-                return session?.profile?.username + "#" + session?.profile?.discriminator;
-            case "twitter":
-                return session?.profile?.data?.username;
-            case "unstoppable-authenticate":
-                return session?.user?.uauthUser;
-            case "email":
-                return session?.user?.email;
-            default:
-                if (session?.user?.address.length > 16)
-                    return shortenAddress(session?.user?.address);
-                return ""; //session?.user?.wallet || shortenAddress(session?.user?.address);
-        }
-    });
 
     return (
         <ChakraBox

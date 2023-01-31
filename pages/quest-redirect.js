@@ -1,71 +1,130 @@
 import React from "react";
-import s from "/sass/claim/claim.module.css";
-import Enums from "enums";
+
 import { useRouter } from "next/router";
-import { BoardSmallDollarSign } from "@components/end-user";
 
-function QuestComplete() {
+import {
+    Heading,
+    Box,
+    Flex,
+    Text,
+    Button,
+} from "@chakra-ui/react";
+import { useSession } from "next-auth/react"
+import { ShortContainer } from "containers/user";
+import { RiftlyFace, RiftlyLogoWhite, RiftlyLogoWhiteText } from "@components/riftly/Logo";
+import { getUserName } from "@utils/index";
+
+
+function QuestRedirectPage() {
     let router = useRouter();
-
+    const { data: session, status } = useSession()
     return (
-        <>
-            <div className={s.app}>
-                <div className={s.board}>
-                    <div className={s.board_container}>
-                        <BoardSmallDollarSign />
-                        <div className={s.board_wrapper}>
-                            <div className={s.board_content}>
-                                <>
-                                    {!router?.query?.error && (
-                                        <>
-                                            <div className={s.board_text}>
-                                                {router?.query?.result}
-                                            </div>
-                                            <button
-                                                className={s.board_pinkBtn}
-                                                onClick={() => {
-                                                    router.push("/");
-                                                }}
-                                            >
-                                                <img
-                                                    src={`${Enums.BASEPATH}/img/sharing-ui/invite/Button_Large.png`}
-                                                    alt="Go Back"
-                                                />
-                                                <div>
-                                                    <span>Go Back</span>
-                                                </div>
-                                            </button>
-                                        </>
-                                    )}
-                                    {router?.query?.error && (
-                                        <>
-                                            <div className={s.board_text}>
-                                                {router?.query?.error}
-                                            </div>
-                                            <button
-                                                className={s.board_pinkBtn}
-                                                onClick={() => {
-                                                    router.push("/");
-                                                }}
-                                            >
-                                                <img
-                                                    src={`${Enums.BASEPATH}/img/sharing-ui/invite/Button_Large.png`}
-                                                    alt="Go Back"
-                                                />
-                                                <div>
-                                                    <span>Go Back</span>
-                                                </div>
-                                            </button>
-                                        </>
-                                    )}
-                                </>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </>
+        <Box w="100%" minH="100vh" h="auto" display={"flex"} position={"relative"}>
+            <Box
+                position="absolute"
+                w="100%"
+                h="100%"
+                backgroundImage="/img/user/banner.png"
+                backgroundPosition="center"
+                backgroundSize={"cover"}
+                backgroundRepeat="no-repeat"
+                display={"flex"}
+                alignItems="center"
+                justifyContent={"center"}
+            >
+                <Box position="absolute"
+                    w="100%"
+                    h="25%"
+                    top={0}
+                >
+                    <Flex
+                        h="100%"
+                        alignItems="center"
+                        justifyContent={"center"}
+                    >
+                        <Box w={{ base: "100px", md: "150px", xl: "200px" }}>
+                            <RiftlyLogoWhite />
+                        </Box>
+                    </Flex>
+
+                </Box>
+
+                <ShortContainer>
+                    <Flex alignItems={"center"} gap="24px">
+                        <Box boxSize={24}>
+                            <RiftlyFace />
+                        </Box>
+                        {session && (
+                            <Heading size="md" fontWeight="700" color="#fff">{getUserName(session)}</Heading>
+                        )}
+                    </Flex>
+
+
+
+                    {router?.query?.result && <Heading size="lg" color="#fff" mb="16px" align="center" >
+                        {router?.query?.result}
+                    </Heading>}
+
+                    {router?.query?.error && <Heading size="lg" color="#fff" mb="16px" align="center" >
+                        {router?.query?.error}
+                    </Heading>}
+
+                    <Button
+                        w={"100%"}
+                        size="lg"
+                        variant="blue"
+                        onClick={() => router.push("/")}
+                    >
+                        {session ? "Back to Challenges" : "Back"}
+                    </Button>
+
+                </ShortContainer>
+            </Box>
+        </Box>
     );
 }
 
-export default QuestComplete;
+export default QuestRedirectPage;
+
+// {!router?.query?.error && (
+//     <>
+//         <div className={s.board_text}>
+//             {router?.query?.result}
+//         </div>
+//         <button
+//             className={s.board_pinkBtn}
+//             onClick={() => {
+//                 router.push("/");
+//             }}
+//         >
+//             <img
+//                 src={`${Enums.BASEPATH}/img/sharing-ui/invite/Button_Large.png`}
+//                 alt="Go Back"
+//             />
+//             <div>
+//                 <span>Go Back</span>
+//             </div>
+//         </button>
+//     </>
+// )}
+// {router?.query?.error && (
+//     <>
+//         <div className={s.board_text}>
+//             {router?.query?.error}
+//         </div>
+//         <button
+//             className={s.board_pinkBtn}
+//             onClick={() => {
+//                 router.push("/");
+//             }}
+//         >
+//             <img
+//                 src={`${Enums.BASEPATH}/img/sharing-ui/invite/Button_Large.png`}
+//                 alt="Go Back"
+//             />
+//             <div>
+//                 <span>Go Back</span>
+//             </div>
+//         </button>
+//     </>
+// )}

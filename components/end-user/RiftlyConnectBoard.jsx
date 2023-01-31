@@ -48,6 +48,8 @@ import axios from "axios";
 import { ChakraBox } from "@theme/additions/framer/FramerChakraComponent";
 import WalletSignInModal from "./shared/riftly/WalletSignInModal";
 import WalletAuthQuestModal from "./shared/riftly/WalletAuthQuestModal";
+import { ShortContainer, TallContainer } from "containers/user";
+import { RiftlyLogoWhiteText } from "@components/riftly/Logo";
 
 export default function RiftlyConnectBoard() {
     let router = useRouter();
@@ -143,7 +145,7 @@ export default function RiftlyConnectBoard() {
                         )} */}
                 {currentView === WELCOME && !web3Error && (
                     <ShortContainer>
-                        <RiftlyLogo />
+                        <RiftlyLogoWhiteText />
 
                         <Flex flexDirection={"column"} alignItems={"center"}>
                             <Heading size="lg" color="#fff" mb="16px">
@@ -241,53 +243,6 @@ export default function RiftlyConnectBoard() {
         </>
     );
 }
-
-const RiftlyLogo = () => {
-    return (
-        <Flex flexDirection={"column"} gap="2%" alignItems={"center"}>
-            <Box mb="12px">
-                <svg
-                    width="100"
-                    height="47"
-                    viewBox="0 0 100 47"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                >
-                    <path
-                        d="M99.042 23.1719C99.042 24.5865 97.8798 25.7397 96.4542 25.7397C89.2795 25.7397 83.4839 31.5058 83.4839 38.6096C83.4839 40.0242 82.3217 41.1774 80.8961 41.1774C79.4705 41.1774 78.3083 40.0242 78.3083 38.6096C78.3083 31.4904 72.4972 25.7397 65.338 25.7397C58.1788 25.7397 52.3678 31.5058 52.3678 38.6096V43.7606C52.3678 45.1752 51.2056 46.3284 49.7799 46.3284C48.3543 46.3284 47.1921 45.1752 47.1921 43.7606V38.6096C47.1921 31.4904 41.3811 25.7397 34.2219 25.7397C27.0627 25.7397 21.2516 31.5058 21.2516 38.6096C21.2516 40.0242 20.0894 41.1774 18.6638 41.1774C17.2381 41.1774 16.0759 40.0242 16.0759 38.6096C16.0759 31.4904 10.2649 25.7397 3.10569 25.7397C1.68005 25.7397 0.517838 24.5865 0.517838 23.1719C0.517838 21.7573 1.68005 20.6041 3.10569 20.6041C10.2804 20.6041 16.0759 14.838 16.0759 7.73421C16.0759 6.3196 17.2381 5.16639 18.6638 5.16639C20.0894 5.16639 21.2516 6.3196 21.2516 7.73421C21.2516 14.8534 27.0627 20.6041 34.2219 20.6041C41.3811 20.6041 47.1921 14.838 47.1921 7.73421V2.56782C47.1921 1.15321 48.3543 0 49.7799 0C51.2056 0 52.3678 1.15321 52.3678 2.56782V7.71884C52.3678 14.838 58.1788 20.5887 65.338 20.5887C72.4972 20.5887 78.3083 14.8226 78.3083 7.71884C78.3083 6.30423 79.4705 5.15102 80.8961 5.15102C82.3217 5.15102 83.4839 6.30423 83.4839 7.71884C83.4839 14.838 89.295 20.5887 96.4542 20.5887C97.8798 20.5887 99.042 21.7419 99.042 23.1565V23.1719Z"
-                        fill="#1D63FF"
-                    />
-                </svg>
-            </Box>
-            <svg
-                width="139"
-                height="22"
-                viewBox="0 0 139 22"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-            >
-                <path
-                    d="M11.932 22L8.3369 14.8039H5.51661V22H0V0.780884H10.7078C15.4496 0.780884 18.1459 3.90224 18.1459 7.83854C18.1459 11.5288 15.868 13.497 13.8845 14.2043L18.2389 22H11.9165H11.932ZM9.88651 5.39373H5.53211V10.1603H9.88651C11.3276 10.1603 12.5518 9.23777 12.5518 7.77704C12.5518 6.3163 11.3276 5.39373 9.88651 5.39373Z"
-                    fill="white"
-                />
-                <path d="M29.1017 22V0.780884H34.6183V22H29.1017Z" fill="white" />
-                <path
-                    d="M46.4108 22V0.780884H62.0929V5.39373H51.9274V8.93025H61.8759V13.5739H51.9274V22H46.4108Z"
-                    fill="white"
-                />
-                <path
-                    d="M77.6045 22V5.54749H71.6075V0.780884H89.0871V5.54749H83.1211V22H77.6045Z"
-                    fill="white"
-                />
-                <path d="M99.0356 22V0.780884H104.552V17.2334H113.153V22H99.0356Z" fill="white" />
-                <path
-                    d="M125.41 22V13.4355L117.29 0.765503H123.504L128.153 8.59197L132.74 0.765503H139L130.927 13.4355V22H125.41Z"
-                    fill="white"
-                />
-            </svg>
-        </Flex>
-    );
-};
 
 const SignInSignUpWrapper = React.forwardRef(({ currentView, goBack, goNext }, ref) => {
     const walletSignInModal = useDisclosure();
@@ -641,57 +596,6 @@ const ForgotPassword = ({ setView }) => {
                 Reset Password
             </Button>
         </ShortContainer>
-    );
-};
-
-const TallContainer = ({ children }) => {
-    return (
-        <Container
-            maxW="container.sm"
-            bg={"brand.neutral4"}
-            color="#262626"
-            height={"536px"}
-            borderRadius="16px"
-            display={"flex"}
-            alignItems={"center"}
-            justifyContent={"center"}
-        >
-            <Flex
-                w="66%"
-                h="80%"
-                flexDirection={"column"}
-                alignItems={"center"}
-                justifyContent={"space-around"}
-                gap="24px"
-            >
-                {children}
-            </Flex>
-        </Container>
-    );
-};
-const ShortContainer = ({ children }) => {
-    return (
-        <Container
-            maxW="container.sm"
-            bg={"brand.neutral4"}
-            color="#262626"
-            height={"429px"}
-            borderRadius="16px"
-            display={"flex"}
-            alignItems={"center"}
-            justifyContent={"center"}
-            zIndex="2"
-        >
-            <Flex
-                w="66%"
-                h="80%"
-                flexDirection={"column"}
-                alignItems={"center"}
-                justifyContent={"space-around"}
-            >
-                {children}
-            </Flex>
-        </Container>
     );
 };
 
