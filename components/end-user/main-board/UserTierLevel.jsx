@@ -69,7 +69,14 @@ const UserTierLevel = ({ session }) => {
     }, []);
     console.log(userRewards);
     useEffect(() => {
-        if (userRewards && userRewards.length > 0) {
+        if (userRewards && userRewards.length >= 0) {
+            if (userRewards.length === 0) {
+                tierSet({
+                    currentLevel: 1,
+                    nextLevel: 2,
+                    currentPoint: 0,
+                });
+            }
             let currentReward = userRewards[0];
             if (!tier) {
                 let currentPoint = currentReward.quantity;
@@ -137,12 +144,6 @@ const UserTierLevel = ({ session }) => {
                 };
                 tierSet(newTier);
             }
-        } else {
-            tierSet({
-                currentLevel: 1,
-                nextLevel: 2,
-                currentPoint: 0,
-            });
         }
     }, [userRewards]);
 
