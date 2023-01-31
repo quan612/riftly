@@ -47,6 +47,7 @@ import { getDiscordAuthLink, getTwitterAuthLink } from "@utils/helpers";
 import axios from "axios";
 import { ChakraBox } from "@theme/additions/framer/FramerChakraComponent";
 import WalletSignInModal from "./shared/riftly/WalletSignInModal";
+import WalletAuthQuestModal from "./shared/riftly/WalletAuthQuestModal";
 
 export default function RiftlyConnectBoard() {
     let router = useRouter();
@@ -289,15 +290,25 @@ const RiftlyLogo = () => {
 };
 
 const SignInSignUpWrapper = React.forwardRef(({ currentView, goBack, goNext }, ref) => {
-    const walletModal = useDisclosure();
-
+    const walletSignInModal = useDisclosure();
+    const walletSignUpModal = useDisclosure();
     return (
         <>
-            {walletModal?.isOpen && (
+            {walletSignInModal?.isOpen && (
                 <WalletSignInModal
-                    isOpen={walletModal.isOpen}
+                    isOpen={walletSignInModal.isOpen}
                     onClose={() => {
-                        walletModal.onClose();
+                        walletSignInModal.onClose();
+                    }}
+                />
+            )}
+
+            {walletSignUpModal?.isOpen && (
+                <WalletAuthQuestModal
+                    isSignUp={true}
+                    isOpen={walletSignUpModal.isOpen}
+                    onClose={() => {
+                        walletSignUpModal.onClose();
                     }}
                 />
             )}
@@ -371,6 +382,7 @@ const SignInSignUpWrapper = React.forwardRef(({ currentView, goBack, goNext }, r
                             // return window.open(twitterLink, "_self");
                         }
                     }}
+                    disabled={true}
                     variant="google"
                     size="lg"
                     borderRadius="48px"
@@ -388,11 +400,9 @@ const SignInSignUpWrapper = React.forwardRef(({ currentView, goBack, goNext }, r
                     // onClick={() => authenticateUsingWallet(Enums.METAMASK)}
                     onClick={() => {
                         if (currentView === SIGNIN_OPTIONS) {
-                            // signIn("google");signIn("twitter");
-                            walletModal.onOpen();
+                            walletSignInModal.onOpen();
                         } else {
-                            // let twitterLink = await getTwitterAuthLink();
-                            // return window.open(twitterLink, "_self");
+                            walletSignUpModal.onOpen();
                         }
                     }}
                     variant="wallet"

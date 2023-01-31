@@ -100,13 +100,13 @@ export const updateDiscordUserQuestTransaction = async (quest, userId, userInfo)
     }
 };
 
-export const updateUserWalletTransaction = async (questId, userId, address) => {
+export const updateUserWalletTransaction = async (questId, userId, wallet) => {
     try {
         if (userId) {
             let updatedUser = prisma.whiteList.update({
                 where: { userId },
                 data: {
-                    wallet: address,
+                    wallet,
                 },
             });
 
@@ -120,19 +120,25 @@ export const updateUserWalletTransaction = async (questId, userId, address) => {
 
             await prisma.$transaction([updatedUser, userQuest]);
         } else {
-            let newUser = await prisma.whiteList.create({
-                data: {
-                    wallet,
-                },
-            });
-            if (newUser) {
-                await prisma.userQuest.create({
+            let tryFindUser = await prisma.whiteList.findUnique({
+                where: { wallet },
+            })
+
+            if (!tryFindUser) {
+                let newUser = await prisma.whiteList.create({
                     data: {
-                        userId: newUser.userId,
-                        questId,
-                        isClaimable: true,
+                        wallet,
                     },
                 });
+                if (newUser) {
+                    await prisma.userQuest.create({
+                        data: {
+                            userId: newUser.userId,
+                            questId,
+                            isClaimable: true,
+                        },
+                    });
+                }
             }
         }
     } catch (error) {
@@ -290,9 +296,11 @@ export const claimUserDailyQuestTransaction = async (
     extendedUserQuestData,
     userId
 ) => {
-    let claimedReward;
+
     try {
-        claimedReward = prisma.reward.upsert({
+        console.log(`**Upsert daily quest**`);
+
+        let claimedReward = prisma.Reward.upsert({
             where: {
                 userId_rewardTypeId: { userId, rewardTypeId },
             },

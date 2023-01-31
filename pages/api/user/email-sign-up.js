@@ -1,12 +1,7 @@
 import { utils } from "ethers";
 import { prisma } from "@context/PrismaContext";
 import Enums from "@enums/index";
-import { recoverPersonalSignature } from "@metamask/eth-sig-util";
-import { bufferToHex } from "ethereumjs-util";
-import { getQuestByTypeId, getQuestType } from "repositories/quest";
-import { updateUserWalletTransaction } from "repositories/transactions";
-import { isWhiteListUser } from "repositories/session-auth";
-import { getSession } from "next-auth/react";
+
 import { validateEmail } from "@utils/index";
 const bcrypt = require("bcrypt")
 
@@ -51,8 +46,6 @@ export default async function emailSignUp(req, res) {
                         password: hash
                     },
                 });
-
-                // await updateUserWalletTransaction(walletAuthQuest.questId, whiteListUser?.userId, wallet)
 
                 return res.status(200).json({ message: "New account created." });
             } catch (error) {

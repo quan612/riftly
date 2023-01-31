@@ -29,13 +29,15 @@ import { Web3Context } from "@context/Web3Context";
 import Enums from "@enums/index";
 import { RiftlyModalCloseButton } from "@components/riftly/Buttons";
 import { useWalletAuthQuestSubmit } from "@shared/HOC/quest";
+import { useRouter } from "next/router";
 
 const CONNECTABLE = 1;
 const AUTHENTICATING = 2;
 const AUTHENTICATED = 3;
 const ERROR = 4;
 
-const WalletAuthQuestModal = ({ isOpen, onClose }) => {
+const WalletAuthQuestModal = ({ isOpen, onClose, isSignUp = false }) => {
+    const router = useRouter();
     const { isMobile } = useDeviceDetect();
     const [error, errorSet] = useState();
     const { web3Error, signUpWithWallet, setWeb3Error } = useContext(Web3Context);
@@ -56,9 +58,13 @@ const WalletAuthQuestModal = ({ isOpen, onClose }) => {
             let res = await walletAuthQuestSubmit(payload).catch((err) => {
                 throw err;
             });
-            console.log(res);
+
             if (!res.isError) {
-                setView(AUTHENTICATED);
+                if (isSignUp) {
+                    setView(AUTHENTICATED);
+                } else {
+                    setView(AUTHENTICATED);
+                }
             } else {
                 errorSet(res.message);
                 setView(ERROR);
@@ -176,10 +182,27 @@ const WalletAuthQuestModal = ({ isOpen, onClose }) => {
                                     Congrats!
                                 </Heading>
 
-                                <Text w="100%" color="brand.neutral0" align="center" fontSize="md">
-                                    You finished wallet authentication. Return to challenges to
-                                    claim your reward.
-                                </Text>
+                                {isSignUp && (
+                                    <Text
+                                        w="100%"
+                                        color="brand.neutral0"
+                                        align="center"
+                                        fontSize="md"
+                                    >
+                                        Sign up successful. Go back to sign in.
+                                    </Text>
+                                )}
+                                {!isSignUp && (
+                                    <Text
+                                        w="100%"
+                                        color="brand.neutral0"
+                                        align="center"
+                                        fontSize="md"
+                                    >
+                                        You finished wallet authentication. Return to challenges to
+                                        claim your reward.
+                                    </Text>
+                                )}
 
                                 <Button
                                     w="100%"

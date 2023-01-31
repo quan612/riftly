@@ -220,7 +220,9 @@ const UserTierLevel = ({ session }) => {
 
                                         <TextMd as="span" color="whiteAlpha.700" opacity="0.64">
                                             {/* {tier && tier.currentPoint} Reward Points */}
-                                            {userRewards && userRewards[0].quantity} Reward Points
+                                            {userRewards?.length > 0 &&
+                                                userRewards[0].quantity + " "}
+                                            Reward Points
                                         </TextMd>
                                     </Box>
                                 </Flex>

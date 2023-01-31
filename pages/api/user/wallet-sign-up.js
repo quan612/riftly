@@ -64,6 +64,7 @@ export default async function walletSignUp(req, res) {
                         .status(200)
                         .json({ isError: true, message: "Invalid signature." });
 
+
                 await updateUserWalletTransaction(walletAuthQuest.questId, whiteListUser?.userId, wallet)
 
                 // await trackRequest(req)
