@@ -109,6 +109,23 @@ export const useNftOwningQuestSubmit = () => {
     return [data, isLoading, mutateAsync];
 }
 
+export const useWalletAuthQuestSubmit = () => {
+    const queryClient = useQueryClient();
+
+    const { data, error, isError, isLoading, isSuccess, mutate, mutateAsync } = useMutation((payload) => {
+        return axios
+            .post(`${Enums.BASEPATH}/api/user/wallet-sign-up`, payload)
+            .then((r) => r.data);
+
+    }, {
+        onSuccess: () => {
+            queryClient.invalidateQueries("userQueryQuest");
+        },
+    });
+
+    return [data, isLoading, mutateAsync];
+}
+
 export const useUserQuestClaim = () => {
 
     const { data, error, isError, isLoading, isSuccess, mutate, mutateAsync } = useMutation((payload) => {

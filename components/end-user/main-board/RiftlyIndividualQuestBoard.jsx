@@ -93,7 +93,7 @@ const RiftlyIndividualQuestBoard = ({ session, userQuests }) => {
             position="absolute"
             top={"160px"}
             zIndex="2"
-            minH="auto"
+            minH="100vh"
             maxH="auto"
             pb="24px"
         >

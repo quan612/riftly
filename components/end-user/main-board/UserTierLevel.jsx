@@ -46,7 +46,6 @@ const UserTierLevel = ({ session }) => {
     const [tier, tierSet] = useState(null);
     const { isOpen, onOpen, onClose } = useDisclosure();
     let levelUpTimeout;
-    // console.log(userRewards);
 
     const test = (val) => {
         let newVal = levelProgress + val;
@@ -69,47 +68,77 @@ const UserTierLevel = ({ session }) => {
         };
     }, []);
 
-    // useEffect(() => {
-    //     if (userRewards && userRewards.length > 0) {
-    //         let currentReward = userRewards[0];
-    //         let currentPoint = currentReward.quantity;
-    //         let currentLevel = getLevel(currentPoint);
-    //         let nextLevelPoint = getPoints(currentLevel + 1);
-    //         let progress = (currentPoint / nextLevelPoint) * 100;
+    useEffect(() => {
+        if (userRewards && userRewards.length > 0) {
+            let currentReward = userRewards[0];
+            if (!tier) {
+                let currentPoint = currentReward.quantity;
+                let currentLevel = getLevel(currentPoint);
+                let currentLevelPoint = getPoints(currentLevel);
+                let nextLevelPoint = getPoints(currentLevel + 1);
+                console.log(currentLevelPoint);
+                console.log(currentPoint);
+                console.log(nextLevelPoint);
+                let progress =
+                    ((currentPoint - currentLevelPoint) / (nextLevelPoint - currentLevelPoint)) *
+                    100;
 
-    //         if (!tier) {
-    //             //first render
-    //             console.log("first render");
-    //             let newTier = {
-    //                 currentLevel,
-    //                 nextLevel: currentLevel + 1,
-    //                 currentPoint,
-    //             };
-    //             levelProgressSet(progress);
-    //             tierSet((prev) => newTier);
+                console.log(progress);
+                let newTier = {
+                    currentLevel,
+                    nextLevel: currentLevel + 1,
+                    currentPoint,
+                };
+                levelProgressSet(progress);
+                tierSet((prev) => newTier);
 
-    //             return;
-    //         }
-    //         // console.log(userRewards[0].quantity);
+                return;
+            }
 
-    //         if (currentPoint > tier.currentPoint) {
-    //             levelProgressSet(100);
-    //             levelUpTimeout = setTimeout(() => {
-    //                 onOpen();
-    //                 levelProgressSet(progress);
-    //                 clearTimeout(levelUpTimeout);
-    //             }, 1350);
-    //         } else {
-    //             levelProgressSet(progress);
-    //         }
-    //         let newTier = {
-    //             currentLevel,
-    //             nextLevel: currentLevel + 1,
-    //             currentPoint,
-    //         };
-    //         tierSet((prev) => newTier);
-    //     }
-    // }, [userRewards]);
+            let newPoint = currentReward.quantity;
+            let currentLevel = getLevel(tier.currentPoint);
+            let currentLevelPoint = getPoints(currentLevel);
+            let nextLevelPoint = getPoints(currentLevel + 1);
+            let progress =
+                ((newPoint - currentLevelPoint) / (nextLevelPoint - currentLevelPoint)) * 100;
+
+            console.log(currentLevelPoint);
+            console.log(newPoint);
+            console.log(nextLevelPoint);
+
+            let newTier;
+            if (newPoint > nextLevelPoint) {
+                levelProgressSet(100);
+
+                levelUpTimeout = setTimeout(() => {
+                    onOpen();
+
+                    let currentLevelPoint = getPoints(currentLevel + 1);
+                    let nextLevelPoint = getPoints(tier.currentLevel + 2);
+                    let newProgress =
+                        ((newPoint - currentLevelPoint) / (nextLevelPoint - currentLevelPoint)) *
+                        100;
+                    levelProgressSet(newProgress);
+
+                    newTier = {
+                        currentLevel: currentLevel + 1,
+                        nextLevel: currentLevel + 2,
+                        currentPoint: newPoint,
+                    };
+                    tierSet(newTier);
+                    clearTimeout(levelUpTimeout);
+                }, 1350);
+            } else {
+                levelProgressSet(progress);
+                newTier = {
+                    currentLevel: currentLevel,
+                    nextLevel: currentLevel + 1,
+                    currentPoint: newPoint,
+                };
+                tierSet(newTier);
+            }
+        }
+    }, [userRewards]);
 
     const getUserName = useCallback((session) => {
         switch (session.provider) {
@@ -148,7 +177,7 @@ const UserTierLevel = ({ session }) => {
                 minH="100%"
                 flex="1"
                 // onClick={test}
-                onClick={() => test(35)}
+                // onClick={() => test(35)}
             >
                 <UserTierAvatar />
 
@@ -190,7 +219,8 @@ const UserTierLevel = ({ session }) => {
                                         </Box>
 
                                         <TextMd as="span" color="whiteAlpha.700" opacity="0.64">
-                                            {tier && tier.currentPoint} Reward Points
+                                            {/* {tier && tier.currentPoint} Reward Points */}
+                                            {userRewards && userRewards[0].quantity} Reward Points
                                         </TextMd>
                                     </Box>
                                 </Flex>
@@ -235,7 +265,8 @@ const UserTierLevel = ({ session }) => {
                                             </defs>
                                         </svg>
                                         <Heading fontWeight="700" size="lg" color="#fff">
-                                            {/* {tier && tier.currentLevel} */}5
+                                            {tier && tier.currentLevel}
+                                            {/* 5 */}
                                         </Heading>
                                     </Flex>
                                 </Box>

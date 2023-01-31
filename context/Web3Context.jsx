@@ -11,6 +11,7 @@ const API_ADMIN = `${Enums.BASEPATH}/api/admin`;
 const API_USER = `${Enums.BASEPATH}/api/user`;
 
 import UAuth from "@uauth/js";
+// import { useWalletAuthQuestSubmit } from "@shared/HOC/quest";
 const { default: Resolution } = require("@unstoppabledomains/resolution");
 const resolution = new Resolution();
 
@@ -276,18 +277,8 @@ export function Web3Provider({ session, children }) {
                             });
 
                         if (signature && addresses[0]) {
-                            const newUser = await axios
-                                .post(`${Enums.BASEPATH}/api/user/wallet-sign-up`, {
-                                    address: addresses[0],
-                                    signature,
-                                })
-                                .then((r) => r.data);
-
-                            if (newUser?.data?.isError) {
-                                clearTimeout(timeout);
-                                throw new Error(newUser?.data?.message);
-                            }
-                            resolve(newUser); // if the previous line didn't always throw
+                            resolve({ signature, address: addresses[0] }); // if the previous line didn't always throw
+                            // clearTimeout(timeout);
                         }
                         reject("Missing address or signature");
                     } catch (e) {

@@ -28,6 +28,7 @@ import { MetamaskIcon, WalletConnectIcon } from "./RiftlyIcon";
 import { Web3Context } from "@context/Web3Context";
 import Enums from "@enums/index";
 import { RiftlyModalCloseButton } from "@components/riftly/Buttons";
+import { useWalletAuthQuestSubmit } from "@shared/HOC/quest";
 
 const CONNECTABLE = 1;
 const AUTHENTICATING = 2;
@@ -40,10 +41,22 @@ const WalletAuthQuestModal = ({ isOpen, onClose }) => {
     const { web3Error, signUpWithWallet, setWeb3Error } = useContext(Web3Context);
     const [currentView, setView] = useState(CONNECTABLE);
 
+    const [walletAuthQuestData, isSubmittingQuest, walletAuthQuestSubmit] =
+        useWalletAuthQuestSubmit();
+
+    useEffect(() => {}, []);
+
     async function handleConnect(type) {
         setView(AUTHENTICATING);
         try {
-            let res = await signUpWithWallet(type);
+            let payload = await signUpWithWallet(type).catch((err) => {
+                throw err;
+            });
+
+            let res = await walletAuthQuestSubmit(payload).catch((err) => {
+                throw err;
+            });
+            console.log(res);
             if (!res.isError) {
                 setView(AUTHENTICATED);
             } else {
@@ -68,7 +81,7 @@ const WalletAuthQuestModal = ({ isOpen, onClose }) => {
             <ModalContent
                 borderRadius="16px"
                 bg="brand.neutral4"
-                minH="30%"
+                minH="33%"
                 w="33%"
                 // maxH={"384px"}
                 maxW="container.sm"
@@ -129,26 +142,28 @@ const WalletAuthQuestModal = ({ isOpen, onClose }) => {
                             <Progress size="xs" isIndeterminate w="80%" />
                         )}
 
-                        {currentView === ERROR ||
-                            (web3Error && (
-                                <>
-                                    <Heading color="white" fontSize={"xl"} align="center">
-                                        Error authenticating
-                                    </Heading>
-                                    {error && <Text color="red.300">{error}</Text>}
-                                    {web3Error && <Text color="red.300">{web3Error}</Text>}
+                        {(currentView === ERROR || web3Error) && (
+                            <>
+                                <Heading color="white" fontSize={"xl"} align="center">
+                                    Error authenticating
+                                </Heading>
+                                {error && <Text color="red.300">{error}</Text>}
+                                {web3Error && <Text color="red.300">{web3Error}</Text>}
 
-                                    <Button
-                                        variant="blue"
-                                        onClick={handleOnClose}
-                                        minW="100%"
-                                        borderRadius="24px"
-                                        w="100%"
-                                    >
-                                        Back to Challenges
-                                    </Button>
-                                </>
-                            ))}
+                                <Button
+                                    variant="blue"
+                                    onClick={() => {
+                                        setView(CONNECTABLE);
+                                        handleOnClose();
+                                    }}
+                                    minW="100%"
+                                    borderRadius="24px"
+                                    w="100%"
+                                >
+                                    Back
+                                </Button>
+                            </>
+                        )}
 
                         {currentView === AUTHENTICATED && (
                             <>

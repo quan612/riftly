@@ -49,10 +49,11 @@ const ChallengeQuests = ({ currentQuests }) => {
             flexDirection={"column"}
             gap={"16px"}
             position={"relative"}
-            // layout="position"
             minH="auto"
-            h="900px"
-            layout
+            // layout="position"
+
+            // h="900px"
+            // layout
         >
             <ChallengesHeader
                 filterCompleted={filterCompleted}
@@ -500,7 +501,6 @@ const UserQuestBox = ({ quest, index, currentQuests, filterCompleted, onTest }) 
                         walletAuthQuestRef.current = {};
                         walletAuthQuestModal.onClose();
                     }}
-                    currentQuest={walletAuthQuestRef.current}
                 />
             )}
             {nftOwnQuestRef?.current && (
