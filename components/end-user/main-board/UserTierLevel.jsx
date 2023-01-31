@@ -76,6 +76,7 @@ const UserTierLevel = ({ session }) => {
                     nextLevel: 2,
                     currentPoint: 0,
                 });
+                return;
             }
             let currentReward = userRewards[0];
             if (!tier) {
