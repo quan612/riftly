@@ -67,7 +67,7 @@ const UserTierLevel = ({ session }) => {
             clearTimeout(levelUpTimeout);
         };
     }, []);
-
+    console.log(userRewards);
     useEffect(() => {
         if (userRewards && userRewards.length > 0) {
             let currentReward = userRewards[0];
@@ -137,6 +137,12 @@ const UserTierLevel = ({ session }) => {
                 };
                 tierSet(newTier);
             }
+        } else {
+            tierSet({
+                currentLevel: 1,
+                nextLevel: 2,
+                currentPoint: 0,
+            });
         }
     }, [userRewards]);
 
