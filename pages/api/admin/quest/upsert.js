@@ -50,6 +50,14 @@ const AdminQuestUpsertAPI = async (req, res) => {
                         },
                     });
 
+                    let walletAuthQuest = walletAuthCheck(existingQuests, questType.name)
+                    if (walletAuthQuest) {
+                        return res.status(200).json({
+                            message: `Cannot add more than one "${type}" type.`,
+                            isError: true,
+                        });
+                    }
+
                     let smsQuestCheck = smsVerificationAuthCheck(existingQuests, questType.name)
                     if (smsQuestCheck) {
                         return res.status(200).json({
@@ -206,6 +214,17 @@ const AdminQuestUpsertAPI = async (req, res) => {
             res.setHeader("Allow", ["POST"]);
             res.status(405).end(`Method ${method} Not Allowed`);
     }
+};
+
+const walletAuthCheck = (existingQuests, type) => {
+    if (type != Enums.WALLET_AUTH) return;
+
+    let walletAuthQuest = existingQuests.filter((q) => q.type.name === Enums.WALLET_AUTH);
+
+    if (walletAuthQuest?.length >= 1) {
+        return true;
+    }
+    return false;
 };
 
 const unstoppableAuthCheck = (existingQuests, type) => {

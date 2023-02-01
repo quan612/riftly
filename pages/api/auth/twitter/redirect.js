@@ -112,7 +112,7 @@ export default async function twitterRedirect(req, res) {
 
                 await updateTwitterUserQuestTransaction(
                     twitterQuest,
-                    whiteListUser.userId,
+                    whiteListUser?.userId,
                     userInfo.data.data
                 );
 

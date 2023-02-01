@@ -50,15 +50,16 @@ export const updateTwitterUserQuestTransaction = async (quest, userId, userInfo)
     }
 };
 
-export const updateDiscordUserQuestTransaction = async (quest, userId, userInfo) => {
+export const updateDiscordUserQuestTransaction = async (questId, userId, userInfo) => {
     try {
-        let { questId } = quest;
+
         const { id, username, discriminator } = userInfo;
 
         if (!id || !username) {
             throw new Error("Cannot get twitter id or twitter username from auth");
         }
-
+        console.log(userId)
+        console.log(21)
         if (userId) {
             let updatedUser = prisma.whiteList.update({
                 where: { userId },

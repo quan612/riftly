@@ -64,6 +64,12 @@ export default async function walletSignUp(req, res) {
                         .status(200)
                         .json({ isError: true, message: "Invalid signature." });
 
+                let existingUser = await prisma.whiteList.findUnique({ where: { wallet } })
+                if (existingUser && whiteListUser && existingUser.userId !== whiteListUser?.userId) {
+                    return res
+                        .status(200)
+                        .json({ isError: true, message: "Attempt with existed wallet belong to other user." });
+                }
 
                 await updateUserWalletTransaction(walletAuthQuest.questId, whiteListUser?.userId, wallet)
 

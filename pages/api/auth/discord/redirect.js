@@ -83,7 +83,7 @@ export default async function discordRedirect(req, res) {
                         discordId: userInfo.data.id,
                     },
                 });
-                if (existingUser && existingUser.userId !== whiteListUser.userId) {
+                if (existingUser && existingUser.userId !== whiteListUser?.userId) {
                     let error = "Attempt to authenticate same Discord Id on different users";
                     return res.status(200).redirect(`/quest-redirect?error=${error}`);
                 }
@@ -117,9 +117,10 @@ export default async function discordRedirect(req, res) {
                     }
 
                 }
+
                 await updateDiscordUserQuestTransaction(
-                    discordQuest,
-                    whiteListUser.userId,
+                    discordQuest.questId,
+                    whiteListUser?.userId,
                     userInfo.data
                 );
 
