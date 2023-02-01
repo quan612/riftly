@@ -24,6 +24,7 @@ model WhiteList {
   uathUser                      String?               @default("")
   email                         String?               @unique
   password                      String?               @default("")
+  smsVerification               SmsVerification?
 }
 model WhiteListUserData {
   id           Int           @id @default(autoincrement())
@@ -180,6 +181,9 @@ model QuestVariables{
   googleClientId              String?             @default("")
   googleProjectId             String?             @default("")
   googlePropertyId            String?             @default("")
+  smsSid                      String?             @default("")
+  smsAuthToken                String?             @default("")
+  smsServiceId                String?             @default("")
   createdAt                   DateTime            @default(now())
   updatedAt                   DateTime            @default(now()) @updatedAt
 }
@@ -193,4 +197,15 @@ model Discord {
   postMessageWhenClaimed      Boolean         @default(true)
   createdAt                   DateTime        @default(now())
   updatedAt                   DateTime        @default(now()) @updatedAt
+}
+
+model SmsVerification {
+  id                          Int                 @id @default(autoincrement())
+  user                        WhiteList           @relation(fields: [userId], references: [userId])
+  userId                      String              @unique
+  attemptedPhone              String              @unique
+  status                      String
+  valid                       Boolean             @default(false)
+  createdAt                   DateTime            @default(now())
+  updatedAt                   DateTime            @default(now()) @updatedAt
 }

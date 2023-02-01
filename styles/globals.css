@@ -59,3 +59,18 @@ a {
 	background-position: center right;
 	padding-right: 18px!important;
   }
+
+	.PhoneInputInput {
+		width:"100%";
+
+		background-color: transparent;
+		height: 40px;
+		border: 1px solid #89A4C2;
+		border-radius: 24px;
+		color: #fff;
+		padding-left: 24px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+	

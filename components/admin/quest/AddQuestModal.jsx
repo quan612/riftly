@@ -35,6 +35,7 @@ import {
     Text,
 } from "@chakra-ui/react";
 import { RiftlyModalCloseButton } from "@components/riftly/Buttons";
+import SmsVerificationQuestForm from "./Forms/SmsVerificationQuestForm";
 
 const AddQuestModal = ({ isOpen, onClose, rewardTypes, questTypes }) => {
     const [selectedType, setSelectedType] = useState();
@@ -156,7 +157,6 @@ const AddQuestModal = ({ isOpen, onClose, rewardTypes, questTypes }) => {
                             isCreate={true}
                         />
                     )}
-
                     {selectedType === Enums.DAILY_SHELL && (
                         <DailyShellQuestForm
                             rewardTypes={rewardTypes}
@@ -166,6 +166,14 @@ const AddQuestModal = ({ isOpen, onClose, rewardTypes, questTypes }) => {
                     )}
                     {selectedType === Enums.CODE_QUEST && (
                         <CodeQuestForm
+                            rewardTypes={rewardTypes}
+                            closeModal={onClose}
+                            isCreate={true}
+                        />
+                    )}
+
+                    {selectedType === Enums.SMS_VERIFICATION && (
+                        <SmsVerificationQuestForm
                             rewardTypes={rewardTypes}
                             closeModal={onClose}
                             isCreate={true}

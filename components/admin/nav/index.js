@@ -312,4 +312,25 @@ const NAV_ITEMS = [
       },
     ],
   },
+
+  {
+    label: 'Setting',
+    children: [
+      {
+        label: 'Config',
+        subLabel: 'Multiple server configs',
+        href: '/admin/setting/config',
+      },
+      {
+        label: 'Discord',
+        subLabel: 'Channels configuration',
+        href: '/admin/setting/discord',
+      },
+      {
+        label: 'Reward Types',
+        subLabel: 'Types of reward configuration',
+        href: '/admin/setting/reward-types',
+      },
+    ],
+  },
 ];

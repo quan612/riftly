@@ -18,14 +18,6 @@ import JoinDiscordQuest from "./Forms/JoinDiscordQuest";
 import ClaimRewardForOwningNFTForm from "./Forms/ClaimRewardForOwningNFTForm";
 
 import {
-    Heading,
-    Box,
-    Flex,
-    Link,
-    List,
-    ListItem,
-    Text,
-    Button,
     Modal,
     ModalOverlay,
     ModalContent,
@@ -38,6 +30,7 @@ import {
     CloseButton,
 } from "@chakra-ui/react";
 import { RiftlyModalCloseButton } from "@components/riftly/Buttons";
+import SmsVerificationQuestForm from "./Forms/SmsVerificationQuestForm";
 
 const EditQuestModal = ({ quest, isOpen, onClose, rewardTypes }) => {
     return (
@@ -48,7 +41,6 @@ const EditQuestModal = ({ quest, isOpen, onClose, rewardTypes }) => {
                 bg="brand.neutral4"
                 minH="55%"
                 w="80%"
-                // maxH={"384px"}
                 maxW="container.lg"
                 mt="7%"
                 transition={"1.25s"}
@@ -156,6 +148,14 @@ const EditQuestModal = ({ quest, isOpen, onClose, rewardTypes }) => {
 
                     {quest.type.name === Enums.UNSTOPPABLE_AUTH && (
                         <UnstoppableAuthQuestForm
+                            quest={quest}
+                            rewardTypes={rewardTypes}
+                            closeModal={onClose}
+                        />
+                    )}
+
+                    {quest.type.name === Enums.SMS_VERIFICATION && (
+                        <SmsVerificationQuestForm
                             quest={quest}
                             rewardTypes={rewardTypes}
                             closeModal={onClose}

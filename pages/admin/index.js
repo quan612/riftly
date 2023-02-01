@@ -2,22 +2,7 @@ import { AdminLayout } from "/components/admin";
 import React, { useEffect } from "react";
 function Admin() {
 
-
   return (
-    // <div className="profile-page">
-    //   <div className="container">
-    //     <div className="col-xxl-12">
-    //       <div className="row">
-    //         <div className="col-12">
-    //           <AdminAnalyticsMenu />
-    //         </div>
-    //       </div>
-    //       <div className="col-xxl-12">
-    //         <AdminGoogleAnalytics />
-    //       </div>
-    //     </div>
-    //   </div>
-    // </div>
     <AdminGoogleAnalytics />
   );
 }

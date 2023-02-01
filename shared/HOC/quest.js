@@ -126,6 +126,41 @@ export const useWalletAuthQuestSubmit = () => {
     return [data, isLoading, mutateAsync];
 }
 
+
+export const usePhoneNumberQuestSubmit = () => {
+    const queryClient = useQueryClient();
+
+    const { data, error, isError, isLoading, isSuccess, mutate, mutateAsync } = useMutation((payload) => {
+        return axios
+            .post(`${Enums.BASEPATH}/api/user/quest/submit/send-phone-for-sms`, payload)
+            .then((r) => r.data);
+
+    }, {
+        onSuccess: () => {
+            queryClient.invalidateQueries("userQueryQuest");
+        },
+    });
+
+    return [data, isLoading, mutateAsync];
+}
+// only after code sent to user phone
+export const usePhoneCodeQuestSubmit = () => {
+    const queryClient = useQueryClient();
+
+    const { data, error, isError, isLoading, isSuccess, mutate, mutateAsync } = useMutation((payload) => {
+        return axios
+            .post(`${Enums.BASEPATH}/api/user/quest/submit/send-code-for-verification`, payload)
+            .then((r) => r.data);
+
+    }, {
+        onSuccess: () => {
+            queryClient.invalidateQueries("userQueryQuest");
+        },
+    });
+
+    return [data, isLoading, mutateAsync];
+}
+
 export const useUserQuestClaim = () => {
 
     const { data, error, isError, isLoading, isSuccess, mutate, mutateAsync } = useMutation((payload) => {

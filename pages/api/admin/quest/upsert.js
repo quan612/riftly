@@ -50,6 +50,14 @@ const AdminQuestUpsertAPI = async (req, res) => {
                         },
                     });
 
+                    let smsQuestCheck = smsVerificationAuthCheck(existingQuests, questType.name)
+                    if (smsQuestCheck) {
+                        return res.status(200).json({
+                            message: `Cannot add more than one "${type}" type.`,
+                            isError: true,
+                        });
+                    }
+
                     let unstoppableAuth = unstoppableAuthCheck(existingQuests, questType.name);
                     if (unstoppableAuth) {
                         return res.status(200).json({
@@ -221,6 +229,18 @@ const discordTwitterAuthCheck = (existingQuests, type) => {
         (discordAuthQuest?.length >= 1 && type === Enums.DISCORD_AUTH) ||
         (twitterAuthQuest?.length >= 1 && type === Enums.TWITTER_AUTH)
     ) {
+        return true;
+    }
+    return false;
+};
+
+const smsVerificationAuthCheck = (existingQuests, type) => {
+    if (type != Enums.SMS_VERIFICATION) return;
+
+    let smsVerificationQuest = existingQuests.filter((q) => q.type.name === Enums.SMS_VERIFICATION);
+
+
+    if (smsVerificationQuest?.length >= 1) {
         return true;
     }
     return false;

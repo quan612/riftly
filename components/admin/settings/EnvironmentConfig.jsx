@@ -4,7 +4,43 @@ import { object, array, string, number } from "yup";
 import Enums from "enums";
 import axios from "axios";
 
+import {
+    Heading,
+    Box,
+    Flex,
+    Link,
+    List,
+    ListItem,
+    Text,
+    Button,
+    useColorMode,
+    useColorModeValue,
+    SimpleGrid,
+    FormControl,
+    FormLabel,
+    FormErrorMessage,
+    Input,
+    Switch,
+    Select,
+    Checkbox,
+    GridItem,
+    Tooltip,
+    useToast,
+    Icon,
+    Divider,
+} from "@chakra-ui/react";
+import Card from "@components/chakra/card/Card";
+
+import { BsInfoCircle } from "react-icons/bs";
+
+const InfoIcon = React.forwardRef(function MyComponent(props, ref) {
+    //  Spread the props to the underlying DOM element.
+    return <Icon as={BsInfoCircle} ms={"5px"} ref={ref} />;
+});
+
 const EnvironmentConfig = () => {
+    const bg = useColorModeValue("white", "#1B254B");
+    const shadow = useColorModeValue("0px 18px 40px rgba(112, 144, 176, 0.12)", "none");
     const [configs, setConfigs] = useState(null);
     const [isLoading, setLoading] = useState(false);
 
@@ -37,6 +73,10 @@ const EnvironmentConfig = () => {
         googleClientId: configs?.googleClientId || "",
         googleProjectId: configs?.googleProjectId || "",
         googlePropertyId: configs?.googlePropertyId || "",
+
+        smsSid: configs?.smsSid || "",
+        smsAuthToken: configs?.smsAuthToken || "",
+        smsServiceId: configs?.smsServiceId || "",
     };
 
     return (
@@ -72,388 +112,526 @@ const EnvironmentConfig = () => {
                 }}
             >
                 {({ errors, status, touched }) => (
-                    <Form>
-                        <div className="row">
-                            <div className="col-xxl-12">
-                                <div className="d-flex align-items-center mb-3">
-                                    <div className="media-body">
-                                        <h5 className="mb-0">Environment Config</h5>
-                                    </div>
-                                </div>
-                            </div>
-                            {/* Type   */}
-                            <div className="col-6 mb-3">
-                                <label className="form-label">Discord</label>
-                            </div>
-                            {/* Its children  */}
-                            <div className="col-12 mb-3">
-                                <div className="form-group row">
-                                    <label className=" col-sm-4 col-form-label">
-                                        DISCORD BOT TOKEN
-                                    </label>
-                                    <div className="col-sm-8">
-                                        <Field
-                                            name="discordBotToken"
-                                            type="password"
-                                            className={
-                                                "form-control" +
-                                                (errors?.discordBotToken && touched?.discordBotToken
-                                                    ? " is-invalid"
-                                                    : "")
-                                            }
-                                        />
-                                    </div>
-                                </div>
-                                <label className=" col-sm-12 col-form-label">
-                                    (Bot needs at least SEND_MESSAGE permission on the server)
-                                </label>
-                            </div>
-                            <div className="col-12 mb-3">
-                                <div className="form-group row">
-                                    <label className=" col-sm-4 col-form-label">
-                                        DISCORD CLIENT ID
-                                    </label>
-                                    <div className="col-sm-8">
-                                        <Field
-                                            name="discordId"
-                                            type="text"
-                                            className={
-                                                "form-control" +
-                                                (errors?.discordId && touched?.discordId
-                                                    ? " is-invalid"
-                                                    : "")
-                                            }
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                            {/* Its children  */}
-                            <div className="col-12 mb-3">
-                                <div className="form-group row">
-                                    <label className=" col-sm-4 col-form-label">
-                                        DISCORD CLIENT SECRET
-                                    </label>
-                                    <div className="col-sm-8">
-                                        <Field
-                                            name="discordSecret"
-                                            type="password"
-                                            className={
-                                                "form-control" +
-                                                (errors?.discordSecret && touched?.discordSecret
-                                                    ? " is-invalid"
-                                                    : "")
-                                            }
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                            {/* Its children  */}
-                            {/* <div className="col-12 mb-3">
-                                <div className="form-group row">
-                                    <label className=" col-sm-4 col-form-label">
-                                        DISCORD NODEJS
-                                    </label>
-                                    <div className="col-sm-8">
-                                        <Field
-                                            name="discordBackend"
-                                            type="text"
-                                            className={
-                                                "form-control" +
-                                                (errors?.discordBackend && touched?.discordBackend
-                                                    ? " is-invalid"
-                                                    : "")
-                                            }
-                                        />
-                                    </div>
-                                </div>
-                            </div> */}
-
-                            {/* Its children  */}
-                            {/* <div className="col-12 mb-3">
-                                <div className="form-group row">
-                                    <label className=" col-sm-4 col-form-label">
-                                        DISCORD NODEJS SECRET
-                                    </label>
-                                    <div className="col-sm-8">
-                                        <Field
-                                            name="discordBackendSecret"
-                                            type="password"
-                                            className={
-                                                "form-control" +
-                                                (errors?.discordBackendSecret &&
-                                                touched?.discordBackendSecret
-                                                    ? " is-invalid"
-                                                    : "")
-                                            }
-                                        />
-                                    </div>
-                                </div>
-                            </div> */}
-                            {/* Type   */}
-                            <div className="col-6 mb-3">
-                                <label className="form-label">Twitter</label>
-                            </div>
-                            {/* Its children  */}
-
-                            <div className="col-12 mb-3">
-                                <div className="form-group row">
-                                    <label className=" col-sm-4 col-form-label">
-                                        TWITTER BEARER TOKEN
-                                    </label>
-                                    <div className="col-sm-8">
-                                        <Field
-                                            name="twitterBearerToken"
-                                            type="password"
-                                            className={
-                                                "form-control" +
-                                                (errors?.twitterBearerToken &&
-                                                touched?.twitterBearerToken
-                                                    ? " is-invalid"
-                                                    : "")
-                                            }
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                            {/* Its children  */}
-                            <div className="col-12 mb-3">
-                                <div className="form-group row">
-                                    <label className=" col-sm-4 col-form-label">
-                                        TWITTER CLIENT ID
-                                    </label>
-                                    <div className="col-sm-8">
-                                        <Field
-                                            name="twitterId"
-                                            type="text"
-                                            className={
-                                                "form-control" +
-                                                (errors?.twitterId && touched?.twitterId
-                                                    ? " is-invalid"
-                                                    : "")
-                                            }
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                            {/* Its children  */}
-                            <div className="col-12 mb-3">
-                                <div className="form-group row">
-                                    <label className=" col-sm-4 col-form-label">
-                                        TWITTER CLIENT SECRET
-                                    </label>
-                                    <div className="col-sm-8">
-                                        <Field
-                                            name="twitterSecret"
-                                            type="password"
-                                            className={
-                                                "form-control" +
-                                                (errors?.twitterSecret && touched?.twitterSecret
-                                                    ? " is-invalid"
-                                                    : "")
-                                            }
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                            {/* Type   */}
-                            <div className="col-6 mb-3">
-                                <label className="form-label">Misc</label>
-                            </div>
-                            {/* Its children  */}
-                            <div className="col-12 mb-3">
-                                <div className="form-group row">
-                                    <label className=" col-sm-4 col-form-label">
-                                        PENDING REWARD IMAGE URL
-                                    </label>
-
-                                    <div className="col-sm-8">
-                                        <Field
-                                            name="pendingRewardImageUrl"
-                                            type="text"
-                                            className={
-                                                "form-control" +
-                                                (errors?.pendingRewardImageUrl &&
-                                                touched?.pendingRewardImageUrl
-                                                    ? " is-invalid"
-                                                    : "")
-                                            }
-                                        />
-                                    </div>
-                                    <label className=" col-sm-4 col-form-label">
-                                        (A Http Link to the image)
-                                    </label>
-                                </div>
-                            </div>
-                            <div className="col-12 mb-3">
-                                <div className="form-group row">
-                                    <label className=" col-sm-4 col-form-label">HOST URL</label>
-
-                                    <div className="col-sm-8">
-                                        <Field
-                                            name="hostUrl"
-                                            type="text"
-                                            className={
-                                                "form-control" +
-                                                (errors?.hostUrl && touched?.hostUrl
-                                                    ? " is-invalid"
-                                                    : "")
-                                            }
-                                        />
-                                    </div>
-                                    <label className=" col-sm-4 col-form-label">
-                                        (Vercel host that referred on multiple places)
-                                    </label>
-                                </div>
-                            </div>
-
-                            {/* Type   */}
-                            <div className="col-6 mb-3">
-                                <label className="form-label">Cloudinary</label>
-                            </div>
-                            {/* Its children  */}
-                            <div className="col-12 mb-3">
-                                <div className="form-group row">
-                                    <label className=" col-sm-4 col-form-label">CLOUD NAME</label>
-                                    <div className="col-sm-8">
-                                        <Field
-                                            name="cloudinaryName"
-                                            type="text"
-                                            className={
-                                                "form-control" +
-                                                (errors?.cloudinaryName && touched?.cloudinaryName
-                                                    ? " is-invalid"
-                                                    : "")
-                                            }
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-12 mb-3">
-                                <div className="form-group row">
-                                    <label className=" col-sm-4 col-form-label">CLOUD KEY</label>
-                                    <div className="col-sm-8">
-                                        <Field
-                                            name="cloudinaryKey"
-                                            type="text"
-                                            className={
-                                                "form-control" +
-                                                (errors?.cloudinaryKey && touched?.cloudinaryKey
-                                                    ? " is-invalid"
-                                                    : "")
-                                            }
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-12 mb-3">
-                                <div className="form-group row">
-                                    <label className=" col-sm-4 col-form-label">CLOUD SECRET</label>
-                                    <div className="col-sm-8">
-                                        <Field
-                                            name="cloudinarySecret"
-                                            type="password"
-                                            className={
-                                                "form-control" +
-                                                (errors?.cloudinarySecret &&
-                                                touched?.cloudinarySecret
-                                                    ? " is-invalid"
-                                                    : "")
-                                            }
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                            {/* Type   */}
-                            <div className="col-6 mb-3">
-                                <label className="form-label">Analytics</label>
-                            </div>
-                            {/* Its children  */}
-                            <div className="col-12 mb-3">
-                                <div className="form-group row">
-                                    <label className=" col-sm-4 col-form-label">Client Email</label>
-
-                                    <div className="col-sm-8">
-                                        <Field
-                                            name="googleClientEmail"
-                                            type="text"
-                                            className={
-                                                "form-control" +
-                                                (errors?.googleClientEmail &&
-                                                touched?.googleClientEmail
-                                                    ? " is-invalid"
-                                                    : "")
-                                            }
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-12 mb-3">
-                                <div className="form-group row">
-                                    <label className=" col-sm-4 col-form-label">Client Id</label>
-
-                                    <div className="col-sm-8">
-                                        <Field
-                                            name="googleClientId"
-                                            type="text"
-                                            className={
-                                                "form-control" +
-                                                (errors?.googleClientId && touched?.googleClientId
-                                                    ? " is-invalid"
-                                                    : "")
-                                            }
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="col-12 mb-3">
-                                <div className="form-group row">
-                                    <label className=" col-sm-4 col-form-label">Project Id</label>
-
-                                    <div className="col-sm-8">
-                                        <Field
-                                            name="googleProjectId"
-                                            type="text"
-                                            className={
-                                                "form-control" +
-                                                (errors?.googleProjectId && touched?.googleProjectId
-                                                    ? " is-invalid"
-                                                    : "")
-                                            }
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-12 mb-3">
-                                <div className="form-group row">
-                                    <label className=" col-sm-4 col-form-label">Property Id</label>
-
-                                    <div className="col-sm-8">
-                                        <Field
-                                            name="googlePropertyId"
-                                            type="text"
-                                            className={
-                                                "form-control" +
-                                                (errors?.googlePropertyId &&
-                                                touched?.googlePropertyId
-                                                    ? " is-invalid"
-                                                    : "")
-                                            }
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="mt-3 col-3">
-                            <button
-                                type="submit"
-                                className="btn btn-primary me-2 w-100"
-                                disabled={isLoading}
+                    <Box w="100%">
+                        <Form>
+                            <Flex
+                                flexDirection={{
+                                    base: "row",
+                                }}
+                                w="100%"
+                                h="100%"
+                                justifyContent="center"
+                                mb="60px"
+                                mt={{ base: "20px", md: "20px" }}
+                                gap="1%"
                             >
-                                {isLoading ? "Loading..." : "Submit"}
-                            </button>
-                        </div>
-                    </Form>
+                                <Box
+                                    w={{ base: "100%" }}
+                                    minW="100%"
+                                    paddingLeft={{ base: "16px", md: "24px" }}
+                                    paddingRight={{ base: "16px", md: "24px" }}
+                                >
+                                    <Card boxShadow={shadow} py="8" bg={bg}>
+                                        <SimpleGrid
+                                            columns={{ base: 1, "2xl": 3 }}
+                                            columnGap={10}
+                                            rowGap={4}
+                                            w="full"
+                                        >
+                                            <GridItem colSpan={3}>
+                                                <Heading size="lg" text="white">
+                                                    Discord
+                                                </Heading>
+                                            </GridItem>
+                                            <GridItem colSpan={{ base: 3, "2xl": 1 }}>
+                                                <FormControl mb="24px">
+                                                    <FormLabel
+                                                        ms="4px"
+                                                        fontSize="md"
+                                                        fontWeight="bold"
+                                                        position={"relative"}
+                                                    >
+                                                        Bot token
+                                                        <Tooltip
+                                                            placement="top"
+                                                            label="Bot needs at least SEND_MESSAGE permission on the server"
+                                                        >
+                                                            <span>
+                                                                <Icon
+                                                                    as={BsInfoCircle}
+                                                                    ms={"5px"}
+                                                                />
+                                                            </span>
+                                                        </Tooltip>
+                                                    </FormLabel>
+
+                                                    <Field
+                                                        as={Input}
+                                                        id="discordBotToken"
+                                                        size="lg"
+                                                        name="discordBotToken"
+                                                        type="password"
+                                                        variant="auth"
+                                                        placeholder="Token for Bot"
+                                                    />
+                                                </FormControl>
+                                            </GridItem>
+
+                                            <GridItem colSpan={{ base: 3, "2xl": 1 }}>
+                                                <FormControl mb="24px">
+                                                    <FormLabel
+                                                        ms="4px"
+                                                        fontSize="md"
+                                                        fontWeight="bold"
+                                                        position={"relative"}
+                                                    >
+                                                        Client Id
+                                                    </FormLabel>
+
+                                                    <Field
+                                                        as={Input}
+                                                        id="discordId"
+                                                        size="lg"
+                                                        name="discordId"
+                                                        type="text"
+                                                        variant="auth"
+                                                        placeholder="Discord Client Id"
+                                                    />
+                                                </FormControl>
+                                            </GridItem>
+
+                                            <GridItem colSpan={3}>
+                                                <FormControl mb="24px">
+                                                    <FormLabel
+                                                        ms="4px"
+                                                        fontSize="md"
+                                                        fontWeight="bold"
+                                                        position={"relative"}
+                                                    >
+                                                        Client Secret
+                                                    </FormLabel>
+
+                                                    <Field
+                                                        as={Input}
+                                                        size="lg"
+                                                        id="discordSecret"
+                                                        name="discordSecret"
+                                                        type="password"
+                                                        variant="auth"
+                                                        placeholder="Discord Client Secret"
+                                                    />
+                                                </FormControl>
+                                            </GridItem>
+
+                                            <GridItem colSpan={3}>
+                                                <Divider />
+                                            </GridItem>
+
+                                            <GridItem colSpan={3}>
+                                                <Heading size="lg" text="white">
+                                                    Twitter
+                                                </Heading>
+                                            </GridItem>
+                                            <GridItem colSpan={{ base: 3, "2xl": 1 }}>
+                                                <FormControl mb="24px">
+                                                    <FormLabel
+                                                        ms="4px"
+                                                        fontSize="md"
+                                                        fontWeight="bold"
+                                                        position={"relative"}
+                                                    >
+                                                        Bearer token
+                                                    </FormLabel>
+
+                                                    <Field
+                                                        as={Input}
+                                                        size="lg"
+                                                        name="twitterBearerToken"
+                                                        id="twitterBearerToken"
+                                                        type="password"
+                                                        variant="auth"
+                                                        placeholder="Twitter bearer token"
+                                                    />
+                                                </FormControl>
+                                            </GridItem>
+                                            <GridItem colSpan={{ base: 3, "2xl": 1 }}>
+                                                <FormControl mb="24px">
+                                                    <FormLabel
+                                                        ms="4px"
+                                                        fontSize="md"
+                                                        fontWeight="bold"
+                                                        position={"relative"}
+                                                    >
+                                                        Client Id
+                                                    </FormLabel>
+
+                                                    <Field
+                                                        as={Input}
+                                                        size="lg"
+                                                        name="twitterId"
+                                                        id="twitterId"
+                                                        type="text"
+                                                        variant="auth"
+                                                        placeholder="Twitter Client Id"
+                                                    />
+                                                </FormControl>
+                                            </GridItem>
+
+                                            <GridItem colSpan={{ base: 3, "2xl": 2 }}>
+                                                <FormControl mb="24px">
+                                                    <FormLabel
+                                                        ms="4px"
+                                                        fontSize="md"
+                                                        fontWeight="bold"
+                                                        position={"relative"}
+                                                    >
+                                                        Client Secret
+                                                    </FormLabel>
+
+                                                    <Field
+                                                        as={Input}
+                                                        size="lg"
+                                                        name="twitterSecret"
+                                                        id="twitterSecret"
+                                                        type="password"
+                                                        variant="auth"
+                                                        placeholder="Twitter Client Secret"
+                                                    />
+                                                </FormControl>
+                                            </GridItem>
+
+                                            <GridItem colSpan={3}>
+                                                <Divider />
+                                            </GridItem>
+
+                                            <GridItem colSpan={3}>
+                                                <Heading size="lg" text="white">
+                                                    Misc
+                                                </Heading>
+                                            </GridItem>
+
+                                            <GridItem colSpan={{ base: 3, "2xl": 2 }}>
+                                                <FormControl mb="24px">
+                                                    <FormLabel
+                                                        ms="4px"
+                                                        fontSize="md"
+                                                        fontWeight="bold"
+                                                        position={"relative"}
+                                                    >
+                                                        Pending Reward Image Url
+                                                    </FormLabel>
+
+                                                    <Field
+                                                        as={Input}
+                                                        size="lg"
+                                                        name="pendingRewardImageUrl"
+                                                        id="pendingRewardImageUrl"
+                                                        type="text"
+                                                        variant="auth"
+                                                        placeholder="A Http url link to pending reward image"
+                                                    />
+                                                </FormControl>
+                                            </GridItem>
+
+                                            <GridItem colSpan={{ base: 3, "2xl": 1 }}>
+                                                <FormControl mb="24px">
+                                                    <FormLabel
+                                                        fontSize="md"
+                                                        fontWeight="bold"
+                                                        position={"relative"}
+                                                    >
+                                                        Host Url
+                                                    </FormLabel>
+
+                                                    <Field
+                                                        as={Input}
+                                                        size="lg"
+                                                        name="hostUrl"
+                                                        id="hostUrl"
+                                                        type="text"
+                                                        variant="auth"
+                                                        placeholder="Vercel host that referred on multiple places"
+                                                    />
+                                                </FormControl>
+                                            </GridItem>
+
+                                            <GridItem colSpan={{ base: 3, "2xl": 1 }}>
+                                                <FormControl mb="24px">
+                                                    <FormLabel
+                                                        ms="4px"
+                                                        fontSize="md"
+                                                        fontWeight="bold"
+                                                        position={"relative"}
+                                                    >
+                                                        Cloudinary name
+                                                    </FormLabel>
+
+                                                    <Field
+                                                        as={Input}
+                                                        size="lg"
+                                                        name="cloudinaryName"
+                                                        id="cloudinaryName"
+                                                        type="text"
+                                                        variant="auth"
+                                                        placeholder="Name of cloudinary instance"
+                                                    />
+                                                </FormControl>
+                                            </GridItem>
+
+                                            <GridItem colSpan={{ base: 3, "2xl": 1 }}>
+                                                <FormControl mb="24px">
+                                                    <FormLabel
+                                                        ms="4px"
+                                                        fontSize="md"
+                                                        fontWeight="bold"
+                                                        position={"relative"}
+                                                    >
+                                                        Cloudinary Key
+                                                    </FormLabel>
+
+                                                    <Field
+                                                        as={Input}
+                                                        size="lg"
+                                                        name="cloudinaryKey"
+                                                        id="cloudinaryKey"
+                                                        type="text"
+                                                        variant="auth"
+                                                        placeholder="Cloudinary key"
+                                                    />
+                                                </FormControl>
+                                            </GridItem>
+
+                                            <GridItem colSpan={{ base: 3, "2xl": 2 }}>
+                                                <FormControl mb="24px">
+                                                    <FormLabel
+                                                        ms="4px"
+                                                        fontSize="md"
+                                                        fontWeight="bold"
+                                                        position={"relative"}
+                                                    >
+                                                        Cloudinary Secret
+                                                    </FormLabel>
+
+                                                    <Field
+                                                        as={Input}
+                                                        size="lg"
+                                                        name="cloudinarySecret"
+                                                        id="cloudinarySecret"
+                                                        type="password"
+                                                        variant="auth"
+                                                        placeholder="Cloudinary Secret"
+                                                    />
+                                                </FormControl>
+                                            </GridItem>
+
+                                            <GridItem colSpan={3}>
+                                                <Divider />
+                                            </GridItem>
+                                            <GridItem colSpan={{ base: 3 }}>
+                                                <Heading size="lg" text="white">
+                                                    Google Analytics
+                                                    <Tooltip
+                                                        placement="top"
+                                                        label="Still need a process env of private key as it cannot be stored here"
+                                                    >
+                                                        <span>
+                                                            <Icon
+                                                                color="red"
+                                                                as={BsInfoCircle}
+                                                                ms={"5px"}
+                                                            />
+                                                        </span>
+                                                    </Tooltip>
+                                                </Heading>
+                                            </GridItem>
+
+                                            <GridItem colSpan={{ base: 3, "2xl": 1 }}>
+                                                <FormControl mb="24px">
+                                                    <FormLabel
+                                                        ms="4px"
+                                                        fontSize="md"
+                                                        fontWeight="bold"
+                                                        position={"relative"}
+                                                    >
+                                                        Client Email
+                                                    </FormLabel>
+
+                                                    <Field
+                                                        as={Input}
+                                                        size="lg"
+                                                        name="googleClientEmail"
+                                                        id="googleClientEmail"
+                                                        type="text"
+                                                        variant="auth"
+                                                        placeholder="Client Email"
+                                                    />
+                                                </FormControl>
+                                            </GridItem>
+
+                                            <GridItem colSpan={{ base: 3, "2xl": 1 }}>
+                                                <FormControl mb="24px">
+                                                    <FormLabel
+                                                        ms="4px"
+                                                        fontSize="md"
+                                                        fontWeight="bold"
+                                                        position={"relative"}
+                                                    >
+                                                        Client Id
+                                                    </FormLabel>
+
+                                                    <Field
+                                                        as={Input}
+                                                        size="lg"
+                                                        name="googleClientId"
+                                                        id="googleClientId"
+                                                        type="text"
+                                                        variant="auth"
+                                                        placeholder="Client Id"
+                                                    />
+                                                </FormControl>
+                                            </GridItem>
+
+                                            <GridItem colSpan={{ base: 3, "2xl": 1 }}>
+                                                <FormControl mb="24px">
+                                                    <FormLabel
+                                                        ms="4px"
+                                                        fontSize="md"
+                                                        fontWeight="bold"
+                                                        position={"relative"}
+                                                    >
+                                                        Project Id
+                                                    </FormLabel>
+
+                                                    <Field
+                                                        as={Input}
+                                                        size="lg"
+                                                        name="googleProjectId"
+                                                        id="googleProjectId"
+                                                        type="text"
+                                                        variant="auth"
+                                                        placeholder="Project Id"
+                                                    />
+                                                </FormControl>
+                                            </GridItem>
+
+                                            <GridItem colSpan={{ base: 3, "2xl": 1 }}>
+                                                <FormControl mb="24px">
+                                                    <FormLabel
+                                                        ms="4px"
+                                                        fontSize="md"
+                                                        fontWeight="bold"
+                                                        position={"relative"}
+                                                    >
+                                                        Property Id
+                                                    </FormLabel>
+
+                                                    <Field
+                                                        as={Input}
+                                                        size="lg"
+                                                        name="googlePropertyId"
+                                                        id="googlePropertyId"
+                                                        type="text"
+                                                        variant="auth"
+                                                        placeholder="Property Id"
+                                                    />
+                                                </FormControl>
+                                            </GridItem>
+                                        </SimpleGrid>
+
+                                        <GridItem colSpan={3}>
+                                            <Divider />
+                                        </GridItem>
+                                        <GridItem colSpan={{ base: 3 }}>
+                                            <Heading size="lg" text="white">
+                                                SMS
+                                            </Heading>
+                                        </GridItem>
+
+                                        <GridItem colSpan={{ base: 3, xl: 1 }}>
+                                            <FormControl mb="24px">
+                                                <FormLabel
+                                                    ms="4px"
+                                                    fontSize="md"
+                                                    fontWeight="bold"
+                                                    position={"relative"}
+                                                >
+                                                    Sms Sid (Currently on process env)
+                                                </FormLabel>
+
+                                                <Field
+                                                    as={Input}
+                                                    size="lg"
+                                                    name="smsSid"
+                                                    id="smsSid"
+                                                    type="text"
+                                                    variant="auth"
+                                                    placeholder="Sms Sid"
+                                                />
+                                            </FormControl>
+                                        </GridItem>
+
+                                        <GridItem colSpan={{ base: 3, xl: 1 }}>
+                                            <FormControl mb="24px">
+                                                <FormLabel
+                                                    ms="4px"
+                                                    fontSize="md"
+                                                    fontWeight="bold"
+                                                    position={"relative"}
+                                                >
+                                                    Sms Auth token
+                                                </FormLabel>
+
+                                                <Field
+                                                    as={Input}
+                                                    size="lg"
+                                                    name="smsAuthToken"
+                                                    id="smsAuthToken"
+                                                    type="password"
+                                                    variant="auth"
+                                                    placeholder="Sms Auht Token"
+                                                />
+                                            </FormControl>
+                                        </GridItem>
+
+                                        <GridItem colSpan={{ base: 3, xl: 1 }}>
+                                            <FormControl mb="24px">
+                                                <FormLabel
+                                                    ms="4px"
+                                                    fontSize="md"
+                                                    fontWeight="bold"
+                                                    position={"relative"}
+                                                >
+                                                    Sms Service Id
+                                                </FormLabel>
+
+                                                <Field
+                                                    as={Input}
+                                                    size="lg"
+                                                    name="smsServiceId"
+                                                    id="smsServiceId"
+                                                    type="text"
+                                                    variant="auth"
+                                                    placeholder="Sms Service Id"
+                                                />
+                                            </FormControl>
+                                        </GridItem>
+
+                                        <Button
+                                            w={{ base: "200px" }}
+                                            my="16px"
+                                            type="submit"
+                                            colorScheme="teal"
+                                            size="lg"
+                                            isLoading={isLoading}
+                                            disabled={isLoading}
+                                        >
+                                            Submit
+                                        </Button>
+                                    </Card>
+                                </Box>
+                            </Flex>
+                        </Form>
+                    </Box>
                 )}
             </Formik>
         </>

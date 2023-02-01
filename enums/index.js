@@ -39,6 +39,7 @@ const Enums = {
     DISCORD_AUTH: "Discord Authenticate",
     TWITTER_AUTH: "Twitter Authenticate",
     WALLET_AUTH: "Wallet Authenticate",
+    SMS_VERIFICATION: "SMS Verification",
 
     // Image approval
     ITEM_PER_PAGE: 100,

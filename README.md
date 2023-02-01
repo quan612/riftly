@@ -26,6 +26,8 @@ INSERT INTO public."QuestType" (id, name, description) VALUES (12, 'Code Quest',
 INSERT INTO public."QuestType" (id, name, description) VALUES (13, 'Wallet Authenticate', NULL);
 INSERT INTO public."QuestType" (id, name, description) VALUES (14, 'Claim Reward For Owning NFT', NULL);
 INSERT INTO public."QuestType" (id, name, description) VALUES (15, 'Unstoppable Domain Authenticate', NULL);
+INSERT INTO public."QuestType" (id, name, description) VALUES (16, 'SMS Verification', NULL);
+
 
 INSERT INTO public."RewardType" (id, reward) VALUES (1, '$Shell');
 INSERT INTO public."RewardType" (id, reward) VALUES (2, 'Mint List');
@@ -51,15 +53,23 @@ INSERT INTO public."RewardType" (id, reward) VALUES (3, 'Mystery Bowl');
 In any sql client, the tables should be created.
 
 
-  ### Populate data
-Go to ./prisma/seed/admin.js
-Modifying the value with your wallet, then execute these commands:
-```js
-dotenv -e .env.development -- node ./prisma/seed/admin.js
-dotenv -e .env.development -- node ./prisma/seed/quest-type.js
-dotenv -e .env.development -- node ./prisma/seed/reward-type.js 
+### Populate data
+Using the sql above
 
-```
+<details>
+  <summary> Reward Types Config</summary>
+  
+> Add / Edit Reward Type
+
+**This is needed before any reward can be awarded to a user**
+
+Image Preview are used for Preview Mode when reward a user from Admin Reward Page, or when a user goes to claim page and claim a certain reward, then 
+the image is embded into discord.
+
+![Screenshot](screenshots/reward_config_1.png)
+
+Icon is optional
+</details>
 
 </details>
 <br/>
@@ -90,24 +100,12 @@ Under http://localhost:3000/admin/quest
 - Daily
 - Claim Reward for owning NFT
 
+
+### Must create these three quest once: 
+Discord Authenticate
+Twitter Authenticate
+Wallet Authenticate
 </details>
-
-
-<details>
-  <summary> Reward Types Config</summary>
-  
-> Add / Edit Reward Type
-
-**This is needed before any reward can be awarded to a user**
-
-Image Preview are used for Preview Mode when reward a user from Admin Reward Page, or when a user goes to claim page and claim a certain reward, then 
-the image is embded into discord.
-
-![Screenshot](screenshots/reward_config_1.png)
-
-Icon is optional
-</details>
-
 
 <details>
   <summary> Discord Config</summary>

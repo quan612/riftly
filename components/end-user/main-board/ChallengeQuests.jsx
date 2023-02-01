@@ -27,6 +27,7 @@ import { doQuestUtility } from "../shared/doQuestUtility";
 import WalletAuthQuestModal from "../shared/riftly/WalletAuthQuestModal";
 import NftOwnerQuestModal from "../shared/riftly/NftOwnerQuestModal";
 import { HeadingLg, HeadingSm, TextSm } from "@components/riftly/Typography";
+import SmsVerificationQuestModal from "../shared/riftly/SmsVerificationQuestModal";
 
 const ChallengeQuests = ({ currentQuests }) => {
     const [filterCompleted, filterCompletedSet] = useState(false);
@@ -258,10 +259,12 @@ const UserQuestBox = ({ quest, index, currentQuests, filterCompleted, onTest }) 
     const codeQuestRef = useRef({});
 
     const walletAuthQuestModal = useDisclosure();
-    const walletAuthQuestRef = useRef({});
 
     const nftOwnQuestModal = useDisclosure();
     const nftOwnQuestRef = useRef({});
+
+    const smsVerificationQuestModal = useDisclosure();
+    const smsQuestRef = useRef({});
 
     useEffect(() => {
         return () => {
@@ -279,12 +282,15 @@ const UserQuestBox = ({ quest, index, currentQuests, filterCompleted, onTest }) 
                         codeQuestModal.onOpen();
                         break;
                     case Enums.WALLET_AUTH:
-                        walletAuthQuestRef.current = quest;
                         walletAuthQuestModal.onOpen();
                         break;
                     case Enums.OWNING_NFT_CLAIM:
                         nftOwnQuestRef.current = quest;
                         nftOwnQuestModal.onOpen();
+                        break;
+                    case Enums.SMS_VERIFICATION:
+                        smsQuestRef.current = quest;
+                        smsVerificationQuestModal.onOpen();
                         break;
                     default:
                         await doQuestUtility(router, quest, currentQuests, onSubmit);
@@ -494,13 +500,22 @@ const UserQuestBox = ({ quest, index, currentQuests, filterCompleted, onTest }) 
                     currentQuest={codeQuestRef.current}
                 />
             )}
-            {walletAuthQuestRef?.current && (
+            {walletAuthQuestModal.isOpen && (
                 <WalletAuthQuestModal
                     isOpen={walletAuthQuestModal.isOpen}
                     onClose={() => {
-                        walletAuthQuestRef.current = {};
                         walletAuthQuestModal.onClose();
                     }}
+                />
+            )}
+            {smsVerificationQuestModal.isOpen && (
+                <SmsVerificationQuestModal
+                    isOpen={smsVerificationQuestModal.isOpen}
+                    onClose={() => {
+                        smsQuestRef.current = {};
+                        smsVerificationQuestModal.onClose();
+                    }}
+                    quest={smsQuestRef.current}
                 />
             )}
             {nftOwnQuestRef?.current && (

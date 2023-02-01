@@ -30,6 +30,7 @@ const UNCLAIMABLE = 4;
 import { AnimatePresence, AnimateSharedLayout, motion } from "framer-motion";
 import { useCodeQuestSubmit } from "@shared/HOC/quest";
 import { RiftlyModalCloseButton } from "@components/riftly/Buttons";
+import { debounce } from "@utils/index";
 
 const CodeQuestModal = ({ isOpen, onClose, currentQuest }) => {
     const [codeQuestData, isSubmittingQuest, submit] = useCodeQuestSubmit();
@@ -200,17 +201,3 @@ const CodeQuestModal = ({ isOpen, onClose, currentQuest }) => {
 };
 
 export default CodeQuestModal;
-
-function debounce(func, wait) {
-    let timeout;
-    return function () {
-        const context = this;
-        const args = arguments;
-        const later = function () {
-            timeout = null;
-            func.apply(context, args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-    };
-}

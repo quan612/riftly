@@ -162,13 +162,13 @@ const CurrentQuests = ({ quests, isLoading, error }) => {
                                             )}
 
                                             {quest.type.name === Enums.FOLLOW_INSTAGRAM && (
-                                                <Text color="red.400">
+                                                <Text as={"span"} color="red.400" ms="2">
                                                     {quest.extendedQuestData.followAccount}
                                                 </Text>
                                             )}
 
                                             {quest.type.name === Enums.TWITTER_RETWEET && (
-                                                <Text color="blue.400">
+                                                <Text as={"span"} color="blue.400" ms="2">
                                                     {quest.extendedQuestData.tweetId}
                                                 </Text>
                                             )}
@@ -278,39 +278,6 @@ const CurrentQuests = ({ quests, isLoading, error }) => {
                     }}
                 />
             )}
-
-            {/* <Modal
-                isOpen={router.query?.id ? true : isModalOpen}
-                onClose={() => {
-                    router.push(`${router.pathname}`);
-                    setModalOpen(false);
-                }}
-                render={(modal) => {
-                    if (router.query?.id && quests) {
-                        let quest = quests.filter((q) => q.id === parseInt(router.query.id))[0];
-
-                        return (
-                            <EditQuest
-                                closeModal={() => {
-                                    router.push(`${router.pathname}`);
-                                    setModalOpen(false);
-                                }}
-                                quest={quest}
-                            />
-                        );
-                    } else {
-                        return (
-                            <AddQuest
-                                closeModal={() => {
-                                    router.push(`${router.pathname}`);
-                                    setModalOpen(false);
-                                }}
-                            />
-                        );
-                    }
-                }}
-                isConfirm={true}
-            /> */}
         </Box>
     );
 };

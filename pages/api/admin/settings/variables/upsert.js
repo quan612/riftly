@@ -26,6 +26,9 @@ const AdminConfigsUpsertAPI = async (req, res) => {
           googleClientId,
           googleProjectId,
           googlePropertyId,
+          smsSid,
+          smsAuthToken,
+          smsServiceId,
         } = req.body;
 
 
@@ -54,6 +57,9 @@ const AdminConfigsUpsertAPI = async (req, res) => {
             googleClientId,
             googleProjectId,
             googlePropertyId,
+            smsSid,
+            smsAuthToken,
+            smsServiceId,
           },
           update: {
             hostUrl,
@@ -73,6 +79,9 @@ const AdminConfigsUpsertAPI = async (req, res) => {
             googleClientId,
             googleProjectId,
             googlePropertyId,
+            smsSid,
+            smsAuthToken,
+            smsServiceId,
           },
         });
 
