@@ -27,10 +27,12 @@ model WhiteList {
   smsVerification               SmsVerification?
 }
 model WhiteListUserData {
-  id           Int           @id @default(autoincrement())
-  userId       String        @unique
-  user         WhiteList     @relation(fields: [userId], references: [userId])
-  data         Json? 
+  id                            Int           @id @default(autoincrement())
+  userId                        String        @unique
+  user                          WhiteList     @relation(fields: [userId], references: [userId])
+  data                          Json? 
+  lastNotified                  DateTime?
+  canNotifyChallenge            Boolean       @default(false)
 }
 model PendingReward {
   id           Int            @id @default(autoincrement())

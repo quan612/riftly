@@ -1,5 +1,6 @@
-import React, { useEffect, useState, useCallback, useRef } from "react";
+import React, { useContext, useEffect, useState, useCallback, useRef } from "react";
 
+import { Web3Context } from "@context/Web3Context";
 import Enums from "enums";
 import { ErrorMessage, Field, Form, Formik, useFormik } from "formik";
 import {
@@ -23,8 +24,23 @@ import {
     Divider,
 } from "@chakra-ui/react";
 import { RiftlyFace } from "@components/riftly/Logo";
+import axios from "axios";
 
 const PersonalInfo = ({ session }) => {
+    let notificationTimeout, checkNotificationInterval;
+    useEffect(() => {
+        const notificationTest = new Notification("To do list", {
+            body: "sdsdsdsd",
+            // icon: ""
+        });
+        console.log(notificationTest);
+        checkNotificationInterval = setInterval(() => {
+            //get latest quest
+        }, 10000);
+        return () => {
+            clearInterval(checkNotificationInterval);
+        };
+    }, []);
     return (
         <Box
             display={"flex"}
@@ -45,11 +61,8 @@ const PersonalInfo = ({ session }) => {
 export default PersonalInfo;
 
 const Settings = () => {
-    const initialValues = {
-        username: "",
-        password: "",
-        email: "",
-    };
+    const { SignOut } = useContext(Web3Context);
+
     return (
         <>
             <Heading color="white" fontWeight="600" size="md">
@@ -76,7 +89,18 @@ const Settings = () => {
                     <FormLabel htmlFor="quest-alerts" mb="0" color="#fff" flex="80%">
                         Notify me about new Challenges
                     </FormLabel>
-                    <Switch id="quest-alerts" />
+                    <Switch
+                        id="quest-alerts"
+                        onChange={async (e) => {
+                            if (Notification.permission === "default") {
+                                const askForPermission = await Notification.requestPermission();
+                            }
+                            let res = await axios
+                                .post(`/api/user/notification/`)
+                                .then((r) => r.data);
+                            console.log(res);
+                        }}
+                    />
                 </FormControl>
                 {/* </Box> */}
                 <Divider />
@@ -89,7 +113,7 @@ const Settings = () => {
                 <Divider />
                 <FormControl display="flex" alignItems="center">
                     <FormLabel htmlFor="annoucement-alerts" mb="0" color="#fff" flex="80%">
-                        Notify me about important annoucements
+                        Notify me about important announcements
                     </FormLabel>
                     <Switch id="annoucement-alerts" disabled={true} />
                 </FormControl>
@@ -98,10 +122,20 @@ const Settings = () => {
                     <Button w="100%" variant="signIn">
                         FAQ
                     </Button>
-                    <Button w="100%" variant="signIn" type="submit">
+                    <Button w="100%" variant="signIn" onClick={SignOut}>
                         Logout
                     </Button>
                 </ButtonGroup>
+
+                <Button
+                    w="100%"
+                    variant="signIn"
+                    onClick={async () => {
+                        console.log("current status", Notification.permission);
+                    }}
+                >
+                    Test
+                </Button>
             </Box>
         </>
     );
@@ -238,14 +272,6 @@ const AccountInfo = () => {
                     }}
                 >
                     {({ values, errors, status, touched, handleChange, setFieldValue }) => {
-                        // const childrenProps = {
-                        //     isCreate,
-                        //     text: "Code Quest Event",
-                        //     isLoading,
-                        //     status,
-                        //     closeModal,
-                        // };
-                        console.log(errors);
                         return (
                             <Form>
                                 <SimpleGrid columns="2" gap="24px">
