@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useCallback, useRef } from "react";
 
 import Enums from "enums";
-import { withUserQuestQuery } from "shared/HOC/quest";
 
 import { useToast, Heading, Box, Container, Flex } from "@chakra-ui/react";
 
@@ -14,6 +13,7 @@ import { ChakraBox } from "@theme/additions/framer/FramerChakraComponent";
 import { RiftlyIcon } from "../shared/riftly/RiftlyIcon";
 import RedeemRewards from "./RedeemRewards";
 import Achievements from "./Achievements";
+import PersonalInfo from "./PersonalInfo";
 
 const DASHBOARD = 1;
 const REDEEM = 2;
@@ -54,7 +54,12 @@ const RiftlyIndividualQuestBoard = ({ session }) => {
                         gap="16px"
                     >
                         <AnimatePresence initial={false}>
-                            <ChakraBox position={"relative"} h="128px" key={"1"}>
+                            <ChakraBox
+                                position={"relative"}
+                                h={menu === PERSONAL_INFO ? "0px" : "128px"}
+                                maxH="128px"
+                                key={"1"}
+                            >
                                 <>
                                     {(menu === DASHBOARD || menu === ACHIEVEMENT) && (
                                         <UserTierLevel
@@ -64,7 +69,11 @@ const RiftlyIndividualQuestBoard = ({ session }) => {
                                         />
                                     )}
                                     {menu === REDEEM && (
-                                        <BalanceInfo session={session} key="balance-info" />
+                                        <BalanceInfo
+                                            minH="128px"
+                                            session={session}
+                                            key="balance-info"
+                                        />
                                     )}
                                 </>
                             </ChakraBox>
@@ -86,6 +95,9 @@ const RiftlyIndividualQuestBoard = ({ session }) => {
                                 {menu === ACHIEVEMENT && <Achievements key="achievements" />}
                             </ChakraBox>
                         </AnimatePresence>
+
+                        {/* personal info */}
+                        {menu === PERSONAL_INFO && <PersonalInfo session={session} />}
 
                         <Box
                             h="50px"
