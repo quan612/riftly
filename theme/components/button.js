@@ -214,7 +214,48 @@ export const buttonStyles = {
           },
         }),
 
+        "ghost-base": (props) => ({
+          borderColor: "transparent",
+          bg: "transparent",
+          color: "brand.neutral0",
+
+          textDecoration: "none",
+          outline: "none",
+          _hover: {
+            textDecoration: "underline",
+            _disabled: {
+              color: "#fff",
+              opacity: 0.4,
+              textDecoration: "none",
+            }
+          },
+          _disabled: {
+            textDecoration: "none",
+            color: "brand.neutral0",
+            opacity: 0.4,
+
+          },
+          _focus: {
+
+            color: "#fff",
+            textDecoration: "underline",
+            _disabled: {
+              color: "#fff",
+              opacity: 0.4,
+              textDecoration: "none",
+            }
+          },
+          _active: {
+
+            color: "neutral0",
+            textDecoration: "underline",
+          },
+        }),
+
         cyan: (props) => ({
+          fontSize: "md",
+          minWidth: "96px",
+          height: "40px",
           bg: "brand.cyan",
           color: "#fff",
           transition: "0.8s",

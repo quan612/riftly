@@ -6,7 +6,7 @@ import { utils } from "ethers";
 
 const REWARD_TYPE_QUERY = `${Enums.BASEPATH}/api/admin/rewardType`;
 const PENDING_REWARD_QUERY = `${Enums.BASEPATH}/api/user/reward/getPending`;
-const USER_GET_CLAIMED_REWARD = `${Enums.BASEPATH}/api/user/reward/getClaimed`;
+
 const USER_CLAIMED_REWARD = `${Enums.BASEPATH}/api/user/reward/claim`;
 
 export const withRewardTypeQuery =
@@ -106,11 +106,17 @@ export const useUserRewardQuery = (session) => {
     let userId = session?.user?.userId;
 
     const { data, isLoading } = useQuery(["userRewardQuery", userId], () => {
+
         return axios
-            .get(`${USER_GET_CLAIMED_REWARD}/${userId}`)
+            .get(`${Enums.BASEPATH}/api/user/reward/getClaimed/${userId}`)
             .then((r) => r.data);
 
-    }, { staleTime: 5 * 60, enabled: userId !== undefined });
+
+    }, {
+        staleTime: 60 * 60,
+
+        enabled: userId !== undefined
+    });
 
     return [data, isLoading];
 };

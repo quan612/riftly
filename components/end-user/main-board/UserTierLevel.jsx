@@ -31,6 +31,16 @@ import { ChakraBox } from "@theme/additions/framer/FramerChakraComponent";
 import { HeadingSm, TextMd } from "@components/riftly/Typography";
 import { getUserName } from "@utils/index";
 
+const usePrevious = (value) => {
+    const ref = useRef();
+
+    useEffect(() => {
+        ref.current = value;
+    }, [value]);
+
+    return ref.current;
+};
+
 function getPoints(level) {
     // return 20 * level * (level + 4);
     return ((Math.pow(level, 2) + level) / 2) * 100 - level * 100;
@@ -41,34 +51,23 @@ function getLevel(points) {
     return Math.floor(level);
 }
 
-const UserTierLevel = ({ session }) => {
+const UserTierLevel = React.forwardRef(({ session }, levelProgress) => {
     const [userRewards, userRewardLoading] = useUserRewardQuery(session);
-    const [levelProgress, levelProgressSet] = useState(0);
+
     const [tier, tierSet] = useState(null);
     const { isOpen, onOpen, onClose } = useDisclosure();
     let levelUpTimeout;
 
-    const test = (val) => {
-        let newVal = levelProgress + val;
-        if (newVal > 100) {
-            newVal = newVal % 100;
-            levelProgressSet(100);
-            let timeout = setTimeout(() => {
-                onOpen();
-                levelProgressSet(newVal);
-                clearTimeout(timeout);
-            }, 350);
-        } else {
-            levelProgressSet(newVal);
-        }
-    };
+    let previousData = usePrevious(userRewards || null);
+    let isFirstRender = previousData === undefined;
+    let shouldAnimateInitialRender = (isFirstRender && !userRewards) || previousData === null;
 
     useEffect(() => {
         return () => {
             clearTimeout(levelUpTimeout);
         };
     }, []);
-    console.log(userRewards);
+
     useEffect(() => {
         if (userRewards && userRewards.length >= 0) {
             if (userRewards.length === 0) {
@@ -79,26 +78,28 @@ const UserTierLevel = ({ session }) => {
                 });
                 return;
             }
+
             let currentReward = userRewards[0];
             if (!tier) {
                 let currentPoint = currentReward.quantity;
                 let currentLevel = getLevel(currentPoint);
                 let currentLevelPoint = getPoints(currentLevel);
                 let nextLevelPoint = getPoints(currentLevel + 1);
-                console.log(currentLevelPoint);
-                console.log(currentPoint);
-                console.log(nextLevelPoint);
+                // console.log(currentLevelPoint);
+                // console.log(currentPoint);
+                // console.log(nextLevelPoint);
                 let progress =
                     ((currentPoint - currentLevelPoint) / (nextLevelPoint - currentLevelPoint)) *
                     100;
 
-                console.log(progress);
+                // console.log(progress);
                 let newTier = {
                     currentLevel,
                     nextLevel: currentLevel + 1,
                     currentPoint,
                 };
-                levelProgressSet(progress);
+                // levelProgressSet(progress);
+                levelProgress.current = progress;
                 tierSet((prev) => newTier);
 
                 return;
@@ -111,14 +112,14 @@ const UserTierLevel = ({ session }) => {
             let progress =
                 ((newPoint - currentLevelPoint) / (nextLevelPoint - currentLevelPoint)) * 100;
 
-            console.log(currentLevelPoint);
-            console.log(newPoint);
-            console.log(nextLevelPoint);
+            // console.log(currentLevelPoint);
+            // console.log(newPoint);
+            // console.log(nextLevelPoint);
 
             let newTier;
             if (newPoint > nextLevelPoint) {
-                levelProgressSet(100);
-
+                // levelProgressSet(100);
+                levelProgress.current = 100;
                 levelUpTimeout = setTimeout(() => {
                     onOpen();
 
@@ -127,8 +128,8 @@ const UserTierLevel = ({ session }) => {
                     let newProgress =
                         ((newPoint - currentLevelPoint) / (nextLevelPoint - currentLevelPoint)) *
                         100;
-                    levelProgressSet(newProgress);
-
+                    // levelProgressSet(newProgress);
+                    levelProgress.current = newProgress;
                     newTier = {
                         currentLevel: currentLevel + 1,
                         nextLevel: currentLevel + 2,
@@ -138,7 +139,8 @@ const UserTierLevel = ({ session }) => {
                     clearTimeout(levelUpTimeout);
                 }, 1350);
             } else {
-                levelProgressSet(progress);
+                // levelProgressSet(progress);
+                levelProgress.current = progress;
                 newTier = {
                     currentLevel: currentLevel,
                     nextLevel: currentLevel + 1,
@@ -154,21 +156,54 @@ const UserTierLevel = ({ session }) => {
             minW="100%"
             bg={"brand.neutral4"}
             minH="128px"
-            // h="11.21%"
             h="100%"
             border="1px solid"
             borderRadius={"16px"}
             borderColor="brand.neutral3"
             position={"relative"}
             display="flex"
-            // layout="position"
+            initial={{ opacity: 0, x: "100px", scaleX: "50%" }}
+            animate={{
+                opacity: 1,
+                x: "0px",
+                scaleX: "100%",
+                transition: {
+                    opacity: 1,
+                    duration: 0.5,
+                    // type: "spring",
+                },
+            }}
+            exit={{
+                opacity: 0,
+                zIndex: 0,
+                scaleX: "70%",
+                transition: {
+                    duration: 0.5,
+                },
+            }}
         >
+            {/* <ChakraBox
+                bg={"brand.neutral4"}
+                position={"absolute"}
+                border="1px solid"
+                borderRadius={"16px"}
+                borderColor="brand.neutral3"
+                h="100%"
+                w="100%"
+                initial={{ scaleX: "25%" }}
+                animate={{
+                    scaleX: "100%",
+                    transition: {
+                        duration: 0.45,
+                    },
+                }}
+            /> */}
             <Box
                 display={"flex"}
                 alignItems={"center"}
                 minH="100%"
                 flex="1"
-                // onClick={test}
+                zIndex={2}
                 // onClick={() => test(35)}
             >
                 <UserTierAvatar />
@@ -240,7 +275,6 @@ const UserTierLevel = ({ session }) => {
                                                 cx="24"
                                                 cy="24"
                                                 r="21.5"
-                                                // fill="#132436"
                                                 stroke="url(#paint0_linear_13425_1016)"
                                                 strokeWidth="5"
                                             />
@@ -275,10 +309,12 @@ const UserTierLevel = ({ session }) => {
                                 >
                                     <ChakraBox
                                         initial={{
-                                            width: `${levelProgress}%`,
+                                            width: shouldAnimateInitialRender
+                                                ? 0
+                                                : `${levelProgress?.current}%`,
                                         }}
                                         animate={{
-                                            width: `${levelProgress}%`,
+                                            width: `${levelProgress?.current}%`,
                                         }}
                                         transition={{
                                             type: "spring",
@@ -321,7 +357,7 @@ const UserTierLevel = ({ session }) => {
             <LevelUpModal tier={tier} isOpen={isOpen} onClose={onClose} />
         </ChakraBox>
     );
-};
+});
 
 export default UserTierLevel;
 

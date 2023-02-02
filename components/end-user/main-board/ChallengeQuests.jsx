@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback, useRef } from "react";
 import Enums from "enums";
-import { useUserQuestClaim, useUserQuestSubmit } from "shared/HOC/quest";
+import { useUserQuestClaim, useUserQuestSubmit, withUserQuestQuery } from "shared/HOC/quest";
 
 import { useRouter } from "next/router";
 
@@ -29,20 +29,20 @@ import NftOwnerQuestModal from "../shared/riftly/NftOwnerQuestModal";
 import { HeadingLg, HeadingSm, TextSm } from "@components/riftly/Typography";
 import SmsVerificationQuestModal from "../shared/riftly/SmsVerificationQuestModal";
 
-const ChallengeQuests = ({ currentQuests }) => {
+const ChallengeQuests = ({ userQuests }) => {
     const [filterCompleted, filterCompletedSet] = useState(false);
     const trackFirstRender = useRef(true);
     const [newQuests, newQuestsSet] = useState([]);
     const [completedQuests, completedQuestsSet] = useState([]);
     useEffect(() => {
-        if (currentQuests) {
+        if (userQuests) {
             // trackFirstRender.current = false;
-            let completed = currentQuests.filter((q) => q.hasClaimed === true);
+            let completed = userQuests.filter((q) => q.hasClaimed === true);
             completedQuestsSet(completed);
-            let newQ = currentQuests.filter((q) => q.hasClaimed === false);
+            let newQ = userQuests.filter((q) => q.hasClaimed === false);
             newQuestsSet(newQ);
         }
-    }, [currentQuests, filterCompleted]);
+    }, [userQuests, filterCompleted]);
 
     return (
         <ChakraBox
@@ -62,38 +62,39 @@ const ChallengeQuests = ({ currentQuests }) => {
             />
 
             <Box h="auto" display={"flex"} flexDirection={"column"} gap={"16px"}>
-                {currentQuests
-                    .filter((q) => {
-                        if (filterCompleted) {
-                            return q.hasClaimed === true;
-                        } else {
-                            return q.hasClaimed === false;
-                        }
-                    })
-                    .map((quest, index) => {
-                        return (
-                            <ChakraBox
-                                key={quest.id}
-                                h={{ base: "112px", md: "96px" }}
-                                maxH={{ base: "112px", md: "96px" }}
-                                w="100%"
-                                bg="brand.neutral4"
-                                border="1px solid"
-                                borderColor="brand.neutral3"
-                                borderRadius={"16px"}
-                            >
-                                <Box display="flex" flexDirection={"row"} w="100%">
-                                    <UserQuestBox
-                                        quest={quest}
-                                        index={index}
-                                        key={index}
-                                        currentQuests={currentQuests}
-                                        filterCompleted={filterCompleted}
-                                    />
-                                </Box>
-                            </ChakraBox>
-                        );
-                    })}
+                {userQuests &&
+                    userQuests
+                        .filter((q) => {
+                            if (filterCompleted) {
+                                return q.hasClaimed === true;
+                            } else {
+                                return q.hasClaimed === false;
+                            }
+                        })
+                        .map((quest, index) => {
+                            return (
+                                <ChakraBox
+                                    key={quest.id}
+                                    h={{ base: "112px", md: "96px" }}
+                                    maxH={{ base: "112px", md: "96px" }}
+                                    w="100%"
+                                    bg="brand.neutral4"
+                                    border="1px solid"
+                                    borderColor="brand.neutral3"
+                                    borderRadius={"16px"}
+                                >
+                                    <Box display="flex" flexDirection={"row"} w="100%">
+                                        <UserQuestBox
+                                            quest={quest}
+                                            index={index}
+                                            key={index}
+                                            currentQuests={userQuests}
+                                            filterCompleted={filterCompleted}
+                                        />
+                                    </Box>
+                                </ChakraBox>
+                            );
+                        })}
 
                 {/* {!filterCompleted &&
                     newQuests.map((quest, index) => {
@@ -151,7 +152,7 @@ const ChallengeQuests = ({ currentQuests }) => {
     );
 };
 
-export default ChallengeQuests;
+export default withUserQuestQuery(ChallengeQuests);
 
 const ChallengesHeader = ({ filterCompleted, filterCompletedSet }) => {
     return (

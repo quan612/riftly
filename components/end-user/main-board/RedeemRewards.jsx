@@ -18,44 +18,45 @@ import { ChakraBox } from "@theme/additions/framer/FramerChakraComponent";
 import { RiftlyIcon } from "../shared/riftly/RiftlyIcon";
 import { AnimatePresence } from "framer-motion";
 
-const FeatureQuests = () => {
-    const [featureQuests, featureQuestsSet] = useState([{ id: 1 }]);
-    const onDoFeatureQuest = (key) => {
-        let filterQuest = featureQuests.filter((q) => q.id !== key);
-        featureQuestsSet(filterQuest);
+const RedeemRewards = () => {
+    const [pendingRewards, pendingRewardsSet] = useState([
+        { id: 1 },
+        { id: 2 },
+        { id: 3 },
+        { id: 4 },
+        { id: 5 },
+        { id: 6 },
+        { id: 7 },
+        { id: 8 },
+        { id: 9 },
+    ]);
+    const onClaimReward = (key) => {
+        let filterRewards = pendingRewards.filter((q) => q.id !== key);
+        pendingRewardsSet(filterRewards);
     };
     return (
         <AnimatePresence>
-            {featureQuests.length > 0 && (
+            {pendingRewards.length > 0 && (
                 <ChakraBox
                     display="flex"
                     flexDirection={"column"}
-                    // initial={{ opacity: 0 }}
-                    // animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
+                    exit={{ opacity: 0, transition: { duration: 0.65 } }}
                     gap={"16px"}
                 >
                     <Heading color="white" fontWeight="600" size="md">
-                        Featured
+                        Redeem Rewards
                     </Heading>
 
-                    <Box
-                        display={"flex"}
-                        overflowX={"auto"}
-                        position="relative"
-                        gap="16px"
-                        overflowY={"none"}
-                    >
-                        {featureQuests.map((quest, index) => {
+                    <Box display={"flex"} position="relative" gap="16px" flexWrap={"wrap"}>
+                        {pendingRewards.map((reward, index) => {
                             return (
-                                <FeatureCard
+                                <RewardCard
                                     image={"/img/user/feature-1.png"}
-                                    quest={quest}
-                                    key={quest.id}
-                                    id={quest.id}
-                                    doFeatureQuest={onDoFeatureQuest}
+                                    reward={reward}
+                                    key={reward.id}
+                                    id={reward.id}
+                                    onAction={onClaimReward}
                                 />
-                                // <Box bg={"brand.neutral4"} borderRadius="16px" h="259px" minW="200px"></Box>
                             );
                         })}
                     </Box>
@@ -65,11 +66,11 @@ const FeatureQuests = () => {
     );
 };
 
-export default FeatureQuests;
+export default RedeemRewards;
 
-const FeatureCard = ({ image, id, doFeatureQuest }) => {
+const RewardCard = ({ image, id, onAction }) => {
     return (
-        <Box bg={"brand.neutral4"} borderRadius="16px" h="259px" w="auto" minW="200px" maxW="33%">
+        <Box bg={"brand.neutral4"} borderRadius="16px" h="259px" w="auto" minW="200px" maxW="31%">
             <Flex direction={{ base: "column" }} h="100%">
                 <Box position="relative" h="37%" minH={"37%"} maxH="37%!important">
                     <Image
@@ -82,7 +83,7 @@ const FeatureCard = ({ image, id, doFeatureQuest }) => {
                 </Box>
                 <Flex flexDirection="column" justify="space-between" h="63%" py="4" px="4">
                     <Body />
-                    <Footer id={id} doFeatureQuest={doFeatureQuest} />
+                    <Footer id={id} onAction={onAction} />
                 </Flex>
             </Flex>
         </Box>
@@ -105,7 +106,7 @@ const Body = ({ quest }) => {
     );
 };
 
-const Footer = ({ id, doFeatureQuest }) => {
+const Footer = ({ id, onAction }) => {
     return (
         <Flex align="start" alignItems={"center"} justify="space-between" mt="25px">
             <Flex alignItems={"center"} gap="5px">
@@ -125,9 +126,9 @@ const Footer = ({ id, doFeatureQuest }) => {
                 borderRadius="48px"
                 px="24px"
                 py="5px"
-                onClick={() => doFeatureQuest(id)}
+                onClick={() => onAction(id)}
             >
-                Test
+                Redeem
             </Button>
         </Flex>
     );
