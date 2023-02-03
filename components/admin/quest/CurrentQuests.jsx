@@ -45,12 +45,13 @@ import {
     Icon,
 } from "@chakra-ui/react";
 import AdminCard from "@components/chakra/card/AdminCard";
-import { BsCheckLg } from "react-icons/bs";
+
 import { BiEdit } from "react-icons/bi";
 import { AiFillDelete } from "react-icons/ai";
 import { MdPreview } from "react-icons/md";
 import EditQuestModal from "./EditQuestModal";
 import AddQuestModal from "./AddQuestModal";
+import { RiftlyCheckMark, RiftlyEditIcon } from "@components/riftly/Misc";
 
 const CurrentQuests = ({ quests, isLoading, error }) => {
     let router = useRouter();
@@ -173,26 +174,11 @@ const CurrentQuests = ({ quests, isLoading, error }) => {
                                                 </Text>
                                             )}
                                         </Td>
-                                        <Td>
-                                            {quest.isEnabled && (
-                                                <Icon
-                                                    transition="0.8s"
-                                                    color="green.300"
-                                                    as={BsCheckLg}
-                                                />
-                                            )}
-                                        </Td>
+                                        <Td>{quest.isEnabled && <RiftlyCheckMark />}</Td>
 
                                         <Td>
                                             <Flex gap="2">
-                                                <Icon
-                                                    transition="0.8s"
-                                                    color="green.300"
-                                                    boxSize={5}
-                                                    as={BiEdit}
-                                                    _hover={{
-                                                        cursor: "pointer",
-                                                    }}
+                                                <RiftlyEditIcon
                                                     onClick={() => {
                                                         editQuestRef.current = quest;
                                                         editQuestModal.onOpen();

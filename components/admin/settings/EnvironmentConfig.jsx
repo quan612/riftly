@@ -31,12 +31,7 @@ import {
 } from "@chakra-ui/react";
 import Card from "@components/chakra/card/Card";
 
-import { BsInfoCircle } from "react-icons/bs";
-
-const InfoIcon = React.forwardRef(function MyComponent(props, ref) {
-    //  Spread the props to the underlying DOM element.
-    return <Icon as={BsInfoCircle} ms={"5px"} ref={ref} />;
-});
+import { RiftlyTooltip } from "@components/riftly/Misc";
 
 const EnvironmentConfig = () => {
     const bg = useColorModeValue("white", "#1B254B");
@@ -152,17 +147,7 @@ const EnvironmentConfig = () => {
                                                         position={"relative"}
                                                     >
                                                         Bot token
-                                                        <Tooltip
-                                                            placement="top"
-                                                            label="Bot needs at least SEND_MESSAGE permission on the server"
-                                                        >
-                                                            <span>
-                                                                <Icon
-                                                                    as={BsInfoCircle}
-                                                                    ms={"5px"}
-                                                                />
-                                                            </span>
-                                                        </Tooltip>
+                                                        <RiftlyTooltip label="Bot needs at least SEND_MESSAGE permission on the server" />
                                                     </FormLabel>
 
                                                     <Field
@@ -430,18 +415,7 @@ const EnvironmentConfig = () => {
                                             <GridItem colSpan={{ base: 3 }}>
                                                 <Heading size="lg" text="white">
                                                     Google Analytics
-                                                    <Tooltip
-                                                        placement="top"
-                                                        label="Still need a process env of private key as it cannot be stored here"
-                                                    >
-                                                        <span>
-                                                            <Icon
-                                                                color="red"
-                                                                as={BsInfoCircle}
-                                                                ms={"5px"}
-                                                            />
-                                                        </span>
-                                                    </Tooltip>
+                                                    <RiftlyTooltip label="Still need a process env of private key as it cannot be stored here" />
                                                 </Heading>
                                             </GridItem>
 

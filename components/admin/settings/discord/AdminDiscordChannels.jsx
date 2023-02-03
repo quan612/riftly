@@ -1,15 +1,44 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { Tooltip } from "@chakra-ui/react";
-
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { object, array, string, number } from "yup";
 
-import { useAdminQuestSoftDelete, withAdminQuestQuery } from "shared/HOC/quest";
 import { debounce } from "utils/";
 import {
     useAdminDiscordChannelsMutation,
     useAdminDiscordChannelsQuery,
 } from "@shared/HOC/settings";
+import Card from "@components/chakra/card/Card";
+
+import {
+    Heading,
+    Box,
+    Flex,
+    Table,
+    Tbody,
+    Th,
+    Thead,
+    Tr,
+    Td,
+    Text,
+    Button,
+    useColorMode,
+    useColorModeValue,
+    SimpleGrid,
+    FormControl,
+    FormLabel,
+    FormErrorMessage,
+    Input,
+    Switch,
+    Select,
+    Checkbox,
+    GridItem,
+    Tooltip,
+    useToast,
+    Icon,
+} from "@chakra-ui/react";
+
+import AdminCard from "@components/chakra/card/AdminCard";
+import { RiftlyTooltip } from "@components/riftly/Misc";
 
 const AdminDiscordChannels = () => {
     const [discordChannels, isLoadingDiscordChannels] = useAdminDiscordChannelsQuery();
@@ -25,12 +54,15 @@ const AdminDiscordChannels = () => {
 
     const handleOnPostMessageChange = async (e, discord) => {
         e.preventDefault();
-        if (discord.postMessageWhenClaimed !== e.target.checked) {
+
+        let val = e.target.checked;
+        if (discord.postMessageWhenClaimed !== val) {
             const payload = {
                 ...discord,
-                postMessageWhenClaimed: e.target.checked,
+                postMessageWhenClaimed: val,
                 isCreated: false,
             };
+
             await upsertChannelAsync(payload);
         }
     };
@@ -41,121 +73,102 @@ const AdminDiscordChannels = () => {
     );
 
     const debouncedIsPostMessageChangeHandler = useCallback(
-        debounce((e, discord) => handleOnPostMessageChange(e, discord), 800),
+        debounce((val, discord) => handleOnPostMessageChange(val, discord), 800),
         []
     );
 
     return (
-        <div className="row">
-            <div className="col-xxl-12">
-                <h4 className="card-title mb-3">Create Channel</h4>
-                <div className="card">
-                    <div className="card-body">
-                        <CreateDiscordChannel upsertChannelAsync={upsertChannelAsync} />
-                    </div>
-                </div>
-            </div>
-            <div className="col-xl-12">
-                <h4 className="card-title mb-3">Current Channels</h4>
-                <div className="card">
-                    <div className="card-body">
-                        <div className="table-responsive api-table">
-                            <table className="table">
-                                <thead>
-                                    <tr>
-                                        <th>Channel</th>
-                                        <th>Channel Id</th>
-                                        <th>
-                                            Status
-                                            <Tooltip
-                                                placement="top"
-                                                label="Disabled Channel will not be listed under Reward User Page"
-                                                aria-label="A tooltip"
-                                                fontSize="md"
-                                            >
-                                                <i
-                                                    className="ms-2 bi bi-info-circle"
-                                                    data-toggle="tooltip"
-                                                    title="Tooltip on top"
-                                                ></i>
-                                            </Tooltip>
-                                        </th>
-                                        <th>
-                                            Post Message
-                                            <Tooltip
-                                                placement="top"
-                                                label="Allow to post an embeded message to this channel once user claimed a reward"
-                                                aria-label="A tooltip"
-                                                fontSize="md"
-                                            >
-                                                <i
-                                                    className="ms-2 bi bi-info-circle"
-                                                    data-toggle="tooltip"
-                                                    title="Tooltip on top"
-                                                ></i>
-                                            </Tooltip>
-                                        </th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {discordChannels &&
-                                        discordChannels.map((discord, index) => {
-                                            return (
-                                                <tr key={index}>
-                                                    <td>{discord.channel}</td>
-                                                    <td>{discord.channelId}</td>
-                                                    <td>
-                                                        <div className="form-check form-switch">
+        <Box w="100%" display={"flex"} flexDirection="column" gap="24px">
+            <Heading color="#fff" size="md">
+                Create Channel
+            </Heading>
+            <CreateDiscordChannel upsertChannelAsync={upsertChannelAsync} />
+
+            <Heading color="#fff" size="md">
+                Current Channels
+            </Heading>
+
+            <AdminCard>
+                <Table variant="simple">
+                    <Thead>
+                        <Tr my=".8rem" pl="0px" color="gray.400" fontSize="18px">
+                            <Th>Channel</Th>
+                            <Th>Channel Id</Th>
+                            <Th>
+                                Status
+                                <RiftlyTooltip label="Disabled Channel will not be listed under Reward User Page" />
+                            </Th>
+                            <Th>
+                                Post Message
+                                <RiftlyTooltip label="Allow to post an embeded message to this channel once user claimed a reward" />
+                            </Th>
+                            <Th>Action</Th>
+                        </Tr>
+                    </Thead>
+                    <Tbody>
+                        {discordChannels &&
+                            discordChannels.map((discord, index) => {
+                                return (
+                                    <Tr key={index}>
+                                        <Td>{discord.channel}</Td>
+                                        <Td>{discord.channelId}</Td>
+                                        <Td>
+                                            {/* <div className="form-check form-switch">
                                                             <input
                                                                 className="form-check-input"
                                                                 type="checkbox"
-                                                                defaultChecked={
-                                                                    discord.isEnabled ? true : false
-                                                                }
-                                                                onChange={(e) =>
-                                                                    debouncedStatusChangeHandler(
-                                                                        e,
-                                                                        discord
-                                                                    )
-                                                                }
+                                                                
                                                             />
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div className="form-check form-switch">
-                                                            <input
-                                                                className="form-check-input"
-                                                                type="checkbox"
-                                                                defaultChecked={
-                                                                    discord.postMessageWhenClaimed
-                                                                        ? true
-                                                                        : false
-                                                                }
-                                                                onChange={(e) =>
-                                                                    debouncedIsPostMessageChangeHandler(
-                                                                        e,
-                                                                        discord
-                                                                    )
-                                                                }
-                                                            />
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <span>
-                                                            <i className="ri-delete-bin-line"></i>
-                                                        </span>
-                                                    </td>
-                                                </tr>
-                                            );
-                                        })}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+                                                        </div> */}
+                                            <Switch
+                                                id="-discord-channel-status"
+                                                defaultChecked={discord.isEnabled ? true : false}
+                                                onChange={(e) =>
+                                                    debouncedStatusChangeHandler(e, discord)
+                                                }
+                                            />
+                                        </Td>
+                                        <Td>
+                                            <Switch
+                                                id="post-discord-channel-message"
+                                                defaultChecked={
+                                                    discord.postMessageWhenClaimed ? true : false
+                                                }
+                                                onChange={(e) =>
+                                                    debouncedIsPostMessageChangeHandler(e, discord)
+                                                }
+                                            />
+                                        </Td>
+                                        <Td>
+                                            {/* <Icon
+                                               
+                                                transition="0.8s"
+                                                color="red.300"
+                                                boxSize={7}
+                                                as={AiFillDelete}
+                                                _hover={{
+                                                    cursor: "pointer",
+                                                    color: "red.600",
+                                                }}
+                                                onClick={async () => {
+                                                    // if (
+                                                    //     !window.confirm(
+                                                    //         "Proceed to soft delete discord channel "
+                                                    //     )
+                                                    // ) {
+                                                    //     return;
+                                                    // }
+                                                    // handleQuestSoftDelete(quest);
+                                                }}
+                                            /> */}
+                                        </Td>
+                                    </Tr>
+                                );
+                            })}
+                    </Tbody>
+                </Table>
+            </AdminCard>
+        </Box>
     );
 };
 
@@ -172,6 +185,8 @@ const CreateDiscordChannelSchema = object().shape({
 });
 
 function CreateDiscordChannel({ upsertChannelAsync }) {
+    const bg = useColorModeValue("white", "#1B254B");
+    const shadow = useColorModeValue("0px 18px 40px rgba(112, 144, 176, 0.12)", "none");
     return (
         <>
             <Formik
@@ -196,69 +211,91 @@ function CreateDiscordChannel({ upsertChannelAsync }) {
                 }}
             >
                 {({ errors, status, touched }) => (
-                    <Form>
-                        <div className="row">
-                            <div className="col-xxl-6 col-xl-6 col-lg-6 mb-3">
-                                <label className="form-label">Channel (#deep-sea-challenger)</label>
-                                <Field
-                                    name="channel"
-                                    type="text"
-                                    className={
-                                        "form-control" +
-                                        (errors?.channel && touched?.channel ? " is-invalid" : "")
-                                    }
-                                />
-                                <ErrorMessage
-                                    name="channel"
-                                    component="div"
-                                    className="invalid-feedback"
-                                />
-                            </div>
-                            <div className="col-xxl-6 col-xl-6 col-lg-6 mb-3">
-                                <label className="form-label">Channel Id</label>
-                                <Field
-                                    name="channelId"
-                                    type="text"
-                                    className={
-                                        "form-control" +
-                                        (errors?.channelId && touched?.channelId
-                                            ? " is-invalid"
-                                            : "")
-                                    }
-                                />
-                                <ErrorMessage
-                                    name="channelId"
-                                    component="div"
-                                    className="invalid-feedback"
-                                />
-                            </div>
-                            <div
-                                className={`col-12 mb-3 text-danger ${
-                                    status ? "d-block" : "d-none"
-                                }`}
+                    <Box w="100%">
+                        <Form>
+                            <Flex
+                                flexDirection={{
+                                    base: "row",
+                                }}
+                                w="100%"
+                                h="100%"
+                                justifyContent="center"
+                                gap="16px"
                             >
-                                <label className="form-label">API error: {status}</label>
-                            </div>
-                        </div>
+                                <Card boxShadow={shadow} py="8" bg={bg}>
+                                    <SimpleGrid
+                                        columns={{ base: 1, lg: 3 }}
+                                        columnGap={10}
+                                        rowGap={4}
+                                        w="full"
+                                    >
+                                        <GridItem colSpan={{ base: 1 }}>
+                                            <FormControl
+                                                mb="24px"
+                                                isRequired
+                                                isInvalid={errors.channel && touched.channel}
+                                            >
+                                                <FormLabel ms="4px" fontSize="md" fontWeight="bold">
+                                                    Channel (#deep-sea-challenger)
+                                                </FormLabel>
 
-                        <div className="mt-3">
-                            <button type="submit" className="btn btn-primary me-2">
-                                Save
-                            </button>
-                        </div>
-                    </Form>
+                                                <Field
+                                                    as={Input}
+                                                    size="lg"
+                                                    name="channel"
+                                                    type="text"
+                                                    variant="auth"
+                                                    placeholder="Channel name"
+                                                />
+                                                <FormErrorMessage fontSize="md">
+                                                    {errors.channel}
+                                                </FormErrorMessage>
+                                            </FormControl>
+                                        </GridItem>
+
+                                        <GridItem colSpan={{ base: 1, lg: 2 }}>
+                                            <FormControl
+                                                isRequired
+                                                isInvalid={errors.channel && touched.channel}
+                                            >
+                                                <FormLabel ms="4px" fontSize="md" fontWeight="bold">
+                                                    Channel Id
+                                                </FormLabel>
+
+                                                <Field
+                                                    as={Input}
+                                                    size="lg"
+                                                    name="channelId"
+                                                    type="text"
+                                                    variant="auth"
+                                                    placeholder="Channel Id"
+                                                />
+                                                <FormErrorMessage fontSize="md">
+                                                    {errors.channelId}
+                                                </FormErrorMessage>
+                                            </FormControl>
+                                        </GridItem>
+
+                                        {status && (
+                                            <Text fontSize="md" color="red.500" width={"100%"}>
+                                                {status}
+                                            </Text>
+                                        )}
+
+                                        <Button
+                                            w={{ base: "200px" }}
+                                            type="submit"
+                                            colorScheme="teal"
+                                        >
+                                            Submit
+                                        </Button>
+                                    </SimpleGrid>
+                                </Card>
+                            </Flex>
+                        </Form>
+                    </Box>
                 )}
             </Formik>
         </>
     );
-}
-
-function shortByText(a, b) {
-    if (a.text?.toLowerCase() < b.text?.toLowerCase()) {
-        return -1;
-    }
-    if (a.text?.toLowerCase() > b.text?.toLowerCase()) {
-        return 1;
-    }
-    return 0;
 }

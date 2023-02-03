@@ -173,18 +173,20 @@ export function Web3Provider({ session, children }) {
             }
 
             if (addresses.length === 0) {
-                setWeb3Error("Account is locked, or is not connected, or is in pending request.");
-                return;
+                throw new Error(
+                    "Account is locked, or is not connected, or is in pending request."
+                );
             }
-            const user = await axios.get(API_USER, {
-                params: {
-                    address: addresses[0],
-                },
-            });
+            const user = await axios
+                .get(API_USER, {
+                    params: {
+                        address: addresses[0],
+                    },
+                })
+                .then((r) => r.data);
 
-            if (!user || !user.data || user.data.isError) {
-                setWeb3Error("User not found, please sign up.");
-                return;
+            if (!user || user.isError) {
+                throw new Error("User not found, please sign up.");
             }
 
             const promise = new Promise((resolve, reject) => {
@@ -197,7 +199,6 @@ export function Web3Provider({ session, children }) {
                         signature = await signer
                             .signMessage(`${Enums.USER_SIGN_MSG}`)
                             .catch((err) => {
-                                console.log(1);
                                 throw new Error("User rejects signing.");
                             });
 
@@ -211,7 +212,7 @@ export function Web3Provider({ session, children }) {
                                 reject(error.message);
                             });
                             clearTimeout(timeout);
-                            resolve(); // if the previous line didn't always throw
+                            resolve();
                         }
                         clearTimeout(timeout);
                         reject("Missing address or signature");
@@ -219,15 +220,15 @@ export function Web3Provider({ session, children }) {
                         clearTimeout(timeout);
                         reject(e);
                     }
-                }, 500);
+                }, 800);
             });
 
             return promise;
         } catch (error) {
             if (error.message.indexOf("user rejected signing") !== -1) {
-                setWeb3Error("User rejected signing message.");
+                throw new Error("User rejected signing");
             } else {
-                setWeb3Error(error.message);
+                throw error;
             }
         }
     };

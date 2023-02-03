@@ -132,6 +132,11 @@ const Settings = () => {
                     variant="signIn"
                     onClick={async () => {
                         console.log("current status", Notification.permission);
+
+                        const notificationTest = new Notification("asd", {
+                            body: "sdsdsdsd",
+                            // icon: ""
+                        });
                     }}
                 >
                     Test

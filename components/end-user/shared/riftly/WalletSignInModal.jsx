@@ -129,26 +129,25 @@ const WalletSignInModal = ({ isOpen, onClose }) => {
                             <Progress size="xs" isIndeterminate w="80%" />
                         )}
 
-                        {currentView === ERROR ||
-                            (web3Error && (
-                                <>
-                                    <Heading color="white" fontSize={"xl"} align="center">
-                                        Error authenticating
-                                    </Heading>
-                                    {error && <Text color="red.300">{error}</Text>}
-                                    {web3Error && <Text color="red.300">{web3Error}</Text>}
+                        {(currentView === ERROR || web3Error) && (
+                            <>
+                                <Heading color="white" fontSize={"xl"} align="center">
+                                    Error authenticating
+                                </Heading>
+                                {error && <Text color="red.300">{error}</Text>}
+                                {web3Error && <Text color="red.300">{web3Error}</Text>}
 
-                                    <Button
-                                        variant="blue"
-                                        onClick={handleOnClose}
-                                        minW="100%"
-                                        borderRadius="24px"
-                                        w="100%"
-                                    >
-                                        Close
-                                    </Button>
-                                </>
-                            ))}
+                                <Button
+                                    variant="blue"
+                                    onClick={handleOnClose}
+                                    minW="100%"
+                                    borderRadius="24px"
+                                    w="100%"
+                                >
+                                    Close
+                                </Button>
+                            </>
+                        )}
 
                         {currentView === AUTHENTICATED && <Text>Redirecting...</Text>}
                     </Flex>

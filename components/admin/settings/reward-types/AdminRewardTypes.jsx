@@ -4,8 +4,39 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import { object, array, string, number } from "yup";
 
 import { debounce } from "utils/";
+import {
+    Heading,
+    Box,
+    Flex,
+    Table,
+    Tbody,
+    Th,
+    Thead,
+    Tr,
+    Td,
+    Text,
+    Button,
+    useColorMode,
+    useColorModeValue,
+    SimpleGrid,
+    FormControl,
+    FormLabel,
+    FormErrorMessage,
+    Input,
+    Switch,
+    Select,
+    Checkbox,
+    GridItem,
+    Tooltip,
+    useToast,
+    Icon,
+    ButtonGroup,
+} from "@chakra-ui/react";
 
 import { useAdminRewardTypeMutation, useRewardTypesQuery } from "@shared/HOC/reward-types";
+import AdminCard from "@components/chakra/card/AdminCard";
+import { RiftlyCheckMark, RiftlyEditIcon, RiftlyTooltip } from "@components/riftly/Misc";
+import Card from "@components/chakra/card/Card";
 
 const AdminRewardTypes = () => {
     const [rewardTypes, isLoadingRewardTypes] = useRewardTypesQuery();
@@ -20,114 +51,83 @@ const AdminRewardTypes = () => {
         isEnabled: true,
     });
 
+    console.log(rewardTypes);
+
     return (
-        <div className="row">
-            <div className="col-xxl-12">
-                <h4 className="card-title mb-3">Create Reward Type</h4>
-                <div className="card">
-                    <div className="card-body">
-                        <CreateRewardTypes
-                            upsertRewardTypeAsync={upsertRewardTypeAsync}
-                            createRewardType={createRewardType}
-                            createRewardTypeSet={createRewardTypeSet}
-                        />
-                    </div>
-                </div>
-            </div>
-            <div className="col-xl-12">
-                <h4 className="card-title mb-3">Current Reward Types</h4>
-                <div className="card">
-                    <div className="card-body">
-                        <div className="table-responsive api-table">
-                            <table className="table">
-                                <thead>
-                                    <tr>
-                                        <th>Reward</th>
-                                        <th>Preview</th>
-                                        <th>Icon</th>
-                                        <th>Enabled</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {rewardTypes &&
-                                        rewardTypes?.map((rewardType, index) => {
-                                            return (
-                                                <tr key={index}>
-                                                    <td>{rewardType.reward}</td>
-                                                    <td>
-                                                        {rewardType?.rewardPreview?.length > 0 && (
-                                                            <img
-                                                                src={`${rewardType?.rewardPreview}`}
-                                                                style={{ width: "120px" }}
-                                                            />
-                                                        )}
-                                                    </td>
-                                                    <td>
-                                                        {rewardType?.rewardIcon?.length > 0 && (
-                                                            <img
-                                                                src={`${rewardType?.rewardIcon}`}
-                                                                style={{ width: "50px" }}
-                                                            />
-                                                        )}
-                                                    </td>
-                                                    <td>
-                                                        {rewardType?.isEnabled && (
-                                                            <i
-                                                                className="ri-check-line"
-                                                                style={{
-                                                                    fontSize: "2rem",
-                                                                    color: "green",
-                                                                }}
-                                                            ></i>
-                                                        )}
-                                                        {!rewardType?.isEnabled && (
-                                                            <i
-                                                                className="ri-close-line"
-                                                                style={{
-                                                                    fontSize: "2rem",
-                                                                    color: "red",
-                                                                }}
-                                                            ></i>
-                                                        )}
-                                                    </td>
-                                                    <td>
-                                                        <span>
-                                                            <i
-                                                                className="ri-edit-line ri-xl"
-                                                                style={{
-                                                                    fontSize: "2rem",
-                                                                }}
-                                                                onClick={() => {
-                                                                    createRewardTypeSet({
-                                                                        id: rewardType.id,
-                                                                        reward: rewardType.reward,
-                                                                        rewardPreview:
-                                                                            rewardType.rewardPreview,
-                                                                        isUpdating: true,
-                                                                        isEnabled:
-                                                                            rewardType.isEnabled,
-                                                                    });
-                                                                }}
-                                                            ></i>
-                                                        </span>
-                                                    </td>
-                                                </tr>
-                                            );
-                                        })}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <Box w="100%" display={"flex"} flexDirection="column" gap="24px">
+            <Heading color="#fff" size="md">
+                Create Reward Type
+            </Heading>
+            <CreateRewardTypes
+                upsertRewardTypeAsync={upsertRewardTypeAsync}
+                createRewardType={createRewardType}
+                createRewardTypeSet={createRewardTypeSet}
+            />
+            <Heading color="#fff" size="md">
+                Current Reward Types
+            </Heading>
+            <AdminCard>
+                <Table variant="simple">
+                    <Thead>
+                        <Tr>
+                            <Th>Reward</Th>
+                            <Th>Preview</Th>
+                            <Th>Icon</Th>
+                            <Th>Enabled</Th>
+                            <Th>Action</Th>
+                        </Tr>
+                    </Thead>
+                    <Tbody>
+                        {rewardTypes &&
+                            rewardTypes?.map((rewardType, index) => {
+                                return (
+                                    <Tr key={index}>
+                                        <Td>{rewardType.reward}</Td>
+                                        <Td>
+                                            {rewardType?.rewardPreview?.length > 0 && (
+                                                <img
+                                                    src={`${rewardType?.rewardPreview}`}
+                                                    style={{ width: "120px" }}
+                                                />
+                                            )}
+                                        </Td>
+                                        <Td>
+                                            {rewardType?.rewardIcon?.length > 0 && (
+                                                <img
+                                                    src={`${rewardType?.rewardIcon}`}
+                                                    style={{ width: "50px" }}
+                                                />
+                                            )}
+                                        </Td>
+                                        <Td>{rewardType?.isEnabled && <RiftlyCheckMark />}</Td>
+                                        <Td>
+                                            <RiftlyEditIcon
+                                                onClick={() => {
+                                                    createRewardTypeSet({
+                                                        id: rewardType.id,
+                                                        reward: rewardType.reward,
+                                                        rewardPreview: rewardType.rewardPreview,
+                                                        isUpdating: true,
+                                                        isEnabled: rewardType.isEnabled,
+                                                    });
+                                                }}
+                                            />
+                                        </Td>
+                                    </Tr>
+                                );
+                            })}
+                    </Tbody>
+                </Table>
+            </AdminCard>
+        </Box>
     );
 };
 
 export default AdminRewardTypes;
 
 function CreateRewardTypes({ upsertRewardTypeAsync, createRewardType, createRewardTypeSet }) {
+    const bg = useColorModeValue("white", "#1B254B");
+    const shadow = useColorModeValue("0px 18px 40px rgba(112, 144, 176, 0.12)", "none");
     const initialValues = createRewardType;
 
     const CreateRewardTypeSchema = object().shape({
@@ -176,7 +176,7 @@ function CreateRewardTypes({ upsertRewardTypeAsync, createRewardType, createRewa
                 enableReinitialize
                 initialValues={initialValues}
                 validationSchema={CreateRewardTypeSchema}
-                validateOnChange={true}
+                validateOnChange={false}
                 validateOnBlur={false}
                 onSubmit={async (fields, { setStatus, resetForm }) => {
                     setStatus(null);
@@ -205,119 +205,191 @@ function CreateRewardTypes({ upsertRewardTypeAsync, createRewardType, createRewa
             >
                 {({ errors, status, touched, setFieldValue, values, resetForm, handleChange }) => {
                     return (
-                        <Form>
-                            <div className="row">
-                                <div className="col-xxl-3 col-xl-3 col-lg-3 mb-3">
-                                    <label className="form-label">Reward Name </label>
-                                    <Field
-                                        name="reward"
-                                        type="text"
-                                        className={
-                                            "form-control" +
-                                            (errors?.reward && touched?.reward ? " is-invalid" : "")
-                                        }
-                                    />
-                                    <ErrorMessage
-                                        name="reward"
-                                        component="div"
-                                        className="invalid-feedback"
-                                    />
-                                </div>
-                                <div className="col-xxl-4 col-xl-4 col-lg-4 mb-3">
-                                    <label className="form-label">Icon</label>
-                                    <br />
-                                    <button
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            e.preventDefault();
-                                            hiddenIconFileInput.current.click();
-                                        }}
-                                        className="btn btn-primary me-2"
-                                    >
-                                        <div>
-                                            <span>Choose File</span>
-                                        </div>
-                                    </button>
-                                    {imageIcon && imageIcon.name}
-                                    <input
-                                        type="file"
-                                        name="file"
-                                        accept="image/jpeg, image/png"
-                                        style={{ display: "none" }}
-                                        ref={hiddenIconFileInput}
-                                        onChange={(e) => handleOnRewardIconChange(e, setFieldValue)}
-                                    />
-                                </div>
-                                <div className="col-xxl-6 col-xl-6 col-lg-6 mb-3">
-                                    <label className="form-label">
-                                        Image Preview URL (For Discord Embeded)
-                                    </label>
-                                    <br />
-                                    <Field
-                                        name="rewardPreview"
-                                        type="text"
-                                        className={
-                                            "form-control" +
-                                            (errors?.rewardPreview && touched?.rewardPreview
-                                                ? " is-invalid"
-                                                : "")
-                                        }
-                                    />
-                                </div>
-                                <div className="col-12">
-                                    <div className="form-check form-switch">
-                                        <input
-                                            className="form-check-input"
-                                            type="checkbox"
-                                            // defaultChecked={values.isEnabled ? true : false}
-                                            checked={values.isEnabled ? true : false}
-                                            name="isEnabled"
-                                            onChange={handleChange}
-                                        />
-                                        Enabled
-                                    </div>
-                                </div>
-                                <div className="col-xxl-12 col-xl-12 col-lg-12 mb-3">
-                                    <label>
-                                        (Disable Reward Type would hide it from Reward User page)
-                                    </label>
-                                </div>
-                                <div
-                                    className={`col-12 mb-3 text-danger ${
-                                        status ? "d-block" : "d-none"
-                                    }`}
-                                >
-                                    <label className="form-label">API error: {status}</label>
-                                </div>
-                            </div>
-
-                            <div className="mt-3">
-                                <button
-                                    type="submit"
-                                    className="btn btn-outline-primary me-2"
-                                    disabled={getButtonState(values)}
-                                >
-                                    {createRewardType.isUpdating ? "Update" : "Save"}
-                                </button>
-                                <button
-                                    type="button"
-                                    className="btn btn-secondary me-2"
-                                    onClick={() => {
-                                        setImageIcon(null);
-                                        resetForm();
-                                        createRewardTypeSet({
-                                            id: -1,
-                                            reward: "",
-                                            rewardPreview: "",
-                                            isUpdating: false,
-                                            isEnabled: true,
-                                        });
+                        <Box w="100%">
+                            <Form>
+                                <Flex
+                                    flexDirection={{
+                                        base: "row",
                                     }}
+                                    w="100%"
+                                    h="100%"
+                                    justifyContent="center"
+                                    gap="16px"
                                 >
-                                    Cancel
-                                </button>
-                            </div>
-                        </Form>
+                                    <Card boxShadow={shadow} py="8" bg={bg}>
+                                        <SimpleGrid
+                                            columns={{ base: 1, lg: 3 }}
+                                            columnGap={10}
+                                            rowGap={4}
+                                            w="full"
+                                        >
+                                            <GridItem colSpan={{ base: 1 }}>
+                                                <FormControl
+                                                    mb="24px"
+                                                    isRequired
+                                                    isInvalid={errors.reward && touched.reward}
+                                                >
+                                                    <FormLabel
+                                                        ms="4px"
+                                                        fontSize="md"
+                                                        fontWeight="bold"
+                                                    >
+                                                        Reward Name
+                                                    </FormLabel>
+
+                                                    <Field
+                                                        as={Input}
+                                                        size="lg"
+                                                        name="reward"
+                                                        type="text"
+                                                        variant="auth"
+                                                        placeholder="Reward name"
+                                                    />
+                                                    <FormErrorMessage fontSize="md">
+                                                        {errors.reward}
+                                                    </FormErrorMessage>
+                                                </FormControl>
+                                            </GridItem>
+
+                                            <GridItem colSpan={{ base: 1 }}>
+                                                <FormControl>
+                                                    <FormLabel
+                                                        ms="4px"
+                                                        fontSize="md"
+                                                        fontWeight="bold"
+                                                    >
+                                                        Icon
+                                                    </FormLabel>
+                                                    <Button
+                                                        variant="signIn"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            e.preventDefault();
+                                                            hiddenIconFileInput.current.click();
+                                                        }}
+                                                        className="btn btn-primary me-2"
+                                                    >
+                                                        <Box>
+                                                            <span>Choose File</span>
+                                                        </Box>
+                                                    </Button>
+                                                    {imageIcon && imageIcon.name}
+                                                    <input
+                                                        type="file"
+                                                        name="file"
+                                                        accept="image/jpeg, image/png"
+                                                        style={{ display: "none" }}
+                                                        ref={hiddenIconFileInput}
+                                                        onChange={(e) =>
+                                                            handleOnRewardIconChange(
+                                                                e,
+                                                                setFieldValue
+                                                            )
+                                                        }
+                                                    />
+                                                </FormControl>
+                                            </GridItem>
+
+                                            <GridItem colSpan={{ base: 2 }}>
+                                                <FormControl mb="24px">
+                                                    <FormLabel
+                                                        ms="4px"
+                                                        fontSize="md"
+                                                        fontWeight="bold"
+                                                    >
+                                                        Image Preview URL (For Discord Embeded)
+                                                    </FormLabel>
+
+                                                    <Field
+                                                        as={Input}
+                                                        size="lg"
+                                                        name="rewardPreview"
+                                                        type="text"
+                                                        variant="auth"
+                                                        placeholder="Reward Image Url"
+                                                    />
+                                                </FormControl>
+                                            </GridItem>
+
+                                            <GridItem colSpan={{ base: 1 }}>
+                                                <FormControl
+                                                    display="flex"
+                                                    flexDirection={"column"}
+                                                    gap="4px"
+                                                >
+                                                    <FormLabel
+                                                        htmlFor="quest-alerts"
+                                                        color="#fff"
+                                                        flex="80%"
+                                                    >
+                                                        Notify me about new Challenges
+                                                        <RiftlyTooltip
+                                                            label="Disable Reward Type would hide it from Reward
+                                                    User page"
+                                                        />
+                                                    </FormLabel>
+
+                                                    <Switch
+                                                        isChecked={values.isEnabled ? true : false}
+                                                        onChange={handleChange}
+                                                    />
+                                                </FormControl>
+                                            </GridItem>
+                                            {/* <div className="col-12">
+                                                <div className="form-check form-switch">
+                                                    <input
+                                                        className="form-check-input"
+                                                        type="checkbox"
+                                                        // defaultChecked={values.isEnabled ? true : false}
+                                                        checked={values.isEnabled ? true : false}
+                                                        name="isEnabled"
+                                                        onChange={handleChange}
+                                                    />
+                                                    Enabled
+                                                </div>
+                                            </div> */}
+
+                                            {status && (
+                                                <Text fontSize="md" color="red.500" width={"100%"}>
+                                                    {status}
+                                                </Text>
+                                            )}
+
+                                            <ButtonGroup gap="24px">
+                                                <Button
+                                                    w={{ base: "200px" }}
+                                                    type="submit"
+                                                    colorScheme="teal"
+                                                    disabled={getButtonState(values)}
+                                                    // isLoading={createRewardType.isUpdating}
+                                                >
+                                                    Save
+                                                </Button>
+
+                                                <Button
+                                                    w={{ base: "200px" }}
+                                                    variant="signIn"
+                                                    onClick={() => {
+                                                        setImageIcon(null);
+
+                                                        createRewardTypeSet({
+                                                            id: -1,
+                                                            reward: "",
+                                                            rewardPreview: "",
+                                                            isUpdating: false,
+                                                            isEnabled: true,
+                                                        });
+                                                        resetForm();
+                                                    }}
+                                                >
+                                                    Cancel
+                                                </Button>
+                                            </ButtonGroup>
+                                        </SimpleGrid>
+                                    </Card>
+                                </Flex>
+                            </Form>
+                        </Box>
                     );
                 }}
             </Formik>

@@ -42,7 +42,6 @@ import {
 } from "@chakra-ui/react";
 
 import Card from "@components/chakra/card/Card";
-import { BsCheckLg } from "react-icons/bs";
 
 const AdminBulkUsersAdd = () => {
     const bg = useColorModeValue("white", "#1B254B");
@@ -215,11 +214,7 @@ const AdminBulkUsersAdd = () => {
                                                             <Td>{usersArray[index].wallet}</Td>
                                                             <Td>
                                                                 {usersArray[index].isValid && (
-                                                                    <Icon
-                                                                        transition="0.8s"
-                                                                        color="green.300"
-                                                                        as={BsCheckLg}
-                                                                    />
+                                                                    <RiftlyCheckMark />
                                                                 )}
                                                                 {!usersArray[index].isValid && (
                                                                     <Text color="red.300">
