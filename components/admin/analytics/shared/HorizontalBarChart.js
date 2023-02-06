@@ -91,9 +91,9 @@ const HorizontalBarChart = ({ clientData }) => {
         },
     };
     return (
-        <>
-            <Bar data={data} height={160} options={options} ref={chartRef} />
-        </>
+
+        <Bar data={data} height={160} options={options} ref={chartRef} />
+
     );
 };
 export default HorizontalBarChart;

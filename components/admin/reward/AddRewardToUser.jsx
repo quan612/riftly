@@ -29,7 +29,7 @@ import {
     Checkbox,
     GridItem,
 } from "@chakra-ui/react";
-import Card from "@components/chakra/card/Card";
+import Card from "@components/riftly/card/Card";
 
 const AddRewardToUser = ({ isSubmitting, onSubmit, mutationError }) => {
     const bg = useColorModeValue("white", "#1B254B");
@@ -311,39 +311,40 @@ const AddRewardToUser = ({ isSubmitting, onSubmit, mutationError }) => {
                                                             Post To Discord
                                                         </FormLabel>
 
-                                                        {discordChannels.map((d, index) => {
-                                                            let isChecked = false;
-                                                            if (
-                                                                values.postInDiscordChannels
-                                                                    .length === 0
-                                                            ) {
-                                                                isChecked = false;
-                                                            } else {
-                                                                let checkIndex =
-                                                                    values.postInDiscordChannels.findIndex(
-                                                                        (c) =>
-                                                                            c.channelId ===
-                                                                            d.channelId
-                                                                    );
-
-                                                                if (checkIndex === -1) {
+                                                        <Box display={"flex"} gap="16px">
+                                                            {discordChannels.map((d, index) => {
+                                                                let isChecked = false;
+                                                                if (
+                                                                    values.postInDiscordChannels
+                                                                        .length === 0
+                                                                ) {
                                                                     isChecked = false;
                                                                 } else {
-                                                                    if (
-                                                                        values
-                                                                            .postInDiscordChannels[
-                                                                            checkIndex
-                                                                        ].toPost
-                                                                    )
-                                                                        isChecked = true;
-                                                                }
-                                                            }
+                                                                    let checkIndex =
+                                                                        values.postInDiscordChannels.findIndex(
+                                                                            (c) =>
+                                                                                c.channelId ===
+                                                                                d.channelId
+                                                                        );
 
-                                                            return (
-                                                                <div className="col-12" key={index}>
+                                                                    if (checkIndex === -1) {
+                                                                        isChecked = false;
+                                                                    } else {
+                                                                        if (
+                                                                            values
+                                                                                .postInDiscordChannels[
+                                                                                checkIndex
+                                                                            ].toPost
+                                                                        )
+                                                                            isChecked = true;
+                                                                    }
+                                                                }
+
+                                                                return (
                                                                     <FormControl
                                                                         display="flex"
                                                                         alignItems="center"
+                                                                        key={index}
                                                                     >
                                                                         <Switch
                                                                             isChecked={isChecked}
@@ -393,9 +394,9 @@ const AddRewardToUser = ({ isSubmitting, onSubmit, mutationError }) => {
                                                                             {d.channel}
                                                                         </FormLabel>
                                                                     </FormControl>
-                                                                </div>
-                                                            );
-                                                        })}
+                                                                );
+                                                            })}
+                                                        </Box>
                                                     </FormControl>
                                                 )}
                                             </GridItem>

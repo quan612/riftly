@@ -25,7 +25,7 @@ export const Web3Context = React.createContext();
 export function Web3Provider({ session, children }) {
     const [web3Error, setWeb3Error] = useState(null);
 
-    let signMessageTimeout;
+    let signMessageTimeout, adminSignTimeout;
 
     function iOS() {
         return (
@@ -54,6 +54,7 @@ export function Web3Provider({ session, children }) {
             if (signMessageTimeout) {
                 clearTimeout(signMessageTimeout);
             }
+            if (adminSignTimeout) clearTimeout(adminSignTimeout);
         };
     }, []);
 
@@ -114,38 +115,65 @@ export function Web3Provider({ session, children }) {
 
         try {
             if (addresses.length === 0) {
-                setWeb3Error("Account is locked, or is not connected, or is in pending request.");
-                return;
+                throw new Error(
+                    "Account is locked, or is not connected, or is in pending request."
+                );
             }
 
-            const admin = await axios.get(API_ADMIN, {
-                params: {
-                    address: addresses[0],
-                },
+            const admin = await axios
+                .get(API_ADMIN, {
+                    params: {
+                        address: addresses[0],
+                    },
+                })
+                .then((r) => r.data);
+
+            if (!admin) {
+                throw new Error("Cannot authenticate as admin with current wallet account");
+            }
+
+            const nonce = admin.nonce.trim();
+
+            const promise = new Promise((resolve, reject) => {
+                adminSignTimeout = setTimeout(async () => {
+                    const signer = await providerInstance.getSigner();
+                    let signature;
+                    try {
+                        signature = await signer
+                            .signMessage(`${Enums.ADMIN_SIGN_MSG}: ${nonce}`)
+                            .catch((err) => {
+                                throw new Error("User rejects signing.");
+                            });
+                    } catch (error) {
+                        clearTimeout(adminSignTimeout);
+                        reject(error);
+                    }
+
+                    if (signature && addresses[0]) {
+                        signIn("admin-authenticate", {
+                            redirect: true,
+                            signature,
+                            address: addresses[0],
+                        }).catch((error) => {
+                            reject(error.message);
+                        });
+                        clearTimeout(adminSignTimeout);
+                        resolve();
+                    }
+                    reject("Missing address or signature");
+                }, 500);
             });
-
-            if (!admin.data) {
-                setWeb3Error("Cannot authenticate as admin with current wallet account");
-                return;
+            return promise;
+        } catch (error) {
+            if (error.message.indexOf("user rejected signing") !== -1) {
+                throw new Error("User rejected signing");
+            } else {
+                throw error;
             }
-
-            const nonce = admin.data.nonce.trim();
-
-            signMessageTimeout = setTimeout(async () => {
-                const signer = await providerInstance.getSigner();
-                const signature = await signer.signMessage(`${Enums.ADMIN_SIGN_MSG}: ${nonce}`);
-                const address = await signer.getAddress();
-
-                await signIn("admin-authenticate", {
-                    redirect: true,
-                    signature,
-                    address,
-                });
-            }, 1000);
-        } catch (error) {}
+        }
     };
 
-    const signInWithWallet = async (walletType) => {
+    const signInWithWallet = async (walletType, redirect = false) => {
         if (!walletType) {
             throw new Error("Missing wallet type.");
         }
@@ -203,16 +231,28 @@ export function Web3Provider({ session, children }) {
                             });
 
                         if (signature && addresses[0]) {
-                            signIn("non-admin-authenticate", {
-                                redirect: true,
-                                signature,
-                                address: addresses[0],
-                            }).catch((error) => {
-                                setWeb3Error(error.message);
-                                reject(error.message);
-                            });
-                            clearTimeout(timeout);
-                            resolve();
+                            if (redirect) {
+                                signIn("non-admin-authenticate", {
+                                    redirect,
+                                    signature,
+                                    address: addresses[0],
+                                    callbackUrl: `${window.location.origin}`,
+                                }).catch((error) => {
+                                    reject(error.message);
+                                });
+                                clearTimeout(timeout);
+                                resolve();
+                            } else {
+                                signIn("non-admin-authenticate", {
+                                    redirect: false,
+                                    signature,
+                                    address: addresses[0],
+                                }).catch((error) => {
+                                    reject(error.message);
+                                });
+                                clearTimeout(timeout);
+                                resolve();
+                            }
                         }
                         clearTimeout(timeout);
                         reject("Missing address or signature");

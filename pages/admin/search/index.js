@@ -1,12 +1,15 @@
 import React from "react";
-import AdminUserRewardSearch from "@components/admin/search/users/AdminUserRewardSearch";
-import AdminSearchLayout from "@components/layout/AdminSearchLayout";
+import { AdminLayout } from "/components/admin";
+import dynamic from "next/dynamic";
+const AdminUserRewardSearchComponent = dynamic(() =>
+    import("@components/admin/search/users/AdminUserRewardSearch")
+);
 
 const AdminUserRewardSearchPage = () => {
-    return <AdminUserRewardSearch />;
+    return <AdminUserRewardSearchComponent />;
 };
 
-AdminUserRewardSearchPage.Layout = AdminSearchLayout;
+AdminUserRewardSearchPage.Layout = AdminLayout;
 AdminUserRewardSearchPage.requireAdmin = true;
 export default AdminUserRewardSearchPage;
 

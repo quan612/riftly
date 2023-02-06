@@ -21,8 +21,9 @@ import { AnimatePresence, motion, AnimateSharedLayout, LayoutGroup } from "frame
 import { useQueryClient } from "react-query";
 import { RiftlyIcon } from "../shared/riftly/RiftlyIcon";
 import { HeadingLg, HeadingSm, TextSm } from "@components/riftly/Typography";
+import UserTierLevel from "./dashboard/UserTierLevel";
 
-const Achievements = () => {
+const Achievements = ({ session }) => {
     let achievementsArray = [
         {
             id: 1,
@@ -76,125 +77,143 @@ const Achievements = () => {
             progress: 70,
         },
     ];
+    let levelProgress = useRef(0);
     return (
-        <ChakraBox
-            display="flex"
-            flexDirection={"column"}
-            gap={"16px"}
-            position={"relative"}
-            minH="auto"
-        >
-            <AchievementHeader />
+        <>
+            <UserTierLevel ref={levelProgress} session={session} />
 
-            <Box h="auto" display={"flex"} flexDirection={"column"} gap={"64px"}>
-                {achievementsArray &&
-                    achievementsArray.map((achievement, index) => {
-                        const { id, isClaimed, isLocked, text, description, quantity, progress } =
-                            achievement;
-                        return (
-                            <Box position={"relative"}>
-                                <Grid templateColumns={"1fr 3fr"} zIndex={"2"} position="relative">
-                                    <GridItem position="relative">
-                                        <Box
-                                            position={"relative"}
-                                            w="100%"
-                                            h="100%"
-                                            display={"flex"}
-                                            alignItems="center"
-                                        >
+            <Box
+                display="flex"
+                flexDirection={"column"}
+                gap={"16px"}
+                position={"relative"}
+                minH="auto"
+            >
+                <AchievementHeader />
+
+                <Box h="auto" display={"flex"} flexDirection={"column"} gap={"64px"}>
+                    {achievementsArray &&
+                        achievementsArray.map((achievement, index) => {
+                            const {
+                                id,
+                                isClaimed,
+                                isLocked,
+                                text,
+                                description,
+                                quantity,
+                                progress,
+                            } = achievement;
+                            return (
+                                <Box position={"relative"} key={index}>
+                                    <Grid
+                                        templateColumns={"1fr 3fr"}
+                                        zIndex={"2"}
+                                        position="relative"
+                                    >
+                                        <GridItem position="relative">
                                             <Box
-                                                w="50%"
-                                                h="auto"
-                                                zIndex={"1"}
+                                                position={"relative"}
+                                                w="100%"
+                                                h="100%"
                                                 display={"flex"}
                                                 alignItems="center"
-                                                justifyContent={"center"}
                                             >
-                                                {!isLocked && (
-                                                    <Flex
-                                                        position={"relative"}
-                                                        alignItems="center"
-                                                        justifyContent={"center"}
-                                                        w="80%"
-                                                        h="80%"
-                                                        bg="brand.neutral5"
-                                                    >
-                                                        <Circle stroke={getColor(achievement)} />
-                                                    </Flex>
-                                                )}
-                                                {isLocked && (
-                                                    <Flex
-                                                        position={"relative"}
-                                                        alignItems="center"
-                                                        justifyContent={"center"}
-                                                        w="100%"
-                                                        h="100%"
-                                                        bg="brand.neutral5"
-                                                    >
-                                                        <CircleProgress progress={progress} />
-                                                    </Flex>
-                                                )}
                                                 <Box
-                                                    position="absolute"
-                                                    display="flex"
-                                                    justifyContent="center"
+                                                    w="50%"
+                                                    h="auto"
+                                                    zIndex={"1"}
+                                                    display={"flex"}
+                                                    alignItems="center"
+                                                    justifyContent={"center"}
                                                 >
-                                                    <Heading
-                                                        fontWeight="700"
-                                                        size="md"
-                                                        color={getColor(achievement)}
+                                                    {!isLocked && (
+                                                        <Flex
+                                                            position={"relative"}
+                                                            alignItems="center"
+                                                            justifyContent={"center"}
+                                                            w="80%"
+                                                            h="80%"
+                                                            bg="brand.neutral5"
+                                                        >
+                                                            <Circle
+                                                                stroke={getColor(achievement)}
+                                                            />
+                                                        </Flex>
+                                                    )}
+                                                    {isLocked && (
+                                                        <Flex
+                                                            position={"relative"}
+                                                            alignItems="center"
+                                                            justifyContent={"center"}
+                                                            w="100%"
+                                                            h="100%"
+                                                            bg="brand.neutral5"
+                                                        >
+                                                            <CircleProgress progress={progress} />
+                                                        </Flex>
+                                                    )}
+                                                    <Box
+                                                        position="absolute"
+                                                        display="flex"
+                                                        justifyContent="center"
                                                     >
-                                                        {achievement.id}
-                                                    </Heading>
+                                                        <Heading
+                                                            fontWeight="700"
+                                                            size="md"
+                                                            color={getColor(achievement)}
+                                                        >
+                                                            {achievement.id}
+                                                        </Heading>
+                                                    </Box>
                                                 </Box>
+
+                                                <Box
+                                                    left="10%"
+                                                    w="90%"
+                                                    height="1px"
+                                                    bg={getColor(achievement)}
+                                                    position="absolute"
+                                                    zIndex={0}
+                                                />
                                             </Box>
+                                        </GridItem>
 
+                                        <GridItem>
                                             <Box
-                                                left="10%"
-                                                w="90%"
-                                                height="1px"
-                                                bg={getColor(achievement)}
-                                                position="absolute"
-                                                zIndex={0}
-                                            />
-                                        </Box>
-                                    </GridItem>
-
-                                    <GridItem>
-                                        <ChakraBox
-                                            key={id}
-                                            h={{ base: "112px", md: "96px" }}
-                                            maxH={{ base: "112px", md: "96px" }}
-                                            w="100%"
-                                            bg="brand.neutral4"
-                                            border="1px solid"
-                                            borderColor={getColor(achievement)}
-                                            borderRadius={"16px"}
-                                        >
-                                            <TripBox item={achievement} index={index} />
-                                        </ChakraBox>
-                                    </GridItem>
-                                </Grid>
-                                <Box
-                                    className="achievement-vertical-line"
-                                    h="160px"
-                                    position="absolute"
-                                    left="39.5px"
-                                    top="32px"
-                                    w="1px"
-                                    bg={
-                                        index === achievementsArray.length - 1
-                                            ? "brand.neutral3"
-                                            : getColor(achievement)
-                                    }
-                                    zIndex={"0"}
-                                />
-                            </Box>
-                        );
-                    })}
-                <ComingSoonStrip index={achievementsArray.length + 1} />
+                                                key={id}
+                                                h={{ base: "112px", md: "96px" }}
+                                                maxH={{ base: "112px", md: "96px" }}
+                                                w="100%"
+                                                bg="brand.neutral4"
+                                                border="1px solid"
+                                                borderColor={getColor(achievement)}
+                                                borderRadius={"16px"}
+                                            >
+                                                <TripBox item={achievement} index={index} />
+                                            </Box>
+                                        </GridItem>
+                                    </Grid>
+                                    <Box
+                                        className="achievement-vertical-line"
+                                        h="160px"
+                                        position="absolute"
+                                        left="39.5px"
+                                        top="32px"
+                                        w="1px"
+                                        bg={
+                                            index === achievementsArray.length - 1
+                                                ? "brand.neutral3"
+                                                : getColor(achievement)
+                                        }
+                                        zIndex={"0"}
+                                    />
+                                </Box>
+                            );
+                        })}
+                    <ComingSoonStrip index={achievementsArray.length + 1} />
+                </Box>
             </Box>
-        </ChakraBox>
+        </>
     );
 };
 
@@ -230,7 +249,6 @@ const Circle = ({ style = {}, stroke }) => {
         </svg>
     );
 };
-
 const CircleProgress = ({ progress }) => {
     return (
         <>
@@ -284,11 +302,11 @@ const CircleProgress = ({ progress }) => {
 export default Achievements;
 const AchievementHeader = () => {
     return (
-        <ChakraBox display={"flex"} justifyContent="space-between">
+        <Box display={"flex"} justifyContent="space-between">
             <Heading color="white" fontWeight="600" size="md">
                 Achievements
             </Heading>
-        </ChakraBox>
+        </Box>
     );
 };
 const TripBox = ({ item, index }) => {
@@ -403,7 +421,8 @@ const TripBox = ({ item, index }) => {
                                 <AnimatePresence>
                                     {showScore && (
                                         <ChakraBox
-                                            key={item.id}
+                                            // key={item.id}
+                                            key={index}
                                             position={"absolute"}
                                             top="-3"
                                             left="4"

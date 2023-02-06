@@ -32,10 +32,10 @@ import {
     Td,
     Icon,
 } from "@chakra-ui/react";
-import Card from "@components/chakra/card/Card";
+import Card from "@components/riftly/card/Card";
 
 import { useAdminUserQuestsQuery, useAdminUserQuestDelete } from "@shared/HOC/user-quests";
-import AdminCard from "@components/chakra/card/AdminCard";
+import AdminCard from "@components/riftly/card/AdminCard";
 
 const AdminUserQuestsSearch = () => {
     const [queryData, isQuerying, queryUserQuestsAsync] = useAdminUserQuestsQuery();

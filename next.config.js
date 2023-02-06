@@ -1,5 +1,10 @@
 
-module.exports = {
+const withBundleAnalyzer = require("@next/bundle-analyzer")({
+    enabled: false,
+});
+
+
+const config = {
     env: {
         NEXTAUTH_URL: process.env.NEXTAUTH_URL,
     },
@@ -52,3 +57,6 @@ module.exports = {
         ];
     },
 };
+
+
+module.exports = withBundleAnalyzer(config);

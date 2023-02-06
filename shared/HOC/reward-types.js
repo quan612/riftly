@@ -2,12 +2,6 @@ import { useQueryClient, useQuery, useMutation } from "react-query";
 import axios from "axios";
 import { useRouter } from "next/router";
 import Enums from "enums";
-import { utils } from "ethers";
-
-const PENDING_REWARD_SUBMIT = `${Enums.BASEPATH}/api/admin/reward/addPending`;
-const PENDING_REWARD_QUERY = `${Enums.BASEPATH}/api/user/reward/getPending`;
-const USER_GET_CLAIMED_REWARD = `${Enums.BASEPATH}/api/user/reward/getClaimed`;
-const USER_CLAIMED_REWARD = `${Enums.BASEPATH}/api/user/reward/claim`;
 
 export const withRewardTypeQuery =
     (Component) =>

@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { AdminLayout } from "/components/admin";
+import dynamic from "next/dynamic";
+const EnvironmentConfigComponent = dynamic(() => import("@components/admin/settings/EnvironmentConfig"));
 
 const AdminConfigVariable = ({ session }) => {
-    return <EnvironmentConfig />;
+    return <EnvironmentConfigComponent />;
 };
 
 AdminConfigVariable.Layout = AdminLayout;
@@ -11,7 +13,6 @@ export default AdminConfigVariable;
 
 import { unstable_getServerSession } from "next-auth/next";
 import { authOptions } from "pages/api/auth/[...nextauth]";
-import EnvironmentConfig from "@components/admin/settings/EnvironmentConfig";
 
 export async function getServerSideProps(context) {
     const session = await unstable_getServerSession(context.req, context.res, authOptions);

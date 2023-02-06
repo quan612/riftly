@@ -29,7 +29,7 @@ import {
     Icon,
     Divider,
 } from "@chakra-ui/react";
-import Card from "@components/chakra/card/Card";
+import Card from "@components/riftly/card/Card";
 
 import { RiftlyTooltip } from "@components/riftly/Misc";
 

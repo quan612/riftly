@@ -28,7 +28,7 @@ import {
     Tooltip,
     useToast,
 } from "@chakra-ui/react";
-import Card from "@components/chakra/card/Card";
+import Card from "@components/riftly/card/Card";
 
 const avatars = [
     `${Enums.BASEPATH}/img/sharing-ui/invite/ava1.png`,

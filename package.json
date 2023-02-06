@@ -17,6 +17,7 @@
     "@hcaptcha/react-hcaptcha": "^1.4.4",
     "@metamask/eth-sig-util": "^4.0.1",
     "@moralisweb3/evm-utils": "^2.11.1",
+    "@next/bundle-analyzer": "^13.1.6",
     "@nsfw-filter/nsfwjs": "^2.2.0",
     "@prisma/client": "^4.1.0",
     "@types/node": "^18.11.18",
@@ -58,6 +59,7 @@
     "twilio": "^3.84.1",
     "typed.js": "^2.0.12",
     "walletconnect": "^1.7.7",
+    "web-push": "^3.5.0",
     "web3": "^1.8.1",
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.19.1/xlsx-0.19.1.tgz",
     "yup": "^0.32.11"

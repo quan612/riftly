@@ -3,9 +3,6 @@ import {
     Heading,
     Box,
     Flex,
-    Link,
-    List,
-    ListItem,
     Text,
     Button,
     Modal,
@@ -22,7 +19,6 @@ import {
     Progress,
 } from "@chakra-ui/react";
 
-import { CloseButton } from "@chakra-ui/react";
 import { useDeviceDetect } from "lib/hooks";
 import { MetamaskIcon, WalletConnectIcon } from "./RiftlyIcon";
 import { Web3Context } from "@context/Web3Context";
@@ -40,7 +36,7 @@ const WalletAuthQuestModal = ({ isOpen, onClose, isSignUp = false }) => {
     const router = useRouter();
     const { isMobile } = useDeviceDetect();
     const [error, errorSet] = useState();
-    const { web3Error, signUpWithWallet, setWeb3Error } = useContext(Web3Context);
+    const { web3Error, signUpWithWallet, setWeb3Error, signInWithWallet } = useContext(Web3Context);
     const [currentView, setView] = useState(CONNECTABLE);
 
     const [walletAuthQuestData, isSubmittingQuest, walletAuthQuestSubmit] =
@@ -58,10 +54,11 @@ const WalletAuthQuestModal = ({ isOpen, onClose, isSignUp = false }) => {
             let res = await walletAuthQuestSubmit(payload).catch((err) => {
                 throw err;
             });
-
+            console.log("res", res);
             if (!res.isError) {
                 if (isSignUp) {
-                    setView(AUTHENTICATED);
+                    let redirect = true;
+                    await signInWithWallet(type, redirect);
                 } else {
                     setView(AUTHENTICATED);
                 }
@@ -189,7 +186,7 @@ const WalletAuthQuestModal = ({ isOpen, onClose, isSignUp = false }) => {
                                         align="center"
                                         fontSize="md"
                                     >
-                                        Sign up successful. Go back to sign in.
+                                        Wallet linked successfully
                                     </Text>
                                 )}
                                 {!isSignUp && (

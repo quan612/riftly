@@ -70,7 +70,6 @@ const WalletSignInModal = ({ isOpen, onClose }) => {
                 bg="brand.neutral4"
                 minH="30%"
                 w="33%"
-                // maxH={"384px"}
                 maxW="container.sm"
                 mt="16%"
                 transition={"1.25s"}

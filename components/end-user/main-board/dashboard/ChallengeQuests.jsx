@@ -21,13 +21,13 @@ import { ChakraBox } from "@theme/additions/framer/FramerChakraComponent";
 
 import { AnimatePresence, motion, AnimateSharedLayout, LayoutGroup } from "framer-motion";
 import { useQueryClient } from "react-query";
-import { RiftlyIcon } from "../shared/riftly/RiftlyIcon";
-import CodeQuestModal from "../shared/riftly/CodeQuestModal";
-import { doQuestUtility } from "../shared/doQuestUtility";
-import WalletAuthQuestModal from "../shared/riftly/WalletAuthQuestModal";
-import NftOwnerQuestModal from "../shared/riftly/NftOwnerQuestModal";
+import { RiftlyIcon } from "../../shared/riftly/RiftlyIcon";
+import CodeQuestModal from "../../shared/riftly/CodeQuestModal";
+import { doQuestUtility } from "../../shared/doQuestUtility";
+import WalletAuthQuestModal from "../../shared/riftly/WalletAuthQuestModal";
+import NftOwnerQuestModal from "../../shared/riftly/NftOwnerQuestModal";
 import { HeadingLg, HeadingSm, TextSm } from "@components/riftly/Typography";
-import SmsVerificationQuestModal from "../shared/riftly/SmsVerificationQuestModal";
+import SmsVerificationQuestModal from "../../shared/riftly/SmsVerificationQuestModal";
 
 const ChallengeQuests = ({ userQuests }) => {
     const [filterCompleted, filterCompletedSet] = useState(false);
@@ -45,17 +45,7 @@ const ChallengeQuests = ({ userQuests }) => {
     }, [userQuests, filterCompleted]);
 
     return (
-        <ChakraBox
-            display="flex"
-            flexDirection={"column"}
-            gap={"16px"}
-            position={"relative"}
-            minH="auto"
-            // layout="position"
-
-            // h="900px"
-            // layout
-        >
+        <Box display="flex" flexDirection={"column"} gap={"16px"} position={"relative"} minH="auto">
             <ChallengesHeader
                 filterCompleted={filterCompleted}
                 filterCompletedSet={filterCompletedSet}
@@ -73,7 +63,7 @@ const ChallengeQuests = ({ userQuests }) => {
                         })
                         .map((quest, index) => {
                             return (
-                                <ChakraBox
+                                <Box
                                     key={quest.id}
                                     h={{ base: "112px", md: "96px" }}
                                     maxH={{ base: "112px", md: "96px" }}
@@ -92,63 +82,11 @@ const ChallengeQuests = ({ userQuests }) => {
                                             filterCompleted={filterCompleted}
                                         />
                                     </Box>
-                                </ChakraBox>
+                                </Box>
                             );
                         })}
-
-                {/* {!filterCompleted &&
-                    newQuests.map((quest, index) => {
-                        return (
-                            <Box
-                                key={quest.id}
-                                h={{ base: "112px", md: "96px" }}
-                                maxH={{ base: "112px", md: "96px" }}
-                                w="100%"
-                                bg="brand.neutral4"
-                                border="1px solid"
-                                borderColor="brand.neutral3"
-                                borderRadius={"16px"}
-                            >
-                                <Box display="flex" flexDirection={"row"} w="100%">
-                                    <UserQuestBox
-                                        quest={quest}
-                                        index={index}
-                                        key={index}
-                                        currentQuests={currentQuests}
-                                        filterCompleted={filterCompleted}
-                                    />
-                                </Box>
-                            </Box>
-                        );
-                    })}
-
-                {filterCompleted &&
-                    completedQuests.map((quest, index) => {
-                        return (
-                            <ChakraBox
-                                key={quest.id}
-                                h={{ base: "112px", md: "96px" }}
-                                maxH={{ base: "112px", md: "96px" }}
-                                w="100%"
-                                bg="brand.neutral4"
-                                border="1px solid"
-                                borderColor="brand.neutral3"
-                                borderRadius={"16px"}
-                            >
-                                <Box display="flex" flexDirection={"row"} w="100%">
-                                    <UserQuestBox
-                                        quest={quest}
-                                        index={index}
-                                        key={index}
-                                        currentQuests={currentQuests}
-                                        filterCompleted={filterCompleted}
-                                    />
-                                </Box>
-                            </ChakraBox>
-                        );
-                    })} */}
             </Box>
-        </ChakraBox>
+        </Box>
     );
 };
 
@@ -156,11 +94,7 @@ export default withUserQuestQuery(ChallengeQuests);
 
 const ChallengesHeader = ({ filterCompleted, filterCompletedSet }) => {
     return (
-        <ChakraBox
-            display={"flex"}
-            justifyContent="space-between"
-            // layout="position"
-        >
+        <Box display={"flex"} justifyContent="space-between">
             <Heading color="white" fontWeight="600" size="md">
                 Challenges
             </Heading>
@@ -182,64 +116,66 @@ const ChallengesHeader = ({ filterCompleted, filterCompletedSet }) => {
                         alignItems="center"
                         position="relative"
                     >
-                        <ChakraBox
-                            layout="position"
-                            // layout
-                            // layoutId="challenges-filter"
-                            w="50%"
-                            h="100%"
-                            bg="brand.neutral3"
-                            borderRadius="48px"
-                        />
-                        <Box
-                            h="100%"
-                            w="50%"
-                            position={"absolute"}
-                            top="0"
-                            left="0"
-                            alignItems={"center"}
-                            display="flex"
-                            _hover={{
-                                cursor: "pointer",
-                            }}
-                        >
-                            <Text
-                                transitionDuration="1s"
-                                color={!filterCompleted ? "white" : "whiteAlpha.500"}
-                                w="100%"
-                                align={"center"}
-                                fontSize="xs"
+                        <>
+                            <ChakraBox
+                                layoutId="challenges-filter"
+                                w="50%"
+                                h="100%"
+                                bg="brand.neutral3"
+                                borderRadius="48px"
+                            />
+                            <Box
+                                h="100%"
+                                w="50%"
+                                position={"absolute"}
+                                top="0"
+                                left="0"
+                                alignItems={"center"}
+                                display="flex"
+                                _hover={{
+                                    cursor: "pointer",
+                                }}
+                                key="new"
                             >
-                                New
-                            </Text>
-                        </Box>
-                        <Box
-                            h="100%"
-                            w="50%"
-                            position={"absolute"}
-                            top="0"
-                            right="0"
-                            alignItems={"center"}
-                            display="flex"
-                            _hover={{
-                                cursor: "pointer",
-                            }}
-                        >
-                            <Text
-                                transitionDuration="1s"
-                                color={filterCompleted ? "white" : "whiteAlpha.500"}
-                                w="100%"
-                                align={"center"}
-                                fontSize="xs"
+                                <Text
+                                    transitionDuration="1s"
+                                    color={!filterCompleted ? "white" : "whiteAlpha.500"}
+                                    w="100%"
+                                    align={"center"}
+                                    fontSize="xs"
+                                >
+                                    New
+                                </Text>
+                            </Box>
+                            <Box
+                                h="100%"
+                                w="50%"
+                                position={"absolute"}
+                                top="0"
+                                right="0"
+                                alignItems={"center"}
+                                display="flex"
+                                _hover={{
+                                    cursor: "pointer",
+                                }}
+                                key="completed"
                             >
-                                Completed
-                            </Text>
-                        </Box>
+                                <Text
+                                    transitionDuration="1s"
+                                    color={filterCompleted ? "white" : "whiteAlpha.500"}
+                                    w="100%"
+                                    align={"center"}
+                                    fontSize="xs"
+                                >
+                                    Completed
+                                </Text>
+                            </Box>
+                        </>
                         {/* </AnimateSharedLayout> */}
                     </Flex>
                 </Box>
             </Box>
-        </ChakraBox>
+        </Box>
     );
 };
 
@@ -331,8 +267,6 @@ const UserQuestBox = ({ quest, index, currentQuests, filterCompleted, onTest }) 
                 disableBtnSet(false);
                 clearTimeout(invalidCacheTimeout);
             }, 2000);
-
-            //
         } catch (error) {
             console.log(error);
             toast({
@@ -392,7 +326,7 @@ const UserQuestBox = ({ quest, index, currentQuests, filterCompleted, onTest }) 
                             flex="1"
                             alignItems="center"
                         >
-                            <Flex display={"flex"} flexDirection="column">
+                            <Flex display={"flex"} flexDirection="column" flex="80%" me="2px">
                                 {!filterCompleted && (
                                     <>
                                         <HeadingSm color="#fff" noOfLines={2}>
@@ -412,7 +346,7 @@ const UserQuestBox = ({ quest, index, currentQuests, filterCompleted, onTest }) 
                                     </>
                                 )}
                             </Flex>
-                            <Flex position="relative" h="100%" alignItems={"center"}>
+                            <Flex position="relative" h="100%" alignItems={"center"} flex="20%">
                                 {filterCompleted && (
                                     <Text
                                         color="brand.neutral0"
@@ -429,7 +363,7 @@ const UserQuestBox = ({ quest, index, currentQuests, filterCompleted, onTest }) 
                                             <ChakraBox
                                                 key={quest.id}
                                                 position={"absolute"}
-                                                top="-3"
+                                                top="-4"
                                                 left="4"
                                                 variants={{
                                                     hidden: {
@@ -438,7 +372,7 @@ const UserQuestBox = ({ quest, index, currentQuests, filterCompleted, onTest }) 
                                                     },
                                                     visible: {
                                                         opacity: 1,
-                                                        y: 0,
+                                                        y: -5,
                                                         transition: {
                                                             duration: 1,
                                                             type: "spring",
@@ -448,8 +382,7 @@ const UserQuestBox = ({ quest, index, currentQuests, filterCompleted, onTest }) 
                                                         opacity: 0,
 
                                                         transition: {
-                                                            duration: 2,
-                                                            // type: "spring",
+                                                            duration: 2.25,
                                                         },
                                                     },
                                                 }}
@@ -532,48 +465,3 @@ const UserQuestBox = ({ quest, index, currentQuests, filterCompleted, onTest }) 
         </>
     );
 };
-
-// const UnderlinedMenu = () => {
-//     const [selected, setSelected] = useState(0);
-//     return (
-//         <div className="underlined-menu">
-//             <Box display={"flex"} flexDirection="row" justifyContent={"space-evenly"}>
-//                 <AnimateSharedLayout>
-//                     {menuItems.map((el, i) => (
-//                         <MenuItem
-//                             text={el}
-//                             key={i}
-//                             selected={selected === i}
-//                             onClick={() => setSelected(i)}
-//                         />
-//                     ))}
-//                 </AnimateSharedLayout>
-//             </Box>
-//         </div>
-//     );
-// };
-
-// const menuItems = ["Lorem", "ipsum", "dolor", "sit"];
-// const MenuItem = ({ text, selected, onClick }) => (
-//     <motion.div
-//         onClick={onClick}
-//         animate={{ opacity: selected ? 1 : 0.5 }}
-//         style={{ color: "white", position: "relative" }}
-//     >
-//         {text}
-//         {selected && (
-//             <motion.div
-//                 layoutId="underline"
-//                 style={{
-//                     position: "absolute",
-//                     top: "100%",
-//                     left: "0",
-//                     width: "100%",
-//                     height: "4px",
-//                     background: "white",
-//                     borderRadius: "15px",
-//                 }}
-//             />
-//         )}
-//     </motion.div>
-// );

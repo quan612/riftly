@@ -103,6 +103,7 @@ export const buttonStyles = {
           },
         }),
         signIn: (props) => ({
+
           border: "1px solid",
           borderColor: "brand.blue",
           borderRadius: "48px",
@@ -137,6 +138,8 @@ export const buttonStyles = {
         }),
 
         blue: (props) => ({
+          minWidth: "84px",
+          minH: "40px",
           border: "1px solid",
           borderColor: "transparent",
           borderRadius: "48px",
@@ -173,11 +176,9 @@ export const buttonStyles = {
             color: "brand.blue",
           },
         }),
-        "modal-close": {
-
-        },
 
         "ghost-blue": (props) => ({
+          minWidth: "96px",
           borderColor: "transparent",
           bg: "transparent",
           color: "brand.blue",
@@ -215,6 +216,8 @@ export const buttonStyles = {
         }),
 
         "ghost-base": (props) => ({
+          minWidth: "84px",
+          minH: "40px",
           borderColor: "transparent",
           bg: "transparent",
           color: "brand.neutral0",
@@ -253,10 +256,11 @@ export const buttonStyles = {
         }),
 
         cyan: (props) => ({
+          minWidth: "84px",
+          minH: "40px",
           fontSize: "md",
-          minWidth: "96px",
-          height: "40px",
           bg: "brand.cyan",
+          borderRadius: "48px",
           color: "#fff",
           transition: "0.8s",
           _hover: {

@@ -31,7 +31,6 @@ const PersonalInfo = ({ session }) => {
     useEffect(() => {
         const notificationTest = new Notification("To do list", {
             body: "sdsdsdsd",
-            // icon: ""
         });
         console.log(notificationTest);
         checkNotificationInterval = setInterval(() => {
@@ -47,9 +46,9 @@ const PersonalInfo = ({ session }) => {
             flexDirection={"column"}
             w="100%"
             position="relative"
-            top="16px"
+            top="32px"
             gap="16px"
-            paddingBottom="16px"
+            paddingBottom="24px"
         >
             <AccountInfo />
             <ConnectionsInfo />

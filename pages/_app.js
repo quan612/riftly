@@ -11,7 +11,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import Script from "next/script";
 import * as gtag from "../lib/ga/gtag";
 import { useRouter } from "next/router";
-import { ChakraProvider } from "@chakra-ui/react";
+import { Box, ChakraProvider } from "@chakra-ui/react";
 import { useChallengerPageLoading } from "lib/hooks/useChallengerPageLoading";
 import { Analytics } from "@vercel/analytics/react";
 import theme from "theme/theme";
@@ -26,8 +26,8 @@ import {
     Tooltip,
     Legend,
     BarElement,
-    ArcElement
-} from 'chart.js';
+    ArcElement,
+} from "chart.js";
 import AdminLayout from "../components/admin/AdminLayout";
 
 ChartJS.register(
@@ -43,6 +43,12 @@ ChartJS.register(
 );
 
 const queryClient = new QueryClient();
+
+import { AnimatePresence } from "framer-motion";
+import UserLayout from "@components/end-user/UserLayout";
+export function reportWebVitals(metric) {
+    // console.log(metric);
+}
 
 function MyApp({ Component, pageProps }) {
     const router = useRouter();
@@ -86,17 +92,20 @@ function MyApp({ Component, pageProps }) {
                         <ChakraProvider theme={theme}>
                             {Component.requireAdmin ? (
                                 <AdminLayout>
-                                    {/* <Component.Layout> */}
                                     <AdminGuard>
                                         <Component {...pageProps} />
                                     </AdminGuard>
-                                    {/* </Component.Layout> */}
                                 </AdminLayout>
                             ) : (
-                                <>
-                                    <Component {...pageProps} />
+                                <UserLayout {...pageProps}>
+
+                                    <AnimatePresence mode="wait" initial={false} transitionDuration="0.2s">
+                                        <Component {...pageProps} key={router.asPath} />
+                                    </AnimatePresence>
+
+
                                     <Analytics />
-                                </>
+                                </UserLayout>
                             )}
                         </ChakraProvider>
                     </StrictMode>
@@ -107,3 +116,18 @@ function MyApp({ Component, pageProps }) {
 }
 
 export default MyApp;
+
+export function UserGuard({ children }) {
+    const { session } = useContext(Web3Context);
+    const router = useRouter()
+
+    if (session && session.user) {
+        return <>{children}</>;
+    }
+
+    if (!session) {
+        router.push("/")
+    }
+
+    return null;
+}

@@ -41,7 +41,7 @@ import {
     GridItem,
 } from "@chakra-ui/react";
 
-import Card from "@components/chakra/card/Card";
+import Card from "@components/riftly/card/Card";
 
 const AdminBulkUsersAdd = () => {
     const bg = useColorModeValue("white", "#1B254B");

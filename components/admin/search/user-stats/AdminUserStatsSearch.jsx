@@ -1,8 +1,6 @@
 import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { ErrorMessage, Field, Form, Formik, FieldArray, getIn } from "formik";
 import { object, array, string, number, ref } from "yup";
-// import useTable from "@hooks/useTable";
-import TableFooter from "../../elements/Table/TableFooter";
 import { utils } from "ethers";
 import axios from "axios";
 
@@ -47,7 +45,7 @@ import {
 
 import { ArrowRightIcon, ArrowLeftIcon, ChevronRightIcon, ChevronLeftIcon } from "@chakra-ui/icons";
 
-import AdminCard from "../../../chakra/card/AdminCard";
+import AdminCard from "../../../riftly/card/AdminCard";
 
 import { useGlobalFilter, usePagination, useSortBy, useTable } from "react-table";
 

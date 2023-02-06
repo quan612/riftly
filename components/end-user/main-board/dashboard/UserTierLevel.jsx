@@ -26,7 +26,7 @@ import {
 
 import { useUserRewardQuery } from "@shared/HOC";
 import { shortenAddress } from "@utils/shortenAddress";
-import { RiftlyIcon } from "../shared/riftly/RiftlyIcon";
+import { RiftlyIcon } from "../../shared/riftly/RiftlyIcon";
 import { ChakraBox } from "@theme/additions/framer/FramerChakraComponent";
 import { HeadingSm, TextMd } from "@components/riftly/Typography";
 import { getUserName } from "@utils/index";
@@ -152,7 +152,7 @@ const UserTierLevel = React.forwardRef(({ session }, levelProgress) => {
     }, [userRewards]);
 
     return (
-        <ChakraBox
+        <Box
             minW="100%"
             bg={"brand.neutral4"}
             minH="128px"
@@ -162,50 +162,8 @@ const UserTierLevel = React.forwardRef(({ session }, levelProgress) => {
             borderColor="brand.neutral3"
             position={"relative"}
             display="flex"
-            initial={{ opacity: 0, x: "100px", scaleX: "50%" }}
-            animate={{
-                opacity: 1,
-                x: "0px",
-                scaleX: "100%",
-                transition: {
-                    opacity: 1,
-                    duration: 0.5,
-                    // type: "spring",
-                },
-            }}
-            exit={{
-                opacity: 0,
-                zIndex: 0,
-                scaleX: "70%",
-                transition: {
-                    duration: 0.5,
-                },
-            }}
         >
-            {/* <ChakraBox
-                bg={"brand.neutral4"}
-                position={"absolute"}
-                border="1px solid"
-                borderRadius={"16px"}
-                borderColor="brand.neutral3"
-                h="100%"
-                w="100%"
-                initial={{ scaleX: "25%" }}
-                animate={{
-                    scaleX: "100%",
-                    transition: {
-                        duration: 0.45,
-                    },
-                }}
-            /> */}
-            <Box
-                display={"flex"}
-                alignItems={"center"}
-                minH="100%"
-                flex="1"
-                zIndex={2}
-                // onClick={() => test(35)}
-            >
+            <Box display={"flex"} alignItems={"center"} minH="100%" flex="1" zIndex={2}>
                 <UserTierAvatar />
 
                 <Box display="flex" flex="1" h="100%" alignItems="center" justifyContent={"center"}>
@@ -355,7 +313,7 @@ const UserTierLevel = React.forwardRef(({ session }, levelProgress) => {
             </Box>
 
             <LevelUpModal tier={tier} isOpen={isOpen} onClose={onClose} />
-        </ChakraBox>
+        </Box>
     );
 });
 
@@ -401,13 +359,7 @@ const LevelUpModal = ({ tier, isOpen, onClose }) => {
                             h="65%"
                             zIndex={3}
                         >
-                            <Image
-                                src={"/img/user/Level Up_Confetti.gif"}
-                                w="70%"
-                                // h={{ base: "100%" }}
-                                // borderTopRadius="16px"
-                                fit={"fill"}
-                            />
+                            <Image src={"/img/user/Level Up_Confetti.gif"} w="70%" fit={"fill"} />
                         </Box>
                         <ChakraBox
                             display={"flex"}

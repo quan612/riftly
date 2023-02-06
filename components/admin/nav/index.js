@@ -23,22 +23,26 @@ import {
   ChevronRightIcon,
 } from '@chakra-ui/icons';
 import AdminLogin from '../AdminLogin';
-import Modal from '../elements/Modal';
+
 import { Web3Context } from "@context/Web3Context";
 
 export default function AdminNavigation() {
   const { isOpen, onToggle } = useDisclosure();
   const { SignOut, session } = useContext(Web3Context);
-  const [isModalOpen, setModalOpen] = useState(false);
+
+
+  const walletSignInModal = useDisclosure();
   return (
     <Box w="100%">
-      <Modal
-        isOpen={isModalOpen}
-        onClose={() => setModalOpen(false)}
-        title="Test"
-        render={(modal) => <AdminLogin closeModal={() => setModalOpen(false)} />}
-        isConfirm={true}
-      />
+      {walletSignInModal?.isOpen && (
+        <AdminLogin
+          isOpen={walletSignInModal.isOpen}
+          onClose={() => {
+            walletSignInModal.onClose();
+          }}
+        />
+      )}
+
       <Flex
         bg={useColorModeValue('white', 'gray.800')}
         color={useColorModeValue('gray.600', 'white')}
@@ -87,7 +91,7 @@ export default function AdminNavigation() {
               fontWeight={600}
               color={'white'}
               bg={'pink.400'}
-              onClick={() => setModalOpen(true)}
+              onClick={() => walletSignInModal.onOpen()}
               _hover={{
                 bg: 'pink.300',
               }}>

@@ -3,10 +3,10 @@ import {
   Heading,
   Box,
   Flex,
-
   Container,
-
 } from "@chakra-ui/react";
+
+
 
 export const ShortContainer = ({ children }) => {
   return (
@@ -24,7 +24,7 @@ export const ShortContainer = ({ children }) => {
       ms={{ base: "16px", md: "0px" }}
     >
       <Flex
-        w="66%"
+        w="80%"
         h="80%"
         flexDirection={"column"}
         alignItems={"center"}
@@ -49,7 +49,7 @@ export const TallContainer = ({ children }) => {
       justifyContent={"center"}
     >
       <Flex
-        w="66%"
+        w="80%"
         h="80%"
         flexDirection={"column"}
         alignItems={"center"}

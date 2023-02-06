@@ -1,19 +1,22 @@
 import React from "react";
-import AdminSearchLayout from "@components/layout/AdminSearchLayout";
+import dynamic from "next/dynamic";
+const AdminUserStatsSearchComponent = dynamic(() =>
+    import("@components/admin/search/user-stats/AdminUserStatsSearch")
+);
 
 const AdminSearchUserStatsPage = () => {
     return (
-        <AdminUserStatsSearch />
+        <AdminUserStatsSearchComponent />
     );
 };
 
-AdminSearchUserStatsPage.Layout = AdminSearchLayout;
+AdminSearchUserStatsPage.Layout = AdminLayout;
 AdminSearchUserStatsPage.requireAdmin = true;
 export default AdminSearchUserStatsPage;
 
 import { unstable_getServerSession } from "next-auth/next";
 import { authOptions } from "pages/api/auth/[...nextauth]";
-import AdminUserStatsSearch from "../../../components/admin/search/user-stats/AdminUserStatsSearch";
+import { AdminLayout } from "@components/admin";
 
 export async function getServerSideProps(context) {
     const session = await unstable_getServerSession(context.req, context.res, authOptions);

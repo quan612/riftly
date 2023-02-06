@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { useSession } from "next-auth/react"
 import { ShortContainer } from "containers/user";
-import { RiftlyFace, RiftlyLogoWhite, RiftlyLogoWhiteText } from "@components/riftly/Logo";
+import { RiftlyFace, RiftlyLogoWhite } from "@components/riftly/Logo";
 import { getUserName } from "@utils/index";
 
 
@@ -85,46 +85,3 @@ function QuestRedirectPage() {
 }
 
 export default QuestRedirectPage;
-
-// {!router?.query?.error && (
-//     <>
-//         <div className={s.board_text}>
-//             {router?.query?.result}
-//         </div>
-//         <button
-//             className={s.board_pinkBtn}
-//             onClick={() => {
-//                 router.push("/");
-//             }}
-//         >
-//             <img
-//                 src={`${Enums.BASEPATH}/img/sharing-ui/invite/Button_Large.png`}
-//                 alt="Go Back"
-//             />
-//             <div>
-//                 <span>Go Back</span>
-//             </div>
-//         </button>
-//     </>
-// )}
-// {router?.query?.error && (
-//     <>
-//         <div className={s.board_text}>
-//             {router?.query?.error}
-//         </div>
-//         <button
-//             className={s.board_pinkBtn}
-//             onClick={() => {
-//                 router.push("/");
-//             }}
-//         >
-//             <img
-//                 src={`${Enums.BASEPATH}/img/sharing-ui/invite/Button_Large.png`}
-//                 alt="Go Back"
-//             />
-//             <div>
-//                 <span>Go Back</span>
-//             </div>
-//         </button>
-//     </>
-// )}

@@ -1,14 +1,21 @@
+import React, { useEffect } from "react";
 import Head from "next/head";
-import React from "react";
-import s from "/sass/claim/claim.module.css";
 
-import NotEnabledChallenger from "@components/end-user/NotEnabledChallenger";
+import dynamic from "next/dynamic";
+const RiftlyIndividualQuestBoardComponent = dynamic(() =>
+    import("@components/end-user/main-board/dashboard/RiftlyIndividualQuestBoard")
+);
 
-import RiftlyConnectBoard from "@components/end-user/RiftlyConnectBoard";
-import RiftlyIndividualQuestBoard from "@components/end-user/main-board/RiftlyIndividualQuestBoard";
+const transition = { duration: 0.5, ease: [0.43, 0.13, 0.23, 0.96] };
+const variants = {
+    hidden: { opacity: 0 },
+    enter: { opacity: 1, transition },
+    exit: { opacity: 0, transition: { duration: 0.2, ...transition } },
+};
 
-// Home page for user
 function Home({ session }) {
+
+
     return (
         <>
             <Head>
@@ -36,62 +43,25 @@ function Home({ session }) {
                 />
                 <link rel="icon" href="/faviconShell.png" />
             </Head>
-            <Box w="100%" minH="100vh" h="auto" display={"flex"} position={"relative"}>
-                {!session && <RiftlyConnectBoard />}
-                {/* {session && process.env.NEXT_PUBLIC_ENABLE_CHALLENGER === "false" && <NotEnabledChallenger session={session} />} */}
-                {session && process.env.NEXT_PUBLIC_ENABLE_CHALLENGER === "true" && (
-                    <>
-                        <Banner />
-                        <RiftlyIndividualQuestBoard session={session} />
-                    </>
-                )}
-            </Box>
+            <ChakraBox initial="hidden" animate="enter" exit="exit" variants={variants}>
+                <Flex flexDirection="column" gap="16px">
+                    <RiftlyIndividualQuestBoardComponent session={session} />
+                </Flex>
+            </ChakraBox>
         </>
     );
 }
-
-import { Box, Container, Image } from "@chakra-ui/react";
-
-const Banner = () => {
-    return (
-        <Box
-            minW={"100%"}
-            w="100%"
-
-            h="176px"
-
-            display={"flex"}
-            position={"relative"}
-            justifyContent={"center"}
-        >
-            <Box
-                position={"absolute"}
-                h="100vh"
-                w="100%"
-                backgroundImage="/img/user/banner.png"
-                backgroundPosition="center"
-                backgroundSize={"cover"}
-                backgroundRepeat="no-repeat"
-            >
-
-            </Box>
-
-            <Box position="absolute" top="0" h="calc(100% - 32px)" display={"flex"}>
-                <Box display={"flex"} alignItems="center">
-                    <Image src={"/img/user/Logo_white.svg"} w={"105.9px"} h="64px" fit={"fill"} />
-                </Box>
-            </Box>
-        </Box>
-    );
-};
 
 export default Home;
 
 import { unstable_getServerSession } from "next-auth/next";
 import { authOptions } from "pages/api/auth/[...nextauth]";
+import { ChakraBox } from "@theme/additions/framer/FramerChakraComponent";
+import { Flex } from "@chakra-ui/react";
 
 export async function getServerSideProps(context) {
     const session = await unstable_getServerSession(context.req, context.res, authOptions);
+    context.res.setHeader("Cache-Control", "public, s-maxage=10, stale-while-revalidate=59");
 
     return {
         props: {

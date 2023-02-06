@@ -3,7 +3,7 @@ import useSWR from "swr";
 import axios from "axios";
 import { BuildCsv } from "./BuildCsv";
 import useTable from "@hooks/useTable";
-import TableFooter from "../../elements/Table/TableFooter";
+
 import { utils } from "ethers";
 
 function sleep(ms = 500) {
@@ -260,7 +260,6 @@ const ResultTable = ({ data, rowsPerPage, setTableData }) => {
                             })}
                         </tbody>
                     </table>
-                    <TableFooter range={range} slice={slice} setPage={setPage} page={page} />
                 </div>
             </div>
         </div>

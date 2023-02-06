@@ -1,15 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { AdminLayout } from "/components/admin";
 
-import AdminUserQuestsSearch from "@components/admin/search/user-quests/AdminUserQuestsSearch";
-import AdminSearchLayout from "@components/layout/AdminSearchLayout";
+import dynamic from "next/dynamic";
+const AdminUserQuestsSearchComponent = dynamic(() =>
+    import("@components/admin/search/user-quests/AdminUserQuestsSearch")
+);
 
 const AdminSearchUserQuestPage = () => {
     return (
-        <AdminUserQuestsSearch />
+        <AdminUserQuestsSearchComponent />
     );
 };
 
-AdminSearchUserQuestPage.Layout = AdminSearchLayout;
+AdminSearchUserQuestPage.Layout = AdminLayout;
 AdminSearchUserQuestPage.requireAdmin = true;
 export default AdminSearchUserQuestPage;
 

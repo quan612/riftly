@@ -1,18 +1,4 @@
-@font-face {
-	src: url("/fonts/AtlantisInternational.ttf") format("TrueType");
-	font-family: "Atlantis";
-	font-display: swap;
-}
-@font-face {
-	src: url("/fonts/ronda_revised.ttf") format("TrueType");
-	font-family: "PFRondaSeven";
-	font-display: swap;
-}
-@font-face {
-	src: url("/fonts/Safety Goggles.otf");
-	font-family: "Safety Goggles";
-	/* font-display: swap; */
-}
+
 * {
 	box-sizing: border-box;
 	padding: 0;
@@ -42,23 +28,7 @@ a {
 		
 }
 
-.table th.up {
-	background-image: url("/img/sharing-ui/up_arrow.png");
-  }
-  .table th.down {
-	background-image: url("/img/sharing-ui/down_arrow.png");
-  }
-  .table th.default {
-	background-image: url("/img/sharing-ui/default.png");
-  }
-  th.up,
-  th.default,
-  th.down {
-	cursor: pointer;
-	background-repeat: no-repeat;
-	background-position: center right;
-	padding-right: 18px!important;
-  }
+
 
 	.PhoneInputInput {
 		width:"100%";

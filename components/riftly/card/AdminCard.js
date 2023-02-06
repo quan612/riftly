@@ -1,4 +1,4 @@
-import Card from "@components/chakra/card/Card";
+import Card from "@components/riftly/card/Card";
 
 import {
 

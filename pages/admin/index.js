@@ -1,28 +1,29 @@
 import { AdminLayout } from "/components/admin";
+
 import React, { useEffect } from "react";
-function Admin() {
+import dynamic from "next/dynamic";
+const AdminGoogleAnalyticsComponent = dynamic(() => import("@components/admin/analytics/AdminGoogleAnalytics"))
+const AdminPage = () => {
 
   return (
-    <AdminGoogleAnalytics />
+    <AdminGoogleAnalyticsComponent />
   );
 }
 
-Admin.requireAdmin = true;
-Admin.Layout = AdminLayout;
-export default Admin;
+AdminPage.requireAdmin = true;
+AdminPage.Layout = AdminLayout;
+export default AdminPage;
 
 import { unstable_getServerSession } from "next-auth/next"
 import { authOptions } from 'pages/api/auth/[...nextauth]'
-import AdminAnalyticsMenu from "../../components/layout/AdminAnalyticsMenu";
 
-import AdminGoogleAnalytics from "../../components/admin/analytics/AdminGoogleAnalytics";
-import AdminNavigation from "@components/admin/nav";
 export async function getServerSideProps(context) {
   const session = await unstable_getServerSession(
     context.req,
     context.res,
     authOptions
   );
+  context.res.setHeader("Cache-Control", "public, s-maxage=10, stale-while-revalidate=59");
 
   return {
     props: {

@@ -43,11 +43,11 @@ import {
     Icon,
 } from "@chakra-ui/react";
 
-import AdminCard from "../../../chakra/card/AdminCard";
+import AdminCard from "../../../riftly/card/AdminCard";
 import { useGlobalFilter, usePagination, useSortBy, useTable, useFilters } from "react-table";
 import { ArrowRightIcon, ArrowLeftIcon, ChevronRightIcon, ChevronLeftIcon } from "@chakra-ui/icons";
 import Enums from "@enums/index";
-import RightSideBar from "@components/chakra/right-side-bar/RightSideBar";
+import RightSideBar from "@components/riftly/right-side-bar/RightSideBar";
 
 import { BsFilter } from "react-icons/bs";
 
@@ -1146,134 +1146,6 @@ const SearchForm = ({ onFormSubmit, rewardTypes, outsideFilter }) => {
                                                     </FormControl>
                                                 </GridItem>
                                             </SimpleGrid>
-
-                                            {/* <div className="row">
-                                                <FieldArray name="rewards">
-                                                    {(arrayHelpers) => (
-                                                        <>
-                                                            <div className="col-xxl-6 col-xl-6 col-lg-6 mb-3 flex items-center">
-                                                                <label className="form-label me-3">
-                                                                    Rewards
-                                                                </label>
-
-                                                                <MultiSelect
-                                                                    items={rewardTypeItems}
-                                                                    onSelectedItem={(item) => {
-                                                                        arrayHelpers.push({
-                                                                            type: item.name,
-                                                                            typeId: item.id,
-                                                                            minQty: 1,
-                                                                            maxQty: 10,
-                                                                        });
-                                                                    }}
-                                                                    onDeSelectedItem={(item) => {
-                                                                        let index =
-                                                                            values.rewards.findIndex(
-                                                                                (el) =>
-                                                                                    el.type === item
-                                                                            );
-
-                                                                        arrayHelpers.remove(index);
-                                                                    }}
-                                                                />
-                                                            </div>
-                                                            <div className="col-xxl-2 col-xl-2 col-lg-2 mb-3 flex items-center">
-                                                                <label className="form-label">
-                                                                    Min
-                                                                </label>
-                                                            </div>
-                                                            <div className="col-xxl-2 col-xl-2 col-lg-2 mb-3 flex items-center">
-                                                                <label className="form-label">
-                                                                    Max
-                                                                </label>
-                                                            </div>
-
-                                                            {values.rewards &&
-                                                                values.rewards.map(
-                                                                    (item, index) => {
-                                                                        const fieldName = `rewards.[${index}]`;
-                                                                        return (
-                                                                            <React.Fragment
-                                                                                key={index}
-                                                                            >
-                                                                                <div className="col-xxl-6 col-xl-6 col-lg-6 mb-3">
-                                                                                    <Field
-                                                                                        name={`${fieldName}.type`}
-                                                                                        type="text"
-                                                                                        className={
-                                                                                            "form-control"
-                                                                                        }
-                                                                                        disabled={
-                                                                                            true
-                                                                                        }
-                                                                                    />
-                                                                                    <ErrorMessage
-                                                                                        name={`${fieldName}.minQty`}
-                                                                                        component="div"
-                                                                                        className="text-red-500"
-                                                                                    />
-                                                                                </div>
-
-                                                                                <div className="col-xxl-2 col-xl-2 col-lg-2 mb-3">
-                                                                                    <Field
-                                                                                        name={`${fieldName}.minQty`}
-                                                                                        type="text"
-                                                                                        className={
-                                                                                            "form-control" +
-                                                                                            (errors.rewards &&
-                                                                                            errors
-                                                                                                .rewards[
-                                                                                                index
-                                                                                            ] &&
-                                                                                            touched
-                                                                                                .rewards[
-                                                                                                index
-                                                                                            ]
-                                                                                                ? " is-invalid"
-                                                                                                : "")
-                                                                                        }
-                                                                                        validate={() =>
-                                                                                            validateQty(
-                                                                                                values.rewards,
-                                                                                                index
-                                                                                            )
-                                                                                        }
-                                                                                    />
-                                                                                </div>
-                                                                                <div className="col-xxl-2 col-xl-2 col-lg-2 mb-3">
-                                                                                    <Field
-                                                                                        name={`${fieldName}.maxQty`}
-                                                                                        type="text"
-                                                                                        className={
-                                                                                            "form-control" +
-                                                                                            (errors.rewards &&
-                                                                                            errors
-                                                                                                .rewards[
-                                                                                                index
-                                                                                            ] &&
-                                                                                            touched
-                                                                                                .rewards[
-                                                                                                index
-                                                                                            ]
-                                                                                                ? " is-invalid"
-                                                                                                : "")
-                                                                                        }
-                                                                                        validate={() =>
-                                                                                            validateQty(
-                                                                                                values.rewards,
-                                                                                                index
-                                                                                            )
-                                                                                        }
-                                                                                    />
-                                                                                </div>
-                                                                            </React.Fragment>
-                                                                        );
-                                                                    }
-                                                                )}
-                                                        </>
-                                                    )}
-                                                </FieldArray>
-                                            </div> */}
 
                                             <Button
                                                 w={{ base: "150px" }}

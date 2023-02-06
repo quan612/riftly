@@ -1,5 +1,4 @@
 import React from "react";
-import AdminNavbar from "./Navbar";
 
 import { Box, Flex } from "@chakra-ui/react";
 import AdminNavigation from "./nav";
@@ -19,9 +18,7 @@ export default function AdminLayout({ children }) {
                 base: "start",
                 xl: "start",
             }}
-            // px={{ base: "30px", md: "50px" }}
         >
-            {/* <AdminNavbar /> */}
             <AdminNavigation />
             <Flex
                 minW="100%"

@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { AdminLayout } from "/components/admin";
-import AdminDiscordChannels from "@components/admin/settings/discord/AdminDiscordChannels";
+
+import dynamic from "next/dynamic";
+const AdminDiscordChannelsComponent = dynamic(() =>
+    import("@components/admin/settings/discord/AdminDiscordChannels")
+);
+
 const modsAddress = [];
 
 const AdminDiscordChannelPage = ({ session }) => {
-    const [viewable, setViewable] = useState(false);
-    return <AdminDiscordChannels />;
+    return <AdminDiscordChannelsComponent />;
 };
 
 AdminDiscordChannelPage.Layout = AdminLayout;

@@ -44,7 +44,7 @@ import {
     ButtonGroup,
     Icon,
 } from "@chakra-ui/react";
-import AdminCard from "@components/chakra/card/AdminCard";
+import AdminCard from "@components/riftly/card/AdminCard";
 
 import { BiEdit } from "react-icons/bi";
 import { AiFillDelete } from "react-icons/ai";

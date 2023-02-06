@@ -15,7 +15,7 @@ import {
 } from "@chakra-ui/react";
 import { HeadingLg, HeadingSm, TextSm } from "@components/riftly/Typography";
 import { ChakraBox } from "@theme/additions/framer/FramerChakraComponent";
-import { RiftlyIcon } from "../shared/riftly/RiftlyIcon";
+import { RiftlyIcon } from "../../shared/riftly/RiftlyIcon";
 import { AnimatePresence } from "framer-motion";
 
 const FeatureQuests = () => {

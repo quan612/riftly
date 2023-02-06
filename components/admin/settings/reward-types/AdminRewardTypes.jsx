@@ -34,9 +34,9 @@ import {
 } from "@chakra-ui/react";
 
 import { useAdminRewardTypeMutation, useRewardTypesQuery } from "@shared/HOC/reward-types";
-import AdminCard from "@components/chakra/card/AdminCard";
+import AdminCard from "@components/riftly/card/AdminCard";
 import { RiftlyCheckMark, RiftlyEditIcon, RiftlyTooltip } from "@components/riftly/Misc";
-import Card from "@components/chakra/card/Card";
+import Card from "@components/riftly/card/Card";
 
 const AdminRewardTypes = () => {
     const [rewardTypes, isLoadingRewardTypes] = useRewardTypesQuery();
