@@ -29,6 +29,8 @@ import { signIn } from "next-auth/react";
 import axios from "axios";
 import { ChakraBox } from "@theme/additions/framer/FramerChakraComponent";
 import { getDiscordAuthLink, getTwitterAuthLink } from "@utils/helpers";
+import Loading from "@components/riftly/Loading";
+import { sleep } from "@utils/index";
 
 const NON_EMAIL = 1;
 const EMAIL = 2;
@@ -262,6 +264,7 @@ export const EmailWrapper = React.forwardRef(({ isSignIn = false, setView }, ref
 
         try {
             setLoading(true);
+            sleep(1000);
             let signInRes = await signIn("email", {
                 redirect: false,
                 email,

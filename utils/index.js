@@ -38,3 +38,7 @@ export const getUserName = (session) => {
             return ""; //session?.user?.wallet || shortenAddress(session?.user?.address);
     }
 };
+
+export function sleep(ms = 500) {
+    return new Promise((res) => setTimeout(res, ms));
+}

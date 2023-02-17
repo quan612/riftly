@@ -3,7 +3,7 @@ import { Box, Flex, Icon } from "@chakra-ui/react";
 export const RiftlyLogoWhiteText = () => {
   return (
     <Flex flexDirection={"column"} alignItems={"center"}>
-      <Box mb={{ base: "2px", md: "1rem", lg: "2rem" }}>
+      <Box mb={{ base: "2px", md: "0.5rem" }}>
         <Icon
           width="100%"
           height="100%"

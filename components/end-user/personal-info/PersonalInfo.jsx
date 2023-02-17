@@ -22,12 +22,15 @@ import {
     Button,
     Text,
     Divider,
+    Icon,
+    useDisclosure,
 } from "@chakra-ui/react";
 import { RiftlyFace } from "@components/riftly/Logo";
 import axios from "axios";
 
 import { debounce } from "utils/";
 import { RiftlyTooltip } from "@components/riftly/Icons";
+import UploadAvatarModal from "../shared/UploadAvatarModal";
 
 const PersonalInfo = ({ session }) => {
     return (
@@ -301,8 +304,15 @@ const AccountInfo = () => {
         password: "",
         email: "",
     };
+    const uploadAvatarModal = useDisclosure();
     return (
         <>
+            <UploadAvatarModal
+                isOpen={uploadAvatarModal.isOpen}
+                onClose={() => {
+                    uploadAvatarModal.onClose();
+                }}
+            />
             <Heading color="white" fontWeight="600" size="md">
                 Account Information
             </Heading>
@@ -320,57 +330,61 @@ const AccountInfo = () => {
                 p="24px"
                 flexDirection="column"
                 justifyItems={"center"}
+                alignItems="center"
                 gap="16px"
             >
-                <Box boxSize={24}>
+                <Box boxSize={"96px"} position="relative">
                     <RiftlyFace />
+                    <Box position="absolute" boxSize="40px" right="2px" bottom="0">
+                        <UploadIcon handleOnClick={() => uploadAvatarModal.onOpen()} />
+                    </Box>
                 </Box>
-                <Formik
-                    initialValues={initialValues}
-                    // validationSchema={CodeQuestSchema}
-                    validateOnBlur={true}
-                    validateOnChange={false}
-                    onSubmit={async (fields, { setStatus }) => {
-                        try {
-                            console.log(123);
-                            alert("SUCCESS!! :-)\n\n" + JSON.stringify(fields, null, 4));
-                        } catch (error) {
-                            console.log(error);
-                        }
-                    }}
-                >
-                    {({ values, errors, status, touched, handleChange, setFieldValue }) => {
-                        return (
-                            <Form>
-                                <SimpleGrid columns="2" gap="24px">
-                                    <GridItem colSpan={1}>
-                                        <FormikInput label="Username" name="username" />
-                                    </GridItem>
-                                    <GridItem colSpan={1}>
-                                        <FormikInput
-                                            label="Password"
-                                            name="password"
-                                            type="password"
-                                        />
-                                    </GridItem>
-                                    <GridItem colSpan={2}>
-                                        <FormikInput label="Email" name="email" />
-                                    </GridItem>
-                                    <GridItem colSpan={2}>
-                                        <ButtonGroup gap="16px" w="100%">
-                                            <Button w="100%" variant="signIn">
-                                                Edit
-                                            </Button>
-                                            <Button w="100%" variant="signIn" type="submit">
-                                                Save
-                                            </Button>
-                                        </ButtonGroup>
-                                    </GridItem>
-                                </SimpleGrid>
-                            </Form>
-                        );
-                    }}
-                </Formik>
+                <Box w="100%">
+                    <Formik
+                        initialValues={initialValues}
+                        validateOnBlur={true}
+                        validateOnChange={false}
+                        onSubmit={async (fields, { setStatus }) => {
+                            try {
+                                alert("SUCCESS!! :-)\n\n" + JSON.stringify(fields, null, 4));
+                            } catch (error) {
+                                console.log(error);
+                            }
+                        }}
+                    >
+                        {({ values, errors, status, touched, handleChange, setFieldValue }) => {
+                            return (
+                                <Form w="100%">
+                                    <SimpleGrid columns="2" gap="24px" w="100%">
+                                        <GridItem colSpan={1}>
+                                            <FormikInput label="Username" name="username" />
+                                        </GridItem>
+                                        <GridItem colSpan={1}>
+                                            <FormikInput
+                                                label="Password"
+                                                name="password"
+                                                type="password"
+                                            />
+                                        </GridItem>
+                                        <GridItem colSpan={2}>
+                                            <FormikInput label="Email" name="email" />
+                                        </GridItem>
+                                        <GridItem colSpan={2}>
+                                            <ButtonGroup gap="16px" w="100%">
+                                                <Button w="100%" variant="signIn">
+                                                    Edit
+                                                </Button>
+                                                <Button w="100%" variant="signIn" type="submit">
+                                                    Save
+                                                </Button>
+                                            </ButtonGroup>
+                                        </GridItem>
+                                    </SimpleGrid>
+                                </Form>
+                            );
+                        }}
+                    </Formik>
+                </Box>
             </Box>
         </>
     );
@@ -392,5 +406,32 @@ const FormikInput = ({ label, name, type = "text" }) => {
                 // onChange={(e) => onTextChange(e.target.value)}
             />
         </FormControl>
+    );
+};
+
+const UploadIcon = ({ handleOnClick }) => {
+    return (
+        <Icon
+            width="100%"
+            height="100%"
+            viewBox="0 0 40 40"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            cursor={"pointer"}
+            onClick={handleOnClick}
+        >
+            <circle cx="20" cy="20" r="19" fill="white" stroke="#1D63FF" strokeWidth="2" />
+            <g clip-path="url(#clip0_13957_4815)">
+                <path
+                    d="M14.1663 25.0416H26.833V19.5H28.4163V25.8333C28.4163 26.0433 28.3329 26.2446 28.1845 26.3931C28.036 26.5416 27.8346 26.625 27.6247 26.625H13.3747C13.1647 26.625 12.9633 26.5416 12.8149 26.3931C12.6664 26.2446 12.583 26.0433 12.583 25.8333V19.5H14.1663V25.0416ZM22.083 17.125V21.875H18.9163V17.125H14.958L20.4997 11.5833L26.0413 17.125H22.083Z"
+                    fill="#1D63FF"
+                />
+            </g>
+            <defs>
+                <clipPath id="clip0_13957_4815">
+                    <rect width="19" height="19" fill="white" transform="translate(11 10)" />
+                </clipPath>
+            </defs>
+        </Icon>
     );
 };

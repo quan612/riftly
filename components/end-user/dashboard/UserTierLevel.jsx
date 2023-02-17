@@ -110,7 +110,7 @@ const UserTierLevel = React.forwardRef(({ session }, levelProgress) => {
                     let nextLevelPoint = getPoints(tier.currentLevel + 2);
                     let newProgress =
                         ((newPoint - currentLevelPoint) / (nextLevelPoint - currentLevelPoint)) *
-                        100;
+                        100; // wrong here, when jump 2 levels up
                     // levelProgressSet(newProgress);
                     levelProgress.current = newProgress;
                     newTier = {

@@ -121,7 +121,7 @@ function RiftlyConnectBoard() {
         <ShortContainer>
             <Box w={{ base: "100px", md: "150px" }} display={"flex"}>
                 <Box display={"flex"} alignItems="center">
-                    {/* <RiftlyLogoWhiteText /> */}
+                    <RiftlyLogoWhiteText />
                 </Box>
             </Box>
 

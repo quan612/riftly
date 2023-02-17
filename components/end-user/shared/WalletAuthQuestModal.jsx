@@ -60,8 +60,7 @@ const WalletAuthQuestModal = ({ isOpen, onClose, isSignUp = false }) => {
             //   console.log("res", res);
             if (!res.isError) {
                 if (isSignUp) {
-                    let redirect = true;
-                    await signInWithWallet(type, redirect);
+                    await signInWithWallet(type, payload);
                 } else {
                     setView(AUTHENTICATED);
                 }
