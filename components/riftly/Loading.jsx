@@ -4,7 +4,7 @@ import { Image, Input, ModalOverlay, Modal, ModalContent, ModalBody } from "@cha
 export default function Loading() {
     return (
         <Modal isOpen isCentered>
-            <ModalOverlay bg="#1D3148" opacity="0.7" />
+            <ModalOverlay bg="#1D3148" opacity="0.7!important" />
             <ModalContent
                 w={"container.sm"}
                 bg={"transparent"}
@@ -12,6 +12,7 @@ export default function Loading() {
                 transition={"1.25s"}
                 alignItems="center"
                 justifyContent={"center"}
+                boxShadow="none"
             >
                 <Image
                     position={"absolute"}
