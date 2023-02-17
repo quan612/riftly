@@ -264,7 +264,7 @@ export const EmailWrapper = React.forwardRef(({ isSignIn = false, setView }, ref
 
         try {
             setLoading(true);
-            sleep(1000);
+            await sleep(3000);
             let signInRes = await signIn("email", {
                 redirect: false,
                 email,
@@ -297,7 +297,7 @@ export const EmailWrapper = React.forwardRef(({ isSignIn = false, setView }, ref
         };
 
         setLoading(true);
-
+        await sleep(3000);
         try {
             let signUpRes = await axios
                 .post(`/api/user/email-sign-up`, payload)

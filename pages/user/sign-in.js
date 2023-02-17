@@ -40,8 +40,8 @@ function SignIn() {
                 className="logo-wrapper"
                 position="absolute"
                 top="0"
-                w={{ base: "50px", md: "120px", lg: "179px" }}
-                h={{ base: "75px", md: "179px", lg: "198px" }}
+                w={{ base: "50px", md: "60px", lg: "179px" }}
+                h={{ base: "75px", md: "75px", lg: "198px" }}
                 display={"flex"}
                 justifyContent={"center"}
             >
@@ -49,6 +49,8 @@ function SignIn() {
                     <RiftlyLogoWhiteText />
                 </Box>
             </Box>
+
+
 
             <TallContainer>
                 <SignInSignUpWrapper isSignIn={true} />
