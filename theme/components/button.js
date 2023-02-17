@@ -1,8 +1,5 @@
 import { mode } from "@chakra-ui/theme-tools";
 
-
-
-
 export const buttonStyles = {
   components: {
     Button: {
@@ -283,6 +280,10 @@ export const buttonStyles = {
         }),
 
         twitter: (props) => ({
+          w: { base: "auto", md: "192px" },
+          h: { base: "40px", lg: "48px" },
+          fontSize: { base: "16px", lg: "18px" },
+          fontWeight: "semibold",
           bg: mode("transparent", "transparent")(props),
           color: "white",
           border: "1px solid",
@@ -306,6 +307,10 @@ export const buttonStyles = {
         }),
 
         discord: (props) => ({
+          w: { base: "auto", sm: "192px" },
+          h: { base: "40px", lg: "48px" },
+          fontSize: { base: "16px", lg: "18px" },
+          fontWeight: "semibold",
           bg: "transparent", //mode("transparent", "purple.300")(props),
           color: "white",
           border: "1px solid",
@@ -328,10 +333,14 @@ export const buttonStyles = {
           },
         }),
         wallet: (props) => ({
-          bg: mode("transparent", "transparent")(props),
+          w: { base: "auto", md: "192px" },
+          h: { base: "40px", lg: "48px" },
+          fontSize: { base: "16px", lg: "18px" },
+          fontWeight: "semibold",
+          bg: "transparent",
           color: "white",
           border: "1px solid",
-          borderColor: mode("orange.300", "orange.300")(props),
+          borderColor: "orange.300",
           borderRadius: "48px",
           transition: "0.8s",
           _hover: {
@@ -350,6 +359,10 @@ export const buttonStyles = {
           },
         }),
         google: (props) => ({
+          w: { base: "auto", md: "192px" },
+          h: { base: "40px", lg: "48px" },
+          fontSize: { base: "16px", lg: "18px" },
+          fontWeight: "semibold",
           bg: mode("transparent", "transparent")(props),
           color: "white",
           border: "1px solid",

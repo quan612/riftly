@@ -51,7 +51,7 @@ import { AiFillDelete } from "react-icons/ai";
 import { MdPreview } from "react-icons/md";
 import EditQuestModal from "./EditQuestModal";
 import AddQuestModal from "./AddQuestModal";
-import { RiftlyCheckMark, RiftlyEditIcon } from "@components/riftly/Misc";
+import { RiftlyCheckMark, RiftlyEditIcon } from "@components/riftly/Icons";
 
 const CurrentQuests = ({ quests, isLoading, error }) => {
     let router = useRouter();

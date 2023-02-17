@@ -1,10 +1,13 @@
 import Head from "next/head";
 import React from "react";
 import dynamic from "next/dynamic";
-const SignInPageComponent = dynamic(() => import("@components/end-user/connect/SignInPage"));
 
+import { Box } from "@chakra-ui/react";
+import { RiftlyLogoWhiteText } from "@components/riftly/Logo";
+import { SignInSignUpWrapper } from "@components/end-user/wrappers/SignInSignUpWrapper";
+import { TallContainer } from "containers/user";
 
-function SignUp({ session }) {
+function SignIn() {
     return (
         <>
             <Head>
@@ -33,9 +36,25 @@ function SignUp({ session }) {
                 <link rel="icon" href="/faviconShell.png" />
             </Head>
 
-            <SignInPageComponent />
+            <Box
+                className="logo-wrapper"
+                position="absolute"
+                top="0"
+                w={{ base: "50px", md: "120px", lg: "179px" }}
+                h={{ base: "75px", md: "179px", lg: "198px" }}
+                display={"flex"}
+                justifyContent={"center"}
+            >
+                <Box display={"flex"} alignItems="center" w={{ lg: "58%" }}>
+                    <RiftlyLogoWhiteText />
+                </Box>
+            </Box>
+
+            <TallContainer>
+                <SignInSignUpWrapper isSignIn={true} />
+            </TallContainer>
         </>
     );
 }
 
-export default SignUp;
+export default SignIn;

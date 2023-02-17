@@ -2,7 +2,7 @@ import Head from "next/head";
 import React from "react";
 import dynamic from "next/dynamic";
 const RedeemRewardsPageComponent = dynamic(() =>
-    import("@components/end-user/main-board/redeem/RedeemRewardsPage")
+    import("@components/end-user/redeem/RedeemRewardsPage")
 );
 const transition = { duration: 0.5, ease: [0.43, 0.13, 0.23, 0.96] };
 const variants = {

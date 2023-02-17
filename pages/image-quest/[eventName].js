@@ -1,15 +1,15 @@
 import React from "react";
 import s from "/sass/claim/claim.module.css";
-import { ConnectBoard, ImageUpload } from "@components/end-user";
+
 
 function ImageQuestPage({ session }) {
 
     return (
         <>
             <div className={s.app}>
-                {!session && <ConnectBoard />}
-                {session && process.env.NEXT_PUBLIC_ENABLE_CHALLENGER === "false" && <NotEnabledChallenger />}
-                {session && process.env.NEXT_PUBLIC_ENABLE_CHALLENGER === "true" && <ImageUpload />}
+
+
+                {/* {session && process.env.NEXT_PUBLIC_ENABLE_CHALLENGER === "true" && <ImageUpload />} */}
             </div>
         </>
     );

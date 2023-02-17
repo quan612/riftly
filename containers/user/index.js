@@ -1,4 +1,3 @@
-
 import {
   Heading,
   Box,
@@ -6,58 +5,68 @@ import {
   Container,
 } from "@chakra-ui/react";
 
-
-
 export const ShortContainer = ({ children }) => {
   return (
-    <Container
+    <Box
+      className="short-container"
+      // w={{ xs: "100%", sm: "60%", lg: "container.sm" }}
+      w={"container.sm"}
       maxW="container.sm"
       bg={"brand.neutral4"}
       color="#262626"
-      height={"429px"}
+      height={{ base: "auto", lg: "429px" }}
       borderRadius="16px"
       display={"flex"}
       alignItems={"center"}
       justifyContent={"center"}
       zIndex="2"
-      me={{ base: "16px", md: "0px" }}
-      ms={{ base: "16px", md: "0px" }}
+      me={{ base: "24px", xl: "0px" }}
+      ms={{ base: "24px", xl: "0px" }}
+      p={"3rem 56px"}
     >
       <Flex
-        w="80%"
-        h="80%"
+        w="100%"
+        h="100%"
         flexDirection={"column"}
         alignItems={"center"}
         justifyContent={"space-around"}
+        gap={{ base: "16px", md: "48px" }}
       >
         {children}
       </Flex>
-    </Container>
+    </Box>
   );
 };
 
 export const TallContainer = ({ children }) => {
   return (
-    <Container
+    <Box
+      className="tall-container"
+      // w={{ base: "100%", md: "60%", lg: "container.sm" }}
+      // w={{ xs: "100%", md: "container.sm" }}
+      w={"container.sm"}
       maxW="container.sm"
       bg={"brand.neutral4"}
       color="#262626"
-      height={"536px"}
+      height={{ base: "auto", lg: "536px" }}
       borderRadius="16px"
       display={"flex"}
       alignItems={"center"}
       justifyContent={"center"}
+      me={{ base: "24px", xl: "0px" }}
+      ms={{ base: "24px", xl: "0px" }}
+      p={{ base: "24px", md: "3rem" }}
+      mt={{ base: "1rem", lg: "0px" }}
     >
       <Flex
-        w="80%"
-        h="80%"
+        w={{ base: "100%", sm: "63.5%" }} //120 / 640 of container.sm
         flexDirection={"column"}
         alignItems={"center"}
         justifyContent={"space-around"}
-        gap="24px"
+        gap={{ base: "16px", lg: "24px" }}
       >
         {children}
       </Flex>
-    </Container>
+    </Box>
   );
 };

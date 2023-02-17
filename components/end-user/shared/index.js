@@ -1,7 +1,13 @@
-export { default as BoardTitle } from "./BoardTitle";
-export { default as ScrollableContent } from "./ScrollableContent";
-export { default as DisconnectButton } from "./DisconnectButton";
-export { default as BackToMainBoardButton } from "./BackToMainBoardButton";
-export { default as BoardSmallDollarSign } from "./BoardSmallDollarSign";
-export { default as BoardLargeDollarSign } from "./BoardLargeDollarSign";
-export { default as PinkLargeButton } from "./PinkLargeButton";
+import CodeQuestModal from "./CodeQuestModal";
+import NftOwnerQuestModal from "./NftOwnerQuestModal";
+import SmsVerificationQuestModal from "./SmsVerificationQuestModal";
+import WalletAuthQuestModal from "./WalletAuthQuestModal";
+import WalletSignInModal from "./WalletSignInModal";
+
+export {
+  CodeQuestModal,
+  WalletAuthQuestModal,
+  SmsVerificationQuestModal,
+  NftOwnerQuestModal,
+  WalletSignInModal,
+};

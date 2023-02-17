@@ -188,7 +188,9 @@ const AdminQuestUpsertAPI = async (req, res) => {
           let pushOp = await axios.post(
             `${questVariable.hostUrl}/api/user/web-push/push-notification`,
             payload
-          );
+          ).catch(err => {
+            console.log(err)
+          });
         } else {
           // update quest, we need to get original extendedQuestData and create a new object to avoid data loss
           console.log(`** Upsert a quest **`);
@@ -372,7 +374,7 @@ const imageUploadQuestCheck = (existingQuests, extendedQuestData, type) => {
   return existingCodeQuests.some(
     (q) =>
       q.extendedQuestData.eventName.toLowerCase() ===
-        extendedQuestData.eventName.toLowerCase() ||
+      extendedQuestData.eventName.toLowerCase() ||
       q.extendedQuestData.discordChannel === extendedQuestData.discordChannel
   );
 };

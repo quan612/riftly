@@ -219,7 +219,7 @@ export const authOptions = {
 
                 const currentUser = await prisma.whiteList.findFirst({
                     where: {
-                        email,
+                        email: { equals: email, mode: "insensitive" },
                     },
                 });
 

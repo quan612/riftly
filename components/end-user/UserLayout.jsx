@@ -1,156 +1,164 @@
 import React from "react";
-import { Box, Flex, Container } from "@chakra-ui/react";
-import RiftlyConnectBoard from "./RiftlyConnectBoard";
-import { Banner, FloatingFooter } from "./wrappers";
-import { Router, useRouter } from "next/router";
-import axios from "axios";
+import { Box, Flex, Container, Heading, ButtonGroup, Button, Text } from "@chakra-ui/react";
 
-const urlBase64ToUint8Array = (base64String) => {
-  const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
-  const base64 = (base64String + padding)
-    .replace(/\-/g, "+")
-    .replace(/_/g, "/");
-  const rawData = atob(base64);
-  const outputArray = new Uint8Array(rawData.length);
-  for (let i = 0; i < rawData.length; ++i) {
-    outputArray[i] = rawData.charCodeAt(i);
-  }
-  return outputArray;
-};
+import { FloatingFooter } from "./FloatingFooter";
+import { useRouter } from "next/router";
+import { useWindowSize } from "react-use";
+
+function use100vh() {
+    const ref = React.useRef();
+    const { height } = useWindowSize();
+
+    React.useEffect(() => {
+        if (!ref.current) {
+            return;
+        }
+        ref.current.style.height = height + "px";
+    }, [height]);
+
+    return ref;
+}
 
 export default function UserLayout({ session, children }) {
-  let router = useRouter();
+    let router = useRouter();
 
-  let notifyInterval;
-  React.useEffect(async () => {
-    try {
-      // if (session) {
-      //   Notification.requestPermission().then(async (perm) => {});
-      //   if ("serviceWorker" in navigator) {
-      //     // window.addEventListener("load", function () {
-      //     navigator.serviceWorker.register("./sw.js").then(
-      //       async function (registration) {
-      //         // console.log("subscribe to push manager");
-      //         const subscribeOptions = {
-      //           userVisibleOnly: true,
-      //           applicationServerKey: process.env.NEXT_PUBLIC_VAPID,
-      //           //      "BHVgKdVS-qTStVoxSfoJXjq7jkih61cy3FGFA4IHqM_vh4xWUbgzJKq2fFrcwdssflAqxaYWzleTFzWiLdbkBz8",
-      //         };
-      //         let existingSubscription =
-      //           await registration.pushManager.getSubscription();
-      //         try {
-      //           if (!existingSubscription) {
-      //             console.log(
-      //               "no subscription yet, going to subscribe one then save to database"
-      //             );
-      //             let pushSubscription =
-      //               await registration.pushManager.subscribe(subscribeOptions);
-      //             let newSubscription = await axios
-      //               .post(`/api/user/web-push/save-subscription`, {
-      //                 pushSubscription,
-      //               })
-      //               .then((r) => r.data);
-      //             console.log("newSubscription", newSubscription);
-      //           } else {
-      //             console.log("subscription exists", existingSubscription);
-      //           }
-      //         } catch (err) {
-      //           console.log(err);
-      //         }
-      //       },
-      //       function (err) {
-      //         console.log("Service Worker registration failed: ", err);
-      //       }
-      //     );
-      //   }
-      // }
-    } catch (error) {
-      clearInterval(notifyInterval);
-    }
-
-    if (Notification.permission !== "granted" && notifyInterval) {
-      clearInterval(notifyInterval);
-    }
-    return () => {
-      clearInterval(notifyInterval);
-    };
-  }, [session]);
-
-  if (session) {
-    return (
-      <Box
-        w="100%"
-        minH="100vh"
-        h="auto"
-        display={"flex"}
-        position={"relative"}
-      >
-        <Banner />
-        <Box
-          minW={"100%"}
-          w="100%"
-          bg={"brand.neutral5"}
-          color="#262626"
-          borderTopRadius={"16px"}
-          position="absolute"
-          top={"160px"}
-          minH="100vh"
-          maxH="auto"
-          pb="16px"
-          zIndex="2"
-        >
-          <Container
-            position={"relative"}
-            maxW="container.sm"
-            minW={{ sm: "100%", md: "container.sm" }}
-            padding={{ sm: "0px 16px", md: "0" }}
-          >
-            <Box
-              display={"flex"}
-              flexDirection={"column"}
-              w="100%"
-              position="relative"
-              top="-16px"
-              gap="16px"
-            >
-              {children}
-            </Box>
-          </Container>
-          <Box
-            h="75px"
-            minH="75px"
-            bg="brand.neutral5"
-            key="challenges-layout-hack"
-          />
-        </Box>
-        <FloatingFooter />
-      </Box>
-    );
-  } else {
-    if (router.pathname === "/") {
-      return (
-        <Box
-          w="100%"
-          minH="100vh"
-          h="auto"
-          display={"flex"}
-          position={"relative"}
-        >
-          <RiftlyConnectBoard />
-        </Box>
-      );
+    if (session) {
+        return (
+            <LayoutWrapper>
+                <Box
+                    minW={"100%"}
+                    w="100%"
+                    bg={"brand.neutral5"}
+                    color="#262626"
+                    borderTopRadius={"16px"}
+                    position="absolute"
+                    top={"160px"}
+                    minH="100vh"
+                    maxH="auto"
+                    pb="16px"
+                    zIndex="2"
+                >
+                    <Container
+                        position={"relative"}
+                        maxW="container.sm"
+                        minW={{ sm: "100%", md: "container.sm" }}
+                        padding={{ sm: "0px 16px", md: "0" }}
+                    >
+                        <Box
+                            display={"flex"}
+                            flexDirection={"column"}
+                            w="100%"
+                            position="relative"
+                            top="-16px"
+                            gap="16px"
+                        >
+                            {children}
+                        </Box>
+                    </Container>
+                    <Box h="75px" minH="75px" bg="brand.neutral5" key="challenges-layout-hack" />
+                </Box>
+                <FloatingFooter />
+            </LayoutWrapper>
+        );
     } else {
-      return (
-        <Box
-          w="100%"
-          minH="100vh"
-          h="auto"
-          display={"flex"}
-          position={"relative"}
-        >
-          {children}
-        </Box>
-      );
+        if (router.pathname === "/") {
+            return (
+                <LayoutWrapper>
+                    <RiftlyConnectBoard />
+                </LayoutWrapper>
+            );
+        } else {
+            return <LayoutWrapper>{children}</LayoutWrapper>;
+        }
+        1;
     }
-  }
+}
+
+export const LayoutWrapper = ({ children }) => {
+    const { isMobile } = useDeviceDetect();
+
+    const ref = use100vh();
+    return (
+        <Box
+            w="100%"
+            ref={ref}
+            // minH={{ base: `${isMobile ? "100vh" : "100vh"}`, lg: "100vh" }}
+            // h={{ base: `${isMobile ? "-webkit-fill-available" : "100vh"}`, lg: "100vh" }}
+            // h={{ base: `${isMobile ? "-webkit-fill-available" : "100vh"}`, lg: "100vh" }}
+            display={"flex"}
+            position={"relative"}
+            flexDirection="column"
+            className="layout-wrapper"
+        >
+            <Box
+                position="absolute"
+                w="100%"
+                h="100%"
+                __css={{
+                    background:
+                        "linear-gradient(rgba(29, 99, 255, 0.5),  rgba(29, 99, 255, 0.5)), url(/img/user/banner.png)",
+                }}
+                backgroundPosition="center"
+                backgroundSize={"cover"}
+                backgroundRepeat="no-repeat"
+                display={"flex"}
+                alignItems="center"
+                justifyContent={"center"}
+            >
+                {children}
+            </Box>
+        </Box>
+    );
+};
+
+import { ShortContainer } from "containers/user";
+import { RiftlyLogoWhiteText } from "@components/riftly/Logo";
+import { useDeviceDetect } from "lib/hooks";
+
+function RiftlyConnectBoard() {
+    let router = useRouter();
+    return (
+        <ShortContainer>
+            <Box w={{ base: "100px", md: "150px" }} display={"flex"}>
+                <Box display={"flex"} alignItems="center">
+                    {/* <RiftlyLogoWhiteText /> */}
+                </Box>
+            </Box>
+
+            <Flex flexDirection={"column"} alignItems={"center"}>
+                <Heading size="lg" color="#fff" mb="16px">
+                    Welcome to Riftly
+                </Heading>
+                <Text fontSize="lg" color={"brand.neutral1"} textAlign="center">
+                    Join Riftly or sign in to continue
+                </Text>
+            </Flex>
+            <ButtonGroup
+                w="100%"
+                gap="16px"
+                display={"flex"}
+                flexDirection={{ base: "column", md: "row" }}
+                justifyContent="center"
+                alignItems="center"
+            >
+                <Button
+                    w={{ base: "100%", md: "192pz" }}
+                    onClick={() => router.push("/user/sign-up")}
+                    size="lg"
+                    variant="blue"
+                >
+                    Get Started
+                </Button>
+
+                <Button
+                    w={{ base: "100%", md: "192pz" }}
+                    onClick={() => router.push("/user/sign-in")}
+                    size="lg"
+                    variant="signIn"
+                >
+                    Sign In
+                </Button>
+            </ButtonGroup>
+        </ShortContainer>
+    );
 }

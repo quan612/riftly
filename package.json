@@ -55,6 +55,7 @@
     "react-phone-number-input": "^3.2.17",
     "react-query": "^3.34.19",
     "react-table": "^7.7.0",
+    "react-use": "^17.4.0",
     "sass": "^1.45.2",
     "sharp": "^0.31.3",
     "twilio": "^3.84.1",

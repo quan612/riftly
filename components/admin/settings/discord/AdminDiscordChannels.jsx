@@ -38,7 +38,7 @@ import {
 } from "@chakra-ui/react";
 
 import AdminCard from "@components/riftly/card/AdminCard";
-import { RiftlyTooltip } from "@components/riftly/Misc";
+import { RiftlyTooltip } from "@components/riftly/Icons";
 
 const AdminDiscordChannels = () => {
     const [discordChannels, isLoadingDiscordChannels] = useAdminDiscordChannelsQuery();

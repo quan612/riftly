@@ -3,7 +3,7 @@ import Head from "next/head";
 
 import dynamic from "next/dynamic";
 const RiftlyIndividualQuestBoardComponent = dynamic(() =>
-    import("@components/end-user/main-board/dashboard/RiftlyIndividualQuestBoard")
+    import("@components/end-user/dashboard/RiftlyIndividualQuestBoard")
 );
 
 const transition = { duration: 0.5, ease: [0.43, 0.13, 0.23, 0.96] };

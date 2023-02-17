@@ -14,16 +14,16 @@ export default async function emailSignUp(req, res) {
 
                 const { email, password } = req.body;
 
-                const existingUser = await prisma.whiteList.findUnique({
+                const existingUser = await prisma.whiteList.findFirst({
                     where: {
-                        email
+                        email: { equals: email, mode: "insensitive" },
                     }
                 })
 
                 if (existingUser) {
                     return res
                         .status(200)
-                        .json({ isError: true, message: "User existed." });
+                        .json({ isError: true, message: "This email is used." });
                 }
 
                 // let checkMessage = await checkRequest(req, res)
@@ -49,7 +49,7 @@ export default async function emailSignUp(req, res) {
 
                 return res.status(200).json({ message: "New account created." });
             } catch (error) {
-                console.log(error)
+                // console.log(error)
                 return res.status(200).json({ isError: true, message: error.message });
             }
             break;

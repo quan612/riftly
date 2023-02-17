@@ -35,7 +35,7 @@ import {
 
 import { useAdminRewardTypeMutation, useRewardTypesQuery } from "@shared/HOC/reward-types";
 import AdminCard from "@components/riftly/card/AdminCard";
-import { RiftlyCheckMark, RiftlyEditIcon, RiftlyTooltip } from "@components/riftly/Misc";
+import { RiftlyCheckMark, RiftlyEditIcon, RiftlyTooltip } from "@components/riftly/Icons";
 import Card from "@components/riftly/card/Card";
 
 const AdminRewardTypes = () => {

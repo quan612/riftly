@@ -1,7 +1,7 @@
 import Head from "next/head";
 import React from "react";
 import dynamic from "next/dynamic";
-const PersonalInfoPageComponent = dynamic(() => import("@components/end-user/main-board/PersonalInfo"));
+const PersonalInfoPageComponent = dynamic(() => import("@components/end-user/personal-info/PersonalInfo"));
 
 const transition = { duration: 0.5, ease: [0.43, 0.13, 0.23, 0.96] };
 const variants = {

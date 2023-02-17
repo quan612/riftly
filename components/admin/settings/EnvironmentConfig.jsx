@@ -31,7 +31,7 @@ import {
 } from "@chakra-ui/react";
 import Card from "@components/riftly/card/Card";
 
-import { RiftlyTooltip } from "@components/riftly/Misc";
+import { RiftlyTooltip } from "@components/riftly/Icons";
 
 const EnvironmentConfig = () => {
     const bg = useColorModeValue("white", "#1B254B");

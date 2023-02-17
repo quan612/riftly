@@ -3,7 +3,7 @@ import React from "react";
 import dynamic from "next/dynamic";
 import { Flex } from "@chakra-ui/react";
 import { ChakraBox } from "@theme/additions/framer/FramerChakraComponent";
-const AchievementsPageComponent = dynamic(() => import("@components/end-user/main-board/Achievements"));
+const AchievementsPageComponent = dynamic(() => import("@components/end-user/achievement/Achievements"));
 
 const transition = { duration: 0.5, ease: [0.43, 0.13, 0.23, 0.96] };
 const variants = {
