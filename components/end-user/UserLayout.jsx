@@ -25,6 +25,13 @@ export default function UserLayout({ session, children }) {
     if (session) {
         return (
             <LayoutWrapper>
+                <Box position="absolute" w="100%" h="160px" top={0}>
+                    <Flex h="90%" alignItems="center" justifyContent={"center"}>
+                        <Box w={{ base: "75px", md: "90px", xl: "105px" }}>
+                            <RiftlyLogoWhite />
+                        </Box>
+                    </Flex>
+                </Box>
                 <Box
                     minW={"100%"}
                     w="100%"
@@ -112,7 +119,7 @@ export const LayoutWrapper = ({ children }) => {
 };
 
 import { ShortContainer } from "containers/user";
-import { RiftlyLogoWhiteText } from "@components/riftly/Logo";
+import { RiftlyLogoWhite, RiftlyLogoWhiteText } from "@components/riftly/Logo";
 import { useDeviceDetect } from "lib/hooks";
 
 function RiftlyConnectBoard() {
