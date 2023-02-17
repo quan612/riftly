@@ -1,16 +1,16 @@
 import React from "react";
-import s from "/sass/claim/claim.module.css";
+
 
 
 function ImageQuestPage({ session }) {
 
     return (
         <>
-            <div className={s.app}>
 
 
-                {/* {session && process.env.NEXT_PUBLIC_ENABLE_CHALLENGER === "true" && <ImageUpload />} */}
-            </div>
+
+            {/* {session && process.env.NEXT_PUBLIC_ENABLE_CHALLENGER === "true" && <ImageUpload />} */}
+
         </>
     );
 }

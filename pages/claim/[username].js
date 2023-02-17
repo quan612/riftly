@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import s from "/sass/claim/claim.module.css";
+
 import { Web3Context } from "@context/Web3Context";
 
 const util = require("util");
@@ -16,12 +16,12 @@ function ClaimReward({ session }) {
 
     return (
         <>
-            <div className={s.app}>
 
 
-                {/* {session && process.env.NEXT_PUBLIC_ENABLE_CHALLENGER === "true" && <UserClaimReward session={session} />} */}
 
-            </div>
+            {/* {session && process.env.NEXT_PUBLIC_ENABLE_CHALLENGER === "true" && <UserClaimReward session={session} />} */}
+
+
         </>
     );
 }
