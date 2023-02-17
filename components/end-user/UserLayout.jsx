@@ -91,7 +91,6 @@ export const LayoutWrapper = ({ children }) => {
             ref={ref}
             // minH={{ base: `${isMobile ? "100vh" : "100vh"}`, lg: "100vh" }}
             // h={{ base: `${isMobile ? "-webkit-fill-available" : "100vh"}`, lg: "100vh" }}
-            // h={{ base: `${isMobile ? "-webkit-fill-available" : "100vh"}`, lg: "100vh" }}
             display={"flex"}
             position={"relative"}
             flexDirection="column"
@@ -109,6 +108,7 @@ export const LayoutWrapper = ({ children }) => {
                 backgroundSize={"cover"}
                 backgroundRepeat="no-repeat"
                 display={"flex"}
+                flexDirection="column"
                 alignItems="center"
                 justifyContent={"center"}
             >

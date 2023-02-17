@@ -56,7 +56,7 @@ export const TallContainer = ({ children }) => {
       me={{ base: "24px", xl: "0px" }}
       ms={{ base: "24px", xl: "0px" }}
       p={{ base: "24px", md: "3rem" }}
-      mt={{ base: "1rem", lg: "0px" }}
+
     >
       <Flex
         w={{ base: "100%", sm: "63.5%" }} //120 / 640 of container.sm

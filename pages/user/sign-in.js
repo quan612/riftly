@@ -2,7 +2,7 @@ import Head from "next/head";
 import React from "react";
 import dynamic from "next/dynamic";
 
-import { Box } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 import { RiftlyLogoWhiteText } from "@components/riftly/Logo";
 import { SignInSignUpWrapper } from "@components/end-user/wrappers/SignInSignUpWrapper";
 import { TallContainer } from "containers/user";
@@ -36,25 +36,53 @@ function SignIn() {
                 <link rel="icon" href="/faviconShell.png" />
             </Head>
 
-            <Box
-                className="logo-wrapper"
-                position="absolute"
-                top="0"
-                w={{ base: "50px", md: "60px", lg: "179px" }}
-                h={{ base: "75px", md: "75px", lg: "198px" }}
-                display={"flex"}
+            <Flex
+                flex="1"
+                position="relative"
+                w="100%"
                 justifyContent={"center"}
+                alignItems="center"
             >
-                <Box display={"flex"} alignItems="center" w={{ lg: "58%" }}>
-                    <RiftlyLogoWhiteText />
+                <Box
+                    className="logo-wrapper"
+                    h="100%"
+                    w="100%"
+                    display={"flex"}
+                    justifyContent={"center"}
+                    alignItems="center"
+                    position="relative"
+                >
+                    <Box
+                        display={"flex"}
+                        justifyContent={"center"}
+                        alignItems="center"
+                        w="100%"
+                        h="66%"
+                        position="relative"
+                    // maxH="100%"
+                    >
+                        <Box
+                            display={"flex"}
+                            w="100%"
+                            maxH="100%"
+                            height={"100%"}
+                            minH="100%"
+                            position="relative"
+                            justifyContent={"center"}
+                            alignItems="center"
+                        >
+                            <RiftlyLogoWhiteText />
+                        </Box>
+                    </Box>
                 </Box>
-            </Box>
+            </Flex>
 
-
-
-            <TallContainer>
-                <SignInSignUpWrapper isSignIn={true} />
-            </TallContainer>
+            <Flex w="100%" alignItems="center" justifyContent={"center"} mt={{ base: "0.25rem", lg: "0px" }}>
+                <TallContainer>
+                    <SignInSignUpWrapper isSignIn={true} />
+                </TallContainer>
+            </Flex>
+            <Flex flex="1"></Flex>
         </>
     );
 }
