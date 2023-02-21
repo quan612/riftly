@@ -1,81 +1,68 @@
 import React, { useEffect, useState, useCallback, useRef } from "react";
 
-import {
-    Heading,
-    Box,
-    Flex,
-    Text,
-    Button,
-    useDisclosure,
-    Divider,
-    ButtonGroup,
-    Icon,
-    Container,
-    useToast,
-    Grid,
-    GridItem,
-} from "@chakra-ui/react";
+import { Heading, Box, Flex, Text, Button, useToast, Grid, GridItem } from "@chakra-ui/react";
 import { ChakraBox } from "@theme/additions/framer/FramerChakraComponent";
 
-import { AnimatePresence, motion, AnimateSharedLayout, LayoutGroup } from "framer-motion";
 import { useQueryClient } from "react-query";
 import { HeadingLg, HeadingSm, TextSm } from "@components/riftly/Typography";
 import UserTierLevel from "../dashboard/UserTierLevel";
+import { useDeviceDetect } from "lib/hooks";
+let achievementsArray = [
+    {
+        id: 1,
+        isClaimed: true,
+        isLocked: false,
+        text: "Welcome to Riftly",
+        description: "Bonus reward for starting your journey",
+        quantity: 100,
+    },
+    {
+        id: 2,
+        isClaimed: false,
+        isLocked: false,
+        text: "Reach Tier 5",
+        description: "Reach tier 5 to unlock this reward!",
+        quantity: 100,
+    },
+    {
+        id: 3,
+        isClaimed: false,
+        isLocked: false,
+        text: "Log in 10 days in a row",
+        description: "Check in every day to unlock this reward",
+        quantity: 100,
+    },
+    {
+        id: 4,
+        isClaimed: false,
+        isLocked: true,
+        text: "Completed 10 quests",
+        description: "Bonus reward for finishing 10 quests!",
+        quantity: 100,
+        progress: 50,
+    },
+    {
+        id: 5,
+        isClaimed: false,
+        isLocked: true,
+        text: "Completed all KYC quests",
+        description: "Bonus reward for completing all know your customer quests!",
+        quantity: 100,
+        progress: 33,
+    },
+    {
+        id: 6,
+        isClaimed: false,
+        isLocked: true,
+        text: "Own certain Nfts",
+        description: "Bonus reward for owning several Nfts!",
+        quantity: 100,
+        progress: 70,
+    },
+];
 
 const Achievements = ({ session }) => {
-    let achievementsArray = [
-        {
-            id: 1,
-            isClaimed: true,
-            isLocked: false,
-            text: "Welcome to Riftly",
-            description: "Bonus reward for starting your journey",
-            quantity: 100,
-        },
-        {
-            id: 2,
-            isClaimed: false,
-            isLocked: false,
-            text: "Reach Tier 5",
-            description: "Reach tier 5 to unlock this reward!",
-            quantity: 100,
-        },
-        {
-            id: 3,
-            isClaimed: false,
-            isLocked: false,
-            text: "Log in 10 days in a row",
-            description: "Check in every day to unlock this reward",
-            quantity: 100,
-        },
-        {
-            id: 4,
-            isClaimed: false,
-            isLocked: true,
-            text: "Completed 10 quests",
-            description: "Bonus reward for finishing 10 quests!",
-            quantity: 100,
-            progress: 50,
-        },
-        {
-            id: 5,
-            isClaimed: false,
-            isLocked: true,
-            text: "Completed all KYC quests",
-            description: "Bonus reward for completing all know your customer quests!",
-            quantity: 100,
-            progress: 33,
-        },
-        {
-            id: 6,
-            isClaimed: false,
-            isLocked: true,
-            text: "Own certain Nfts",
-            description: "Bonus reward for owning several Nfts!",
-            quantity: 100,
-            progress: 70,
-        },
-    ];
+    const { isMobile } = useDeviceDetect();
     let levelProgress = useRef(0);
     return (
         <>
@@ -104,12 +91,19 @@ const Achievements = ({ session }) => {
                             } = achievement;
                             return (
                                 <Box position={"relative"} key={index}>
+                                    {isMobile && index > 0 && (
+                                        <MobileVerticalTop
+                                            index={index}
+                                            achievement={achievement}
+                                        />
+                                    )}
                                     <Grid
-                                        templateColumns={"1fr 3fr"}
+                                        templateColumns={`${isMobile ? "1fr" : "1fr 3fr"}`}
                                         zIndex={"2"}
                                         position="relative"
+                                        gap={`${isMobile ? "48px" : "0px"}`} //gap on mobile only vertical
                                     >
-                                        <GridItem position="relative">
+                                        <GridItem className="left-wrapper">
                                             <Box
                                                 position={"relative"}
                                                 w="100%"
@@ -117,10 +111,16 @@ const Achievements = ({ session }) => {
                                                 display={"flex"}
                                                 alignItems="center"
                                             >
+                                                {!isMobile && (
+                                                    <DesktopHorizontalLine
+                                                        bg={getColor(achievement)}
+                                                    />
+                                                )}
+
                                                 <Box
-                                                    w="50%"
+                                                    className="circle-wrapper"
+                                                    w={`${isMobile ? "100%" : "50%"}`}
                                                     h="auto"
-                                                    zIndex={"1"}
                                                     display={"flex"}
                                                     alignItems="center"
                                                     justifyContent={"center"}
@@ -147,14 +147,17 @@ const Achievements = ({ session }) => {
                                                             w="100%"
                                                             h="100%"
                                                             bg="brand.neutral5"
+                                                            zIndex={"1"}
                                                         >
                                                             <CircleProgress progress={progress} />
                                                         </Flex>
                                                     )}
                                                     <Box
+                                                        className="order-number"
                                                         position="absolute"
                                                         display="flex"
                                                         justifyContent="center"
+                                                        zIndex={"1"}
                                                     >
                                                         <Heading
                                                             fontWeight="700"
@@ -164,52 +167,30 @@ const Achievements = ({ session }) => {
                                                             {achievement.id}
                                                         </Heading>
                                                     </Box>
+                                                    <MobileVerticalLineBottom
+                                                        index={index}
+                                                        achievementsArray={achievementsArray}
+                                                        achievement={achievement}
+                                                    />
                                                 </Box>
-
-                                                <Box
-                                                    left="10%"
-                                                    w="90%"
-                                                    height="1px"
-                                                    bg={getColor(achievement)}
-                                                    position="absolute"
-                                                    zIndex={0}
-                                                />
                                             </Box>
                                         </GridItem>
 
-                                        <GridItem>
-                                            <Box
-                                                key={id}
-                                                h={{ base: "112px", md: "96px" }}
-                                                maxH={{ base: "112px", md: "96px" }}
-                                                w="100%"
-                                                bg="brand.neutral4"
-                                                border="1px solid"
-                                                borderColor={getColor(achievement)}
-                                                borderRadius={"16px"}
-                                            >
-                                                <TripBox item={achievement} index={index} />
-                                            </Box>
+                                        <GridItem className="right-wrapper" zIndex={1}>
+                                            <TripBox item={achievement} index={index} id={id} />
                                         </GridItem>
                                     </Grid>
-                                    <Box
-                                        className="achievement-vertical-line"
-                                        h="160px"
-                                        position="absolute"
-                                        left="39.5px"
-                                        top="32px"
-                                        w="1px"
-                                        bg={
-                                            index === achievementsArray.length - 1
-                                                ? "brand.neutral3"
-                                                : getColor(achievement)
-                                        }
-                                        zIndex={"0"}
-                                    />
+                                    {!isMobile && (
+                                        <DesktopVerticalLine
+                                            index={index}
+                                            achievementsArray={achievementsArray}
+                                            achievement={achievement}
+                                        />
+                                    )}
                                 </Box>
                             );
                         })}
-                    <ComingSoonStrip index={achievementsArray.length + 1} />
+                    <ComingSoonStrip isMobile={isMobile} index={achievementsArray.length + 1} />
                 </Box>
             </Box>
         </>
@@ -259,14 +240,7 @@ const CircleProgress = ({ progress }) => {
                     viewBox="0 0 80 80"
                     preserveAspectRatio="xMinYMin meet"
                 >
-                    <circle
-                        cx="50%"
-                        cy="50%"
-                        r="42%"
-                        fill="none"
-                        stroke="#fff"
-                        strokeWidth="12"
-                    ></circle>
+                    <circle cx="50%" cy="50%" r="42%" fill="none" stroke="#fff" strokeWidth="12" />
                 </svg>
             </Box>
 
@@ -282,17 +256,13 @@ const CircleProgress = ({ progress }) => {
                     transform="rotate(-90 40 40)"
                     cx="40"
                     cy="40"
-                    // r="42%"
                     r="34"
                     fill="none"
                     stroke="#00BBC7"
                     strokeWidth="12"
-                    // strokeDasharray={`${(progress * 314) / 100} 314`}
-                    // strokeDasharray={`157 157`}
                     strokeDasharray="213.52"
                     strokeDashoffset={` ${213.52 - (213.52 * progress) / 100}`}
-                    // strokeDashoffset={`10`}
-                ></circle>
+                />
             </svg>
         </>
     );
@@ -308,7 +278,7 @@ const AchievementHeader = () => {
         </Box>
     );
 };
-const TripBox = ({ item, index }) => {
+const TripBox = ({ id, item, index }) => {
     const toast = useToast();
     const queryClient = useQueryClient();
     const [disableBtn, disableBtnSet] = useState(false);
@@ -363,21 +333,27 @@ const TripBox = ({ item, index }) => {
 
         if (isClaimed) {
             return (
-                <Button size={"md"} variant="ghost-base" disabled={true}>
+                <Button flex="1" size={"md"} variant="ghost-base" disabled={true}>
                     Claimed
                 </Button>
             );
         }
         if (!isClaimed && !isLocked) {
             return (
-                <Button size={"sm"} variant="cyan" transitionDuration={"0.5s"} onClick={() => {}}>
+                <Button
+                    flex="1"
+                    size={"sm"}
+                    variant="cyan"
+                    transitionDuration={"0.5s"}
+                    onClick={() => {}}
+                >
                     Claim
                 </Button>
             );
         }
         if (isLocked) {
             return (
-                <Button size={"md"} variant="ghost-base" disabled={true}>
+                <Button flex="1" size={"md"} variant="ghost-base" disabled={true}>
                     Locked
                 </Button>
             );
@@ -385,7 +361,20 @@ const TripBox = ({ item, index }) => {
     });
 
     return (
-        <>
+        <Box
+            key={id}
+            h={{ base: "112px", md: "96px" }}
+            maxH={{ base: "112px", md: "96px" }}
+            w="100%"
+            bg="brand.neutral4"
+            border="1px solid"
+            borderColor={getColor(item)}
+            borderRadius={"16px"}
+            position="relative"
+            display={"flex"}
+            alignItems="center"
+            justifyContent={"center"}
+        >
             <Box display="flex" flex="1" h="100%">
                 <Box
                     className="user-achievement-claim"
@@ -403,7 +392,7 @@ const TripBox = ({ item, index }) => {
                             flex="1"
                             alignItems="center"
                         >
-                            <Flex display={"flex"} flexDirection="column">
+                            <Flex display={"flex"} flexDirection="column" w="80%">
                                 <>
                                     <HeadingSm color="#fff">{item.text}</HeadingSm>
                                     <TextSm
@@ -416,70 +405,39 @@ const TripBox = ({ item, index }) => {
                                     </TextSm>
                                 </>
                             </Flex>
-                            <Flex position="relative" h="100%" alignItems={"center"}>
-                                <AnimatePresence>
-                                    {showScore && (
-                                        <ChakraBox
-                                            // key={item.id}
-                                            key={index}
-                                            position={"absolute"}
-                                            top="-3"
-                                            left="4"
-                                            variants={{
-                                                hidden: {
-                                                    opacity: 0,
-                                                    y: 20,
-                                                },
-                                                visible: {
-                                                    opacity: 1,
-                                                    y: 0,
-                                                    transition: {
-                                                        duration: 1,
-                                                        type: "spring",
-                                                    },
-                                                },
-                                                removed: {
-                                                    opacity: 0,
-
-                                                    transition: {
-                                                        duration: 2,
-                                                        // type: "spring",
-                                                    },
-                                                },
-                                            }}
-                                            initial="hidden"
-                                            animate="visible"
-                                            exit="removed"
-                                        >
-                                            <Text
-                                                className="score"
-                                                size="xl"
-                                                color="brand.cyan"
-                                                fontWeight={"700"}
-                                            >
-                                                + {item.quantity}
-                                            </Text>
-                                        </ChakraBox>
-                                    )}
-                                    {getClaimButton()}
-                                </AnimatePresence>
+                            <Flex
+                                position="relative"
+                                h="100%"
+                                alignItems={"center"}
+                                maxWidth="20%"
+                                minW="80px"
+                                flex="1"
+                            >
+                                {getClaimButton()}
                             </Flex>
                         </Flex>
                     </Box>
                 </Box>
             </Box>
-        </>
+        </Box>
     );
 };
 
-const ComingSoonStrip = ({ index }) => {
+const ComingSoonStrip = ({ isMobile, index }) => {
     return (
         <Box position={"relative"}>
-            <Grid templateColumns={"1fr 3fr"} zIndex={"2"} position="relative">
-                <GridItem position="relative">
+            <Grid
+                templateColumns={`${isMobile ? "1fr" : "1fr 3fr"}`}
+                zIndex={"2"}
+                position="relative"
+                gap={`${isMobile ? "60px" : "0px"}`} //gap on mobile only vertical
+            >
+                <GridItem className="left-wrapper" position="relative">
                     <Box position={"relative"} h="100%" display={"flex"} alignItems="center">
+                        {!isMobile && <DesktopHorizontalLine bg={"#2F4E6D"} />}
                         <Box
-                            w="50%"
+                            className="circle-wrapper"
+                            w={`${isMobile ? "100%" : "50%"}`}
                             h="auto"
                             zIndex={"1"}
                             display={"flex"}
@@ -502,21 +460,11 @@ const ComingSoonStrip = ({ index }) => {
                                 </Heading>
                             </Box>
                         </Box>
-
-                        <Box
-                            left="10%"
-                            w="90%"
-                            height="1px"
-                            bg={"#2F4E6D"}
-                            position="absolute"
-                            zIndex={0}
-                        />
                     </Box>
                 </GridItem>
 
-                <GridItem>
+                <GridItem className="right-wrapper" zIndex={"1"}>
                     <ChakraBox
-                        // key={id}
                         h={{ base: "112px", md: "96px" }}
                         maxH={{ base: "112px", md: "96px" }}
                         w="100%"
@@ -562,6 +510,87 @@ const ComingSoonStrip = ({ index }) => {
                     </ChakraBox>
                 </GridItem>
             </Grid>
+        </Box>
+    );
+};
+
+const DesktopHorizontalLine = ({ bg }) => {
+    return (
+        <Box
+            className="horizontal-line"
+            w="100%"
+            position="absolute"
+            display="flex"
+            alignItems={"center"}
+            justifyContent="center"
+            zIndex={-1}
+            left={`${"3rem"}`}
+        >
+            <Box w={`${"100%"}`} height={`${"1px"}`} bg={bg} />
+        </Box>
+    );
+};
+
+const DesktopVerticalLine = ({ index, achievementsArray, achievement }) => {
+    return (
+        <Box
+            className="desktop-vertical-line"
+            display={`${"block"}`}
+            h="160px"
+            position="absolute"
+            left="39.5px"
+            top="32px"
+            w="1px"
+            bg={index === achievementsArray.length - 1 ? "brand.neutral3" : getColor(achievement)}
+            zIndex={"0"}
+        />
+    );
+};
+
+const MobileVerticalTop = ({ index, achievement }) => {
+    return (
+        <Box
+            w="100%"
+            className="mobile-middle-vertical-line-top"
+            position="relative"
+            display={`${"flex"}`}
+            justifyContent="center"
+            alignItems={"center"}
+            zIndex={"-1"}
+        >
+            <Box
+                h="160px"
+                position="absolute"
+                w="1px"
+                bg={
+                    index === achievementsArray.length - 1
+                        ? "brand.neutral3"
+                        : getColor(achievement)
+                }
+            />
+        </Box>
+    );
+};
+
+const MobileVerticalLineBottom = ({ index, achievementsArray, achievement }) => {
+    return (
+        <Box
+            className="middle-vertical-line-below-circle"
+            position="absolute"
+            display={"flex"}
+            justifyContent="center"
+            zIndex={"-1"}
+        >
+            <Box
+                h="120px"
+                position="absolute"
+                w="1px"
+                bg={
+                    index === achievementsArray.length - 1
+                        ? "brand.neutral3"
+                        : getColor(achievement)
+                }
+            />
         </Box>
     );
 };

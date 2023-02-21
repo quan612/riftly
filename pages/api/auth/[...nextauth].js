@@ -28,6 +28,9 @@ const bcrypt = require("bcrypt");
 
 const { NEXTAUTH_SECRET } = process.env;
 
+import { AccountStatus } from "@prisma/client";
+
+
 export const authOptions = {
     providers: [
         /*   
@@ -92,8 +95,8 @@ export const authOptions = {
             },
         }),
         CredentialsProvider({
-            id: "non-admin-authenticate",
-            name: "Non-admin authentication",
+            id: "web3-wallet",
+            name: "web3-wallet",
             type: "credentials",
             authorize: async (credentials, req) => {
                 try {
@@ -224,7 +227,7 @@ export const authOptions = {
                 });
 
                 if (!currentUser) {
-                    throw new Error("This email account is not in our record.");
+                    throw new Error("This email account is not found.");
                 }
 
                 // bcrypt check
@@ -234,31 +237,10 @@ export const authOptions = {
                 }
 
                 return {
-                    address: currentUser?.wallet,
                     isAdmin: false,
                     userId: currentUser.userId,
                     email: currentUser.email,
                 };
-
-                //   const res = await fetch('http://localhost:5287/api/tokens', {
-                //     method: 'POST',
-                //     body: JSON.stringify(payload),
-                //     headers: {
-                //       'Content-Type': 'application/json',
-                //     },
-                //   })
-
-                //   const user = await res.json()
-                //   if (!res.ok) {
-                //     throw new Error(user.message)
-                //   }
-                //   // If no error and we have user data, return it
-                //   if (res.ok && user) {
-                //     return user
-                //   }
-
-                //   // Return null if user data could not be retrieved
-                //   return null
             },
         }),
         DiscordProvider({
@@ -275,15 +257,16 @@ export const authOptions = {
     debug: false,
     session: {
         jwt: true,
-        maxAge: 60 * 60 * 24, // 7 days
+        maxAge: 60 * 60, // 7 days
     },
     jwt: {
         signingKey: NEXTAUTH_SECRET,
     },
     callbacks: {
         signIn: async (user, account, profile) => {
-            // console.log("Provider: " + user?.account?.provider);
-
+            if (user?.account?.provider === "admin-authenticate") {
+                return true
+            }
             if (user?.account?.provider === "unstoppable-authenticate") {
                 let uathUser = user.credentials.uathUser;
                 const existingUser = await prisma.whiteList.findFirst({
@@ -300,10 +283,6 @@ export const authOptions = {
                 let credentials = user?.credentials;
                 let userInfo = user?.user;
 
-                // console.log(credentials.message)
-                // console.log(credentials.signature)
-                // console.log(userInfo.message)
-                // console.log(userInfo.signature)
                 if (
                     // credentials.address.toLowerCase() != userInfo.address.toLowerCase() ||
                     credentials.message != userInfo.message ||
@@ -312,6 +291,40 @@ export const authOptions = {
                     console.log("Invalid unstoppable authorization.");
                     let error = `Invalid unstoppable authorization.`;
                     return `/quest-redirect?error=${error}`;
+                }
+                return false; // not supporting right now
+            }
+            if (user?.account?.provider === "email") {
+                let email = user?.user?.userId
+                const existingUser = await prisma.whiteList.findFirst({
+                    where: {
+                        email,
+                    },
+                });
+
+                if (!existingUser) {
+                    let error = `Email ${email} not found.`;
+                    return `/quest-redirect?error=${error}`;
+                }
+                if (existingUser.status === AccountStatus.PENDING) {
+                    return `/sms-verification?account=${email}&type=${Enums.EMAIL}`;
+                }
+                return true;
+            }
+            if (user?.account?.provider === "discord") {
+                let discordId = user.account.providerAccountId;
+                const existingUser = await prisma.whiteList.findFirst({
+                    where: {
+                        discordId,
+                    },
+                });
+
+                if (!existingUser) {
+                    let error = `Discord ${user.profile.username}%23${user.profile.discriminator} not found.`;
+                    return `/quest-redirect?error=${error}`;
+                }
+                if (existingUser.status === AccountStatus.PENDING) {
+                    return `/sms-verification?account=${address}&type=${Enums.DISCORD}`;
                 }
                 return true;
             }
@@ -327,10 +340,13 @@ export const authOptions = {
                     let error = `Discord ${user.profile.username}%23${user.profile.discriminator} not found in our database.`;
                     return `/quest-redirect?error=${error}`;
                 }
+                if (existingUser.status === AccountStatus.PENDING) {
+                    return `/sms-verification?account=${address}&type=${Enums.DISCORD}`;
+                }
                 return true;
             }
 
-            if (user.account.provider === "twitter") {
+            if (user?.account?.provider === "twitter") {
                 let twitterId = user.account.providerAccountId;
 
                 const existingUser = await prisma.whiteList.findFirst({
@@ -340,13 +356,36 @@ export const authOptions = {
                 });
 
                 if (!existingUser) {
-                    let error = `Twitter account ${user.user.name} not found in our database.`;
+                    let error = `Twitter account ${user.user.name} not found.`;
                     return `/quest-redirect?error=${error}`;
+                }
+                if (existingUser.status === AccountStatus.PENDING) {
+                    return `/sms-verification?account=${address}&type=${Enums.TWITTER}`;
                 }
                 return true;
             }
 
-            return true;
+            if (user?.account?.provider === "web3-wallet") {
+                let userId = user?.user?.userId
+                let address = user?.user?.address
+                const existingUser = await prisma.whiteList.findUnique({
+                    where: {
+                        userId
+                    },
+                });
+
+                if (!existingUser) {
+                    let error = `Wallet account ${address} not found in our database.`;
+                    return `/quest-redirect?error=${error}`;
+                }
+
+                if (existingUser.status === AccountStatus.PENDING) {
+                    return `/sms-verification?account=${address}&type=${Enums.WALLET}`;
+                }
+                return true;
+            }
+
+            return false;
         },
         async redirect({ url, baseUrl }) {
             return url;
@@ -367,30 +406,26 @@ export const authOptions = {
                 session.provider = token.provider;
                 return session;
             } else {
-                let userQuery;
-                if (token.provider === "twitter") {
-                    userQuery = await prisma.whiteList.findFirst({
-                        where: {
-                            twitterId: token?.user?.id,
-                        },
-                    });
-                }
-                if (token.provider === "discord") {
-                    userQuery = await prisma.whiteList.findFirst({
-                        where: {
-                            discordId: token?.user?.id,
-                        },
-                    });
-                }
+
+                let userQuery = await prisma.whiteList.findFirst({
+                    where: {
+                        userId: token?.user?.userId,
+                    },
+                });
 
                 session.profile = token.profile || null;
                 session.user = token.user;
                 session.provider = token.provider;
 
+                session.user.twitter = userQuery?.twitterUserName || ""
+                session.user.discord = userQuery?.discordUserDiscriminator || ""
+                session.user.email = userQuery?.email || ""
+                session.user.avatar = userQuery?.avatar || ""
+                session.user.wallet = userQuery?.wallet || "";
+
                 if (!session.user.userId) {
-                    session.user.address = userQuery.wallet || "";
                     session.user.userId = userQuery.userId;
-                    session.user.uathUser = userQuery.uathUser || "";
+                    session.user.uathUser = userQuery?.uathUser || "";
                 }
                 return session;
             }

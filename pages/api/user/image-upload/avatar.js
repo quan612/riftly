@@ -36,7 +36,19 @@ const AvatarUploadAPI = async (req, res) => {
           public_id: whiteListUser.userId,
           upload_preset: "Riftly-Avatar-Staging"
         });
-        return res.status(200).json(uploaded);
+
+        if (uploaded.secure_url) {
+          await prisma.whiteList.update({
+            where: {
+              userId: whiteListUser.userId
+            },
+            data: {
+              avatar: uploaded.secure_url
+            }
+          })
+          return res.status(200).json({ message: "Upload avatar successfully" });
+        }
+        res.status(200).json({ isError: true, message: "Cannot upload avatar. Please contact administrator." });
       } catch (err) {
         console.log(err);
         res.status(200).json({ isError: true, message: err.message });

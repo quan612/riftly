@@ -135,8 +135,10 @@ export const buttonStyles = {
         }),
 
         blue: (props) => ({
-          minWidth: "84px",
-          minH: "40px",
+          w: { base: "auto", md: "192px" },
+          h: { base: "40px", lg: "48px" },
+          fontSize: { base: "16px", lg: "18px" },
+          fontWeight: "semibold",
           border: "1px solid",
           borderColor: "transparent",
           borderRadius: "48px",
@@ -253,8 +255,10 @@ export const buttonStyles = {
         }),
 
         cyan: (props) => ({
-          minWidth: "84px",
-          minH: "40px",
+          w: { base: "auto", lg: "192px" },
+          h: { base: "40px", lg: "48px" },
+          fontSize: { base: "16px", lg: "18px" },
+
           fontSize: "md",
           bg: "brand.cyan",
           borderRadius: "48px",

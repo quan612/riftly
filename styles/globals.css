@@ -43,4 +43,10 @@ a {
 		justify-content: center;
 		align-items: center;
 	}
-	
+	.PhoneInputCountrySelectArrow {
+		color:white
+	}
+
+	.PhoneInputCountryIcon{
+		color:white
+	}

@@ -25,6 +25,8 @@ model WhiteList {
   email                         String?               @unique
   password                      String?               @default("")
   smsVerification               SmsVerification?
+  avatar                        String?
+  status                        AccountStatus?        @default(PENDING)
 }
 model WhiteListUserData {
   id                            Int           @id @default(autoincrement())
@@ -202,14 +204,14 @@ model Discord {
 }
 
 model SmsVerification {
-  id                          Int                 @id @default(autoincrement())
-  user                        WhiteList           @relation(fields: [userId], references: [userId])
-  userId                      String              @unique
-  attemptedPhone              String              @unique
-  status                      String
-  valid                       Boolean             @default(false)
-  createdAt                   DateTime            @default(now())
-  updatedAt                   DateTime            @default(now()) @updatedAt
+  id                          Int                     @id @default(autoincrement())
+  user                        WhiteList               @relation(fields: [userId], references: [userId])
+  userId                      String                  @unique
+  attemptedPhone              String                  @unique
+  status                      VerificationStatus      @default(PENDING)
+  valid                       Boolean                 @default(false)
+  createdAt                   DateTime                @default(now())
+  updatedAt                   DateTime                @default(now()) @updatedAt
 }
 
 model WebPushSubscription {
@@ -217,4 +219,14 @@ model WebPushSubscription {
   endpoint                    String?
   auth                        String?
   p256dh                      String?
+}
+
+enum AccountStatus {
+ PENDING
+ ACTIVE
+}
+
+enum VerificationStatus {
+ PENDING
+ APPROVED
 }

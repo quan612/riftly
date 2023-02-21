@@ -2,10 +2,8 @@ import React, { useEffect, useState, useRef, useCallback } from "react";
 import { Heading, Text, Button, Image, Input, ButtonGroup } from "@chakra-ui/react";
 
 import { ChakraBox, FramerButton } from "@theme/additions/framer/FramerChakraComponent";
-import { AnimatePresence, AnimateSharedLayout, motion } from "framer-motion";
-import { useCodeQuestSubmit } from "@shared/HOC/quest";
-import { RiftlyModalCloseButton } from "@components/riftly/Buttons";
-import { debounce } from "@utils/index";
+import { AnimatePresence } from "framer-motion";
+
 import ModalWrapper from "../wrappers/ModalWrapper";
 import axios from "axios";
 
@@ -48,15 +46,33 @@ const UploadAvatarModal = ({ isOpen, onClose }) => {
     };
 
     const handleOnSubmit = useCallback(async () => {
-        const res = await axios.post("/api/user/image-upload/avatar", {
-            data: imageSrc,
-        });
+        setIsLoading(true);
 
-        console.log(res);
+        try {
+            const res = await axios
+                .post("/api/user/image-upload/avatar", {
+                    data: imageSrc,
+                })
+                .then((r) => r.data);
+
+            if (res.isError) {
+                setIsLoading(false);
+            } else {
+                setView(SUBMITTED);
+            }
+        } catch (error) {
+            setIsLoading(false);
+            errorSet(error.message);
+        }
     });
 
     return (
-        <ModalWrapper gap="24px" isOpen={isOpen} onClose={onClose} handleOnClose={handleOnClose}>
+        <ModalWrapper
+            gap={{ base: "16px", lg: "32px" }}
+            isOpen={isOpen}
+            onClose={onClose}
+            handleOnClose={handleOnClose}
+        >
             <AnimatePresence mode="popLayout">
                 {currentView === UPLOADABLE && (
                     <>
@@ -114,7 +130,12 @@ const UploadAvatarModal = ({ isOpen, onClose }) => {
                             <span className={s.board_imageUpload_imageName}>{imageFile.name}</span>
                         )}
                         {error && <span className={s.board_imageUpload_imageName}>{error}</span>} */}
-                        <Image src={imageSrc} ref={imageEl} w="70%" />
+                        <ChakraBox w="100%" layout key="avatar-upload-heading">
+                            <Heading color="white" fontSize={"3xl"} lineHeight="4xl" align="center">
+                                Confirm to upload as avatar
+                            </Heading>
+                        </ChakraBox>
+                        <Image src={imageSrc} ref={imageEl} w="50%" />
 
                         <ButtonGroup
                             display={"flex"}

@@ -24,6 +24,7 @@ import {
     Divider,
     Icon,
     useDisclosure,
+    Image,
 } from "@chakra-ui/react";
 import { RiftlyFace } from "@components/riftly/Logo";
 import axios from "axios";
@@ -31,6 +32,8 @@ import axios from "axios";
 import { debounce } from "utils/";
 import { RiftlyTooltip } from "@components/riftly/Icons";
 import UploadAvatarModal from "../shared/UploadAvatarModal";
+import { shortenAddress } from "@utils/shortenAddress";
+import { getDiscordAuthLink, getTwitterAuthLink } from "@utils/helpers";
 
 const PersonalInfo = ({ session }) => {
     return (
@@ -43,8 +46,8 @@ const PersonalInfo = ({ session }) => {
             gap="16px"
             paddingBottom="24px"
         >
-            <AccountInfo />
-            <ConnectionsInfo />
+            <AccountInfo session={session} />
+            <ConnectionsInfo session={session} />
             <Settings />
         </Box>
     );
@@ -57,28 +60,46 @@ const Settings = () => {
     let swRegistrationRef = useRef(null);
     const [switchSb, switchSbSet] = useState(false);
     const toast = useToast();
+    const [disableNotification, setDisableNotification] = useState(false);
 
-    useEffect(() => {
+    useEffect(async () => {
         if ("serviceWorker" in navigator) {
-            navigator.serviceWorker.register("./sw.js").then(
-                async function (registration) {
-                    swRegistrationRef.current = registration;
-                    let existingSubscription =
-                        await swRegistrationRef.current.pushManager.getSubscription();
+            let existingRegistraton = await navigator.serviceWorker.getRegistration();
 
-                    console.log("existingSubscription", existingSubscription);
-                    if (existingSubscription) {
-                        switchSbSet(true);
-                    } else {
-                        switchSbSet(false);
-                    }
-                },
-                function (err) {
-                    console.log("Service Worker registration failed: ", err);
+            if (!existingRegistraton) {
+                swRegistrationRef.current = existingRegistraton;
+                let existingSubscription =
+                    await swRegistrationRef.current.pushManager.getSubscription();
+
+                // console.log("existingSubscription", existingSubscription);
+                if (existingSubscription) {
+                    switchSbSet(true);
+                } else {
+                    switchSbSet(false);
                 }
-            );
+                return;
+            } else {
+                navigator.serviceWorker.register("./sw.js").then(
+                    async function (registration) {
+                        swRegistrationRef.current = registration;
+                        let existingSubscription =
+                            await swRegistrationRef.current.pushManager.getSubscription();
+
+                        // console.log("existingSubscription", existingSubscription);
+                        if (existingSubscription) {
+                            switchSbSet(true);
+                        } else {
+                            switchSbSet(false);
+                        }
+                    },
+                    function (err) {
+                        setDisableNotification(true);
+                    }
+                );
+            }
         } else {
-            window.alert("Not supporting service on this browser");
+            console.log("Not supporting service on this browser");
+            // window.alert("Not supporting service on this browser");
         }
     }, []);
 
@@ -196,6 +217,7 @@ const Settings = () => {
                         onChange={async (e) => {
                             debouncedSubscribeChangeHandler(e);
                         }}
+                        disabled={disableNotification}
                     />
                 </FormControl>
 
@@ -212,14 +234,122 @@ const Settings = () => {
     );
 };
 
-const ConnectionsInfo = () => {
-    const initialValues = {
-        username: "",
-        password: "",
-        email: "",
-    };
+const ConnectionsInfo = ({ session }) => {
+    const { wallet, twitter, discord } = session?.user;
+
+    const getDiscordInfo = useCallback(() => {
+        if (discord.length > 0) {
+            return (
+                <Input
+                    type="text"
+                    fontSize="md"
+                    variant="riftly"
+                    ms="4px"
+                    disabled={true}
+                    value={discord}
+                />
+            );
+        }
+        return (
+            <Button
+                w="100%"
+                variant="outline"
+                onClick={async () => {
+                    let discordLink = await getDiscordAuthLink();
+                    return window.open(discordLink, "_self");
+                }}
+            >
+                Connect Discord
+            </Button>
+        );
+    });
+
+    const getTwitterInfo = useCallback(() => {
+        if (twitter.length > 0) {
+            return (
+                <Input
+                    type="text"
+                    fontSize="md"
+                    variant="riftly"
+                    ms="4px"
+                    disabled={true}
+                    value={twitter}
+                />
+            );
+        }
+        return (
+            <Button
+                w="100%"
+                variant="outline"
+                onClick={async () => {
+                    let twitterLink = await getTwitterAuthLink();
+                    return window.open(twitterLink, "_self");
+                }}
+            >
+                Connect Twitter
+            </Button>
+        );
+    });
+
+    // const getGoogleInfo = useCallback(() => {
+    //     if (twitter.length > 0) {
+    //         return (
+    //             <Input
+    //                 type="text"
+    //                 fontSize="md"
+    //                 variant="riftly"
+    //                 ms="4px"
+    //                 disabled={true}
+    //                 value={twitter}
+    //             />
+    //         );
+    //     }
+    //     return (
+    //         <Button w="100%" variant="outline">
+    //             Connect Twitter
+    //         </Button>
+    //     );
+    // });
+
+    const getWalletInfo = useCallback(() => {
+        if (wallet.length > 0) {
+            return (
+                <Input
+                    type="text"
+                    fontSize="md"
+                    variant="riftly"
+                    ms="4px"
+                    disabled={true}
+                    value={wallet.length > 0 ? shortenAddress(wallet) : ""}
+                />
+            );
+        }
+        return (
+            <Button
+                w="100%"
+                variant="outline"
+                onClick={async () => {
+                    walletSignUpModal.onOpen();
+                }}
+            >
+                Connect Wallet
+            </Button>
+        );
+    });
+
+    const walletSignUpModal = useDisclosure();
+
     return (
         <>
+            {walletSignUpModal?.isOpen && (
+                <WalletAuthQuestModal
+                    isSignUp={true}
+                    isOpen={walletSignUpModal.isOpen}
+                    onClose={() => {
+                        walletSignUpModal.onClose();
+                    }}
+                />
+            )}
             <Heading color="white" fontWeight="600" size="md">
                 Connections
             </Heading>
@@ -244,27 +374,13 @@ const ConnectionsInfo = () => {
                         <Text ms="4px" mb="8px" fontSize="lg" fontWeight="400" color="purple.300">
                             Discord
                         </Text>
-                        <Input
-                            type="text"
-                            fontSize="md"
-                            variant="riftly"
-                            ms="4px"
-                            disabled={true}
-                            value={"fsdfdf"}
-                        />
+                        {getDiscordInfo()}
                     </GridItem>
                     <GridItem colSpan={1}>
                         <Text ms="4px" mb="8px" fontSize="lg" fontWeight="400" color="blue.300">
                             Twitter
                         </Text>
-                        <Input
-                            type="text"
-                            fontSize="md"
-                            variant="riftly"
-                            ms="4px"
-                            disabled={true}
-                            value={"fsdfdf"}
-                        />
+                        {getTwitterInfo()}
                     </GridItem>
                     <GridItem colSpan={1}>
                         <Text ms="4px" mb="8px" fontSize="lg" fontWeight="400" color="red.300">
@@ -283,14 +399,7 @@ const ConnectionsInfo = () => {
                         <Text ms="4px" mb="8px" fontSize="lg" fontWeight="400" color="orange.300">
                             Wallet
                         </Text>
-                        <Input
-                            type="text"
-                            fontSize="md"
-                            variant="riftly"
-                            ms="4px"
-                            disabled={true}
-                            value={"fsdfdf"}
-                        />
+                        {getWalletInfo()}
                     </GridItem>
                 </SimpleGrid>
             </Box>
@@ -298,13 +407,31 @@ const ConnectionsInfo = () => {
     );
 };
 
-const AccountInfo = () => {
+const AccountInfo = ({ session }) => {
     const initialValues = {
         username: "",
         password: "",
         email: "",
     };
+
     const uploadAvatarModal = useDisclosure();
+    const { avatar, email } = session?.user;
+    console.log(session);
+
+    const getUserAvatar = useCallback(
+        (avatar) => {
+            console.log(avatar);
+            if (avatar && avatar.trim().length > 5)
+                return <Image borderRadius={"50%"} src={avatar} />;
+            else return <RiftlyFace />;
+        },
+        [avatar]
+    );
+
+    const getButtonState = useCallback(() => {
+        if (email.length > 0) return false;
+        return true;
+    });
     return (
         <>
             <UploadAvatarModal
@@ -334,7 +461,8 @@ const AccountInfo = () => {
                 gap="16px"
             >
                 <Box boxSize={"96px"} position="relative">
-                    <RiftlyFace />
+                    {getUserAvatar(avatar)}
+
                     <Box position="absolute" boxSize="40px" right="2px" bottom="0">
                         <UploadIcon handleOnClick={() => uploadAvatarModal.onOpen()} />
                     </Box>
@@ -356,28 +484,30 @@ const AccountInfo = () => {
                             return (
                                 <Form w="100%">
                                     <SimpleGrid columns="2" gap="24px" w="100%">
-                                        <GridItem colSpan={1}>
-                                            <FormikInput label="Username" name="username" />
-                                        </GridItem>
-                                        <GridItem colSpan={1}>
-                                            <FormikInput
-                                                label="Password"
-                                                name="password"
-                                                type="password"
-                                            />
-                                        </GridItem>
                                         <GridItem colSpan={2}>
-                                            <FormikInput label="Email" name="email" />
+                                            <FormikInput label="Email" name="email" value={email} />
                                         </GridItem>
-                                        <GridItem colSpan={2}>
-                                            <ButtonGroup gap="16px" w="100%">
-                                                <Button w="100%" variant="signIn">
-                                                    Edit
+                                        <GridItem colSpan={1}>
+                                            <FormikInput label="Phone Number" name="username" />
+                                        </GridItem>
+                                        <GridItem colSpan={1}>
+                                            <FormControl>
+                                                <FormLabel
+                                                    ms="4px"
+                                                    fontSize="md"
+                                                    fontWeight="bold"
+                                                    color="#fff"
+                                                >
+                                                    Password
+                                                </FormLabel>
+                                                <Button
+                                                    w="100%"
+                                                    variant="outline"
+                                                    disabled={getButtonState()}
+                                                >
+                                                    Reset Password
                                                 </Button>
-                                                <Button w="100%" variant="signIn" type="submit">
-                                                    Save
-                                                </Button>
-                                            </ButtonGroup>
+                                            </FormControl>
                                         </GridItem>
                                     </SimpleGrid>
                                 </Form>
@@ -390,20 +520,21 @@ const AccountInfo = () => {
     );
 };
 
-const FormikInput = ({ label, name, type = "text" }) => {
+const FormikInput = ({ label, name, value = "", type = "text" }) => {
     return (
         <FormControl>
             <FormLabel ms="4px" fontSize="md" fontWeight="bold" color="#fff">
                 {label}
             </FormLabel>
             <Field
+                disabled={true}
                 name={name}
                 type={type}
                 as={Input}
                 fontSize="md"
                 variant="riftly"
                 ms="4px"
-                // onChange={(e) => onTextChange(e.target.value)}
+                value={value}
             />
         </FormControl>
     );
@@ -421,7 +552,7 @@ const UploadIcon = ({ handleOnClick }) => {
             onClick={handleOnClick}
         >
             <circle cx="20" cy="20" r="19" fill="white" stroke="#1D63FF" strokeWidth="2" />
-            <g clip-path="url(#clip0_13957_4815)">
+            <g clipPath="url(#clip0_13957_4815)">
                 <path
                     d="M14.1663 25.0416H26.833V19.5H28.4163V25.8333C28.4163 26.0433 28.3329 26.2446 28.1845 26.3931C28.036 26.5416 27.8346 26.625 27.6247 26.625H13.3747C13.1647 26.625 12.9633 26.5416 12.8149 26.3931C12.6664 26.2446 12.583 26.0433 12.583 25.8333V19.5H14.1663V25.0416ZM22.083 17.125V21.875H18.9163V17.125H14.958L20.4997 11.5833L26.0413 17.125H22.083Z"
                     fill="#1D63FF"

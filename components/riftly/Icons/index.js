@@ -1,9 +1,25 @@
-import { Icon, Tooltip } from "@chakra-ui/react"
+import { Icon, Tooltip, Flex } from "@chakra-ui/react"
 import { BsInfoCircle } from "react-icons/bs";
 import { BiEdit } from "react-icons/bi";
 import { BsCheckLg } from "react-icons/bs";
 import { BsTwitter, BsDiscord, BsGoogle } from "react-icons/bs";
 import { RiWallet3Fill } from "react-icons/ri";
+
+export const IconBox = (props) => {
+  const { icon, ...rest } = props;
+
+  return (
+    <Flex
+      alignItems={"center"}
+      justifyContent={"center"}
+      borderRadius={"8px"}
+      {...rest}
+    >
+      {icon}
+    </Flex>
+  );
+}
+
 
 
 export const RiftlyIcon = ({ fill = "#1D63FF" }) => {

@@ -88,7 +88,7 @@ function MyApp({ Component, pageProps }) {
             </Script>
             <ChakraProvider theme={theme}>
               {Component.requireAdmin ? (
-                <AdminLayout>
+                <AdminLayout {...pageProps}>
                   <AdminGuard>
                     <Component {...pageProps} />
                   </AdminGuard>

@@ -126,7 +126,12 @@ function RiftlyConnectBoard() {
     let router = useRouter();
     return (
         <ShortContainer>
-            <Box w={{ base: "100px", md: "150px" }} display={"flex"}>
+            <Box
+                w={{ base: "100px", md: "150px" }}
+                display={"flex"}
+                alignItems="center"
+                justifyContent={"center"}
+            >
                 <Box display={"flex"} alignItems="center">
                     <RiftlyLogoWhiteText />
                 </Box>

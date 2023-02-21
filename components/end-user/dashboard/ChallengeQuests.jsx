@@ -406,6 +406,7 @@ const UserQuestBox = ({ quest, index, currentQuests, filterCompleted, onTest }) 
                                         )}
                                         <Button
                                             size={"sm"}
+                                            maxW="120px"
                                             variant={quest.isClaimable ? "cyan" : "blue"}
                                             transitionDuration={"0.5s"}
                                             onClick={() => {

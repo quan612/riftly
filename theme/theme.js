@@ -11,6 +11,11 @@ import { linkStyles } from "./components/link";
 import { breakpoints } from "./foundations/breakpoints";
 import { globalStyles } from "./styles";
 import { theme as chakraTheme } from '@chakra-ui/react'
+import { MainPanelComponent } from "./additions/layout/MainPanel";
+import { PanelContentComponent } from "./additions/layout/PanelContent";
+import { PanelContainerComponent } from "./additions/layout/PanelContainer";
+
+
 
 const config = {
   initialColorMode: 'dark',
@@ -49,7 +54,9 @@ export default extendTheme(
   textareaStyles, // textarea styles
   switchStyles, // switch styles
   CardComponent, // card component
-
+  MainPanelComponent,
+  PanelContentComponent,
+  PanelContainerComponent,
   {
     fonts,
     colors: riftlyColor

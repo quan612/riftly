@@ -77,11 +77,11 @@ function SignIn() {
                 </Box>
             </Flex>
 
-            <Flex w="100%" alignItems="center" justifyContent={"center"} mt={{ base: "0.25rem", lg: "0px" }}>
-                <TallContainer>
-                    <SignInSignUpWrapper isSignIn={true} />
-                </TallContainer>
-            </Flex>
+
+            <TallContainer>
+                <SignInSignUpWrapper isSignIn={true} />
+            </TallContainer>
+
             <Flex flex="1"></Flex>
         </>
     );

@@ -181,7 +181,7 @@ export function Web3Provider({ session, children }) {
         if (payload) {
             //automatic sign in without sign message
             let { signature, address } = payload;
-            await signIn("non-admin-authenticate", {
+            await signIn("web3-wallet", {
                 redirect: true,
                 signature,
                 address,
@@ -245,7 +245,7 @@ export function Web3Provider({ session, children }) {
                             });
 
                         if (signature && addresses[0]) {
-                            signIn("non-admin-authenticate", {
+                            signIn("web3-wallet", {
                                 redirect: true,
                                 signature,
                                 address: addresses[0],

@@ -13,6 +13,7 @@ import { ChakraBox } from "@theme/additions/framer/FramerChakraComponent";
 import { HeadingSm, TextMd } from "@components/riftly/Typography";
 import { getUserName } from "@utils/index";
 import { RiftlyIcon } from "@components/riftly/Icons";
+import { RiftlyFace } from "@components/riftly/Logo";
 
 const usePrevious = (value) => {
     const ref = useRef();
@@ -36,6 +37,7 @@ function getLevel(points) {
 
 const UserTierLevel = React.forwardRef(({ session }, levelProgress) => {
     const [userRewards, userRewardLoading] = useUserRewardQuery(session);
+    const [avatar] = useState(session?.user?.avatar);
 
     const [tier, tierSet] = useState(null);
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -147,7 +149,7 @@ const UserTierLevel = React.forwardRef(({ session }, levelProgress) => {
             display="flex"
         >
             <Box display={"flex"} alignItems={"center"} minH="100%" flex="1" zIndex={2}>
-                <UserTierAvatar />
+                <UserTierAvatar avatar={avatar} />
 
                 <Box
                     display="flex"
@@ -464,7 +466,11 @@ const LevelUpModal = ({ tier, isOpen, onClose }) => {
     );
 };
 
-const UserTierAvatar = () => {
+const UserTierAvatar = ({ avatar }) => {
+    const getUserAvatar = useCallback((avatar) => {
+        if (avatar && avatar.trim().length > 5) return <Image borderRadius={"50%"} src={avatar} />;
+        else return <RiftlyFace />;
+    });
     return (
         <Box
             className="quest-user-avatar"
@@ -473,21 +479,9 @@ const UserTierAvatar = () => {
             display="flex"
             justifyContent="center"
             alignItems="center"
-            flex={"0 0 auto"}
         >
-            <Box
-                h="80%"
-                display="flex"
-                flexDirection={"column"}
-                justifyContent="space-evenly"
-                alignItems={"center"}
-            >
-                <Image
-                    borderRadius="full"
-                    boxSize="72px"
-                    src="https://bit.ly/dan-abramov"
-                    alt="Dan Abramov"
-                />
+            <Box boxSize={"72px"} position="relative">
+                {getUserAvatar(avatar)}
             </Box>
         </Box>
     );

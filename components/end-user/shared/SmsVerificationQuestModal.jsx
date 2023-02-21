@@ -27,13 +27,8 @@ import {
 } from "@chakra-ui/react";
 
 import { useDeviceDetect } from "lib/hooks";
-
-import Enums from "@enums/index";
-import { RiftlyModalCloseButton } from "@components/riftly/Buttons";
-
 import { useRouter } from "next/router";
 import { debounce } from "@utils/index";
-import axios from "axios";
 import { ChakraBox } from "@theme/additions/framer/FramerChakraComponent";
 
 import "react-phone-number-input/style.css";

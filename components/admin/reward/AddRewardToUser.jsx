@@ -123,10 +123,6 @@ const AddRewardToUser = ({ isSubmitting, onSubmit, mutationError }) => {
                                 gap="1%"
                             >
                                 <Box w={{ base: "100%" }} minW="100%">
-                                    {/* <Heading fontSize="xl" mb="4">
-                                        Reward
-                                    </Heading> */}
-
                                     <Card boxShadow={shadow} py="8" bg={bg}>
                                         <SimpleGrid
                                             minChildWidth={"300px"}
