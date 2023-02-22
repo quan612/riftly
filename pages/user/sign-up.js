@@ -7,7 +7,16 @@ import { RiftlyLogoWhiteText } from "@components/riftly/Logo";
 import { SignInSignUpWrapper } from "@components/end-user/wrappers/SignInSignUpWrapper";
 import { TallContainer } from "containers/user";
 
+import * as gtag from '@lib/ga/gtag'
+
 function SignUp() {
+    React.useEffect(() => {
+        gtag.event({
+            action: 'sign_up',
+            category: 'User',
+            label: "User signs up successfully",
+        })
+    }, [])
     return (
         <>
             <Head>
