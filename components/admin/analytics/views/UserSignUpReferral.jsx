@@ -6,16 +6,20 @@ import Card from "@components/riftly/card/Card";
 
 const barChartDataConsumption = [
     {
+        name: "riftly website",
+        data: [400],
+    },
+    {
         name: "discord",
-        data: [400],
+        data: [222],
     },
     {
-        name: "twitter post",
-        data: [400],
+        name: "twitter",
+        data: [145],
     },
     {
-        name: "random site",
-        data: [400],
+        name: "facebook",
+        data: [121],
     },
 ];
 
@@ -26,6 +30,9 @@ const barChartOptionsConsumption = {
         height: 50,
         toolbar: {
             show: false,
+        },
+        sparkline: {
+            enabled: true,
         },
     },
     tooltip: {
@@ -89,21 +96,21 @@ const barChartOptionsConsumption = {
             },
         },
     },
-    fill: {
-        type: "solid",
-        colors: ["#5E37FF", "#6AD2FF", "#E1E9F8"],
-    },
+    // fill: {
+    //     type: "solid",
+    //     colors: ["#5E37FF", "#6AD2FF", "#E1E9F8"],
+    // },
     legend: {
         show: false,
     },
-    colors: ["#5E37FF", "#6AD2FF", "#E1E9F8"],
+    colors: ["#4299E1", "#ECC94B", "#ED8936", "#ED64A6", "#C53030"],
     dataLabels: {
         enabled: false,
     },
     plotOptions: {
         bar: {
             horizontal: true,
-            borderRadius: 10,
+            borderRadius: 0,
             barHeight: 20,
             // columnWidth: "20px",
         },
@@ -125,7 +132,7 @@ export default function UserSignUpReferral() {
                 </Text>
             </Flex>
 
-            <Box h="240px" mt="auto" w="100%">
+            <Box height="80px" w="100%">
                 <ApexBarChart
                     chartData={barChartDataConsumption}
                     chartOptions={barChartOptionsConsumption}

@@ -41,6 +41,9 @@ const pieChartOptions = {
         enabled: true,
         theme: "dark",
     },
+    stroke: {
+        width: 0,
+    },
 };
 
 export default function UsersByDevicePieCart() {
