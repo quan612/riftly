@@ -14,8 +14,8 @@ function SignUp() {
         if (typeof window !== 'undefined' && window.gtag) {
             console.log("gtag event tracked")
             gtag.event({
-                action: 'sign_up',
-                category: 'User',
+                action: 'sign_up_success',
+                method: "Google",
                 label: "User signs up successfully",
             })
         }
