@@ -296,11 +296,6 @@ const TripBox = ({ id, item, index }) => {
     const claimQuest = useCallback(async (questId) => {
         disableBtnSet(true);
         try {
-            // let res = await onClaim({ questId });
-            // if (res.isError) {
-            //     console.log(res.message);
-            //     throw res.message;
-            // }
             showScoreSet(true);
             scorePopupTimeout = setTimeout(() => {
                 showScoreSet(false);

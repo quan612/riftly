@@ -15,10 +15,10 @@ AdminRewardTypePage.Layout = AdminLayout;
 AdminRewardTypePage.requireAdmin = true;
 export default AdminRewardTypePage;
 
-import { unstable_getServerSession } from "next-auth/next";
+import { getServerSession } from "next-auth/next";
 import { authOptions } from "pages/api/auth/[...nextauth]";
 export async function getServerSideProps(context) {
-    const session = await unstable_getServerSession(context.req, context.res, authOptions);
+    const session = await getServerSession(context.req, context.res, authOptions);
 
     return {
         props: {

@@ -24,7 +24,8 @@ const adminUserStatsAPI = async (req, res) => {
                 wallet: true,
                 twitterUserName: true,
                 discordUserDiscriminator: true,
-                whiteListUserData: true
+                whiteListUserData: true,
+                userId: true
             },
         });
 

@@ -173,7 +173,7 @@ export default function TopCountriesTable() {
                                                 </Text>
                                             );
                                         }
-                                        console.log(cell.column.width);
+
                                         return (
                                             <Td
                                                 {...cell.getCellProps()}

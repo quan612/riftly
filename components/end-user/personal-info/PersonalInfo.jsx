@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState, useCallback, useRef } from "react";
-
 import { Web3Context } from "@context/Web3Context";
 import Enums from "enums";
 import { ErrorMessage, Field, Form, Formik, useFormik } from "formik";
@@ -238,7 +237,7 @@ const ConnectionsInfo = ({ session }) => {
     const { wallet, twitter, discord } = session?.user;
 
     const getDiscordInfo = useCallback(() => {
-        if (discord.length > 0) {
+        if (discord?.length > 0) {
             return (
                 <Input
                     type="text"
@@ -265,7 +264,7 @@ const ConnectionsInfo = ({ session }) => {
     });
 
     const getTwitterInfo = useCallback(() => {
-        if (twitter.length > 0) {
+        if (twitter?.length > 0) {
             return (
                 <Input
                     type="text"
@@ -312,7 +311,7 @@ const ConnectionsInfo = ({ session }) => {
     // });
 
     const getWalletInfo = useCallback(() => {
-        if (wallet.length > 0) {
+        if (wallet?.length > 0) {
             return (
                 <Input
                     type="text"
@@ -429,7 +428,7 @@ const AccountInfo = ({ session }) => {
     );
 
     const getButtonState = useCallback(() => {
-        if (email.length > 0) return false;
+        if (email?.length > 0) return false;
         return true;
     });
     return (

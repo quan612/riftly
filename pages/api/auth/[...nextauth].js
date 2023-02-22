@@ -198,7 +198,7 @@ export const authOptions = {
         CredentialsProvider({
             id: "email",
             // The name to display on the sign in form (e.g. 'Sign in with...')
-            name: "Email",
+            name: "email",
             credentials: {
                 email: {
                     label: "email",
@@ -236,6 +236,10 @@ export const authOptions = {
                     throw new Error("Wrong password entered.");
                 }
 
+                if (currentUser.status === AccountStatus.PENDING) {
+                    throw new Error(`Pending Sign Up`);
+                }
+                // return null
                 return {
                     isAdmin: false,
                     userId: currentUser.userId,
@@ -295,39 +299,29 @@ export const authOptions = {
                 return false; // not supporting right now
             }
             if (user?.account?.provider === "email") {
-                let email = user?.user?.userId
-                const existingUser = await prisma.whiteList.findFirst({
-                    where: {
-                        email,
-                    },
-                });
+                try {
 
-                if (!existingUser) {
-                    let error = `Email ${email} not found.`;
-                    return `/quest-redirect?error=${error}`;
-                }
-                if (existingUser.status === AccountStatus.PENDING) {
-                    return `/sms-verification?account=${email}&type=${Enums.EMAIL}`;
-                }
-                return true;
-            }
-            if (user?.account?.provider === "discord") {
-                let discordId = user.account.providerAccountId;
-                const existingUser = await prisma.whiteList.findFirst({
-                    where: {
-                        discordId,
-                    },
-                });
+                    let email = user?.user?.email
 
-                if (!existingUser) {
-                    let error = `Discord ${user.profile.username}%23${user.profile.discriminator} not found.`;
-                    return `/quest-redirect?error=${error}`;
+                    const existingUser = await prisma.whiteList.findFirst({
+                        where: {
+                            email,
+                        },
+                    });
+
+                    // should not be here
+                    if (existingUser.status === AccountStatus.PENDING) {
+
+                        throw new Error(`/sms-verification?account=${email}&type=${Enums.EMAIL}`);
+                    }
+                    console.log(4)
+                    return true;
+                } catch (error) {
+                    console.log(error)
                 }
-                if (existingUser.status === AccountStatus.PENDING) {
-                    return `/sms-verification?account=${address}&type=${Enums.DISCORD}`;
-                }
-                return true;
+
             }
+
             if (user?.account?.provider === "discord") {
                 let discordId = user.account.providerAccountId;
                 const existingUser = await prisma.whiteList.findFirst({
@@ -345,7 +339,6 @@ export const authOptions = {
                 }
                 return true;
             }
-
             if (user?.account?.provider === "twitter") {
                 let twitterId = user.account.providerAccountId;
 
@@ -388,6 +381,8 @@ export const authOptions = {
             return false;
         },
         async redirect({ url, baseUrl }) {
+            console.log(url)
+            console.log(baseUrl)
             return url;
         },
         async jwt({ token, user, account, profile }) {

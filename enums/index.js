@@ -6,6 +6,7 @@ const Enums = {
     METAMASK: "METAMASK",
     WALLETCONNECT: "WALLETCONNET",
     EMAIL: "Email",
+    GOOGLE: "Google",
     REWARDTYPE: {
         MYSTERYBOWL: "Mystery Bowl",
         NUDE: "Nude",

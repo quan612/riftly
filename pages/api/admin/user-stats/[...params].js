@@ -38,11 +38,10 @@ const handler = async (req, res) => {
                         wallet: true,
                         twitterUserName: true,
                         discordUserDiscriminator: true,
-                        whiteListUserData: true
+                        whiteListUserData: true,
+                        userId: true
                     },
                 });
-
-
 
                 if (!Moralis.Core.isStarted) {
                     await Moralis.start({

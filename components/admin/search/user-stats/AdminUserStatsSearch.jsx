@@ -41,164 +41,18 @@ import {
     NumberInputStepper,
     NumberIncrementStepper,
     NumberDecrementStepper,
+    Icon,
 } from "@chakra-ui/react";
 
 import { ArrowRightIcon, ArrowLeftIcon, ChevronRightIcon, ChevronLeftIcon } from "@chakra-ui/icons";
-
 import AdminCard from "../../../riftly/card/AdminCard";
-
 import { useGlobalFilter, usePagination, useSortBy, useTable } from "react-table";
+import { AiFillDelete } from "react-icons/ai";
+
+import { BiRefresh } from "react-icons/bi";
+import { useAdminRefreshUserStats } from "@shared/HOC/user";
 
 export default function AdminUserStatsSearch() {
-    const [formData, setFormData] = useState(null);
-
-    const onFormSubmit = (data) => {
-        setFormData(data);
-    };
-    return (
-        <Flex
-            flexDirection={{
-                base: "column",
-            }}
-            w="100%"
-            h="100%"
-            justifyContent="center"
-            gap="1%"
-        >
-            <UserStatsSearchForm onFormSubmit={onFormSubmit} />
-            {formData && <UserStatsSearchResult formData={formData} />}
-        </Flex>
-    );
-}
-
-const UserStatsSearchForm = ({ onFormSubmit }) => {
-    const initialValues = {
-        contract: "",
-        wallet: "",
-        chainId: "eth",
-    };
-
-    const chains = ["eth", "polygon", "bsc", "avalance", "fantom"];
-
-    const SearchInfoSchema = object().shape({});
-    return (
-        <>
-            <Formik
-                initialValues={initialValues}
-                validationSchema={SearchInfoSchema}
-                onSubmit={async (fields) => {
-                    onFormSubmit(fields);
-                }}
-                validateOnBlur={true}
-                validateOnChange={false}
-            >
-                {({ formik, errors, status, touched, values }) => {
-                    return (
-                        <Box w="100%">
-                            <Form>
-                                <Flex
-                                    flexDirection={{
-                                        base: "row",
-                                    }}
-                                    w="100%"
-                                    h="100%"
-                                    justifyContent="center"
-                                    mb="20px"
-                                    mt={{ base: "50px", md: "20px" }}
-                                    gap="1%"
-                                >
-                                    <Box w={{ base: "100%" }} minW="100%">
-                                        <AdminCard>
-                                            <SimpleGrid
-                                                minChildWidth={"300px"}
-                                                columns={{ base: 2, md: 2 }}
-                                                columnGap={8}
-                                                rowGap={4}
-                                                w="full"
-                                            >
-                                                <GridItem colSpan={1}>
-                                                    <FormControl mb="24px">
-                                                        <FormLabel
-                                                            ms="4px"
-                                                            fontSize="md"
-                                                            fontWeight="bold"
-                                                        >
-                                                            Contract Address
-                                                        </FormLabel>
-                                                        <Field
-                                                            name="contract"
-                                                            type="text"
-                                                            as={Input}
-                                                        />
-                                                    </FormControl>
-                                                </GridItem>
-                                                <GridItem colSpan={1}>
-                                                    <FormControl mb="24px">
-                                                        <FormLabel
-                                                            ms="4px"
-                                                            fontSize="md"
-                                                            fontWeight="bold"
-                                                        >
-                                                            Wallet Address
-                                                        </FormLabel>
-                                                        <Field
-                                                            name="wallet"
-                                                            type="text"
-                                                            as={Input}
-                                                        />
-                                                    </FormControl>
-                                                </GridItem>
-                                                <GridItem colSpan={1}>
-                                                    <FormControl mb="24px">
-                                                        <FormLabel
-                                                            ms="4px"
-                                                            fontSize="md"
-                                                            fontWeight="bold"
-                                                        >
-                                                            Chain
-                                                        </FormLabel>
-                                                        <Field name="chainId" as={Select}>
-                                                            {chains.map((type, index) => {
-                                                                return (
-                                                                    <option
-                                                                        key={index}
-                                                                        value={type}
-                                                                    >
-                                                                        {type}
-                                                                    </option>
-                                                                );
-                                                            })}
-                                                        </Field>
-                                                    </FormControl>
-                                                </GridItem>
-                                            </SimpleGrid>
-
-                                            <Button
-                                                w={{ base: "200px" }}
-                                                my="12px"
-                                                type="submit"
-                                                colorScheme="teal"
-                                                size="lg"
-                                                // isLoading={isSubmitting}
-                                                // disabled={isSubmitButtonDisabled(values)}
-                                            >
-                                                Search
-                                            </Button>
-                                        </AdminCard>
-                                    </Box>
-                                </Flex>
-                            </Form>
-                        </Box>
-                    );
-                }}
-            </Formik>
-        </>
-    );
-};
-
-function UserStatsSearchResult({ formData }) {
-    // const { data, error } = useSWR([USER_STATS_SEARCH, formData], fetcher);
-    const [apiError, setApiError] = useState(null);
     const [tableData, setTableData] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
 
@@ -227,8 +81,10 @@ function UserStatsSearchResult({ formData }) {
         return nftOwners;
     });
 
-    useEffect(async () => {
-        setIsLoading(true);
+    const onFormSubmit = async (formData) => {
+        // setFormData(data);
+
+        // setIsLoading(true);
         let data = [];
         console.time();
         try {
@@ -289,14 +145,220 @@ function UserStatsSearchResult({ formData }) {
         }
         console.timeEnd();
         setTableData(data);
-        setIsLoading(false);
-    }, [formData]);
+        // setIsLoading(false);
+    };
+    return (
+        <Flex
+            flexDirection={{
+                base: "column",
+            }}
+            w="100%"
+            h="100%"
+            justifyContent="center"
+            gap="1%"
+        >
+            <UserStatsSearchForm onFormSubmit={onFormSubmit} />
+            {tableData && (
+                <UserStatsSearchResult tableData={tableData} setTableData={setTableData} />
+            )}
+        </Flex>
+    );
+}
 
-    if (apiError) {
-        return <div>API Error: {apiError}</div>;
-    }
-    if (!tableData || isLoading) return <div>Loading...</div>;
-    // console.log(tableData);
+const UserStatsSearchForm = ({ onFormSubmit }) => {
+    const initialValues = {
+        contract: "",
+        wallet: "",
+        chainId: "eth",
+    };
+
+    const chains = ["eth", "polygon", "bsc", "avalance", "fantom"];
+
+    const SearchInfoSchema = object().shape({});
+    return (
+        <>
+            <Formik
+                initialValues={initialValues}
+                validationSchema={SearchInfoSchema}
+                onSubmit={async (fields) => {
+                    onFormSubmit(fields);
+                }}
+                validateOnBlur={false}
+                validateOnChange={false}
+            >
+                {({ formik, errors, status, touched, values }) => {
+                    return (
+                        <Box w="100%">
+                            <Form>
+                                <Flex
+                                    flexDirection={{
+                                        base: "row",
+                                    }}
+                                    w="100%"
+                                    h="100%"
+                                    justifyContent="center"
+                                    mb="20px"
+                                    mt={{ base: "50px", md: "20px" }}
+                                    gap="1%"
+                                >
+                                    <Box w={{ base: "100%" }} minW="100%">
+                                        <AdminCard>
+                                            <SimpleGrid
+                                                minChildWidth={"300px"}
+                                                columns={{ base: 2, md: 2 }}
+                                                columnGap={8}
+                                                rowGap={4}
+                                                w="full"
+                                            >
+                                                <GridItem colSpan={1}>
+                                                    <FormControl mb="24px">
+                                                        <FormLabel
+                                                            ms="4px"
+                                                            fontSize="md"
+                                                            fontWeight="bold"
+                                                        >
+                                                            Contract Address
+                                                        </FormLabel>
+                                                        <Field
+                                                            name="contract"
+                                                            type="text"
+                                                            as={Input}
+                                                            variant={"riftly"}
+                                                        />
+                                                    </FormControl>
+                                                </GridItem>
+                                                <GridItem colSpan={1}>
+                                                    <FormControl mb="24px">
+                                                        <FormLabel
+                                                            ms="4px"
+                                                            fontSize="md"
+                                                            fontWeight="bold"
+                                                        >
+                                                            Wallet Address
+                                                        </FormLabel>
+                                                        <Field
+                                                            name="wallet"
+                                                            type="text"
+                                                            as={Input}
+                                                            variant={"riftly"}
+                                                        />
+                                                    </FormControl>
+                                                </GridItem>
+                                                <GridItem colSpan={1}>
+                                                    <FormControl mb="24px">
+                                                        <FormLabel
+                                                            ms="4px"
+                                                            fontSize="md"
+                                                            fontWeight="bold"
+                                                        >
+                                                            Chain
+                                                        </FormLabel>
+                                                        <Field name="chainId" as={Select}>
+                                                            {chains.map((type, index) => {
+                                                                return (
+                                                                    <option
+                                                                        key={index}
+                                                                        value={type}
+                                                                    >
+                                                                        {type}
+                                                                    </option>
+                                                                );
+                                                            })}
+                                                        </Field>
+                                                    </FormControl>
+                                                </GridItem>
+                                            </SimpleGrid>
+
+                                            <Button
+                                                w={{ base: "200px" }}
+                                                my="12px"
+                                                type="submit"
+                                                colorScheme="teal"
+                                                size="lg"
+                                                // isLoading={isSubmitting}
+                                                // disabled={isSubmitButtonDisabled(values)}
+                                            >
+                                                Search
+                                            </Button>
+                                        </AdminCard>
+                                    </Box>
+                                </Flex>
+                            </Form>
+                        </Box>
+                    );
+                }}
+            </Formik>
+        </>
+    );
+};
+
+function UserStatsSearchResult({ tableData, setTableData }) {
+    // useEffect(async () => {
+    //     setIsLoading(true);
+    //     let data = [];
+    //     console.time();
+    //     try {
+    //         if (formData.contract.trim().length === 0 && formData.wallet.trim().length > 0) {
+    //             console.log("searching individual");
+    //             let res = await axios
+    //                 .get(`/api/admin/user-stats/${formData.wallet}/${formData.chainId}`)
+    //                 .then((r) => r.data);
+
+    //             data = [...data, res];
+    //         }
+    //         if (formData.contract.trim().length > 0) {
+    //             /* searching contract*/
+    //             let nftOwners = await getNftOwners(formData);
+
+    //             if (formData.wallet.trim().length > 0) {
+    //                 /* searching contract and individual */
+    //                 let walletOwners = nftOwners.map((nft) => utils.getAddress(nft.owner_of));
+
+    //                 if (walletOwners.includes(utils.getAddress(formData.wallet))) {
+    //                     /* this is just searching individual, as it exists on the contract nft */
+    //                     let res = await axios
+    //                         .get(`/api/admin/user-stats/${formData.wallet}/${formData.chainId}`)
+    //                         .then((r) => r.data);
+
+    //                     data = [...data, res];
+    //                 } else {
+    //                     data = [];
+    //                 }
+    //             } else {
+    //                 let walletOwners = nftOwners.map((nft) => utils.getAddress(nft.owner_of));
+    //                 walletOwners = remove_duplicates_es6(walletOwners);
+
+    //                 let searchRes = {};
+
+    //                 searchRes = await axios
+    //                     .post(`/api/admin/user-stats/wallets`, { walletOwners })
+    //                     .then((r) => r.data);
+
+    //                 data = [...data, ...searchRes.users];
+    //             }
+    //         }
+    //         if (formData.contract.trim().length === 0 && formData.wallet.trim().length === 0) {
+    //             // searching everyone in the database
+    //             let page = 0,
+    //                 searchRes = {};
+
+    //             do {
+    //                 searchRes = await axios.post(`/api/admin/user-stats?page=${page}`, formData);
+
+    //                 data = [...data, ...searchRes.data.users];
+    //                 page = page + 1;
+    //             } while (searchRes?.data?.shouldContinue);
+    //         }
+    //     } catch (error) {
+    //         console.log(error);
+    //         setIsLoading(false);
+    //     }
+    //     console.timeEnd();
+    //     console.log(data);
+    //     setTableData(data);
+    //     setIsLoading(false);
+    // }, [formData]);
+
     return (
         <>
             {/* <div className="card-header px-0">
@@ -326,7 +388,7 @@ function UserStatsSearchResult({ formData }) {
                     </div>
                 </div>
             </div> */}
-            {tableData?.length > 0 && (
+            {tableData?.length >= 0 && (
                 <ResultTable data={tableData} rowsPerPage={10} setTableData={setTableData} />
             )}
         </>
@@ -334,43 +396,13 @@ function UserStatsSearchResult({ formData }) {
 }
 
 const ResultTable = ({ data, rowsPerPage, setTableData }) => {
-    // const [page, setPage] = useState(1);
-    // const { slice, range } = useTable(data, page, rowsPerPage);
-    const [sortField, setSortField] = useState("");
-    const [sortOrder, setSortOrder] = useState("asc");
-
-    const handleSortChange = (accessor) => {
-        const newOrder = accessor === sortField && sortOrder === "asc" ? "desc" : "asc";
-        setSortField(accessor);
-        setSortOrder(newOrder);
-        handleSorting(accessor, newOrder, data);
-    };
-
-    console.log(data);
-
-    const columnData = [
-        {
-            Header: "WALLET",
-            accessor: "wallet",
-        },
-        {
-            Header: "TWITTER",
-            accessor: "twitter",
-        },
-        {
-            Header: "DISCORD",
-            accessor: "discord",
-        },
-        {
-            Header: "FOLLOWERS",
-            accessor: "follower",
-        },
-        {
-            Header: "BALANCE",
-            accessor: "balance",
-        },
-    ];
-    const columns = useMemo(() => columnData, [columnData]);
+    const [userStats, isQuerying, refreshUserStatsAsync] = useAdminRefreshUserStats();
+    const columns = useMemo(
+        () => columnData,
+        [
+            // columnData
+        ]
+    );
     const tableData = useMemo(() => data, [data]);
 
     const tableInstance = useTable(
@@ -405,7 +437,6 @@ const ResultTable = ({ data, rowsPerPage, setTableData }) => {
 
     return (
         <Box w="100%">
-            <h4 className="card-title mb-3">Result</h4>
             <AdminCard>
                 <Table variant="simple">
                     <Thead>
@@ -433,46 +464,50 @@ const ResultTable = ({ data, rowsPerPage, setTableData }) => {
                     </Thead>
                     <Tbody {...getTableBodyProps()}>
                         {page.map((row, index) => {
-                            console.log(row);
                             prepareRow(row);
                             return (
                                 <Tr {...row.getRowProps()} key={index}>
                                     {row.cells.map((cell, index) => {
                                         let data = "";
-                                        // if (cell.column.Header === "NAME") {
-                                        //   data = (
-                                        //     <Flex align='center'>
-                                        //       <Text color={textColor} fontSize='sm' fontWeight='700'>
-                                        //         {cell.value}
-                                        //       </Text>
-                                        //     </Flex>
-                                        //   );
-                                        // } else if (cell.column.Header === "PROGRESS") {
-                                        //   data = (
-                                        //     <Flex align='center'>
-                                        //       <Text
-                                        //         me='10px'
-                                        //         color={textColor}
-                                        //         fontSize='sm'
-                                        //         fontWeight='700'>
-                                        //         {cell.value}%
-                                        //       </Text>
-                                        //     </Flex>
-                                        //   );
-                                        // } else if (cell.column.Header === "QUANTITY") {
-                                        //   data = (
-                                        //     <Text color={textColor} fontSize='sm' fontWeight='700'>
-                                        //       {cell.value}
-                                        //     </Text>
-                                        //   );
-                                        // } else if (cell.column.Header === "DATE") {
-                                        //   data = (
-                                        //     <Text color={textColor} fontSize='sm' fontWeight='700'>
-                                        //       {cell.value}
-                                        //     </Text>
-                                        //   );
-                                        // }
+
+                                        const { userId } = cell.row.original;
                                         data = cell.value;
+                                        if (cell.column.Header === "Action") {
+                                            data = (
+                                                <Icon
+                                                    transition="0.8s"
+                                                    color="green.300"
+                                                    boxSize={7}
+                                                    as={BiRefresh}
+                                                    _hover={{
+                                                        cursor: "pointer",
+                                                    }}
+                                                    onClick={async () => {
+                                                        let payload = {
+                                                            userId,
+                                                        };
+                                                        console.log(userId);
+                                                        let refreshOp = await refreshUserStatsAsync(
+                                                            payload
+                                                        );
+
+                                                        // if (!deleteOp.isError) {
+                                                        //     const dataCopy = [...data];
+                                                        //     // let currentSearch = data.filter(
+                                                        //     //     (q) => q.userId !== userId
+                                                        //     // );
+                                                        //     // console.log(data);
+                                                        //     console.log(data);
+                                                        //     // dataCopy.splice(index, 1);
+                                                        //     // console.log(dataCopy);
+                                                        //     // setTableData(dataCopy);
+                                                        // }
+                                                    }}
+                                                />
+                                            );
+                                        } else {
+                                            data = cell.value;
+                                        }
                                         return (
                                             <Td
                                                 {...cell.getCellProps()}
@@ -482,6 +517,7 @@ const ResultTable = ({ data, rowsPerPage, setTableData }) => {
                                                 borderColor="transparent"
                                             >
                                                 {data}
+                                                {/* {cell.render("Cell")} */}
                                             </Td>
                                         );
                                     })}
@@ -535,7 +571,7 @@ const ResultTable = ({ data, rowsPerPage, setTableData }) => {
                                 }}
                                 defaultValue={pageIndex + 1}
                             >
-                                <NumberInputField />
+                                <NumberInputField color={"white"} />
                                 <NumberInputStepper>
                                     <NumberIncrementStepper />
                                     <NumberDecrementStepper />
@@ -575,8 +611,6 @@ const ResultTable = ({ data, rowsPerPage, setTableData }) => {
                         </Flex>
                     </Flex>
                 )}
-
-                {/* <TableFooter range={range} slice={slice} setPage={setPage} page={page} /> */}
             </AdminCard>
         </Box>
     );
@@ -587,3 +621,29 @@ function remove_duplicates_es6(arr) {
     let it = s.values();
     return Array.from(it);
 }
+const columnData = [
+    {
+        Header: "WALLET",
+        accessor: "wallet",
+    },
+    {
+        Header: "TWITTER",
+        accessor: "twitter",
+    },
+    {
+        Header: "DISCORD",
+        accessor: "discord",
+    },
+    {
+        Header: "FOLLOWERS",
+        accessor: "follower",
+    },
+    {
+        Header: "BALANCE",
+        accessor: "balance",
+    },
+    {
+        Header: "Action",
+        accessor: "action",
+    },
+];

@@ -1,4 +1,4 @@
-import { useQuery, useMutation } from "react-query";
+import { useQuery, useMutation, useQueryClient } from "react-query";
 import axios from "axios";
 import Enums from "enums";
 
@@ -35,6 +35,33 @@ export const useAdminUserMutation = () => {
             .post(`${Enums.BASEPATH}/api/admin/user/add`, payload)
             .then((r) => r.data);
 
+    });
+
+    return [data, isLoading, mutateAsync];
+}
+
+export const useAdminUserDelete = () => {
+    const { data, error, isError, isLoading, isSuccess, mutate, mutateAsync } = useMutation((payload) => {
+        return axios
+            .post(`${Enums.BASEPATH}/api/admin/user/delete`, payload)
+            .then((r) => r.data);
+
+    });
+
+    return [data, isLoading, mutateAsync];
+}
+
+export const useAdminRefreshUserStats = () => {
+    const queryClient = useQueryClient();
+    const { data, error, isError, isLoading, isSuccess, mutate, mutateAsync } = useMutation((payload) => {
+        return axios
+            .post(`${Enums.BASEPATH}/api/admin/user/refresh-stats`, payload)
+            .then((r) => r.data);
+
+    }, {
+        onSuccess: () => {
+            queryClient.invalidateQueries("admin-search-user-stats");
+        },
     });
 
     return [data, isLoading, mutateAsync];

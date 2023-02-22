@@ -27,7 +27,6 @@ function PageViewsChart() {
 
             clientDataSet({ labels, arrayOfValues });
         } else {
-            console.log(res);
         }
     }, []);
 

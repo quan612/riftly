@@ -13,14 +13,13 @@ import {
 } from "@chakra-ui/react";
 
 import { useDeviceDetect } from "lib/hooks";
-
 import { Web3Context } from "@context/Web3Context";
 import Enums from "@enums/index";
-
 import { useWalletAuthQuestSubmit } from "@shared/HOC/quest";
 import { useRouter } from "next/router";
 import { MetamaskIcon, WalletConnectIcon } from "@components/riftly/Icons";
 import ModalWrapper from "../wrappers/ModalWrapper";
+import * as gtag from "@lib/ga/gtag";
 
 const CONNECTABLE = 1;
 const AUTHENTICATING = 2;
@@ -45,7 +44,15 @@ const WalletAuthQuestModal = ({ isOpen, onClose, isSignUp = false }) => {
             let payload = await signUpWithWallet(type).catch((err) => {
                 throw err;
             });
-            console.log(payload);
+
+            if (typeof window !== "undefined" && window.gtag) {
+                console.log("Wallet sign up tracked");
+                gtag.event({
+                    action: "sign_up_success",
+                    method: Enums.WALLET,
+                    label: "Wallet signs up successfully",
+                });
+            }
 
             let res = await walletAuthQuestSubmit(payload).catch((err) => {
                 throw err;

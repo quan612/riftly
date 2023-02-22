@@ -31,6 +31,9 @@ import { ChakraBox } from "@theme/additions/framer/FramerChakraComponent";
 import { getDiscordAuthLink, getTwitterAuthLink } from "@utils/helpers";
 import Loading from "@components/riftly/Loading";
 import { sleep } from "@utils/index";
+import Enums from "@enums/index";
+
+import * as gtag from "@lib/ga/gtag";
 
 const NON_EMAIL = 1;
 const EMAIL = 2;
@@ -98,6 +101,14 @@ export const SignInSignUpWrapper = ({ isSignIn = false }) => {
                                         callbackUrl: `${window.location.origin}`,
                                     });
                                 } else {
+                                    if (typeof window !== "undefined" && window.gtag) {
+                                        console.log("Discord sign up tracked");
+                                        gtag.event({
+                                            action: "sign_up_success",
+                                            method: Enums.DISCORD,
+                                            label: "Discord signs up successfully",
+                                        });
+                                    }
                                     let discordLink = await getDiscordAuthLink();
                                     return window.open(discordLink, "_self");
                                 }
@@ -118,6 +129,14 @@ export const SignInSignUpWrapper = ({ isSignIn = false }) => {
                                         callbackUrl: `${window.location.origin}`,
                                     });
                                 } else {
+                                    if (typeof window !== "undefined" && window.gtag) {
+                                        console.log("Twitter sign up tracked");
+                                        gtag.event({
+                                            action: "sign_up_success",
+                                            method: Enums.TWITTER,
+                                            label: "Twitter signs up successfully",
+                                        });
+                                    }
                                     let twitterLink = await getTwitterAuthLink();
                                     return window.open(twitterLink, "_self");
                                 }
@@ -144,6 +163,14 @@ export const SignInSignUpWrapper = ({ isSignIn = false }) => {
                                     // });
                                     // signIn("twitter");
                                 } else {
+                                    if (typeof window !== "undefined" && window.gtag) {
+                                        console.log("Discord sign up tracked");
+                                        gtag.event({
+                                            action: "sign_up_success",
+                                            method: Enums.DISCORD,
+                                            label: "Discord signs up successfully",
+                                        });
+                                    }
                                     // let twitterLink = await getTwitterAuthLink();
                                     // return window.open(twitterLink, "_self");
                                 }
@@ -266,14 +293,22 @@ export const EmailWrapper = React.forwardRef(({ isSignIn = false, setView }, ref
             setLoading(true);
             await sleep(1000);
             let signInRes = await signIn("email", {
+                // redirect: false,
+
                 redirect: false,
                 email,
                 password,
+                callbackUrl: `${window.location.origin}`,
             });
 
+            console.log(signInRes);
             if (signInRes?.error) {
-                errorSet(signInRes.error);
                 setLoading(false);
+                if (signInRes?.error !== "Pending Sign Up") {
+                    errorSet(signInRes.error);
+                } else {
+                    router.push(`/sms-verification?account=${email}&type=${Enums.EMAIL}`);
+                }
             } else {
                 router.push("/");
             }

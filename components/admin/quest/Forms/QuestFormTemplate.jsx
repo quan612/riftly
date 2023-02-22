@@ -123,7 +123,6 @@ const QuestFormTemplate = ({
                         value={values.rewardTypeId}
                         onChange={(e) => {
                             e.preventDefault();
-                            console.log(e.target.value);
                             onRewardTypeChange(e.target.value);
                         }}
                     >

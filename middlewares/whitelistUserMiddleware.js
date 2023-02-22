@@ -1,11 +1,11 @@
-import { unstable_getServerSession } from "next-auth/next"
+import { getServerSession } from "next-auth/next"
 import { authOptions } from 'pages/api/auth/[...nextauth]'
 import { isWhiteListUser } from "repositories/session-auth";
 
 const whitelistUserMiddleware = (handler) => {
     return async (req, res) => {
 
-        const session = await unstable_getServerSession(req, res, authOptions)
+        const session = await getServerSession(req, res, authOptions)
 
         if (!session) {
             return res.status(200).json({

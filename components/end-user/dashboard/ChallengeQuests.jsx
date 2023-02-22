@@ -256,7 +256,6 @@ const UserQuestBox = ({ quest, index, currentQuests, filterCompleted, onTest }) 
         try {
             let res = await onClaim({ questId });
             if (res.isError) {
-                console.log(res.message);
                 throw res.message;
             }
             showScoreSet(true);

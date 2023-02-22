@@ -9,7 +9,7 @@ import Script from "next/script";
 import * as gtag from "../lib/ga/gtag";
 import { useRouter } from "next/router";
 import { Box, ChakraProvider } from "@chakra-ui/react";
-import { useChallengerPageLoading } from "lib/hooks/useChallengerPageLoading";
+
 import { Analytics } from "@vercel/analytics/react";
 import theme from "theme/theme";
 
@@ -49,7 +49,7 @@ export function reportWebVitals(metric) {
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
-  const { isPageLoading } = useChallengerPageLoading();
+
 
   useEffect(() => {
     const handleRouteChange = (url) => {

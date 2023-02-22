@@ -37,7 +37,8 @@ import { useRouter } from "next/router";
 // } from "components/Scrollbar/Scrollbar";
 // import { HSeparator } from "components/Separator/Separator";
 // import { SidebarHelp } from "components/Sidebar/SidebarHelp";
-import React from "react";
+import React, { useContext, useEffect, useState, useCallback, useRef } from "react";
+import { Web3Context } from "@context/Web3Context";
 // import { Scrollbars } from "react-custom-scrollbars";
 // import {
 //   //  NavLink, 
@@ -58,6 +59,7 @@ function Sidebar(props) {
   const { sidebarVariant, session } = props;
   const router = useRouter()
   const [state, setState] = React.useState({});
+  const { SignOut } = useContext(Web3Context);
 
   const mainPanel = React.useRef();
   let variantChange = "0.2s linear";
@@ -112,7 +114,7 @@ function Sidebar(props) {
 
       if (prop.category) {
         return (
-          <Accordion allowMultiple >
+          <Accordion allowMultiple key={key}>
             <AccordionItem key={key} border="none">
               {({ isExpanded }) => (
                 <>
@@ -135,11 +137,11 @@ function Sidebar(props) {
 
 
                         const isActive = activeRoute(path)
-                        console.log(isActive)
+
                         return (
                           <ListItem
                             // as={Link}
-                            // key={label}
+
                             as={Button}
                             variant={"ghost"}
                             w={"full"}
@@ -427,7 +429,7 @@ export function SidebarResponsive(props) {
         var st = {};
         st[prop["state"]] = !state[prop.state];
         return (
-          <>
+          <React.Fragment key={key}>
             <Text
               color={activeColor}
               fontWeight="bold"
@@ -446,7 +448,7 @@ export function SidebarResponsive(props) {
                 : prop.name}
             </Text>
             {createLinks(prop.views)}
-          </>
+          </React.Fragment>
         );
       }
       return (

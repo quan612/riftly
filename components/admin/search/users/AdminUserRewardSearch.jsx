@@ -52,6 +52,9 @@ import RightSideBar from "@components/riftly/right-side-bar/RightSideBar";
 import { BsFilter } from "react-icons/bs";
 
 import { Select as ReactSelect } from "chakra-react-select";
+import { AiFillDelete } from "react-icons/ai";
+import { useAdminUserQuestDelete } from "@shared/HOC/user-quests";
+import { useAdminUserDelete } from "@shared/HOC/user";
 
 export default function AdminUserRewardSearch({ loggedIn }) {
     const ref = useRef(null);
@@ -446,6 +449,7 @@ export default function AdminUserRewardSearch({ loggedIn }) {
                 {rewardTypes && tableHeight && (
                     <ResultTable
                         tableData={tableData}
+                        setTableData={setTableData}
                         rewardTypes={rewardTypes}
                         outsideFilter={outsideFilter}
                         openFilterSidebar={onOpen}
@@ -504,10 +508,16 @@ const columnData = [
         accessor: "discordUserDiscriminator",
         // filter: customFilterFunction,
     },
+    {
+        Header: "Action",
+        accessor: "action",
+        // filter: customFilterFunction,
+    },
 ];
 
 const ResultTable = ({
     tableData,
+    setTableData,
     rewardTypes,
     outsideFilter,
     openFilterSidebar,
@@ -519,7 +529,7 @@ const ResultTable = ({
         rewardTypes?.map((r) => {
             let rewardTypeIndex = columnData.findIndex((c) => c.Header === r.reward);
             if (rewardTypeIndex === -1)
-                columnData.push({
+                columnData.splice(3, 0, {
                     Header: r.reward,
                     accessor: r.reward,
                     filter: customFilterRewardsRange,
@@ -594,7 +604,7 @@ const ResultTable = ({
                     )}
                 </Flex>
                 <Divider />
-                <Box overflowX={"auto"} overflowY={"auto"} height={`${tableHeight}px`}>
+                <Box overflowX={"auto"} overflowY={"auto"} height={`${tableHeight + 10}px`}>
                     <Table variant="simple">
                         <TableHeader headerGroups={headerGroups} />
 
@@ -602,6 +612,8 @@ const ResultTable = ({
                             getTableBodyProps={getTableBodyProps}
                             page={page}
                             prepareRow={prepareRow}
+                            tableData={tableData}
+                            setTableData={setTableData}
                         />
                     </Table>
                 </Box>
@@ -692,15 +704,10 @@ const TableHeader = ({ headerGroups }) => {
     );
 };
 
-const TableBody = ({ page, getTableBodyProps, prepareRow }) => {
+const TableBody = ({ page, getTableBodyProps, prepareRow, tableData, setTableData }) => {
+    const [deleteUser, isDeleting, deleteUsersAsync] = useAdminUserDelete();
     return (
-        <Tbody
-            {...getTableBodyProps()}
-            // overflowY={"auto"}
-            // height="50vh"
-            // display={"block"}
-            width="100%"
-        >
+        <Tbody {...getTableBodyProps()} width="100%">
             {page.map((row, index) => {
                 prepareRow(row);
                 return (
@@ -710,16 +717,52 @@ const TableBody = ({ page, getTableBodyProps, prepareRow }) => {
                                 cell.column.Header !== "rewards" &&
                                 cell.column.Header !== "userId"
                             ) {
-                                let data = cell.value;
+                                let data;
+                                if (cell.column.Header === "Action") {
+                                    data = (
+                                        <Icon
+                                            transition="0.8s"
+                                            color="red.300"
+                                            boxSize={"18px"}
+                                            as={AiFillDelete}
+                                            _hover={{
+                                                cursor: "pointer",
+                                            }}
+                                            onClick={async () => {
+                                                let { userId } = row.original;
+                                                // let { userId } = tableProps.row.original;
+                                                console.log(userId);
+                                                let payload = {
+                                                    userId,
+                                                };
+                                                if (!window.confirm("Proceed To Delete User")) {
+                                                    return;
+                                                }
+
+                                                let deleteOp = await deleteUsersAsync(payload);
+
+                                                if (!deleteOp.isError) {
+                                                    const dataCopy = tableData.filter(
+                                                        (d) => d.userId !== userId
+                                                    );
+                                                    setTableData(dataCopy);
+                                                }
+                                            }}
+                                        />
+                                    );
+                                } else {
+                                    data = cell.value;
+                                }
                                 return (
                                     <Td
                                         {...cell.getCellProps()}
                                         key={index}
-                                        fontSize={{ sm: "12px" }}
+                                        fontSize={{ base: "12px", lg: "14px" }}
+                                        h="24px"
                                         width={cell.column.width}
                                         minW={{
-                                            sm: "150px",
-                                            md: "200px",
+                                            sm: "120px",
+                                            md: "180px",
                                             lg: "auto",
                                         }}
                                         borderColor="transparent"

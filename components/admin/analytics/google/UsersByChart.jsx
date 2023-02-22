@@ -33,7 +33,6 @@ function UsersByChart() {
                 datasetLabel: "# of Total Users",
             });
         } else {
-            console.log(res);
         }
     }, []);
 

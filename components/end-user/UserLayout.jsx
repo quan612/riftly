@@ -89,8 +89,6 @@ export const LayoutWrapper = ({ children }) => {
         <Box
             w="100%"
             ref={ref}
-            // minH={{ base: `${isMobile ? "100vh" : "100vh"}`, lg: "100vh" }}
-            // h={{ base: `${isMobile ? "-webkit-fill-available" : "100vh"}`, lg: "100vh" }}
             display={"flex"}
             position={"relative"}
             flexDirection="column"

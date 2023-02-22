@@ -47,8 +47,6 @@ const pieChartOptions = {
 };
 
 export default function UsersByDevicePieCart() {
-    // const { ...rest } = props;
-
     // Chakra Color Mode
     const textColor = useColorModeValue("secondaryGray.900", "white");
     const cardColor = useColorModeValue("white", "navy.700");

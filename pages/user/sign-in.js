@@ -36,46 +36,25 @@ function SignIn() {
                 <link rel="icon" href="/faviconShell.png" />
             </Head>
 
-            <Flex
-                flex="1"
+            <Box
+                // position="absolute"
+                // top="0"
+                // w={{ base: "28%", md: "179px" }}
+                // h={{ base: "15%", md: "198px" }}
+                // display={"flex"}
+                // justifyContent={"center"}
                 position="relative"
-                w="100%"
+                top="0"
+                flex="1"
+                w={{ base: "28%", md: "179px" }}
+                // h={{ base: "15%", md: "198px" }}
+                display={"flex"}
                 justifyContent={"center"}
-                alignItems="center"
             >
-                <Box
-                    className="logo-wrapper"
-                    h="100%"
-                    w="100%"
-                    display={"flex"}
-                    justifyContent={"center"}
-                    alignItems="center"
-                    position="relative"
-                >
-                    <Box
-                        display={"flex"}
-                        justifyContent={"center"}
-                        alignItems="center"
-                        w="100%"
-                        h="66%"
-                        position="relative"
-                    // maxH="100%"
-                    >
-                        <Box
-                            display={"flex"}
-                            w="100%"
-                            maxH="100%"
-                            height={"100%"}
-                            minH="100%"
-                            position="relative"
-                            justifyContent={"center"}
-                            alignItems="center"
-                        >
-                            <RiftlyLogoWhiteText />
-                        </Box>
-                    </Box>
+                <Box display={"flex"} justifyContent={"center"} alignItems="center" w={{ base: "40%", lg: "58%" }}>
+                    <RiftlyLogoWhiteText />
                 </Box>
-            </Flex>
+            </Box>
 
 
             <TallContainer>

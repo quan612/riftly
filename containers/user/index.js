@@ -45,7 +45,6 @@ export const TallContainer = ({ children }) => {
     <Flex w="100%" alignItems="center" justifyContent={"center"} mt={{ base: "0.25rem", lg: "0px" }}>
       <Box
         className="tall-container"
-
         w={"container.sm"}
         maxW="container.sm"
         bg={"brand.neutral4"}

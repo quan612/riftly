@@ -51,13 +51,13 @@ function RedeemPage({ session }) {
 
 export default RedeemPage;
 
-import { unstable_getServerSession } from "next-auth/next";
+import { getServerSession } from "next-auth/next";
 import { authOptions } from "pages/api/auth/[...nextauth]";
 import { ChakraBox } from "@theme/additions/framer/FramerChakraComponent";
 import { Flex } from "@chakra-ui/react";
 
 export async function getServerSideProps(context) {
-    const session = await unstable_getServerSession(context.req, context.res, authOptions);
+    const session = await getServerSession(context.req, context.res, authOptions);
     context.res.setHeader("Cache-Control", "public, s-maxage=10, stale-while-revalidate=59");
     if (!session) {
         return {
