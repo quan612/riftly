@@ -11,11 +11,15 @@ import * as gtag from '@lib/ga/gtag'
 
 function SignUp() {
     React.useEffect(() => {
-        gtag.event({
-            action: 'sign_up',
-            category: 'User',
-            label: "User signs up successfully",
-        })
+        if (typeof window !== 'undefined' && window.gtag) {
+            console.log("gtag event tracked")
+            gtag.event({
+                action: 'sign_up',
+                category: 'User',
+                label: "User signs up successfully",
+            })
+        }
+
     }, [])
     return (
         <>
