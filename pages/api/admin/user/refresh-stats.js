@@ -12,7 +12,7 @@ const AdminUserRefreshStatAPI = async (req, res) => {
         case "POST":
             try {
                 const { userId } = req.body;
-
+                console.log("Refresh stats")
                 let userQuery = await prisma.whiteList.findUnique({
                     where: { userId }
                 })
@@ -39,7 +39,7 @@ const AdminUserRefreshStatAPI = async (req, res) => {
                 let data = {}
                 let followers_count = 0
 
-                if (userQuery.twitterId.length > 5) {
+                if (userQuery?.twitterId?.length > 5) {
                     let twitterUserMetric = await axios
                         .get(`https://api.twitter.com/2/users/${userQuery.twitterId}?user.fields=public_metrics`,
                             {
