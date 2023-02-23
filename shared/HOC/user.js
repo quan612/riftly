@@ -9,7 +9,7 @@ export const withUserUpsert =
     (Component) =>
         ({ ...props }) => {
             const { data, error, isError, isLoading, mutateAsync } = useMutation(
-                "mutateUser",
+                "mutate-user",
                 (user) => axios.post(ADD_USER_API, user),
                 {
                     onSuccess: () => { },
@@ -28,6 +28,25 @@ export const withUserUpsert =
                 />
             );
         };
+
+export const useAdminUserStatsQuery = () => {
+    const { data, error, isError, isLoading, isSuccess, mutate, mutateAsync } = useQuery("admin-query-user-stats", async () => {
+
+        let data = [], page = 0,
+            searchRes = {};
+        do {
+            searchRes = await axios.post(`/api/admin/user-stats?page=${page}`).then(r => r.data);
+            data = [...data, ...searchRes.users];
+            page = page + 1;
+        } while (searchRes?.shouldContinue)
+
+        return data
+
+    }, { staleTime: 60 * 60 });
+
+
+    return [data, isLoading];
+}
 
 export const useAdminUserMutation = () => {
     const { data, error, isError, isLoading, isSuccess, mutate, mutateAsync } = useMutation((payload) => {
@@ -60,12 +79,14 @@ export const useAdminRefreshUserStats = () => {
 
     }, {
         onSuccess: () => {
-            queryClient.invalidateQueries("admin-search-user-stats");
+            queryClient.invalidateQueries("admin-query-user-stats");
         },
     });
 
     return [data, isLoading, mutateAsync];
 }
+
+
 
 export const useAdminBulkUsersMutation = () => {
     const { data, error, isError, isLoading, isSuccess, mutate, mutateAsync } = useMutation((payload) => {

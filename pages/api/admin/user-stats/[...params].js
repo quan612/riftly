@@ -39,7 +39,10 @@ const handler = async (req, res) => {
                         twitterUserName: true,
                         discordUserDiscriminator: true,
                         whiteListUserData: true,
-                        userId: true
+                        userId: true,
+                        whiteListUserData: {
+                            select: { data: true }
+                        }
                     },
                 });
 
@@ -49,15 +52,6 @@ const handler = async (req, res) => {
                         // ...other configuration
                     });
                 }
-
-                let response = await Moralis.EvmApi.balance.getNativeBalance({
-                    address: wallet,
-                    chain: chainId,
-                }).then(r => r.toJSON());
-
-                let responseInEther = ethers.utils.formatEther(response.balance)
-
-                user.balance = (+responseInEther).toFixed(4);
 
                 res.setHeader('Cache-Control', 'max-age=0, s-maxage=10, stale-while-revalidate');
                 res.status(200).json(user);

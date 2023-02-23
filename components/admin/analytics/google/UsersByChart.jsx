@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 
 import axios from "axios";
 import dynamic from "next/dynamic";
-const PieChart = dynamic(() => import("../shared/PieChart"), { ssr: false });
+// const PieChart = dynamic(() => import("../shared/PieChart"), { ssr: false });
 
 function UsersByChart() {
     const [clientData, clientDataSet] = useState(null);
@@ -18,7 +18,7 @@ function UsersByChart() {
             let labels = [],
                 arrayOfValues = [];
 
-            console.log(arrayOfValues);
+            // console.log(arrayOfValues);
             for (let i = 0; i < res.rows.length; i++) {
                 let label = res.rows[i].dimensionValues[0].value;
                 let value = res.rows[i].metricValues[0].value;
@@ -36,6 +36,6 @@ function UsersByChart() {
         }
     }, []);
 
-    return <>{clientData && <PieChart clientData={clientData} />}</>;
+    return <>{/* {clientData && <PieChart clientData={clientData} />} */}</>;
 }
 export default UsersByChart;

@@ -26,7 +26,6 @@ const handler = async (req, res) => {
                     return res.status(200).json({ isError: true, message: "Missing valid contract query." });
                 }
 
-                console.log(`Querying contract ${contract}`)
 
                 if (!Moralis.Core.isStarted) {
                     await Moralis.start({
@@ -39,7 +38,8 @@ const handler = async (req, res) => {
                     address: contract,
                     chain: chainId,
                     cursor
-                }).then(r => r.data);
+                }).then(r => r.jsonResponse);
+
 
                 res.setHeader('Cache-Control', 'max-age=0, s-maxage=86400, stale-while-revalidate');
                 res.status(200).json(response);

@@ -1,32 +1,28 @@
-import { Bar } from 'react-chartjs-2';
-// import Chart from "react-apexcharts";
-
-import dynamic from 'next/dynamic'
-const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
+import dynamic from "next/dynamic";
+const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 function PageViewsApexChart({ clientData, legends }) {
-
     const barChartOptionsDailyTraffic = {
-        colors: ['#4d3a96', '#4576b5'],
+        colors: ["#4d3a96", "#4576b5"],
         chart: {
-            type: 'bar',
+            type: "bar",
             height: 450,
             toolbar: {
-                show: false
-            }
+                show: false,
+            },
         },
         tooltip: {
             style: {
                 fontSize: "12px",
-                fontFamily: undefined
+                fontFamily: undefined,
             },
             onDatasetHover: {
                 style: {
                     fontSize: "12px",
-                    fontFamily: undefined
-                }
+                    fontFamily: undefined,
+                },
             },
-            theme: "dark"
+            theme: "dark",
         },
         xaxis: {
             // categories: ["00", "04", "08", "12", "14", "16", "18"],
@@ -37,16 +33,15 @@ function PageViewsApexChart({ clientData, legends }) {
                 style: {
                     colors: "#A3AED0",
                     fontSize: "14px",
-                    fontWeight: "500"
-                }
+                    fontWeight: "500",
+                },
             },
             axisBorder: {
-                show: false
+                show: false,
             },
             axisTicks: {
-                show: false
+                show: false,
             },
-
         },
         yaxis: {
             show: true,
@@ -56,23 +51,23 @@ function PageViewsApexChart({ clientData, legends }) {
                 style: {
                     colors: "#A3AED0",
                     // colors: "#CBD5E0",
-                    fontSize: "14px"
-                }
-            }
+                    fontSize: "14px",
+                },
+            },
         },
         grid: {
             show: false,
             strokeDashArray: 5,
             yaxis: {
                 lines: {
-                    show: true
-                }
+                    show: true,
+                },
             },
             xaxis: {
                 lines: {
-                    show: false
-                }
-            }
+                    show: false,
+                },
+            },
         },
         fill: {
             type: "gradient",
@@ -86,70 +81,69 @@ function PageViewsApexChart({ clientData, legends }) {
                         {
                             offset: 0,
                             color: "rgba(67, 24, 255, 1)",
-                            opacity: 0.55
+                            opacity: 0.55,
                         },
                         {
                             offset: 50,
                             color: "#5c49b8",
-                            opacity: 1
-                        }
+                            opacity: 1,
+                        },
                     ],
                     [
                         {
                             offset: 0,
                             color: "rgba(67, 24, 255, 1)",
-                            opacity: 0.55
+                            opacity: 0.55,
                         },
                         {
                             offset: 50,
                             color: "#5c49b8",
-                            opacity: 1
-                        }
+                            opacity: 1,
+                        },
                     ],
                     [
                         {
                             offset: 0,
                             color: "rgba(67, 24, 255, 1)",
-                            opacity: 0.55
+                            opacity: 0.55,
                         },
                         {
                             offset: 50,
                             color: "#5c49b8",
-                            opacity: 1
-                        }
+                            opacity: 1,
+                        },
                     ],
                     [
                         {
                             offset: 0,
                             color: "rgba(67, 24, 255, 1)",
-                            opacity: 0.55
+                            opacity: 0.55,
                         },
                         {
                             offset: 50,
                             color: "#5c49b8",
-                            opacity: 1
-                        }
-                    ]
-                ]
-            }
+                            opacity: 1,
+                        },
+                    ],
+                ],
+            },
         },
         dataLabels: {
-            enabled: false
+            enabled: false,
         },
         plotOptions: {
             bar: {
-
                 borderRadius: 10,
                 columnWidth: "50px",
                 horizontal: true,
                 // barHeight: '20%',
-            }
+            },
         },
 
         stroke: {
             colors: ["transparent"],
-            width: 8
-        }
+            width: 8,
+        },
     };
     return (
         <>
@@ -167,20 +161,24 @@ function PageViewsApexChart({ clientData, legends }) {
 }
 export default PageViewsApexChart;
 
-const barChartDataDailyTraffic = [{
-    name: "Total Users",
-    data: [23, 55]
-},
-{
-    name: "Page Views",
-    data: [20, 50]
-}, {
-    name: "Sessions",
-    data: [80, 90]
-}, {
-    name: "Sessions Per User",
-    data: [23, 65]
-}]
+const barChartDataDailyTraffic = [
+    {
+        name: "Total Users",
+        data: [23, 55],
+    },
+    {
+        name: "Page Views",
+        data: [20, 50],
+    },
+    {
+        name: "Sessions",
+        data: [80, 90],
+    },
+    {
+        name: "Sessions Per User",
+        data: [23, 65],
+    },
+];
 
 // const data = {
 //     labels,
@@ -212,4 +210,3 @@ const barChartDataDailyTraffic = [{
 
 //     ],
 // };
-

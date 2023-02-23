@@ -53,7 +53,6 @@ import { BsFilter } from "react-icons/bs";
 
 import { Select as ReactSelect } from "chakra-react-select";
 import { AiFillDelete } from "react-icons/ai";
-import { useAdminUserQuestDelete } from "@shared/HOC/user-quests";
 import { useAdminUserDelete } from "@shared/HOC/user";
 
 export default function AdminUserRewardSearch({ loggedIn }) {
@@ -414,7 +413,6 @@ export default function AdminUserRewardSearch({ loggedIn }) {
                     .then((res) => res.data);
 
                 if (searchRes.isError) {
-                    console.log(searchRes.message);
                     throw new Error("Error querying user reward");
                 }
 
@@ -443,7 +441,6 @@ export default function AdminUserRewardSearch({ loggedIn }) {
                 }}
                 w="100%"
                 h="100%"
-                // justifyContent="center"
                 gap="1%"
             >
                 {rewardTypes && tableHeight && (

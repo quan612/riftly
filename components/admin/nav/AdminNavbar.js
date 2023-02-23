@@ -9,7 +9,7 @@ import {
   useColorModeValue
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
-// import AdminNavbarLinks from "./AdminNavbarLinks";
+import AdminNavbarLinks from "./AdminNavbarLinks";
 
 export default function AdminNavbar(props) {
   const [scrolled, setScrolled] = useState(false);
@@ -29,6 +29,7 @@ export default function AdminNavbar(props) {
     secondary,
     brandText,
     onOpen,
+    session,
     ...rest
   } = props;
 
@@ -155,13 +156,14 @@ export default function AdminNavbar(props) {
           </Link>
         </Box>
         <Box ms="auto" w={{ sm: "100%", md: "unset" }}>
-          {/* <AdminNavbarLinks
+          <AdminNavbarLinks
             onOpen={props.onOpen}
             logoText={props.logoText}
             secondary={props.secondary}
             fixed={props.fixed}
             scrolled={scrolled}
-          /> */}
+            session={session}
+          />
         </Box>
       </Flex>
     </Flex>

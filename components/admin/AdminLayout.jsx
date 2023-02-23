@@ -60,7 +60,7 @@ export default function AdminLayout({ session, children }) {
         }
         return activeNavbar;
     };
-    // console.log(routes);
+
     return (
         <Box
         // minHeight="100vh"
@@ -107,16 +107,13 @@ export default function AdminLayout({ session, children }) {
                         brandText={getActiveRoute(routes)}
                         secondary={getActiveNavbar(routes)}
                         fixed={fixed}
+                        session={session}
                         // {...rest}
                     />
                 </Portal>
 
                 <PanelContent>
                     <PanelContainer>
-                        {/* <Switch>
-                {getRoutes(routes)}
-                <Redirect from='/admin' to='/admin/dashboard' />
-              </Switch> */}
                         <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
                             {children}
                         </Flex>

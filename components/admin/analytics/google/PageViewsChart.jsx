@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 
 import dynamic from "next/dynamic";
-const HorizontalBarChart = dynamic(() => import("../shared/HorizontalBarChart"), { ssr: false });
+// const HorizontalBarChart = dynamic(() => import("../shared/HorizontalBarChart"), { ssr: false });
 
 function PageViewsChart() {
     const legends = ["Total Users", "Page Views", "Sessions", "Sessions Per User"];
@@ -30,11 +30,7 @@ function PageViewsChart() {
         }
     }, []);
 
-    return (
-        <>
-            <HorizontalBarChart clientData={clientData} />
-        </>
-    );
+    return <>{/* <HorizontalBarChart clientData={clientData} /> */}</>;
 }
 export default PageViewsChart;
 

@@ -1,28 +1,26 @@
 // Chakra Icons
-import { BellIcon } from "@chakra-ui/icons";
+import { BellIcon, SettingsIcon } from "@chakra-ui/icons";
 // Chakra Imports
 import {
-  Box, Button,
+  Avatar,
+  Box,
+  Button,
   Flex,
   Menu,
   MenuButton,
   MenuItem,
   MenuList, Stack, Text, useColorMode,
-  useColorModeValue
+  useColorModeValue, useDisclosure
 } from "@chakra-ui/react";
+import { RiftlyLogoWhiteText } from "@components/riftly/Logo";
 // Assets
-import avatar1 from "assets/img/avatars/avatar1.png";
-import avatar2 from "assets/img/avatars/avatar2.png";
-import avatar3 from "assets/img/avatars/avatar3.png";
-// Custom Icons
-import { ArgonLogoDark, ArgonLogoLight, ChakraLogoDark, ChakraLogoLight, ProfileIcon, SettingsIcon } from "components/Icons/Icons";
-// Custom Components
-import { ItemContent } from "components/Menu/ItemContent";
-import { SearchBar } from "components/Navbars/SearchBar/SearchBar";
-import { SidebarResponsive } from "components/Sidebar/Sidebar";
-import React from "react";
-import { NavLink } from "react-router-dom";
-import routes from "routes.js";
+
+import { SidebarResponsive } from "../left-side-bar/Sidebar";
+
+import routes from "../routes";
+import React, { useContext, useEffect, useState, useCallback, useRef } from "react";
+import { Web3Context } from "@context/Web3Context";
+import AdminLogin from "../AdminLogin";
 
 export default function HeaderLinks(props) {
   const {
@@ -32,27 +30,40 @@ export default function HeaderLinks(props) {
     scrolled,
     secondary,
     onOpen,
+    session,
     ...rest
   } = props;
 
   const { colorMode } = useColorMode();
 
   // Chakra Color Mode
-  let navbarIcon =
-    fixed && scrolled
-      ? useColorModeValue("gray.700", "gray.200")
-      : useColorModeValue("white", "gray.200");
+  const navbarIcon = useColorModeValue("gray.400", "white");
   let menuBg = useColorModeValue("white", "navy.800");
-  if (secondary) {
-    navbarIcon = "white";
-  }
+  const textColor = useColorModeValue("secondaryGray.900", "white");
+  const textColorBrand = useColorModeValue("brand.700", "brand.400");
+  const shadow = useColorModeValue(
+    "14px 17px 40px 4px rgba(112, 144, 176, 0.18)",
+    "14px 17px 40px 4px rgba(112, 144, 176, 0.06)"
+  );
+  const borderColor = useColorModeValue("#E6ECFA", "rgba(135, 140, 189, 0.3)");
+  const walletSignInModal = useDisclosure();
+  const { SignOut } = useContext(Web3Context);
+
   return (
     <Flex
+      ps={{ sm: "0px", md: "16px" }}
       pe={{ sm: "0px", md: "16px" }}
       w={{ sm: "100%", md: "auto" }}
       alignItems='center'
-      flexDirection='row'>
-      <SearchBar me='18px' />
+      flexDirection='row'
+      bg={menuBg}
+      flexWrap={secondary ? { base: "wrap", md: "nowrap" } : "unset"}
+      p='10px'
+      borderRadius='30px'
+      boxShadow={shadow}
+      gap="8px"
+    >
+      {/* <SearchBar me='18px' />
       <NavLink to='/auth/signin'>
         <Button
           ms='0px'
@@ -76,26 +87,12 @@ export default function HeaderLinks(props) {
           }>
           <Text display={{ sm: "none", md: "flex" }}>Sign In</Text>
         </Button>
-      </NavLink>
+      </NavLink> */}
       <SidebarResponsive
         hamburgerColor={"white"}
         logo={
-          <Stack direction='row' spacing='12px' align='center' justify='center'>
-            {colorMode === "dark" ? (
-              <ArgonLogoLight w='74px' h='27px' />
-            ) : (
-              <ArgonLogoDark w='74px' h='27px' />
-            )}
-            <Box
-              w='1px'
-              h='20px'
-              bg={colorMode === "dark" ? "white" : "gray.700"}
-            />
-            {colorMode === "dark" ? (
-              <ChakraLogoLight w='82px' h='21px' />
-            ) : (
-              <ChakraLogoDark w='82px' h='21px' />
-            )}
+          <Stack direction="row" spacing="12px" align="center" justify="center">
+            <RiftlyLogoWhiteText />
           </Stack>
         }
         colorMode={colorMode}
@@ -105,45 +102,85 @@ export default function HeaderLinks(props) {
       />
       <SettingsIcon
         cursor='pointer'
+        me={{ base: "16px", xl: "0px" }}
         ms={{ base: "16px", xl: "0px" }}
-        me='16px'
+
         onClick={props.onOpen}
         color={navbarIcon}
         w='18px'
         h='18px'
       />
+
       <Menu>
-        <MenuButton>
-          <BellIcon color={navbarIcon} w='18px' h='18px' />
+        <MenuButton p='0px'>
+          <Avatar
+            _hover={{ cursor: "pointer" }}
+            color='white'
+            name='Riftly'
+            bg='#11047A'
+            size='sm'
+            w='40px'
+            h='40px'
+          />
         </MenuButton>
-        <MenuList p='16px 8px' bg={menuBg}>
-          <Flex flexDirection='column'>
-            <MenuItem borderRadius='8px' mb='10px'>
-              <ItemContent
-                time='13 minutes ago'
-                info='from Alicia'
-                boldInfo='New Message'
-                aName='Alicia'
-                aSrc={avatar1}
-              />
-            </MenuItem>
-            <MenuItem borderRadius='8px' mb='10px'>
-              <ItemContent
-                time='2 days ago'
-                info='by Josh Henry'
-                boldInfo='New Album'
-                aName='Josh Henry'
-                aSrc={avatar2}
-              />
-            </MenuItem>
-            <MenuItem borderRadius='8px'>
-              <ItemContent
-                time='3 days ago'
-                info='Payment succesfully completed!'
-                boldInfo=''
-                aName='Kara'
-                aSrc={avatar3}
-              />
+        <MenuList
+          boxShadow={shadow}
+          p='0px'
+          mt='10px'
+          borderRadius='20px'
+          bg={menuBg}
+          border='none'>
+          <Flex w='100%' mb='0px'>
+            <Text
+              ps='20px'
+              pt='16px'
+              pb='10px'
+              w='100%'
+              borderBottom='1px solid'
+              borderColor={borderColor}
+              fontSize='sm'
+              fontWeight='700'
+              color={textColor}>
+              👋&nbsp; Hey, Riftly
+            </Text>
+          </Flex>
+          <Flex flexDirection='column' p='10px'>
+            {/* <MenuItem
+              _hover={{ bg: "none" }}
+              _focus={{ bg: "none" }}
+              borderRadius='8px'
+              px='14px'>
+              <Text fontSize='sm'>Profile Settings</Text>
+            </MenuItem> */}
+
+            <MenuItem
+              _hover={{ bg: "none" }}
+              _focus={{ bg: "none" }}
+              color='red.400'
+              borderRadius='8px'
+              px='14px'>
+
+              {!session ? (
+                <>
+                  {walletSignInModal?.isOpen && (
+                    <AdminLogin
+                      isOpen={walletSignInModal.isOpen}
+                      onClose={() => {
+                        walletSignInModal.onClose();
+                      }}
+                    />
+                  )}
+                  <Text fontSize='sm' onClick={() => walletSignInModal.onOpen()}>Sign In</Text>
+                </>
+
+              ) : (
+                <>
+
+                  <Text fontSize='sm' onClick={() => SignOut()}>Log out</Text>
+                </>
+              )}
+
+
             </MenuItem>
           </Flex>
         </MenuList>

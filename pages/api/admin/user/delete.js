@@ -22,7 +22,9 @@ const AdminUserDeleteAPI = async (req, res) => {
 
                 let deleteUserQuest = prisma.userQuest.deleteMany({ where: { userId } })
                 let deleteUser = prisma.whiteList.delete({ where: { userId } })
-                await prisma.$transaction([deleteUserQuest, deleteUser]);
+                let smsVerifyDelete = prisma.whiteList.delete({ where: { userId } })
+
+                await prisma.$transaction([deleteUserQuest, deleteUser, smsVerifyDelete]);
 
                 return res.status(200).json({ message: "User deleted" });
             } catch (error) {

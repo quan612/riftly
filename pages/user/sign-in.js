@@ -37,12 +37,6 @@ function SignIn() {
             </Head>
 
             <Box
-                // position="absolute"
-                // top="0"
-                // w={{ base: "28%", md: "179px" }}
-                // h={{ base: "15%", md: "198px" }}
-                // display={"flex"}
-                // justifyContent={"center"}
                 position="relative"
                 top="0"
                 flex="1"
@@ -51,11 +45,15 @@ function SignIn() {
                 display={"flex"}
                 justifyContent={"center"}
             >
-                <Box display={"flex"} justifyContent={"center"} alignItems="center" w={{ base: "40%", lg: "58%" }}>
+                <Box
+                    display={"flex"}
+                    justifyContent={"center"}
+                    alignItems="center"
+                    w={{ base: "40%", lg: "58%" }}
+                >
                     <RiftlyLogoWhiteText />
                 </Box>
             </Box>
-
 
             <TallContainer>
                 <SignInSignUpWrapper isSignIn={true} />

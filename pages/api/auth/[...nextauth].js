@@ -87,7 +87,6 @@ export const authOptions = {
                         console.error("cannot update new nonce");
                     }
 
-                    console.log("Authenticated as admin successfully");
                     return { address: originalAddress, isAdmin: true };
                 } catch (error) {
                     throw new Error(error);
@@ -100,7 +99,7 @@ export const authOptions = {
             type: "credentials",
             authorize: async (credentials, req) => {
                 try {
-                    console.log("Authenticating as user");
+
                     let { address, signature } = credentials;
 
                     if (!address || !signature) throw new Error("Missing address or signature");
@@ -130,11 +129,8 @@ export const authOptions = {
                     if (originalAddress.toLowerCase() !== address.toLowerCase())
                         throw new Error("Signature verification failed");
 
-                    console.log("Authenticated as user successfully");
-
                     return { address: originalAddress, isAdmin: false, userId: user.userId };
                 } catch (error) {
-                    console.log(error);
                     throw error;
                 }
             },
@@ -145,11 +141,11 @@ export const authOptions = {
             type: "credentials",
             authorize: async (credentials, req) => {
                 try {
-                    console.log("Authenticating as unstoppable user");
+
                     let { uathUser, address, message, signature, authorization } = credentials;
 
                     // if (!address || !uathUser || !authorization) {
-                    //     console.log("Missing unstoppable info");
+
                     //     throw new Error("Missing unstoppable info");
                     // }
 
@@ -162,7 +158,6 @@ export const authOptions = {
                         },
                     });
                     // let test = await uauth.user();
-                    // console.log("test", test)
 
                     let type = "sig",
                         version = "v1";
@@ -177,8 +172,6 @@ export const authOptions = {
                         version
                     );
 
-                    console.log("Authenticated as user successfully");
-
                     return {
                         address,
                         message,
@@ -191,7 +184,7 @@ export const authOptions = {
                         originalSignature,
                     };
                 } catch (error) {
-                    console.log(error);
+                    throw error
                 }
             },
         }),
@@ -280,7 +273,7 @@ export const authOptions = {
                 });
                 if (!existingUser) {
                     let error = `Unstoppable domain ${uathUser} is not linked.`;
-                    console.log(error);
+
                     return `/quest-redirect?error=${error}`;
                 }
 
@@ -292,7 +285,6 @@ export const authOptions = {
                     credentials.message != userInfo.message ||
                     credentials.signature != userInfo.signature
                 ) {
-                    console.log("Invalid unstoppable authorization.");
                     let error = `Invalid unstoppable authorization.`;
                     return `/quest-redirect?error=${error}`;
                 }
@@ -310,14 +302,13 @@ export const authOptions = {
                     });
 
                     // should not be here
-                    if (existingUser.status === AccountStatus.PENDING) {
+                    // if (existingUser.status === AccountStatus.PENDING) {
+                    //     throw new Error(`/sms-verification?account=${email}&type=${Enums.EMAIL}`);
+                    // }
 
-                        throw new Error(`/sms-verification?account=${email}&type=${Enums.EMAIL}`);
-                    }
-                    console.log(4)
                     return true;
                 } catch (error) {
-                    console.log(error)
+                    return false
                 }
 
             }
@@ -381,8 +372,6 @@ export const authOptions = {
             return false;
         },
         async redirect({ url, baseUrl }) {
-            console.log(url)
-            console.log(baseUrl)
             return url;
         },
         async jwt({ token, user, account, profile }) {
@@ -437,56 +426,3 @@ export default (req, res) => {
     }
     return NextAuth(req, res, authOptions);
 };
-
-/*
- console.log("correct addr" + address);
-                    // if (originalAddress.toLowerCase() !== address.toLowerCase())
-                    //     throw new Error("Signature verification failed");
-                    const provider = new Web3.providers.HttpProvider("https://mainnet.infura.io/v3/e26c48fe88884b9f997fc96344dd0f6a")
-                    const web3 = new Web3(provider);
-
-                    // console.log("signature", signature)
-                    // console.log("message", message)
-
-
-                    // let test = utils.verifyMessage(message, signature)
-                    // console.log(test)
-
-                    // const msg = `${Enums.USER_SIGN_MSG}`;
-
-                    const msg =
-                        `identity.unstoppabledomains.com wants you to sign in with your Ethereum account:0x9128C112f6BB0B2D888607AE6d36168930a37087
-    
-I consent to giving access to: openid wallet
-    
-URI: uns:quan612.wallet
-Version: 1
-Chain ID: 1
-Nonce: 0x7615b547bc31c1b31029949196083b6a3014dbcce03f32139c895343ee01f935
-Issued At: 2022-11-15T20:12:57.971Z`;
-
-                    let data = web3.eth.accounts.recover(msg, signature);
-                    console.log("web3 test: ", data);
-
-
-                    const msgBufferHex = ethUtil.bufferToHex(Buffer.from(msg, "utf8"));
-                    const originalAddress = recoverPersonalSignature({
-                        data: msgBufferHex,
-                        signature: signature.trim(),
-                    });
-                    console.log("originalAddress: ", originalAddress)
-                    // const msgBuffer = ethUtil.toBuffer("Signing abcdse");
-                    // const msgHash = ethUtil.hashPersonalMessage(msgBuffer);
-                    // const signatureBuffer = ethUtil.toBuffer(signature);
-
-                    // const signatureParams = ethUtil.fromRpcSig(signatureBuffer);
-                    // const publicKey = ethUtil.ecrecover(
-                    //     msgHash,
-                    //     signatureParams.v,
-                    //     signatureParams.r,
-                    //     signatureParams.s
-                    // );
-                    // const addressBuffer = ethUtil.publicToAddress(publicKey);
-                    // const abcde = ethUtil.bufferToHex(addressBuffer);
-                    // console.log(abcde)
-*/

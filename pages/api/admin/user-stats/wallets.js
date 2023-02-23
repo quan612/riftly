@@ -34,12 +34,7 @@ const adminUserStatsAPI = async (req, res) => {
 
 
             searchRes.users = users;
-            // if (currentPage * 10000 >= userCount) {
-            //     searchRes.shouldContinue = false;
-            // } else {
-            //     searchRes.shouldContinue = true;
-            // }
-            // console.log(walletOwners)
+
             res.setHeader('Cache-Control', 'max-age=0, s-maxage=60, stale-while-revalidate');
             return res.status(200).json(searchRes);
         } catch (error) {
