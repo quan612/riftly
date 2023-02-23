@@ -28,6 +28,7 @@ const adminUserStatsAPI = async (req, res) => {
                     twitterUserName: true,
                     discordUserDiscriminator: true,
                     whiteListUserData: true,
+                    email: true,
                     userId: true
                 },
             });

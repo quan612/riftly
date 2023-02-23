@@ -516,6 +516,10 @@ const columnData = [
         accessor: "wallet",
     },
     {
+        Header: "EMAIL",
+        accessor: "email",
+    },
+    {
         Header: "TWITTER",
         accessor: "twitterUserName",
     },
