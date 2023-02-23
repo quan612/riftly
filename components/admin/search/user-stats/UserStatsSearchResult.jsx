@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
-import useSWR from "swr";
+
 import axios from "axios";
-import { BuildCsv } from "./BuildCsv";
+
 import useTable from "@hooks/useTable";
 
 import { utils } from "ethers";
@@ -116,25 +116,6 @@ export default function UserStatsSearchResult({ formData }) {
             <div className="card-header px-0">
                 <h4 className=" mb-0">Result</h4>
                 <div className="d-flex ">
-                    {/* <a
-                        href={`data:text/csv;charset=utf-8,${encodeURIComponent(
-                            BuildCsv(tableData)
-                        )}`}
-                        download={`Search - ${new Date().toISOString()}.csv`}
-                        className="me-2"
-                    >
-                        Export as CSV
-                    </a>
-
-                    <a
-                        href={`data:text/plain;charset=utf-8,${encodeURIComponent(
-                            JSON.stringify(tableData)
-                        )}`}
-                        download={`Search - ${new Date().toISOString()}.json`}
-                        className="me-2"
-                    >
-                        Export as Json
-                    </a> */}
                     <div className="text-green-600 font-bold">
                         Search Results: {tableData?.length}
                     </div>
