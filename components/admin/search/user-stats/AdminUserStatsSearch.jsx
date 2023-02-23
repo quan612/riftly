@@ -71,17 +71,21 @@ export default function AdminUserStatsSearch() {
 
     useEffect(async () => {
         if (userStats) {
-            let filterResult = [...userStats];
-            const { contract, chainId, wallet } = filterObj;
-            if (contract.trim().length > 0) {
-                let owners = await getNftOwners(utils.getAddress(contract), chainId);
-                filterResult = filterResult.filter((w) => owners.includes(w.wallet));
-            }
-            if (wallet.trim().length > 0) {
-                filterResult = filterResult.filter((w) => w.wallet === wallet);
-            }
+            try {
+                let filterResult = [...userStats];
+                const { contract, chainId, wallet } = filterObj;
+                if (contract?.trim().length > 0) {
+                    let owners = await getNftOwners(utils.getAddress(contract), chainId);
+                    filterResult = filterResult.filter((w) => owners.includes(w.wallet));
+                }
+                if (wallet?.trim().length > 0) {
+                    filterResult = filterResult.filter((w) => w.wallet === wallet);
+                }
 
-            setTableData(filterResult);
+                setTableData(filterResult);
+            } catch (error) {
+                console.log(error);
+            }
         }
     }, [userStats, filterObj]);
 
@@ -376,7 +380,7 @@ const ResultTable = ({ data, rowsPerPage, setTableData }) => {
                     </ButtonGroup>
                 </Flex>
                 <Flex>
-                    {tableInstance.pageOptions.length > 0 && (
+                    {tableInstance?.pageOptions?.length > 0 && (
                         <TablePagination tableInstance={tableInstance} />
                     )}
                 </Flex>
@@ -449,7 +453,7 @@ const ResultTable = ({ data, rowsPerPage, setTableData }) => {
                                                             cursor: "pointer",
                                                         }}
                                                         onClick={() => {
-                                                            if (wallet.length > 16) {
+                                                            if (wallet?.length > 16) {
                                                                 copy(wallet);
                                                                 toast({
                                                                     description: `Copy wallet ${wallet}`,
@@ -470,7 +474,7 @@ const ResultTable = ({ data, rowsPerPage, setTableData }) => {
                                                         fontSize={"sm"}
                                                         maxWidth="100px"
                                                     >
-                                                        {cell.value.length > 0 &&
+                                                        {cell?.value?.length > 0 &&
                                                             shortenAddress(cell.value)}
                                                     </Text>
                                                 </Tooltip>
@@ -496,91 +500,6 @@ const ResultTable = ({ data, rowsPerPage, setTableData }) => {
                         })}
                     </Tbody>
                 </Table>
-
-                {/* {pageOptions.length > 1 && (
-                    <Flex justifyContent="space-between" m={4} alignItems="center">
-                        <Flex>
-                            <Tooltip label="First Page">
-                                <IconButton
-                                    onClick={() => gotoPage(0)}
-                                    isDisabled={!canPreviousPage}
-                                    icon={<ArrowLeftIcon h={3} w={3} />}
-                                    mr={4}
-                                />
-                            </Tooltip>
-                            <Tooltip label="Previous Page">
-                                <IconButton
-                                    onClick={previousPage}
-                                    isDisabled={!canPreviousPage}
-                                    icon={<ChevronLeftIcon h={6} w={6} />}
-                                />
-                            </Tooltip>
-                        </Flex>
-
-                        <Flex alignItems="center">
-                            <Text flexShrink="0" mr={8}>
-                                Page{" "}
-                                <Text fontWeight="bold" as="span">
-                                    {pageIndex + 1}
-                                </Text>{" "}
-                                of{" "}
-                                <Text fontWeight="bold" as="span">
-                                    {pageOptions.length}
-                                </Text>
-                            </Text>
-                            <Text flexShrink="0">Go to page:</Text>{" "}
-                            <NumberInput
-                                ml={2}
-                                mr={8}
-                                w={28}
-                                min={1}
-                                max={pageOptions.length}
-                                onChange={(value) => {
-                                    const page = value ? value - 1 : 0;
-                                    gotoPage(page);
-                                }}
-                                defaultValue={pageIndex + 1}
-                            >
-                                <NumberInputField color={"white"} />
-                                <NumberInputStepper>
-                                    <NumberIncrementStepper />
-                                    <NumberDecrementStepper />
-                                </NumberInputStepper>
-                            </NumberInput>
-                            <Select
-                                w={32}
-                                value={pageSize}
-                                onChange={(e) => {
-                                    setPageSize(Number(e.target.value));
-                                }}
-                            >
-                                {[10, 20, 30, 40, 50].map((pageSize) => (
-                                    <option key={pageSize} value={pageSize}>
-                                        Show {pageSize}
-                                    </option>
-                                ))}
-                            </Select>
-                        </Flex>
-
-                        <Flex>
-                            <Tooltip label="Next Page">
-                                <IconButton
-                                    onClick={nextPage}
-                                    isDisabled={!canNextPage}
-                                    icon={<ChevronRightIcon h={6} w={6} />}
-                                />
-                            </Tooltip>
-                            <Tooltip label="Last Page">
-                                <IconButton
-                                    onClick={() => gotoPage(pageCount - 1)}
-                                    isDisabled={!canNextPage}
-                                    icon={<ArrowRightIcon h={3} w={3} />}
-                                    ml={4}
-                                />
-                            </Tooltip>
-                        </Flex>
-                    </Flex>
-                )} */}
             </AdminCard>
         </Box>
     );
@@ -659,7 +578,7 @@ const TablePagination = ({ tableInstance }) => {
                     </Text>{" "}
                     of{" "}
                     <Text fontWeight="bold" as="span">
-                        {pageOptions.length}
+                        {pageOptions?.length}
                     </Text>
                 </Text>
                 <Text flexShrink="0">Go to page:</Text>{" "}
@@ -668,7 +587,7 @@ const TablePagination = ({ tableInstance }) => {
                     mr={8}
                     w={28}
                     min={1}
-                    max={pageOptions.length}
+                    max={pageOptions?.length}
                     onChange={(value) => {
                         const page = value ? value - 1 : 0;
                         gotoPage(page);
