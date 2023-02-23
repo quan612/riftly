@@ -57,6 +57,7 @@ import { useAdminRefreshUserStats, useAdminUserStatsQuery } from "@shared/HOC/us
 import { shortenAddress } from "@utils/shortenAddress";
 import { useCopyToClipboard } from "usehooks-ts";
 import XLSX from "xlsx";
+import Loading from "@components/riftly/Loading";
 
 export default function AdminUserStatsSearch() {
     const [tableData, setTableData] = useState(null);
@@ -124,6 +125,7 @@ export default function AdminUserStatsSearch() {
                 filterObj={filterObj}
                 onFormSubmit={(formData) => filterObjSet(formData)}
             />
+            {isLoadingUserStats && <Loading />}
             {tableData && (
                 <ResultTable data={tableData} rowsPerPage={10} setTableData={setTableData} />
             )}
