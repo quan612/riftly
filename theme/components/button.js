@@ -100,7 +100,9 @@ export const buttonStyles = {
           },
         }),
         signIn: (props) => ({
-
+          w: { base: "auto", md: "192px" },
+          h: { base: "40px", lg: "48px" },
+          fontSize: { base: "16px", lg: "18px" },
           border: "1px solid",
           borderColor: "brand.blue",
           borderRadius: "48px",
@@ -138,7 +140,7 @@ export const buttonStyles = {
           w: { base: "auto", md: "192px" },
           h: { base: "40px", lg: "48px" },
           fontSize: { base: "16px", lg: "18px" },
-          fontWeight: "semibold",
+
           border: "1px solid",
           borderColor: "transparent",
           borderRadius: "48px",

@@ -1,5 +1,20 @@
 import { prisma } from "@context/PrismaContext";
 
+export const getAccountStatusToAdd = async () => {
+    let accountStatus = AccountStatus.PENDING;
+    let requiredSmsVerification = getIsSMSVerificationRequired()
+
+    if (!requiredSmsVerification) {
+        accountStatus = AccountStatus.ACTIVE;
+    }
+    return accountStatus;
+}
+
+export const getIsSMSVerificationRequired = async () => {
+    let allConfigs = await prisma.questVariables.findFirst();
+    return allConfigs.requiredSmsVerification
+}
+
 export const getWhiteListUserByUserName = async (username) => {
     return await prisma.whiteList.findFirst({
         where: {
@@ -41,18 +56,6 @@ export const getWhiteListUserByUserId = async (userId) => {
     return await prisma.whiteList.findUnique({
         where: {
             userId,
-        },
-    });
-};
-
-export const addNewUser = async (wallet) => {
-    return await prisma.whiteList.create({
-        data: {
-            wallet,
-            discordId: null,
-            discordUserDiscriminator: null,
-            twitterId: null,
-            twitterUserName: null,
         },
     });
 };

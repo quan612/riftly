@@ -26,7 +26,14 @@ export async function getServerSideProps(context) {
         context.res,
         authOptions
     );
-
+    if (!session || session?.user?.isAdmin === false) {
+        return {
+            redirect: {
+                destination: '/admin/sign-in',
+                permanent: false,
+            },
+        }
+    }
     return {
         props: {
             session,

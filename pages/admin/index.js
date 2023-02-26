@@ -1,14 +1,9 @@
 import { AdminLayout } from "/components/admin";
-
 import React, { useEffect } from "react";
 import dynamic from "next/dynamic";
 const AdminGoogleAnalyticsComponent = dynamic(() => import("@components/admin/analytics/AdminGoogleAnalytics"))
-const AdminPage = () => {
 
-  return (
-    <AdminGoogleAnalyticsComponent />
-  );
-}
+const AdminPage = () => <AdminGoogleAnalyticsComponent />
 
 AdminPage.requireAdmin = true;
 AdminPage.Layout = AdminLayout;
@@ -23,7 +18,14 @@ export async function getServerSideProps(context) {
     context.res,
     authOptions
   );
-  context.res.setHeader("Cache-Control", "public, s-maxage=10, stale-while-revalidate=59");
+  if (!session || session?.user?.isAdmin === false) {
+    return {
+      redirect: {
+        destination: '/admin/sign-in',
+        permanent: false,
+      },
+    }
+  }
 
   return {
     props: {

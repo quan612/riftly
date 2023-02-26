@@ -34,7 +34,7 @@ import {
     Select,
     Text,
 } from "@chakra-ui/react";
-import { RiftlyModalCloseButton } from "@components/riftly/Buttons";
+import { RiftlyModalCloseButton } from "@components/shared/Buttons";
 import SmsVerificationQuestForm from "./Forms/SmsVerificationQuestForm";
 
 const AddQuestModal = ({ isOpen, onClose, rewardTypes, questTypes }) => {

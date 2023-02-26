@@ -14,21 +14,19 @@ import {
     ListItem,
     Text,
     Button,
-    useColorMode,
     useColorModeValue,
     SimpleGrid,
     FormControl,
     FormLabel,
     FormErrorMessage,
     Input,
-    Switch,
     Select,
     Checkbox,
     GridItem,
     Tooltip,
     useToast,
 } from "@chakra-ui/react";
-import Card from "@components/riftly/card/Card";
+import Card from "@components/shared/Card";
 
 const avatars = [
     `${Enums.BASEPATH}/img/sharing-ui/invite/ava1.png`,

@@ -4,7 +4,7 @@ import { Heading, Box, Flex, Text, Button, useToast, Grid, GridItem } from "@cha
 import { ChakraBox } from "@theme/additions/framer/FramerChakraComponent";
 
 import { useQueryClient } from "react-query";
-import { HeadingLg, HeadingSm, TextSm } from "@components/riftly/Typography";
+import { HeadingLg, HeadingSm, TextSm } from "@components/shared/Typography";
 import UserTierLevel from "../dashboard/UserTierLevel";
 import { useDeviceDetect } from "lib/hooks";
 let achievementsArray = [

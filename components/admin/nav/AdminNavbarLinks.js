@@ -12,7 +12,7 @@ import {
   MenuList, Stack, Text, useColorMode,
   useColorModeValue, useDisclosure
 } from "@chakra-ui/react";
-import { RiftlyLogoWhiteText } from "@components/riftly/Logo";
+import { RiftlyLogoWhiteText } from "@components/shared/Logo";
 // Assets
 
 import { SidebarResponsive } from "../left-side-bar/Sidebar";

@@ -24,14 +24,14 @@ import { useQueryClient } from "react-query";
 
 import { doQuestUtility } from "../shared/doQuestUtility";
 
-import { HeadingLg, HeadingSm, TextSm } from "@components/riftly/Typography";
+import { HeadingLg, HeadingSm, TextSm } from "@components/shared/Typography";
 import {
     SmsVerificationQuestModal,
     CodeQuestModal,
     WalletAuthQuestModal,
     NftOwnerQuestModal,
 } from "../shared";
-import { RiftlyIcon } from "@components/riftly/Icons";
+import { RiftlyIcon } from "@components/shared/Icons";
 
 const ChallengeQuests = ({ userQuests }) => {
     const [filterCompleted, filterCompletedSet] = useState(false);

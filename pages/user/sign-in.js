@@ -1,13 +1,21 @@
 import Head from "next/head";
 import React from "react";
-import dynamic from "next/dynamic";
-
 import { Box, Flex } from "@chakra-ui/react";
-import { RiftlyLogoWhiteText } from "@components/riftly/Logo";
+import { RiftlyLogoWhiteText } from "@components/shared/Logo";
 import { SignInSignUpWrapper } from "@components/end-user/wrappers/SignInSignUpWrapper";
 import { TallContainer } from "containers/user";
+import { useSession } from "next-auth/react"
+import { useRouter } from "next/router";
 
 function SignIn() {
+    const { data: session, status } = useSession()
+    const router = useRouter();
+    React.useEffect(() => {
+
+        if (session && !session?.user?.isAdmin) {
+            router.push("/")
+        }
+    }, [session])
     return (
         <>
             <Head>

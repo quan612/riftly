@@ -1,8 +1,8 @@
 import React from "react";
 import { MdBarChart } from "react-icons/md";
-import { Box, Button, Flex, Icon, Text, useColorModeValue } from "@chakra-ui/react";
-import ApexBarChart from "@components/riftly/charts/ApexBarChart";
-import Card from "@components/riftly/card/Card";
+import { Box, Button, Flex, Heading, Icon, Text, useColorModeValue } from "@chakra-ui/react";
+import ApexBarChart from "@components/shared/Charts/ApexBarChart";
+import Card from "@components/shared/Card";
 
 const barChartDataConsumption = [
     {
@@ -103,7 +103,13 @@ const barChartOptionsConsumption = {
     legend: {
         show: false,
     },
-    colors: ["#4299E1", "#ECC94B", "#ED8936", "#ED64A6", "#C53030"],
+    colors: [
+        "rgba(29, 99, 255, 1)",
+        "rgba(29, 99, 255, 0.8)",
+        "rgba(29, 99, 255, 0.6)",
+        "rgba(29, 99, 255, 0.4)",
+        "rgba(29, 99, 255, 0.2)",
+    ],
     dataLabels: {
         enabled: false,
     },
@@ -127,9 +133,15 @@ export default function UserSignUpReferral() {
     return (
         <Card align="center" direction="column" w="100%" h="100%">
             <Flex align="center" w="100%" px="12px" py="10px">
-                <Text me="auto" color={textColor} fontSize="lg" fontWeight="600" lineHeight="100%">
-                    New User Sign Up Referrals
-                </Text>
+                <Heading
+                    me="auto"
+                    color={textColor}
+                    fontSize="lg"
+                    fontWeight="700"
+                    lineHeight="100%"
+                >
+                    Top Referrals
+                </Heading>
             </Flex>
 
             <Box height="80px" w="100%">

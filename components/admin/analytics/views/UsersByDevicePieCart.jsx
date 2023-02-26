@@ -1,12 +1,12 @@
 import React from "react";
-import { Box, Flex, Text, Select, useColorModeValue } from "@chakra-ui/react";
-import Card from "@components/riftly/card/Card";
-import ApexPieChart from "@components/riftly/charts/ApexPieChart";
+import { Box, Flex, Text, Select, useColorModeValue, Heading } from "@chakra-ui/react";
+import Card from "@components/shared/Card";
+import ApexPieChart from "@components/shared/Charts/ApexPieChart";
 
-const pieChartData = [63, 25, 12];
+const pieChartData = [50, 25, 25];
 const pieChartOptions = {
     labels: ["Desktop", "Mobile", "Tablet"],
-    colors: ["#2C5282", "#6AD2FF", "#3182CE"],
+    colors: ["rgba(29, 99, 255, 1)", "rgba(29, 99, 255, 0.6)", "rgba(29, 99, 255, 0.3)"],
     chart: {
         width: "50px",
     },
@@ -35,7 +35,7 @@ const pieChartOptions = {
         },
     },
     fill: {
-        colors: ["#2C5282", "#6AD2FF", "#3182CE"],
+        colors: ["rgba(29, 99, 255, 1)", "rgba(29, 99, 255, 0.6)", "rgba(29, 99, 255, 0.3)"],
     },
     tooltip: {
         enabled: true,
@@ -49,7 +49,7 @@ const pieChartOptions = {
 export default function UsersByDevicePieCart() {
     // Chakra Color Mode
     const textColor = useColorModeValue("secondaryGray.900", "white");
-    const cardColor = useColorModeValue("white", "navy.700");
+    const cardColor = "brand.neutral3";
     const cardShadow = useColorModeValue("0px 18px 40px rgba(112, 144, 176, 0.12)", "unset");
     return (
         <Card p="20px" align="center" direction="column" w="100%">
@@ -92,40 +92,55 @@ export default function UsersByDevicePieCart() {
                 mt="15px"
                 mx="auto"
                 gap="10px"
+                justifyContent="space-around"
             >
                 <Flex direction="column" py="5px">
                     <Flex align="center">
-                        <Box h="8px" w="8px" bg="brand.500" borderRadius="50%" me="4px" />
+                        <Box h="8px" w="8px" bg="brand.blue" borderRadius="50%" me="4px" />
+                        <Text fontSize="xs" color="brand.neutral1" fontWeight="400" mb="5px">
+                            Desktop
+                        </Text>
+                    </Flex>
+                    <Heading fontSize="md" color={textColor} fontWeight="700" fontFamily={"Intern"}>
+                        50%
+                    </Heading>
+                </Flex>
+
+                <Flex direction="column" py="5px" me="10px">
+                    <Flex align="center">
+                        <Box
+                            h="8px"
+                            w="8px"
+                            bg="brand.blue"
+                            borderRadius="50%"
+                            me="4px"
+                            opacity={"0.6"}
+                        />
                         <Text fontSize="xs" color="secondaryGray.600" fontWeight="700" mb="5px">
                             Mobile
                         </Text>
                     </Flex>
-                    <Text fontSize="lg" color={textColor} fontWeight="700">
-                        63%
-                    </Text>
-                </Flex>
-                {/* <VSeparator mx={{ base: "60px", xl: "60px", "2xl": "60px" }} /> */}
-                <Flex direction="column" py="5px" me="10px">
-                    <Flex align="center">
-                        <Box h="8px" w="8px" bg="#6AD2FF" borderRadius="50%" me="4px" />
-                        <Text fontSize="xs" color="secondaryGray.600" fontWeight="700" mb="5px">
-                            Desktop
-                        </Text>
-                    </Flex>
-                    <Text fontSize="lg" color={textColor} fontWeight="700">
+                    <Heading fontSize="md" color={textColor} fontWeight="700" fontFamily={"Intern"}>
                         25%
-                    </Text>
+                    </Heading>
                 </Flex>
                 <Flex direction="column" py="5px" me="10px">
                     <Flex align="center">
-                        <Box h="8px" w="8px" bg="#6AD2FF" borderRadius="50%" me="4px" />
+                        <Box
+                            h="8px"
+                            w="8px"
+                            bg="brand.blue"
+                            borderRadius="50%"
+                            me="4px"
+                            opacity={"0.3"}
+                        />
                         <Text fontSize="xs" color="secondaryGray.600" fontWeight="700" mb="5px">
                             Tablet
                         </Text>
                     </Flex>
-                    <Text fontSize="lg" color={textColor} fontWeight="700">
+                    <Heading fontSize="md" color={textColor} fontWeight="700" fontFamily={"Intern"}>
                         25%
-                    </Text>
+                    </Heading>
                 </Flex>
             </Card>
         </Card>

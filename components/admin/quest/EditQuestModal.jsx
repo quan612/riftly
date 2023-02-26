@@ -29,7 +29,7 @@ import {
     Input,
     CloseButton,
 } from "@chakra-ui/react";
-import { RiftlyModalCloseButton } from "@components/riftly/Buttons";
+import { RiftlyModalCloseButton } from "@components/shared/Buttons";
 import SmsVerificationQuestForm from "./Forms/SmsVerificationQuestForm";
 
 const EditQuestModal = ({ quest, isOpen, onClose, rewardTypes }) => {

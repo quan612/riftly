@@ -29,6 +29,7 @@ const bcrypt = require("bcrypt");
 const { NEXTAUTH_SECRET } = process.env;
 
 import { AccountStatus } from "@prisma/client";
+import { getIsSMSVerificationRequired } from "repositories/user";
 
 
 export const authOptions = {
@@ -229,10 +230,12 @@ export const authOptions = {
                     throw new Error("Wrong password entered.");
                 }
 
-                if (currentUser.status === AccountStatus.PENDING) {
+                let isSMSVerificationRequired = await getIsSMSVerificationRequired()
+
+                if (currentUser.status === AccountStatus.PENDING && isSMSVerificationRequired) {
                     throw new Error(`Pending Sign Up`);
                 }
-                // return null
+
                 return {
                     isAdmin: false,
                     userId: currentUser.userId,
@@ -261,9 +264,11 @@ export const authOptions = {
     },
     callbacks: {
         signIn: async (user, account, profile) => {
+
             if (user?.account?.provider === "admin-authenticate") {
                 return true
             }
+            let isSMSVerificationRequired = await getIsSMSVerificationRequired()
             if (user?.account?.provider === "unstoppable-authenticate") {
                 let uathUser = user.credentials.uathUser;
                 const existingUser = await prisma.whiteList.findFirst({
@@ -295,13 +300,13 @@ export const authOptions = {
 
                     let email = user?.user?.email
 
-                    const existingUser = await prisma.whiteList.findFirst({
+                    await prisma.whiteList.findFirst({
                         where: {
                             email,
                         },
                     });
 
-                    // should not be here
+                    // should not be here, throw from authorize
                     // if (existingUser.status === AccountStatus.PENDING) {
                     //     throw new Error(`/sms-verification?account=${email}&type=${Enums.EMAIL}`);
                     // }
@@ -310,7 +315,6 @@ export const authOptions = {
                 } catch (error) {
                     return false
                 }
-
             }
 
             if (user?.account?.provider === "discord") {
@@ -325,7 +329,7 @@ export const authOptions = {
                     let error = `Discord ${user.profile.username}%23${user.profile.discriminator} not found in our database.`;
                     return `/quest-redirect?error=${error}`;
                 }
-                if (existingUser.status === AccountStatus.PENDING) {
+                if (existingUser.status === AccountStatus.PENDING && isSMSVerificationRequired) {
                     return `/sms-verification?account=${address}&type=${Enums.DISCORD}`;
                 }
                 return true;
@@ -343,7 +347,7 @@ export const authOptions = {
                     let error = `Twitter account ${user.user.name} not found.`;
                     return `/quest-redirect?error=${error}`;
                 }
-                if (existingUser.status === AccountStatus.PENDING) {
+                if (existingUser.status === AccountStatus.PENDING && isSMSVerificationRequired) {
                     return `/sms-verification?account=${address}&type=${Enums.TWITTER}`;
                 }
                 return true;
@@ -363,7 +367,7 @@ export const authOptions = {
                     return `/quest-redirect?error=${error}`;
                 }
 
-                if (existingUser.status === AccountStatus.PENDING) {
+                if (existingUser.status === AccountStatus.PENDING && isSMSVerificationRequired) {
                     return `/sms-verification?account=${address}&type=${Enums.WALLET}`;
                 }
                 return true;

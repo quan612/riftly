@@ -6,7 +6,9 @@ const AdminUserStatsSearchComponent = dynamic(() =>
 
 const AdminSearchUserStatsPage = () => {
     return (
-        <AdminUserStatsSearchComponent />
+        <UsersProvider>
+            <AdminUserStatsSearchComponent />
+        </UsersProvider>
     );
 };
 
@@ -17,9 +19,18 @@ export default AdminSearchUserStatsPage;
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "pages/api/auth/[...nextauth]";
 import { AdminLayout } from "@components/admin";
+import { UsersProvider } from "@context/UsersContext";
 
 export async function getServerSideProps(context) {
     const session = await getServerSession(context.req, context.res, authOptions);
+    if (!session || session?.user?.isAdmin === false) {
+        return {
+            redirect: {
+                destination: '/admin/sign-in',
+                permanent: false,
+            },
+        }
+    }
     return {
         props: {
             session,

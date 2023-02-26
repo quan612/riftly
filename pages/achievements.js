@@ -56,12 +56,8 @@ import { authOptions } from "pages/api/auth/[...nextauth]";
 
 export async function getServerSideProps(context) {
     const session = await getServerSession(context.req, context.res, authOptions);
-    context.res.setHeader(
-        'Cache-Control',
-        'public, s-maxage=10, stale-while-revalidate=59'
-    )
 
-    if (!session) {
+    if (!session || session?.user?.isAdmin) {
         return {
             redirect: {
                 destination: '/user/sign-in',

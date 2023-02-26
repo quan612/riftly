@@ -11,8 +11,8 @@ import {
     Text,
     useColorModeValue,
 } from "@chakra-ui/react";
-import Card from "@components/riftly/card/Card";
-import ApexLineChart from "@components/riftly/charts/ApexLineChart";
+import Card from "@components/shared/Card";
+import ApexLineChart from "@components/shared/Charts/ApexLineChart";
 import Enums from "@enums/index";
 import dynamic from "next/dynamic";
 

@@ -1,5 +1,5 @@
 import { Box, useStyleConfig } from "@chakra-ui/react";
-import React, { Component }  from 'react';
+import React, { Component } from 'react';
 function PanelContent(props) {
   const { variant, children, ...rest } = props;
   const styles = useStyleConfig("PanelContent", { variant });
@@ -12,3 +12,5 @@ function PanelContent(props) {
 }
 
 export default PanelContent;
+
+//this is here to make use of component created in themes folder

@@ -1,9 +1,12 @@
 import React from "react";
 import { Box, Flex, Container, Heading, ButtonGroup, Button, Text } from "@chakra-ui/react";
-
 import { FloatingFooter } from "./FloatingFooter";
 import { useRouter } from "next/router";
 import { useWindowSize } from "react-use";
+import { signOut } from "next-auth/react";
+import { ShortContainer } from "containers/user";
+import { RiftlyLogoWhite, RiftlyLogoWhiteText } from "@components/shared/Logo";
+import { useDeviceDetect } from "lib/hooks";
 
 function use100vh() {
     const ref = React.useRef();
@@ -21,6 +24,27 @@ function use100vh() {
 
 export default function UserLayout({ session, children }) {
     let router = useRouter();
+
+    // React.useEffect(() => {
+    //     if (session?.user?.isAdmin) {
+    //         signOut();
+    //     }
+    // }, [session]);
+
+    // React.useEffect(() => {
+    //     console.log(session);
+    //     if (!session || (session && session?.user?.isAdmin)) {
+    //         router.push("/user/sign-in");
+    //     }
+    // }, [session]);
+
+    if (session && session?.user?.isAdmin) {
+        return (
+            <LayoutWrapper>
+                <RiftlyConnectBoard />
+            </LayoutWrapper>
+        );
+    }
 
     if (session) {
         return (
@@ -115,10 +139,6 @@ export const LayoutWrapper = ({ children }) => {
         </Box>
     );
 };
-
-import { ShortContainer } from "containers/user";
-import { RiftlyLogoWhite, RiftlyLogoWhiteText } from "@components/riftly/Logo";
-import { useDeviceDetect } from "lib/hooks";
 
 function RiftlyConnectBoard() {
     let router = useRouter();

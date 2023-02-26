@@ -3,6 +3,7 @@ import { prisma } from "@context/PrismaContext";
 import Enums from "@enums/index";
 
 import { validateEmail } from "@utils/index";
+import { getAccountStatusToAdd } from "repositories/user";
 const bcrypt = require("bcrypt")
 
 export default async function emailSignUp(req, res) {
@@ -39,11 +40,12 @@ export default async function emailSignUp(req, res) {
                 }
 
                 const hash = await bcrypt.hash(password, 10);
-
+                let accountStatus = await getAccountStatusToAdd();
                 await prisma.whiteList.create({
                     data: {
                         email,
-                        password: hash
+                        password: hash,
+                        status: accountStatus
                     },
                 });
 

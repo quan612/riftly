@@ -154,6 +154,7 @@ export function Web3Provider({ session, children }) {
                             redirect: true,
                             signature,
                             address: addresses[0],
+                            callbackUrl: `${window.location.origin}/admin`,
                         }).catch((error) => {
                             reject(error.message);
                         });

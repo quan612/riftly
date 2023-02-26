@@ -22,6 +22,12 @@ export const validateEmail = (email) => {
         );
 };
 
+export const remove_duplicates_es6 = (arr) => {
+    let s = new Set(arr);
+    let it = s.values();
+    return Array.from(it);
+}
+
 export const getUserName = (session) => {
     switch (session?.provider) {
         case "discord":

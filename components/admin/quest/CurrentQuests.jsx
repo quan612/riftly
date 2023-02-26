@@ -26,14 +26,14 @@ import {
     ButtonGroup,
     Icon,
 } from "@chakra-ui/react";
-import AdminCard from "@components/riftly/card/AdminCard";
+import { AdminCard } from "@components/shared/Card";
 
 import { BiEdit } from "react-icons/bi";
 import { AiFillDelete } from "react-icons/ai";
 import { MdPreview } from "react-icons/md";
 import EditQuestModal from "./EditQuestModal";
 import AddQuestModal from "./AddQuestModal";
-import { RiftlyCheckMark, RiftlyEditIcon } from "@components/riftly/Icons";
+import { RiftlyCheckMark, RiftlyEditIcon } from "@components/shared/Icons";
 
 const CurrentQuests = ({ quests, isLoading, error }) => {
     let router = useRouter();

@@ -9,7 +9,7 @@ const Card = {
     borderRadius: "20px",
     minWidth: "0px",
     wordWrap: "break-word",
-    bg: mode("#ffffff", "navy.800")(props),
+    bg: "brand.neutral4",
     backgroundClip: "border-box",
   }),
 };

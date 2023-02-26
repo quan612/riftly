@@ -16,7 +16,7 @@ import {
 } from "@chakra-ui/react";
 // import { HSeparator } from "components/Separator/Separator";
 import React, { useState } from "react";
-import { HSeparator } from "../separator/Separator";
+import { HSeparator } from "../Separator";
 
 // import { FaFacebook, FaTwitter } from "react-icons/fa";
 
@@ -47,11 +47,14 @@ export default function RightSideBar(props) {
   return (
     <>
       <Drawer
+
         closeOnOverlayClick={false}
         isOpen={props.isOpen}
         onClose={props.onClose}
         finalFocusRef={settingsRef}
         blockScrollOnMount={false}
+        trapFocus={false}
+        variant="permanent"
       >
         <DrawerContent bg={bgDrawer}>
           <DrawerHeader pt="16px" px="24px">

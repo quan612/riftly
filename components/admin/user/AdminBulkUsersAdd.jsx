@@ -33,15 +33,10 @@ import {
     SimpleGrid,
     FormControl,
     FormLabel,
-    FormErrorMessage,
-    Input,
-    Switch,
-    Select,
-    Checkbox,
     GridItem,
 } from "@chakra-ui/react";
 
-import Card from "@components/riftly/card/Card";
+import Card from "@components/shared/Card";
 
 const AdminBulkUsersAdd = () => {
     const bg = useColorModeValue("white", "#1B254B");

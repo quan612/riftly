@@ -14,6 +14,8 @@ import {
   DrawerContent,
   DrawerOverlay,
   Flex,
+  Heading,
+  Icon,
   List,
   ListIcon,
   ListItem,
@@ -23,7 +25,7 @@ import {
   useColorModeValue,
   useDisclosure
 } from "@chakra-ui/react";
-import { IconBox } from "@components/riftly/Icons";
+import { IconBox } from "@components/shared/Icons";
 import Link from "next/link";
 import { useRouter } from "next/router";
 // import {
@@ -39,11 +41,6 @@ import { useRouter } from "next/router";
 import React from "react";
 
 // import { Scrollbars } from "react-custom-scrollbars";
-// import {
-//   //  NavLink, 
-//   // useLocation
-// } from "react-router-dom";
-
 
 import {
   MdDarkMode,
@@ -52,7 +49,6 @@ import {
   MdLightMode,
   MdMenu,
 } from "react-icons/md";
-import AdminLogin from "../AdminLogin";
 
 function Sidebar(props) {
   const { sidebarVariant } = props;
@@ -64,9 +60,6 @@ function Sidebar(props) {
   let variantChange = "0.2s linear";
 
   const { colorMode } = useColorMode;
-
-
-
 
   // verifies if routeName is the one active (in browser input)
   const activeRoute = (routeName) => {
@@ -93,6 +86,7 @@ function Sidebar(props) {
                     display={"flex"}
                     justifyContent={"space-between"}
                     alignItems={"center"}>
+                    <Box boxSize={"24px"}> {prop.icon} </Box>
                     <Text m={0} fontWeight={"bold"} fontSize="lg">
                       {prop.category}
                     </Text>
@@ -149,121 +143,50 @@ function Sidebar(props) {
       }
 
       return (
-        // <Link key={key} href={prop.path}>
-        //   {activeRoute(prop.layout + prop.path) === "active" ? (
-        //     <Button
-        //       boxSize="initial"
-        //       justifyContent="flex-start"
-        //       alignItems="center"
-        //       boxShadow={sidebarActiveShadow}
-        //       bg={activeBg}
-        //       transition={variantChange}
-        //       mb={{
-        //         xl: "6px",
-        //       }}
-        //       mx={{
-        //         xl: "auto",
-        //       }}
-        //       ps={{
-        //         sm: "10px",
-        //         xl: "16px",
-        //       }}
-        //       py="12px"
-        //       borderRadius="15px"
-        //       _hover="none"
-        //       w="100%"
-        //       _active={{
-        //         bg: "inherit",
-        //         transform: "none",
-        //         borderColor: "transparent",
-        //       }}
-        //       _focus={{
-        //         boxShadow: "0px 7px 11px rgba(0, 0, 0, 0.04)",
-        //       }}
-        //     >
-        //       <Flex>
-        //         {typeof prop.icon === "string" ? (
-        //           <Icon>{prop.icon}</Icon>
-        //         ) : (
-        //           <IconBox
-        //             bg="blue.500"
-        //             color="white"
-        //             h="30px"
-        //             w="30px"
-        //             me="12px"
-        //             transition={variantChange}
-        //           >
-        //             {prop.icon}
-        //           </IconBox>
-        //         )}
-        //         <Text color={activeColor} my="auto" fontSize="sm">
-        //           {document.documentElement.dir === "rtl"
-        //             ? prop.rtlName
-        //             : prop.name}
-        //         </Text>
-        //       </Flex>
-        //     </Button>
-        //   ) : (
-        <Button
-          boxSize="initial"
-          justifyContent="flex-start"
-          alignItems="center"
-          bg="transparent"
-          mb={{
-            xl: "6px",
-          }}
-          mx={{
-            xl: "auto",
-          }}
-          py="12px"
-          ps={{
-            sm: "10px",
-            xl: "16px",
-          }}
-          borderRadius="15px"
-          _hover="none"
-          w="100%"
-          _active={{
-            bg: "inherit",
-            transform: "none",
-            borderColor: "transparent",
-          }}
-          _focus={{
-            boxShadow: "none",
-          }}
-        >
-          <Flex>
-            {typeof prop.icon === "string" ? (
-              <Icon>{prop.icon}</Icon>
-            ) : (
-              <IconBox
-                bg={inactiveBg}
-                color="blue.500"
-                h="30px"
-                w="30px"
-                me="12px"
-                transition={variantChange}
-              >
-                {prop.icon}
-              </IconBox>
-            )}
-            <Text color={inactiveColor} my="auto" fontSize="sm">
-              {prop.name}
-            </Text>
-          </Flex>
-        </Button>
-        //   )}
-        // </Link>
-
+        <Link key={key} href={prop.path}>
+          <Button
+            boxSize="initial"
+            justifyContent="flex-start"
+            alignItems="center"
+            bg="transparent"
+            mb={{
+              xl: "6px",
+            }}
+            mx={{
+              xl: "auto",
+            }}
+            py="12px"
+            ps={{
+              sm: "10px",
+              xl: "16px",
+            }}
+            borderRadius="15px"
+            _hover="none"
+            w="100%"
+            _active={{
+              bg: "inherit",
+              transform: "none",
+              borderColor: "transparent",
+            }}
+            _focus={{
+              boxShadow: "none",
+            }}
+          >
+            <Flex alignItems={"start"} gap="1rem">
+              <Box boxSize={"24px"}> {prop.icon} </Box>
+              <Heading color={activeColor} my="auto" fontSize="lg">
+                {prop.name}
+              </Heading>
+            </Flex>
+          </Button>
+        </Link>
       );
     });
   };
   const { logo, routes } = props;
 
   var links = <>{createLinks(routes)}</>;
-  //  BRAND
-  //  Chakra Color Mode
-  let sidebarBg = useColorModeValue("white", "navy.800");
+
   let sidebarRadius = "20px";
   let sidebarMargins = "0px";
   var brand = (
@@ -279,22 +202,17 @@ function Sidebar(props) {
     <Box ref={mainPanel}>
       <Box display={{ sm: "none", xl: "block" }} position="fixed">
         <Box
-          bg={sidebarBg}
+          bg={"brand.neutral4"}
           transition={variantChange}
           w="260px"
           maxW="260px"
-          ms={{
-            sm: "16px",
-          }}
-          my={{
-            sm: "16px",
-          }}
-          h="calc(100vh - 32px)"
+          h="100vh"
           ps="20px"
           pe="20px"
           m={sidebarMargins}
           filter="drop-shadow(0px 5px 14px rgba(0, 0, 0, 0.05))"
-          borderRadius={sidebarRadius}
+          borderTopRightRadius={sidebarRadius}
+          borderBottomRightRadius={sidebarRadius}
         >
           {/* <Scrollbars
             autoHide
@@ -471,63 +389,49 @@ export function SidebarResponsive(props) {
         //           </IconBox>
         //         )}
         //         <Text color={activeColor} my="auto" fontSize="sm">
-        //           {document.documentElement.dir === "rtl"
-        //             ? prop.rtlName
-        //             : prop.name}
+        //           {prop.name}
         //         </Text>
         //       </Flex>
         //     </Button>
         //   ) : (
-        <Button
-          boxSize="initial"
-          justifyContent="flex-start"
-          alignItems="center"
-          bg="transparent"
-          mb={{
-            xl: "6px",
-          }}
-          mx={{
-            xl: "auto",
-          }}
-          py="12px"
-          ps={{
-            sm: "10px",
-            xl: "16px",
-          }}
-          borderRadius="15px"
-          _hover="none"
-          w="100%"
-          _active={{
-            bg: "inherit",
-            transform: "none",
-            borderColor: "transparent",
-          }}
-          _focus={{
-            boxShadow: "none",
-          }}
-        >
-          <Flex>
-            {typeof prop.icon === "string" ? (
-              <Icon>{prop.icon}</Icon>
-            ) : (
-              <IconBox
-                bg={inactiveBg}
-                color="blue.500"
-                h="30px"
-                w="30px"
-                me="12px"
-                transition={variantChange}
-              >
-                {prop.icon}
-              </IconBox>
-            )}
-            <Text color={inactiveColor} my="auto" fontSize="sm">
-              {prop.name}
-            </Text>
-          </Flex>
-        </Button>
-        //   )}
-        // </Link>
+        <Link key={key} href={prop.path}>
+          <Button
+            boxSize="initial"
+            justifyContent="flex-start"
+            alignItems="center"
+            bg="transparent"
+            mb={{
+              xl: "6px",
+            }}
+            mx={{
+              xl: "auto",
+            }}
+            py="12px"
+            ps={{
+              sm: "10px",
+              xl: "16px",
+            }}
+            borderRadius="15px"
+            _hover="none"
+            w="100%"
+            _active={{
+              bg: "inherit",
+              transform: "none",
+              borderColor: "transparent",
+            }}
+            _focus={{
+              boxShadow: "none",
+            }}
+          >
+            <Flex alignItems={"start"} gap="1rem">
+              <Box boxSize={"24px"}> {prop.icon} </Box>
+              <Heading color={activeColor} my="auto" fontSize="lg">
+                {prop.name}
+              </Heading>
+            </Flex>
+          </Button>
+
+        </Link>
 
       );
     });
@@ -564,7 +468,7 @@ export function SidebarResponsive(props) {
       <Drawer
         isOpen={isOpen}
         onClose={onClose}
-        placement={document.documentElement.dir === "rtl" ? "right" : "left"}
+        placement={"left"}
         finalFocusRef={btnRef}
       >
         <DrawerOverlay />

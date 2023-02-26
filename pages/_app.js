@@ -25,7 +25,7 @@ import {
   BarElement,
   ArcElement,
 } from "chart.js";
-import AdminLayout from "../components/admin/AdminLayout";
+import AdminLayout from "@components/admin/AdminLayout";
 
 ChartJS.register(
   CategoryScale,
@@ -39,13 +39,15 @@ ChartJS.register(
   ArcElement
 );
 
-const queryClient = new QueryClient();
+
 
 import { AnimatePresence } from "framer-motion";
-import UserLayout from "@components/end-user/UserLayout";
+import UserLayout, { LayoutWrapper } from "@components/end-user/UserLayout";
 export function reportWebVitals(metric) {
   // console.log(metric);
 }
+
+const queryClient = new QueryClient();
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
@@ -93,19 +95,21 @@ function MyApp({ Component, pageProps }) {
                     <Component {...pageProps} />
                   </AdminGuard>
                 </AdminLayout>
-              ) : (
-                <UserLayout {...pageProps}>
-                  <AnimatePresence
-                    mode="wait"
-                    initial={false}
-                    transitionDuration="0.2s"
-                  >
-                    <Component {...pageProps} key={router.asPath} />
-                  </AnimatePresence>
+              ) :
 
-                  <Analytics />
-                </UserLayout>
-              )}
+                (
+                  <UserLayout {...pageProps}>
+                    <AnimatePresence
+                      mode="wait"
+                      initial={false}
+                      transitionDuration="0.2s"
+                    >
+                      <Component {...pageProps} key={router.asPath} />
+                    </AnimatePresence>
+
+                    <Analytics />
+                  </UserLayout>
+                )}
             </ChakraProvider>
           </StrictMode>
         </QueryClientProvider>

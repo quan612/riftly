@@ -6,7 +6,8 @@ import {
   BreadcrumbLink,
   Flex,
   Link,
-  useColorModeValue
+  useColorModeValue,
+  Text
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import AdminNavbarLinks from "./AdminNavbarLinks";
@@ -36,7 +37,7 @@ export default function AdminNavbar(props) {
   // Here are all the props that may change depending on navbar's type or state.(secondary, variant, scrolled)
   let mainText = (fixed && scrolled) ? useColorModeValue("gray.700", "gray.200") : useColorModeValue("white", "gray.200");
   let secondaryText = (fixed && scrolled) ? useColorModeValue("gray.700", "gray.200") : useColorModeValue("white", "gray.200");
-  let navbarPosition = "absolute";
+  let navbarPosition = "absolute"; //absolute
   let navbarFilter = "none";
   let navbarBackdrop = "none";
   let navbarShadow = "none";
@@ -63,7 +64,7 @@ export default function AdminNavbar(props) {
     }
   if (props.secondary) {
     navbarBackdrop = "none";
-    navbarPosition = "absolute";
+    navbarPosition = "absolute";  //absolute
     mainText = "white";
     secondaryText = "white";
     secondaryMargin = "22px";
@@ -94,24 +95,22 @@ export default function AdminNavbar(props) {
       alignItems={{ xl: "center" }}
       borderRadius="16px"
       display="flex"
-      minH="75px"
+      minH="100px"
       justifyContent={{ xl: "center" }}
       lineHeight="25.6px"
       mx="auto"
       mt={secondaryMargin}
       pb="8px"
-      left={document.documentElement.dir === "rtl" ? "30px" : ""}
-      right={document.documentElement.dir === "rtl" ? "" : "30px"}
       px={{
         sm: paddingX,
-        md: "30px",
+        md: "24px",
       }}
-      ps={{
-        xl: "12px",
-      }}
+      // ps={{
+      //   xl: "12px",
+      // }}
       pt="8px"
       top="18px"
-      w={{ sm: "calc(100vw - 30px)", xl: "calc(100vw - 75px - 275px)" }}
+      w={{ sm: "calc(100vw - 30px)", xl: "calc(100vw  - 280px)" }}
     >
       <Flex
         w="100%"
@@ -122,23 +121,23 @@ export default function AdminNavbar(props) {
         alignItems={{ xl: "center" }}
       >
         <Box mb={{ sm: "8px", md: "0px" }}>
-          <Breadcrumb>
-            <BreadcrumbItem color={mainText}>
+          {/* <Breadcrumb>
+             <BreadcrumbItem color={mainText}>
               <BreadcrumbLink href="#" color={secondaryText}>
                 Pages
               </BreadcrumbLink>
-            </BreadcrumbItem>
+            </BreadcrumbItem> 
 
             <BreadcrumbItem color={mainText}>
               <BreadcrumbLink href="#" color={mainText}>
                 {brandText}
               </BreadcrumbLink>
             </BreadcrumbItem>
-          </Breadcrumb>
+          </Breadcrumb> */}
           {/* Here we create navbar brand, based on route name */}
-          <Link
+          <Text
             color={mainText}
-            href="#"
+
             bg="inherit"
             borderRadius="inherit"
             fontWeight="bold"
@@ -151,9 +150,10 @@ export default function AdminNavbar(props) {
             _focus={{
               boxShadow: "none",
             }}
+            fontSize={{ base: "lg", lg: "xl" }}
           >
             {brandText}
-          </Link>
+          </Text>
         </Box>
         <Box ms="auto" w={{ sm: "100%", md: "unset" }}>
           <AdminNavbarLinks

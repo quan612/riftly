@@ -18,8 +18,8 @@ import {
     Icon,
     Progress,
 } from "@chakra-ui/react";
-import { RiftlyModalCloseButton } from "@components/riftly/Buttons";
-import { MetamaskIcon, WalletConnectIcon } from "@components/riftly/Icons";
+import { RiftlyModalCloseButton } from "@components/shared/Buttons";
+import { MetamaskIcon, WalletConnectIcon } from "@components/shared/Icons";
 
 const CONNECTABLE = 1;
 const AUTHENTICATING = 2;

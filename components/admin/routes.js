@@ -1,4 +1,5 @@
 // import
+import { HomeIcon } from "@components/shared/Icons";
 import React, { Component } from "react";
 
 // import {
@@ -14,13 +15,16 @@ import React, { Component } from "react";
 const routes = [
   {
     name: "Dashboard",
-    category: "Dashboard",
-    children: [
-      {
-        name: "Default",
-        path: "/admin",
-      },
-    ],
+    // category: "Dashboard",
+    path: "/admin",
+    icon: <HomeIcon />,
+    // children: [
+    //   {
+    //     name: "Dashboard",
+    //     path: "/admin",
+
+    //   },
+    // ],
   },
   {
     name: "Reward",

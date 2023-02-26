@@ -2,8 +2,8 @@ const PanelContent = {
   baseStyle: {
     ms: "auto",
     me: "auto",
-    ps: "15px",
-    pe: "15px",
+    ps: "18px",
+    pe: "18px",
   },
 };
 

@@ -9,11 +9,11 @@ import {
     SimpleGrid,
     Image,
 } from "@chakra-ui/react";
-import { HeadingLg, HeadingSm, TextSm } from "@components/riftly/Typography";
+import { HeadingLg, HeadingSm, TextSm } from "@components/shared/Typography";
 import { ChakraBox } from "@theme/additions/framer/FramerChakraComponent";
 
 import { AnimatePresence } from "framer-motion";
-import { RiftlyIcon } from "@components/riftly/Icons";
+import { RiftlyIcon } from "@components/shared/Icons";
 
 const FeatureQuests = () => {
     const [featureQuests, featureQuestsSet] = useState([{ id: 1 }]);

@@ -20,7 +20,7 @@ import {
     MetamaskIcon,
     TwitterIcon,
     WalletConnectIcon,
-} from "@components/riftly/Icons";
+} from "@components/shared/Icons";
 import { useRouter } from "next/router";
 import debounce from "@utils/debounce";
 import { ShortContainer } from "containers/user";
@@ -29,7 +29,7 @@ import { signIn } from "next-auth/react";
 import axios from "axios";
 import { ChakraBox } from "@theme/additions/framer/FramerChakraComponent";
 import { getDiscordAuthLink, getTwitterAuthLink } from "@utils/helpers";
-import Loading from "@components/riftly/Loading";
+import Loading from "@components/shared/LoadingContainer/Loading";
 import { sleep } from "@utils/index";
 import Enums from "@enums/index";
 
@@ -301,7 +301,6 @@ export const EmailWrapper = React.forwardRef(({ isSignIn = false, setView }, ref
                 callbackUrl: `${window.location.origin}`,
             });
 
-            console.log(signInRes);
             if (signInRes?.error) {
                 setLoading(false);
                 if (signInRes?.error !== "Pending Sign Up") {

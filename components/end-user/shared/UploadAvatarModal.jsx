@@ -3,9 +3,10 @@ import { Heading, Text, Button, Image, Input, ButtonGroup } from "@chakra-ui/rea
 
 import { ChakraBox, FramerButton } from "@theme/additions/framer/FramerChakraComponent";
 import { AnimatePresence } from "framer-motion";
-
 import ModalWrapper from "../wrappers/ModalWrapper";
 import axios from "axios";
+import Loading from "@components/shared/LoadingContainer/Loading";
+import { useRouter } from "next/router";
 
 const UPLOADABLE = 0;
 const SUBMITTABLE = 1;
@@ -22,12 +23,14 @@ const UploadAvatarModal = ({ isOpen, onClose }) => {
 
     const hiddenFileInput = useRef(null);
     const imageEl = useRef(null);
+
+    const router = useRouter();
+
     function handleOnChange(changeEvent) {
         const reader = new FileReader();
         errorSet(null);
         if (changeEvent.target.files[0].size > 1024 * 1024) {
             errorSet("File is too big, please try again");
-            // setView(ERROR);
             return;
         }
 
@@ -41,8 +44,10 @@ const UploadAvatarModal = ({ isOpen, onClose }) => {
     }
 
     const handleOnClose = () => {
+        setView(UPLOADABLE);
         errorSet(null);
         onClose();
+        router.push(window.location.href);
     };
 
     const handleOnSubmit = useCallback(async () => {
@@ -53,14 +58,20 @@ const UploadAvatarModal = ({ isOpen, onClose }) => {
                 .post("/api/user/image-upload/avatar", {
                     data: imageSrc,
                 })
-                .then((r) => r.data);
+                .then((r) => r.data)
+                .catch((err) => {
+                    setIsLoading(false);
+                    errorSet(err.message);
+                });
 
             if (res.isError) {
-                setIsLoading(false);
+                errorSet(res.message);
             } else {
                 setView(SUBMITTED);
             }
+            setIsLoading(false);
         } catch (error) {
+            console.log(error.message);
             setIsLoading(false);
             errorSet(error.message);
         }
@@ -73,6 +84,7 @@ const UploadAvatarModal = ({ isOpen, onClose }) => {
             onClose={onClose}
             handleOnClose={handleOnClose}
         >
+            {isLoading && <Loading />}
             <AnimatePresence mode="popLayout">
                 {currentView === UPLOADABLE && (
                     <>
@@ -83,7 +95,7 @@ const UploadAvatarModal = ({ isOpen, onClose }) => {
                         </ChakraBox>
                         <ChakraBox w="100%" layout key="avatar-upload-warning">
                             <Text color="brand.neutral0" align="center" fontSize="md">
-                                Size should be less than 2mb
+                                Size should be less than 1mb
                             </Text>
                         </ChakraBox>
 
@@ -136,6 +148,16 @@ const UploadAvatarModal = ({ isOpen, onClose }) => {
                             </Heading>
                         </ChakraBox>
                         <Image src={imageSrc} ref={imageEl} w="50%" />
+                        {error && (
+                            <ChakraBox
+                                layout
+                                color="red.300"
+                                key="avatar-upload-error"
+                                exit={{ opacity: 0 }}
+                            >
+                                {error}
+                            </ChakraBox>
+                        )}
 
                         <ButtonGroup
                             display={"flex"}

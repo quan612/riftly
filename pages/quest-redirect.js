@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { useSession } from "next-auth/react"
 import { ShortContainer } from "containers/user";
-import { RiftlyFace, RiftlyLogoWhite } from "@components/riftly/Logo";
+import { RiftlyFace, RiftlyLogoWhite } from "@components/shared/Logo";
 import { getUserName } from "@utils/index";
 import { LayoutWrapper } from "@components/end-user/UserLayout";
 

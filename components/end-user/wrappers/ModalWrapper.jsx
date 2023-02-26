@@ -1,7 +1,7 @@
 import React from "react";
 import { Flex, Modal, ModalOverlay, ModalContent, ModalBody } from "@chakra-ui/react";
 
-import { RiftlyModalCloseButton } from "@components/riftly/Buttons";
+import { RiftlyModalCloseButton } from "@components/shared/Buttons";
 
 const ModalWrapper = ({ isOpen, onClose, handleOnClose, gap = "36px", children }) => {
     return (

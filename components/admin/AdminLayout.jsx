@@ -1,44 +1,46 @@
 import React, { useState } from "react";
 
 import { Box, Flex, Portal, useDisclosure, useColorMode, Stack } from "@chakra-ui/react";
-import AdminNavigation from "./nav";
 import MainPanel from "./layout/MainPanel";
 import PanelContent from "./layout/PanelContent";
 import PanelContainer from "./layout/PanelContainer";
 import routes from "./routes";
 import AdminNavbar from "./nav/AdminNavbar";
 import Sidebar from "./left-side-bar/Sidebar";
-import { RiftlyLogoWhite, RiftlyLogoWhiteText } from "@components/riftly/Logo";
+import { RiftlyLogoWhiteText } from "@components/shared/Logo";
+import { signOut } from "next-auth/react";
+import { useRouter } from "next/router";
 
 export default function AdminLayout({ session, children }) {
     const [fixed, setFixed] = useState(false);
     const { colorMode } = useColorMode();
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const router = useRouter();
+
+    // React.useEffect(() => {
+    //     console.log(session);
+    //     if (!session || (session && session?.user?.isAdmin === false)) {
+    //         router.push("/admin/sign-in");
+    //     }
+    // }, [session]);
 
     const getActiveRoute = (routes) => {
-        let activeRoute = "Default Brand Text";
-        // for (let i = 0; i < routes.length; i++) {
-        //     if (routes[i].collapse) {
-        //         let collapseActiveRoute = getActiveRoute(routes[i].views);
-        //         if (collapseActiveRoute !== activeRoute) {
-        //             return collapseActiveRoute;
-        //         }
-        //     } else if (routes[i].category) {
-        //         let categoryActiveRoute = getActiveRoute(routes[i].views);
-        //         if (categoryActiveRoute !== activeRoute) {
-        //             return categoryActiveRoute;
-        //         }
-        //     }
-        //     // else {
-        //     //     if (
-        //     //         window &&
-        //     //         window?.location.href.indexOf(routes[i].layout + routes[i].path) !== -1
-        //     //     ) {
-        //     //         return routes[i].name;
-        //     //     }
-        //     // }
-        // }
-        // return activeRoute;
+        let activeRoute = "Default";
+
+        for (let i = 0; i < routes.length; i++) {
+            // new
+            if (routes[i].category) {
+                let categoryActiveRoute = getActiveRoute(routes[i].children);
+                if (categoryActiveRoute !== activeRoute) {
+                    return categoryActiveRoute;
+                }
+            }
+
+            if (typeof window !== "undefined" && window?.location.pathname === routes[i].path) {
+                return routes[i].name;
+            }
+        }
+        return activeRoute;
     };
     // This changes navbar state(fixed or not)
     const getActiveNavbar = (routes) => {
@@ -70,51 +72,38 @@ export default function AdminLayout({ session, children }) {
         // flexDirection="column"
         // alignItems="start"
         >
-            {/* <AdminNavigation /> */}
-            {/* <Flex minW="100%" w="100%" mt="30px" justifyContent={"center"}>
-                <Flex
-                    flexDirection={{
-                        base: "column",
-                        xl: "column",
-                    }}
-                    w={{ base: "100%", md: "100%", lg: "85%", xl: "75%" }}
-                >
-                    {children}
-                </Flex>
-            </Flex> */}
-
-            <Sidebar
-                routes={routes}
-                logo={
-                    <Stack direction="row" spacing="12px" align="center" justify="center">
-                        <RiftlyLogoWhiteText />
-                    </Stack>
-                }
-                display="none"
-                session={session}
-                // {...rest}
-            />
+            {session && (
+                <Sidebar
+                    routes={routes}
+                    logo={
+                        <Stack direction="row" spacing="12px" align="center" justify="center">
+                            <RiftlyLogoWhiteText />
+                        </Stack>
+                    }
+                    display="none"
+                    session={session}
+                />
+            )}
 
             <MainPanel
                 w={{
                     base: "100%",
-                    xl: "calc(100% - 275px)",
+                    xl: "calc(100% - 260px)",
                 }}
             >
-                <Portal>
-                    <AdminNavbar
-                        onOpen={onOpen}
-                        brandText={getActiveRoute(routes)}
-                        secondary={getActiveNavbar(routes)}
-                        fixed={fixed}
-                        session={session}
-                        // {...rest}
-                    />
-                </Portal>
+                {/* <Portal> */}
+                <AdminNavbar
+                    onOpen={onOpen}
+                    brandText={getActiveRoute(routes)}
+                    secondary={getActiveNavbar(routes)}
+                    fixed={fixed}
+                    session={session}
+                />
+                {/* </Portal> */}
 
                 <PanelContent>
                     <PanelContainer>
-                        <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
+                        <Flex direction="column" pt={{ base: "75px", md: "100px" }}>
                             {children}
                         </Flex>
                     </PanelContainer>

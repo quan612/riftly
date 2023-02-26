@@ -17,7 +17,7 @@ import { Web3Context } from "@context/Web3Context";
 import Enums from "@enums/index";
 import { useWalletAuthQuestSubmit } from "@shared/HOC/quest";
 import { useRouter } from "next/router";
-import { MetamaskIcon, WalletConnectIcon } from "@components/riftly/Icons";
+import { MetamaskIcon, WalletConnectIcon } from "@components/shared/Icons";
 import ModalWrapper from "../wrappers/ModalWrapper";
 import * as gtag from "@lib/ga/gtag";
 

@@ -20,7 +20,6 @@ import {
     FormLabel,
     FormErrorMessage,
     Input,
-    Switch,
     Select,
     Checkbox,
     GridItem,
@@ -43,11 +42,11 @@ import {
     Icon,
 } from "@chakra-ui/react";
 
-import AdminCard from "../../../riftly/card/AdminCard";
+import { AdminCard } from "@components/shared/Card";
 import { useGlobalFilter, usePagination, useSortBy, useTable, useFilters } from "react-table";
 import { ArrowRightIcon, ArrowLeftIcon, ChevronRightIcon, ChevronLeftIcon } from "@chakra-ui/icons";
 import Enums from "@enums/index";
-import RightSideBar from "@components/riftly/right-side-bar/RightSideBar";
+import RightSideBar from "@components/shared/RightSideBar";
 
 import { BsFilter } from "react-icons/bs";
 
@@ -1211,55 +1210,3 @@ const SearchForm = ({ onFormSubmit, rewardTypes, outsideFilter }) => {
         </>
     );
 };
-
-//     data = (
-//         <Flex align="center">
-//             {cell.value.map((r, index) => {
-//                 return (
-//                     <>
-//                         {index !== 0 && ","}
-//                         <Text
-//                             // color={textColor}
-//                             fontSize="sm"
-//                             fontWeight="700"
-//                             key={index}
-//                             ms="2"
-//                         >
-//                             {r.rewardType.reward} (
-//                             {r.quantity})
-//                         </Text>
-//                     </>
-//                 );
-//             })}
-//         </Flex>
-//     );
-
-{
-    /*      need to redo this as another function*/
-}
-{
-    /* <div className="d-flex ">
-                  <a
-                      href={`data:text/csv;charset=utf-8,${encodeURIComponent(
-                          BuildCsv(tableData)
-                      )}`}
-                      download={`Search - ${new Date().toISOString()}.csv`}
-                      className="me-2"
-                  >
-                      Export as CSV
-                  </a>
-
-                  <a
-                      href={`data:text/plain;charset=utf-8,${encodeURIComponent(
-                          JSON.stringify(tableData)
-                      )}`}
-                      download={`Search - ${new Date().toISOString()}.json`}
-                      className="me-2"
-                  >
-                      Export as Json
-                  </a>
-                  <div className="text-green-600 font-bold">
-                      Search Results: {tableData?.length}
-                  </div>
-              </div> */
-}

@@ -16,7 +16,6 @@ import {
     Td,
     Text,
     Button,
-    useColorMode,
     useColorModeValue,
     SimpleGrid,
     FormControl,
@@ -34,9 +33,9 @@ import {
 } from "@chakra-ui/react";
 
 import { useAdminRewardTypeMutation, useRewardTypesQuery } from "@shared/HOC/reward-types";
-import AdminCard from "@components/riftly/card/AdminCard";
-import { RiftlyCheckMark, RiftlyEditIcon, RiftlyTooltip } from "@components/riftly/Icons";
-import Card from "@components/riftly/card/Card";
+import { AdminCard } from "@components/shared/Card";
+import { RiftlyCheckMark, RiftlyEditIcon, RiftlyTooltip } from "@components/shared/Icons";
+import Card from "@components/shared/Card";
 
 const AdminRewardTypes = () => {
     const [rewardTypes, isLoadingRewardTypes] = useRewardTypesQuery();

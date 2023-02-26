@@ -4,16 +4,7 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import { object, array, string, number } from "yup";
 import { withQuestUpsert } from "shared/HOC/quest";
 import QuestFormTemplate, { AdminQuestFormikWrapper } from "./QuestFormTemplate";
-import {
-    FormControl,
-    FormLabel,
-    FormErrorMessage,
-    Input,
-    Switch,
-    Select,
-    Checkbox,
-    GridItem,
-} from "@chakra-ui/react";
+import { FormControl, FormLabel, FormErrorMessage, Input, GridItem } from "@chakra-ui/react";
 
 const FreeTokenQuestSchema = object().shape({
     text: string().required("Quest text is required"),

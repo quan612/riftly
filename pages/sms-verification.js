@@ -23,7 +23,7 @@ import {
 } from "@chakra-ui/react";
 
 import { ShortContainer } from "containers/user";
-import { RiftlyFace, RiftlyLogoWhite } from "@components/riftly/Logo";
+import { RiftlyFace, RiftlyLogoWhite } from "@components/shared/Logo";
 import { LayoutWrapper } from "@components/end-user/UserLayout";
 import { usePhoneCodeQuestSubmit, usePhoneNumberQuestSubmit } from "@shared/HOC/quest";
 import PhoneInput, { isPossiblePhoneNumber } from "react-phone-number-input";

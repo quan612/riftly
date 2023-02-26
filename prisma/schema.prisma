@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+   previewFeatures = ["filteredRelationCount"]
 }
 datasource db {
   provider          = "postgresql"
@@ -188,6 +189,7 @@ model QuestVariables{
   smsSid                      String?             @default("")
   smsAuthToken                String?             @default("")
   smsServiceId                String?             @default("")
+  requiredSmsVerification     Boolean             @default(false)
   createdAt                   DateTime            @default(now())
   updatedAt                   DateTime            @default(now()) @updatedAt
 }

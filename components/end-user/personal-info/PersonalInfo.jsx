@@ -25,11 +25,11 @@ import {
     useDisclosure,
     Image,
 } from "@chakra-ui/react";
-import { RiftlyFace } from "@components/riftly/Logo";
+import { RiftlyFace } from "@components/shared/Logo";
 import axios from "axios";
 
 import { debounce } from "utils/";
-import { RiftlyTooltip } from "@components/riftly/Icons";
+import { RiftlyTooltip } from "@components/shared/Icons";
 import UploadAvatarModal from "../shared/UploadAvatarModal";
 import { shortenAddress } from "@utils/shortenAddress";
 import { getDiscordAuthLink, getTwitterAuthLink } from "@utils/helpers";
@@ -415,11 +415,9 @@ const AccountInfo = ({ session }) => {
 
     const uploadAvatarModal = useDisclosure();
     const { avatar, email } = session?.user;
-    console.log(session);
 
     const getUserAvatar = useCallback(
         (avatar) => {
-            console.log(avatar);
             if (avatar && avatar.trim().length > 5)
                 return <Image borderRadius={"50%"} src={avatar} />;
             else return <RiftlyFace />;

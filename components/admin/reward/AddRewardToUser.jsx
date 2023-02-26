@@ -29,7 +29,7 @@ import {
     Checkbox,
     GridItem,
 } from "@chakra-ui/react";
-import Card from "@components/riftly/card/Card";
+import Card from "@components/shared/Card";
 
 const AddRewardToUser = ({ isSubmitting, onSubmit, mutationError }) => {
     const bg = useColorModeValue("white", "#1B254B");

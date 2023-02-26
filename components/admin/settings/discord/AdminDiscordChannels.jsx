@@ -7,7 +7,7 @@ import {
     useAdminDiscordChannelsMutation,
     useAdminDiscordChannelsQuery,
 } from "@shared/HOC/settings";
-import Card from "@components/riftly/card/Card";
+import Card from "@components/shared/Card";
 
 import {
     Heading,
@@ -37,8 +37,8 @@ import {
     Icon,
 } from "@chakra-ui/react";
 
-import AdminCard from "@components/riftly/card/AdminCard";
-import { RiftlyTooltip } from "@components/riftly/Icons";
+import { AdminCard } from "@components/shared/Card";
+import { RiftlyTooltip } from "@components/shared/Icons";
 
 const AdminDiscordChannels = () => {
     const [discordChannels, isLoadingDiscordChannels] = useAdminDiscordChannelsQuery();

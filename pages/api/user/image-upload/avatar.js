@@ -4,7 +4,6 @@ import { prisma } from "@context/PrismaContext";
 
 let cloudinary = require("cloudinary").v2;
 
-
 //@TODO: rate limit
 const AvatarUploadAPI = async (req, res) => {
   const { method } = req;
@@ -17,10 +16,8 @@ const AvatarUploadAPI = async (req, res) => {
         const whiteListUser = req.whiteListUser;
         const { data } = req.body;
 
-        //get config
-
         let variables = await prisma.questVariables.findFirst()
-        const { cloudinaryKey, cloudinaryName, cloudinarySecret } = variables;
+        const { cloudinaryKey, cloudinaryName, cloudinarySecret, avatarUploadPreset } = variables;
 
         if (!cloudinaryKey || !cloudinaryName || !cloudinarySecret) {
           throw new Error("Missing upload configurations")
@@ -56,7 +53,7 @@ const AvatarUploadAPI = async (req, res) => {
       break;
 
     default:
-      res.setHeader("Allow", ["GET"]);
+      res.setHeader("Allow", ["POST"]);
       res.status(405).end(`Method ${method} Not Allowed`);
   }
 };
@@ -64,7 +61,8 @@ export default whitelistUserMiddleware(AvatarUploadAPI);
 export const config = {
   api: {
     bodyParser: {
-      sizeLimit: "4mb",
+      sizeLimit: "1mb",
     },
+    // bodyParser: false,
   },
 };

@@ -1,4 +1,5 @@
 import { prisma } from "context/PrismaContext";
+import { getAccountStatusToAdd } from "./user";
 
 export const updateTwitterUserQuestTransaction = async (quest, userId, userInfo) => {
     try {
@@ -8,6 +9,8 @@ export const updateTwitterUserQuestTransaction = async (quest, userId, userInfo)
         if (!id || !username) {
             throw new Error("Cannot get twitter id or twitter username from auth");
         }
+
+        let accountStatus = await getAccountStatusToAdd();
 
         if (userId) {
             let updatedUser = prisma.whiteList.update({
@@ -32,6 +35,7 @@ export const updateTwitterUserQuestTransaction = async (quest, userId, userInfo)
                 data: {
                     twitterId: id,
                     twitterUserName: username,
+                    status: accountStatus,
                 },
             });
 
@@ -52,14 +56,12 @@ export const updateTwitterUserQuestTransaction = async (quest, userId, userInfo)
 
 export const updateDiscordUserQuestTransaction = async (questId, userId, userInfo) => {
     try {
-
         const { id, username, discriminator } = userInfo;
 
         if (!id || !username) {
             throw new Error("Cannot get twitter id or twitter username from auth");
         }
-        console.log(userId)
-        console.log(21)
+
         if (userId) {
             let updatedUser = prisma.whiteList.update({
                 where: { userId },
@@ -79,10 +81,12 @@ export const updateDiscordUserQuestTransaction = async (questId, userId, userInf
 
             await prisma.$transaction([updatedUser, userQuest]);
         } else {
+            let accountStatus = await getAccountStatusToAdd();
             let newUser = await prisma.whiteList.create({
                 data: {
                     discordId: id,
                     discordUserDiscriminator: `${username}#${discriminator}`,
+                    status: accountStatus,
                 },
             });
 
@@ -121,29 +125,24 @@ export const updateUserWalletTransaction = async (questId, userId, wallet) => {
 
             await prisma.$transaction([updatedUser, userQuest]);
         } else {
-            let tryFindUser = await prisma.whiteList.findUnique({
-                where: { wallet },
-            })
-
-            if (!tryFindUser) {
-                let newUser = await prisma.whiteList.create({
+            let accountStatus = await getAccountStatusToAdd();
+            let newUser = await prisma.whiteList.create({
+                data: {
+                    wallet,
+                    status: accountStatus,
+                },
+            });
+            if (newUser) {
+                await prisma.userQuest.create({
                     data: {
-                        wallet,
+                        userId: newUser.userId,
+                        questId,
+                        isClaimable: true,
                     },
                 });
-                if (newUser) {
-                    await prisma.userQuest.create({
-                        data: {
-                            userId: newUser.userId,
-                            questId,
-                            isClaimable: true,
-                        },
-                    });
-                }
             }
         }
     } catch (error) {
-
         throw error;
     }
 };
@@ -213,7 +212,6 @@ export const updateUserUnstopabbleAndAddRewardTransaction = async (
         throw error;
     }
 };
-
 
 export const submitUserQuestTransaction = async (questId, userId) => {
     try {
@@ -297,7 +295,6 @@ export const claimUserDailyQuestTransaction = async (
     extendedUserQuestData,
     userId
 ) => {
-
     try {
         console.log(`**Upsert daily quest**`);
 
@@ -389,4 +386,3 @@ export const updateClaimAndPendingRewardTransaction = async (
         console.log(error);
     }
 };
-

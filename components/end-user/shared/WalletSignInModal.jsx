@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext, useCallback } from "react";
 import { Heading, Text, Button, HStack, Progress } from "@chakra-ui/react";
 import { useDeviceDetect } from "lib/hooks";
-import { MetamaskIcon, WalletConnectIcon } from "@components/riftly/Icons";
+import { MetamaskIcon, WalletConnectIcon } from "@components/shared/Icons";
 import { Web3Context } from "@context/Web3Context";
 import Enums from "@enums/index";
 import { useRouter } from "next/router";

@@ -1,5 +1,6 @@
 import adminMiddleware from "@middlewares/adminMiddleware";
 import { prisma } from "context/PrismaContext";
+import { getAccountStatusToAdd } from "repositories/user";
 
 const AdminUserAddAPI = async (req, res) => {
     const { method } = req;
@@ -8,12 +9,13 @@ const AdminUserAddAPI = async (req, res) => {
         case "POST":
             try {
                 const { usersArray } = req.body;
-
+                let accountStatus = await getAccountStatusToAdd();
                 const createMany = await prisma.whiteList.createMany({
                     data:
                         usersArray.map(user => {
                             return {
-                                wallet: user.wallet
+                                wallet: user.wallet,
+                                status: accountStatus
                             }
                         })
                     ,

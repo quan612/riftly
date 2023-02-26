@@ -10,7 +10,7 @@ const UNCLAIMABLE = 4;
 
 import { AnimatePresence, AnimateSharedLayout, motion } from "framer-motion";
 import { useCodeQuestSubmit } from "@shared/HOC/quest";
-import { RiftlyModalCloseButton } from "@components/riftly/Buttons";
+import { RiftlyModalCloseButton } from "@components/shared/Buttons";
 import { debounce } from "@utils/index";
 import ModalWrapper from "../wrappers/ModalWrapper";
 

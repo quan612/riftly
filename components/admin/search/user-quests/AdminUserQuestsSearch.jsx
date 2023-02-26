@@ -8,9 +8,6 @@ import {
     Heading,
     Box,
     Flex,
-    Link,
-    List,
-    ListItem,
     Text,
     Button,
     useColorMode,
@@ -20,7 +17,6 @@ import {
     FormLabel,
     FormErrorMessage,
     Input,
-    Switch,
     Select,
     Checkbox,
     GridItem,
@@ -32,10 +28,10 @@ import {
     Td,
     Icon,
 } from "@chakra-ui/react";
-import Card from "@components/riftly/card/Card";
+import Card from "@components/shared/Card";
 
 import { useAdminUserQuestsQuery, useAdminUserQuestDelete } from "@shared/HOC/user-quests";
-import AdminCard from "@components/riftly/card/AdminCard";
+import { AdminCard } from "@components/shared/Card";
 
 const AdminUserQuestsSearch = () => {
     const [queryData, isQuerying, queryUserQuestsAsync] = useAdminUserQuestsQuery();

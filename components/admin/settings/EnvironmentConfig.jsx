@@ -1,8 +1,9 @@
-import React, { useEffect, useState, useRef, useLayoutEffect } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { object, array, string, number } from "yup";
 import Enums from "enums";
 import axios from "axios";
+import { debounce } from "utils/";
 
 import {
     Heading,
@@ -17,15 +18,20 @@ import {
     FormErrorMessage,
     Input,
     Switch,
-    Select,
-    Checkbox,
     GridItem,
     Icon,
     Divider,
+    useToast,
 } from "@chakra-ui/react";
-import Card from "@components/riftly/card/Card";
+import Card, { AdminCard } from "@components/shared/Card";
 
-import { RiftlyTooltip } from "@components/riftly/Icons";
+import { RiftlyTooltip } from "@components/shared/Icons";
+import {
+    useAdminRequiredSMSMutation,
+    useAdminRequiredSMSQuery,
+    useRequiredSMSQuery,
+} from "@shared/HOC/settings";
+import Loading from "@components/shared/LoadingContainer/Loading";
 
 const EnvironmentConfig = () => {
     const bg = useColorModeValue("white", "#1B254B");
@@ -68,6 +74,44 @@ const EnvironmentConfig = () => {
         smsServiceId: configs?.smsServiceId || "",
     };
 
+    const toast = useToast();
+
+    const [requiredSMS, isQueryingSmsVerify] = useRequiredSMSQuery();
+    const [requiredSMSData, isMutatingSmsVerify, mutateRequiredSMSAsync] =
+        useAdminRequiredSMSMutation();
+
+    console.log(requiredSMS);
+
+    const handleOnRequiredSMSChange = async (e) => {
+        try {
+            // if (requiredSMS !== e.target.checked) {
+            const payload = { isEnabled: e.target.checked, id: initialValues.id };
+            await mutateRequiredSMSAsync(payload);
+            toast({
+                title: "Succees",
+                description: "Update required SMS successful",
+                position: "bottom-right",
+                status: "success",
+                duration: 2000,
+            });
+            // }
+        } catch (err) {
+            toast({
+                title: "Exception",
+                description: `Catch error at: ${err.message}. Please contact admin.`,
+                position: "bottom-right",
+                status: "error",
+                duration: 2000,
+                isClosable: true,
+            });
+        }
+    };
+
+    const debouncedRequiredSMSChangeHandler = useCallback(
+        debounce((e) => handleOnRequiredSMSChange(e), 800),
+        [initialValues.id]
+    );
+
     return (
         <>
             <div className="col-6 mb-3">
@@ -75,6 +119,7 @@ const EnvironmentConfig = () => {
                     Environment Type: {configs?.env || "Development"}
                 </label>
             </div>
+            {isLoading && <Loading />}
             <Formik
                 enableReinitialize
                 initialValues={initialValues}
@@ -91,6 +136,14 @@ const EnvironmentConfig = () => {
 
                         if (res.isError) {
                             setErrors(res.message);
+                        } else {
+                            toast({
+                                title: "Succeed",
+                                description: "Update config successful",
+                                position: "bottom-right",
+                                status: "success",
+                                duration: 2000,
+                            });
                         }
                     } catch (error) {
                         console.log(error.message);
@@ -112,15 +165,10 @@ const EnvironmentConfig = () => {
                                 justifyContent="center"
                                 mb="60px"
                                 mt={{ base: "20px", md: "20px" }}
-                                gap="1%"
+                                gap="20px"
                             >
-                                <Box
-                                    w={{ base: "100%" }}
-                                    minW="100%"
-                                    paddingLeft={{ base: "16px", md: "24px" }}
-                                    paddingRight={{ base: "16px", md: "24px" }}
-                                >
-                                    <Card boxShadow={shadow} py="8" bg={bg}>
+                                <Box w={{ base: "100%" }} minW="100%">
+                                    <AdminCard boxShadow={shadow} py="8">
                                         <SimpleGrid
                                             columns={{ base: 1, "2xl": 3 }}
                                             columnGap={10}
@@ -584,6 +632,29 @@ const EnvironmentConfig = () => {
                                             </FormControl>
                                         </GridItem>
 
+                                        {requiredSMS !== undefined && (
+                                            <GridItem colSpan={{ base: 3, xl: 1 }}>
+                                                <FormControl mb="24px">
+                                                    <FormLabel
+                                                        ms="4px"
+                                                        fontSize="md"
+                                                        fontWeight="bold"
+                                                        position={"relative"}
+                                                    >
+                                                        Required SMS
+                                                    </FormLabel>
+                                                    <Switch
+                                                        // isChecked={requiredSMS}
+                                                        defaultChecked={requiredSMS}
+                                                        id="toogle-sms-verification"
+                                                        onChange={(e) => {
+                                                            debouncedRequiredSMSChangeHandler(e);
+                                                        }}
+                                                    />
+                                                </FormControl>
+                                            </GridItem>
+                                        )}
+
                                         <Button
                                             w={{ base: "200px" }}
                                             my="16px"
@@ -595,7 +666,7 @@ const EnvironmentConfig = () => {
                                         >
                                             Submit
                                         </Button>
-                                    </Card>
+                                    </AdminCard>
                                 </Box>
                             </Flex>
                         </Form>

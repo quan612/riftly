@@ -3,6 +3,8 @@ import Enums from "enums";
 import { prisma } from "context/PrismaContext";
 import axios from "axios";
 import { utils } from "ethers";
+import { AccountStatus } from "@prisma/client";
+import { getAccountStatusToAdd } from "repositories/user";
 
 const AdminUserAddAPI = async (req, res) => {
     const { method } = req;
@@ -11,7 +13,7 @@ const AdminUserAddAPI = async (req, res) => {
         case "POST":
             try {
                 const { user, type } = req.body;
-
+                let accountStatus = await getAccountStatusToAdd();
 
                 if (type === Enums.DISCORD) {
                     let existingUser = await prisma.whiteList.findFirst({ where: { discordId: user } })
@@ -42,7 +44,8 @@ const AdminUserAddAPI = async (req, res) => {
                     const newUser = await prisma.whiteList.create({
                         data: {
                             discordId: user,
-                            discordUserDiscriminator: `${username}#${discriminator}`
+                            discordUserDiscriminator: `${username}#${discriminator}`,
+                            status: accountStatus
                         },
                     });
 
@@ -73,7 +76,8 @@ const AdminUserAddAPI = async (req, res) => {
                         const newUser = await prisma.whiteList.create({
                             data: {
                                 twitterId: id,
-                                twitterUserName: username
+                                twitterUserName: username,
+                                status: accountStatus
                             },
                         });
 
@@ -93,7 +97,8 @@ const AdminUserAddAPI = async (req, res) => {
                     else {
                         const newUser = await prisma.whiteList.create({
                             data: {
-                                wallet
+                                wallet,
+                                status: accountStatus
                             },
                         });
 

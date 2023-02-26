@@ -1,12 +1,7 @@
-import React, { useEffect, useState, useCallback, useMemo } from "react";
+import React, { useEffect, useState, useCallback, useMemo, useContext } from "react";
 import { ErrorMessage, Field, Form, Formik, FieldArray, getIn } from "formik";
 import { object, array, string, number, ref } from "yup";
 import { utils } from "ethers";
-import axios from "axios";
-
-function sleep(ms = 500) {
-    return new Promise((res) => setTimeout(res, ms));
-}
 
 import {
     Heading,
@@ -24,7 +19,6 @@ import {
     FormLabel,
     FormErrorMessage,
     Input,
-    Switch,
     Select,
     Checkbox,
     GridItem,
@@ -36,80 +30,119 @@ import {
     Td,
     Tooltip,
     IconButton,
-    NumberInput,
-    NumberInputField,
-    NumberInputStepper,
-    NumberIncrementStepper,
-    NumberDecrementStepper,
     Icon,
     useToast,
     ButtonGroup,
+    Avatar,
+    Menu,
+    MenuButton,
+    MenuItem,
+    MenuList,
 } from "@chakra-ui/react";
 
-import { ArrowRightIcon, ArrowLeftIcon, ChevronRightIcon, ChevronLeftIcon } from "@chakra-ui/icons";
-import AdminCard from "../../../riftly/card/AdminCard";
+import { AdminBanner, AdminCard } from "@components/shared/Card";
 import { useGlobalFilter, usePagination, useSortBy, useTable } from "react-table";
-import { BiRefresh } from "react-icons/bi";
 import { BsFilter } from "react-icons/bs";
 import { FaCopy, FaDownload, FaFileCsv } from "react-icons/fa";
-import { VscJson } from "react-icons/vsc";
-import { useAdminRefreshUserStats, useAdminUserStatsQuery } from "@shared/HOC/user";
+
 import { shortenAddress } from "@utils/shortenAddress";
-import { useCopyToClipboard } from "usehooks-ts";
-import XLSX from "xlsx";
-import Loading from "@components/riftly/Loading";
+
+import Loading from "@components/shared/LoadingContainer/Loading";
+
+import TablePagination from "./TablePagination";
+import RightSideBar from "@components/shared/RightSideBar";
+import Enums from "@enums/index";
+import {
+    DiscordIcon,
+    EmailIcon,
+    GoogleIcon,
+    TransparentDiscordIcon,
+    TransparentEmailIcon,
+    TransparentGoogleIcon,
+    TransparentTwiterIcon,
+    TransparentWalletIcon,
+    TwitterIcon,
+    WalletIcon,
+} from "@components/shared/Icons";
+import { AiOutlineUser, AiOutlineSortAscending, AiOutlineSortDescending } from "react-icons/ai";
+import { FaEllipsisH } from "react-icons/fa";
+import moment from "moment";
+import AdminUserInfo from "./AdminUserInfo";
+import FilterUsersSidebar from "./FilterUsersSidebar";
+import { downloadCsv, getNftOwners } from "./helper";
+import { UsersContext } from "@context/UsersContext";
+
+const UsersBanner = ({ downloadCsv }) => {
+    const { allUsers, filterSidebar } = useContext(UsersContext);
+    return (
+        <AdminBanner>
+            <Flex
+                mb={{ sm: "10px", md: "0px" }}
+                w={"100%"}
+                textAlign={{ base: "start" }}
+                justifyContent="space-between"
+            >
+                <Flex direction="column" maxWidth="100%" my={{ base: "14px" }} gap="1rem">
+                    {allUsers && (
+                        <Heading
+                            fontSize={{ base: "lg", lg: "3xl" }}
+                            color={"white"}
+                            fontWeight="700"
+                        >
+                            {allUsers.length} Users on Riftly
+                        </Heading>
+                    )}
+                    <Text fontSize={"lg"} color={"white"} fontWeight="400">
+                        Last updated: {moment(new Date()).format("MMM dd, hh:mm A")}{" "}
+                        {new Date()
+                            .toLocaleDateString(undefined, {
+                                day: "2-digit",
+                                timeZoneName: "short",
+                            })
+                            .substring(4)}
+                    </Text>
+                </Flex>
+                <ButtonGroup
+                    h="100%"
+                    alignItems={"center"}
+                    alignSelf="flex-end"
+                    gap="1rem"
+                    size="md"
+                    fontWeight="semibold"
+                    fontSize="lg"
+                >
+                    <Button
+                        variant="outline"
+                        leftIcon={
+                            <Icon
+                                transition="0.8s"
+                                color="green.400"
+                                boxSize={7}
+                                as={FaFileCsv}
+                                _hover={{
+                                    cursor: "pointer",
+                                }}
+                            />
+                        }
+                        onClick={downloadCsv}
+                    >
+                        CSV
+                    </Button>
+                    <Button
+                        variant="outline"
+                        leftIcon={<BsFilter color="white" />}
+                        onClick={filterSidebar.onOpen}
+                    >
+                        Filter Users
+                    </Button>
+                </ButtonGroup>
+            </Flex>
+        </AdminBanner>
+    );
+};
 
 export default function AdminUserStatsSearch() {
-    const [tableData, setTableData] = useState(null);
-
-    const [userStats, isLoadingUserStats] = useAdminUserStatsQuery();
-
-    const [filterObj, filterObjSet] = useState({
-        contract: "",
-        wallet: "",
-        chainId: "eth",
-    });
-
-    useEffect(async () => {
-        if (userStats) {
-            try {
-                let filterResult = [...userStats];
-                const { contract, chainId, wallet } = filterObj;
-                if (contract?.trim().length > 0) {
-                    let owners = await getNftOwners(utils.getAddress(contract), chainId);
-                    filterResult = filterResult.filter((w) => owners.includes(w.wallet));
-                }
-                if (wallet?.trim().length > 0) {
-                    filterResult = filterResult.filter((w) => w.wallet === wallet);
-                }
-
-                setTableData(filterResult);
-            } catch (error) {
-                console.log(error);
-            }
-        }
-    }, [userStats, filterObj]);
-
-    const getNftOwners = useCallback(async (contract, chainId) => {
-        let cursor = "";
-        let nftOwners = [];
-        do {
-            let contractQuery = await axios
-                .get(`/api/admin/user-stats/contract/${contract.trim()}/${chainId}/${cursor}`)
-                .then((r) => r.data);
-
-            for (const nft of contractQuery.result) {
-                nftOwners = [...nftOwners, nft];
-            }
-
-            cursor = contractQuery?.cursor;
-
-            sleep();
-            break;
-        } while (cursor != null && cursor != "");
-
-        return nftOwners.map((r) => r.owner_of);
-    });
+    const { isLoadingUserStats, filterUsers } = useContext(UsersContext);
 
     return (
         <Flex
@@ -119,16 +152,10 @@ export default function AdminUserStatsSearch() {
             w="100%"
             h="100%"
             justifyContent="center"
-            gap="1%"
+            gap="20px"
         >
-            <UserStatsSearchForm
-                filterObj={filterObj}
-                onFormSubmit={(formData) => filterObjSet(formData)}
-            />
             {isLoadingUserStats && <Loading />}
-            {tableData && (
-                <ResultTable data={tableData} rowsPerPage={10} setTableData={setTableData} />
-            )}
+            {filterUsers && <ResultTable data={filterUsers} />}
         </Flex>
     );
 }
@@ -256,10 +283,8 @@ const UserStatsSearchForm = ({ filterObj, onFormSubmit }) => {
     );
 };
 
-const ResultTable = ({ data, rowsPerPage, setTableData }) => {
-    const [userStats, isQuerying, refreshUserStatsAsync] = useAdminRefreshUserStats();
-    const toast = useToast();
-    const [value, copy] = useCopyToClipboard();
+const ResultTable = ({ data }) => {
+    const { filterSidebar, userSidebar, userDetails, viewUserDetails } = useContext(UsersContext);
 
     const columns = useMemo(
         () => columnData,
@@ -273,6 +298,7 @@ const ResultTable = ({ data, rowsPerPage, setTableData }) => {
         {
             columns,
             data: tableData,
+            initialState: { pageSize: 10 },
         },
         useGlobalFilter,
         useSortBy,
@@ -285,359 +311,312 @@ const ResultTable = ({ data, rowsPerPage, setTableData }) => {
         headerGroups,
         page,
         prepareRow,
-        initialState,
-        canPreviousPage,
-        canNextPage,
-        pageOptions,
-        pageCount,
-        gotoPage,
-        nextPage,
-        previousPage,
-        setPageSize,
         state: { pageIndex, pageSize },
         rows, //this give filtered rows
     } = tableInstance;
 
     const borderColor = useColorModeValue("gray.200", "whiteAlpha.100");
 
+    const getRowProps = (row) => ({
+        style: {
+            background: "rgba(47, 78, 109, 0.5)",
+            borderRadius: "20px",
+        },
+    });
+
     return (
-        <Box w="100%">
-            <AdminCard>
-                <Flex>
-                    <ButtonGroup spacing="6" mb="15px">
-                        <Button
-                            leftIcon={<BsFilter />}
-                            // onClick={openFilterSidebar}
-                            variant="outline"
-                            size="sm"
-                            fontWeight="semibold"
-                            fontSize="16px"
-                        >
-                            Filter
-                        </Button>
+        <Flex
+            flexDirection={{
+                base: "column",
+            }}
+            w="100%"
+            h="100%"
+            justifyContent="center"
+            gap="20px"
+        >
+            <RightSideBar
+                isOpen={filterSidebar.isOpen}
+                onClose={filterSidebar.onClose}
+                title="Filter Users"
+            >
+                <FilterUsersSidebar />
+            </RightSideBar>
+            <RightSideBar
+                isOpen={userSidebar.isOpen}
+                onClose={userSidebar.onClose}
+                title="User Info"
+            >
+                <AdminUserInfo userDetails={userDetails} />
+            </RightSideBar>
+            <UsersBanner
+                downloadCsv={() => {
+                    let jsonData = rows.map((row) => {
+                        prepareRow(row);
 
-                        <Icon
-                            transition="0.8s"
-                            color="green.400"
-                            boxSize={7}
-                            as={FaFileCsv}
-                            _hover={{
-                                cursor: "pointer",
-                            }}
-                            onClick={async () => {
-                                let jsonData = rows.map((row) => {
-                                    prepareRow(row);
+                        return row.original;
+                    });
 
-                                    return row.original;
-                                });
-
-                                jsonData = jsonData.map((r) => {
-                                    r.follower = r.whiteListUserData?.data?.followers_count;
-                                    r.balance = r.whiteListUserData?.data?.eth;
-
-                                    delete r.whiteListUserData;
-                                    delete r.userId;
-                                    return r;
-                                });
-                                const wb = XLSX.utils.book_new();
-                                const ws = XLSX.utils.json_to_sheet(jsonData);
-                                XLSX.utils.book_append_sheet(wb, ws, "test");
-                                XLSX.writeFile(wb, "Riftly_User_Search.csv");
-                            }}
-                        />
-
-                        <Icon
-                            transition="0.8s"
-                            color="yellow.400"
-                            boxSize={7}
-                            as={VscJson}
-                            _hover={{
-                                cursor: "pointer",
-                            }}
-                            onClick={async () => {
-                                let jsonData = rows.map((row) => {
-                                    prepareRow(row);
-
-                                    return row.original;
-                                });
-
-                                jsonData = jsonData.map((r) => {
-                                    r.follower = r.whiteListUserData?.data?.followers_count;
-                                    r.balance = r.whiteListUserData?.data?.eth;
-
-                                    delete r.whiteListUserData;
-                                    delete r.userId;
-                                    return r;
-                                });
-                                const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(
-                                    JSON.stringify(jsonData)
-                                )}`;
-                                const link = document.createElement("a");
-                                link.href = jsonString;
-                                link.download = "Riftly User Search.json";
-
-                                link.click();
-                            }}
-                        />
-                    </ButtonGroup>
-                </Flex>
-                <Flex>
-                    {tableInstance?.pageOptions?.length > 0 && (
-                        <TablePagination tableInstance={tableInstance} />
-                    )}
-                </Flex>
-                <Table variant="simple">
-                    <Thead>
-                        {headerGroups.map((headerGroup, index) => (
-                            <Tr {...headerGroup.getHeaderGroupProps()} key={index}>
-                                {headerGroup.headers.map((column, index) => (
-                                    <Th
-                                        {...column.getHeaderProps(column.getSortByToggleProps())}
-                                        pe="8px"
-                                        key={index}
-                                        borderColor={borderColor}
-                                    >
-                                        <Flex
-                                            justify="space-between"
-                                            align="center"
-                                            fontSize={{ sm: "8px", lg: "15px" }}
-                                            color="gray.400"
-                                        >
-                                            {column.render("Header")}
-                                        </Flex>
-                                    </Th>
-                                ))}
-                            </Tr>
-                        ))}
-                    </Thead>
-                    <Tbody {...getTableBodyProps()}>
-                        {page.map((row, index) => {
-                            prepareRow(row);
-                            return (
-                                <Tr {...row.getRowProps()} key={index}>
-                                    {row.cells.map((cell, index) => {
-                                        let data = "";
-
-                                        const { userId, wallet } = cell.row.original;
-                                        data = cell.value;
-                                        if (cell.column.Header === "TWITTER FOLLOWERS") {
-                                            data =
-                                                cell.row.original.whiteListUserData?.data
-                                                    ?.followers_count;
-                                        } else if (cell.column.Header === "BALANCE (ETH)") {
-                                            data = cell.row.original.whiteListUserData?.data?.eth;
-                                        } else if (cell.column.Header === "Action") {
-                                            data = (
-                                                <Flex gap="3px">
-                                                    <Icon
-                                                        transition="0.8s"
-                                                        color="green.300"
-                                                        boxSize={7}
-                                                        as={BiRefresh}
-                                                        _hover={{
-                                                            cursor: "pointer",
-                                                        }}
-                                                        onClick={async () => {
-                                                            let payload = {
-                                                                userId,
-                                                            };
-
-                                                            await refreshUserStatsAsync(payload);
-                                                        }}
-                                                    />
-
-                                                    <Icon
-                                                        transition="0.8s"
-                                                        color="blue.300"
-                                                        boxSize={6}
-                                                        as={FaCopy}
-                                                        _hover={{
-                                                            cursor: "pointer",
-                                                        }}
-                                                        onClick={() => {
-                                                            if (wallet?.length > 16) {
-                                                                copy(wallet);
-                                                                toast({
-                                                                    description: `Copy wallet ${wallet}`,
-                                                                    position: "bottom-right",
-
-                                                                    duration: 2000,
-                                                                });
-                                                            }
-                                                        }}
-                                                    />
-                                                </Flex>
-                                            );
-                                        } else if (cell.column.Header === "WALLET") {
-                                            data = (
-                                                <Tooltip label={cell.value} placement="top">
-                                                    <Text
-                                                        color="white"
-                                                        fontSize={"sm"}
-                                                        maxWidth="100px"
-                                                    >
-                                                        {cell?.value?.length > 0 &&
-                                                            shortenAddress(cell.value)}
-                                                    </Text>
-                                                </Tooltip>
-                                            );
-                                        } else {
-                                            data = cell.value;
-                                        }
+                    downloadCsv(jsonData);
+                }}
+            />
+            <Box w="100%" mb="2rem">
+                <AdminCard>
+                    <Table
+                        variant="simple"
+                        style={{
+                            borderCollapse: "separate",
+                            borderSpacing: "0 1em",
+                        }}
+                    >
+                        <Thead>
+                            {headerGroups.map((headerGroup, index) => (
+                                <Tr {...headerGroup.getHeaderGroupProps()} key={index}>
+                                    {headerGroup.headers.map((column, index) => {
                                         return (
-                                            <Td
-                                                {...cell.getCellProps()}
+                                            <Th
+                                                {...column.getHeaderProps(
+                                                    column.getSortByToggleProps()
+                                                )}
+                                                pe="6px"
                                                 key={index}
-                                                fontSize={{ sm: "14px" }}
-                                                minW={{ sm: "150px", md: "200px", lg: "auto" }}
-                                                borderColor="transparent"
+                                                borderColor={borderColor}
                                             >
-                                                {data}
-                                                {/* {cell.render("Cell")} */}
-                                            </Td>
+                                                {!column?.hideHeader && (
+                                                    <Flex
+                                                        align="center"
+                                                        fontSize={{ sm: "8px", lg: "15px" }}
+                                                        color="gray.400"
+                                                        gap="8px"
+                                                    >
+                                                        {column.render("Header")}
+
+                                                        {column.isSorted &&
+                                                            !column.isSortedDesc && <span>▼</span>}
+                                                        {column.isSorted && column.isSortedDesc && (
+                                                            <span>▲</span>
+                                                        )}
+                                                    </Flex>
+                                                )}
+                                            </Th>
                                         );
                                     })}
                                 </Tr>
-                            );
-                        })}
-                    </Tbody>
-                </Table>
-            </AdminCard>
-        </Box>
-    );
-};
+                            ))}
+                        </Thead>
+                        <Tbody {...getTableBodyProps()} gap="12px">
+                            {page.map((row, index) => {
+                                prepareRow(row);
 
-function remove_duplicates_es6(arr) {
-    let s = new Set(arr);
-    let it = s.values();
-    return Array.from(it);
-}
-const columnData = [
-    {
-        Header: "WALLET",
-        accessor: "wallet",
-    },
-    {
-        Header: "EMAIL",
-        accessor: "email",
-    },
-    {
-        Header: "TWITTER",
-        accessor: "twitterUserName",
-    },
-    {
-        Header: "DISCORD",
-        accessor: "discordUserDiscriminator",
-    },
-    {
-        Header: "TWITTER FOLLOWERS",
-        accessor: "follower",
-    },
-    {
-        Header: "BALANCE (ETH)",
-        accessor: "balance",
-    },
-    {
-        Header: "Action",
-        accessor: "action",
-    },
-];
+                                return (
+                                    <Tr {...row.getRowProps(getRowProps(row))} key={index}>
+                                        {row.cells.map((cell, index) => {
+                                            let data = "";
 
-const TablePagination = ({ tableInstance }) => {
-    const {
-        pageOptions,
-        gotoPage,
-        canPreviousPage,
-        previousPage,
-        canNextPage,
-        nextPage,
-        setPageSize,
-        pageCount,
-        state: { pageIndex, pageSize },
-    } = tableInstance;
+                                            data = getCellValue(cell, viewUserDetails);
 
-    return (
-        <Flex justifyContent="space-between" m={4} alignItems="center" w="100%">
-            <Flex>
-                <Tooltip label="First Page">
-                    <IconButton
-                        onClick={() => gotoPage(0)}
-                        isDisabled={!canPreviousPage}
-                        icon={<ArrowLeftIcon h={3} w={3} />}
-                        mr={4}
-                    />
-                </Tooltip>
-                <Tooltip label="Previous Page">
-                    <IconButton
-                        onClick={previousPage}
-                        isDisabled={!canPreviousPage}
-                        icon={<ChevronLeftIcon h={6} w={6} />}
-                    />
-                </Tooltip>
-            </Flex>
-
-            <Flex alignItems="center">
-                <Text flexShrink="0" mr={8}>
-                    Page{" "}
-                    <Text fontWeight="bold" as="span">
-                        {pageIndex + 1}
-                    </Text>{" "}
-                    of{" "}
-                    <Text fontWeight="bold" as="span">
-                        {pageOptions?.length}
-                    </Text>
-                </Text>
-                <Text flexShrink="0">Go to page:</Text>{" "}
-                <NumberInput
-                    ml={2}
-                    mr={8}
-                    w={28}
-                    min={1}
-                    max={pageOptions?.length}
-                    onChange={(value) => {
-                        const page = value ? value - 1 : 0;
-                        gotoPage(page);
-                    }}
-                    defaultValue={pageIndex + 1}
-                >
-                    <NumberInputField color={useColorModeValue("black", "gray.300")} />
-                    <NumberInputStepper>
-                        <NumberIncrementStepper />
-                        <NumberDecrementStepper />
-                    </NumberInputStepper>
-                </NumberInput>
-                <Select
-                    w={32}
-                    value={pageSize}
-                    onChange={(e) => {
-                        setPageSize(Number(e.target.value));
-                    }}
-                >
-                    {[25, 50, 75, 100].map((pageSize) => (
-                        <option key={pageSize} value={pageSize}>
-                            Show {pageSize}
-                        </option>
-                    ))}
-                </Select>
-            </Flex>
-
-            <Flex>
-                <Tooltip label="Next Page">
-                    <IconButton
-                        onClick={nextPage}
-                        isDisabled={!canNextPage}
-                        icon={<ChevronRightIcon h={6} w={6} />}
-                    />
-                </Tooltip>
-                <Tooltip label="Last Page">
-                    <IconButton
-                        onClick={() => gotoPage(pageCount - 1)}
-                        isDisabled={!canNextPage}
-                        icon={<ArrowRightIcon h={3} w={3} />}
-                        ml={4}
-                    />
-                </Tooltip>
-            </Flex>
+                                            return (
+                                                <Td
+                                                    {...cell.getCellProps()}
+                                                    key={index}
+                                                    fontSize={{ sm: "14px" }}
+                                                    minW={{ sm: "150px", md: "200px", lg: "auto" }}
+                                                    border="1px solid transparent"
+                                                    borderLeftRadius={`${
+                                                        index === 0 ? "20px" : "0px"
+                                                    }`}
+                                                    borderRightRadius={`${
+                                                        index === row.cells.length - 1
+                                                            ? "20px"
+                                                            : "0px"
+                                                    }`}
+                                                >
+                                                    {data}
+                                                    {/* {cell.render("Cell")} */}
+                                                </Td>
+                                            );
+                                        })}
+                                    </Tr>
+                                );
+                            })}
+                        </Tbody>
+                    </Table>
+                    <Flex>
+                        {tableInstance?.pageOptions?.length > 0 && (
+                            <TablePagination tableInstance={tableInstance} />
+                        )}
+                    </Flex>
+                </AdminCard>
+            </Box>
         </Flex>
     );
 };
+
+const getUsername = (userObj) => {
+    const { email, discordUserDiscriminator, twitterUserName, wallet, google, avatar } = userObj;
+
+    return (
+        <Flex alignItems={"center"} gap={{ base: "8px", lg: "1rem" }}>
+            <Box>
+                <Avatar
+                    size="md"
+                    bg="rgba(47, 78, 109, 1)"
+                    icon={<AiOutlineUser fontSize="1.75rem" color="rgba(19, 36, 54, 1)" />}
+                    src={avatar}
+                />
+            </Box>
+            <Heading color="white" fontSize={"md"} maxWidth="120px" isTruncated>
+                {shortenAddress(wallet)}
+            </Heading>
+        </Flex>
+    );
+};
+
+// this being here to manipulat the style, sometimes in ancessor its impossible to return the
+// value straightaway for sorting purpose
+const getCellValue = (cell, viewUserDetails) => {
+    const { userId, wallet } = cell.row.original;
+    switch (cell.column.Header) {
+        case "TIER":
+            return (
+                <Text color="white" fontSize={"lg"}>
+                    5
+                </Text>
+            );
+        case "LAST ACTIVE":
+            if (cell.value < 24) {
+                return (
+                    <Text color="green.300" fontSize={"lg"}>
+                        {cell.value} hrs
+                    </Text>
+                );
+            }
+
+            if (cell.value === 24) {
+                return (
+                    <Text color="green.300" fontSize={"lg"}>
+                        1 day
+                    </Text>
+                );
+            }
+            let day = Math.floor(cell.value / 24);
+            let color = day <= 4 ? "orange.300" : "red.300";
+            return (
+                <Text color={color} fontSize={"lg"}>
+                    {Math.floor(cell.value / 24)} days
+                </Text>
+            );
+
+        case "ACTION":
+            return (
+                <Box>
+                    <Menu>
+                        <MenuButton>
+                            <Icon
+                                as={FaEllipsisH}
+                                boxSize={{ base: 4, lg: 6 }}
+                                cursor="pointer"
+                                color="brand.neutral1"
+                            />
+                        </MenuButton>
+
+                        <MenuList>
+                            <MenuItem onClick={() => viewUserDetails(cell.row.original)}>
+                                User Details
+                            </MenuItem>
+                        </MenuList>
+                    </Menu>
+                </Box>
+            );
+
+        case "USER":
+            return getUsername(cell.row.original);
+        case "CONNECTIONS":
+            const { email, discordUserDiscriminator, twitterUserName, wallet, google } =
+                cell.row.original;
+            return (
+                <Flex gap={{ base: "5px", lg: "8px" }}>
+                    <Box boxSize={"18px"}>
+                        {email && <EmailIcon />}
+                        {!email && <TransparentEmailIcon />}
+                    </Box>
+                    <Box boxSize={"18px"}>
+                        {google && <GoogleIcon />}
+                        {!google && <TransparentGoogleIcon />}
+                    </Box>
+                    <Box boxSize={"18px"}>
+                        {discordUserDiscriminator && <DiscordIcon />}
+                        {!discordUserDiscriminator && <TransparentDiscordIcon />}
+                    </Box>
+                    <Box boxSize={"18px"}>
+                        {twitterUserName && <TwitterIcon />}
+                        {!twitterUserName && <TransparentTwiterIcon />}
+                    </Box>
+                    <Box boxSize={"18px"}>
+                        {wallet && <WalletIcon />}
+                        {!wallet && <TransparentWalletIcon />}
+                    </Box>
+                </Flex>
+            );
+        default:
+            let value = cell.value;
+            if (typeof cell.value === "number") {
+                value = value.toLocaleString("en-US");
+            }
+            return (
+                <Text color="white" fontSize={"lg"}>
+                    {value}
+                </Text>
+            );
+    }
+};
+const columnData = [
+    {
+        Header: "USER",
+        accessor: "user",
+        disableSortBy: true,
+    },
+    {
+        Header: "TIER",
+        accessor: "tier",
+    },
+    {
+        Header: "POINTS",
+        accessor: (row) => {
+            let rewardValue = row?.rewards?.find((e) => e?.rewardType?.reward === "Points");
+            return rewardValue?.quantity; //?.toLocaleString("en-US") || 0;
+        },
+    },
+    {
+        Header: "LAST ACTIVE",
+        accessor: (row) => {
+            let lastFinishedQuestDaytime = row?.userQuest[0]?.updatedAt;
+            let dayPast = moment(new Date()).diff(moment(lastFinishedQuestDaytime), "days", false);
+            let hourPast = moment(new Date()).diff(
+                moment(lastFinishedQuestDaytime),
+                "hours",
+                false
+            );
+
+            return hourPast; // manipulate later
+        },
+    },
+    {
+        Header: "CONNECTIONS",
+        accessor: "connections",
+        disableSortBy: true,
+    },
+    {
+        Header: "FOLLOWERS",
+        accessor: (row) => row?.whiteListUserData?.data?.followers_count || 0,
+    },
+    {
+        Header: "NET WORTH",
+        accessor: (row) => row?.whiteListUserData?.data?.eth || 0,
+    },
+    {
+        Header: "ACTION",
+        accessor: "action",
+        disableSortBy: true,
+        hideHeader: true,
+    },
+];

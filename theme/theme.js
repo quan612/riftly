@@ -61,5 +61,45 @@ export default extendTheme(
     fonts,
     colors: riftlyColor
   },
-  { config }
+  { config },
+  {
+    components: {
+      Progress: {
+        baseStyle: {
+          filledTrack: {
+            bg: '#1D63FF',
+
+          },
+          track: { bg: 'rgba(255, 255, 255, 0.1)' },
+        },
+        variants: {
+          noBg: {
+            filledTrack: {
+              bg: '#1D63FF',
+
+            },
+            track: { bg: 'transparent' },
+          }
+
+        }
+      },
+    },
+  },
+  {
+    components: {
+      Drawer: {
+
+        variants: {
+          permanent: {
+            dialog: {
+              pointerEvents: 'auto',
+            },
+            dialogContainer: {
+              pointerEvents: 'none',
+            },
+          },
+        }
+      },
+    },
+  }
 );

@@ -1,6 +1,6 @@
 import React from "react";
-import MiniStatistics from "@components/riftly/card/MiniStatistics";
-import { IconBox } from "@components/riftly/Icons";
+import { AdminBanner, MiniStatistics } from "@components/shared/Card";
+import { IconBox } from "@components/shared/Icons";
 import { MdAddTask, MdAttachMoney, MdBarChart, MdFileCopy } from "react-icons/md";
 import {
     Avatar,
@@ -13,8 +13,9 @@ import {
     useColorModeValue,
     Text,
     GridItem,
+    Heading,
 } from "@chakra-ui/react";
-import Card from "@components/riftly/card/Card";
+import Card from "@components/shared/Card";
 import dynamic from "next/dynamic";
 import UsersByDevicePieCart from "./UsersByDevicePieCart";
 import CompletedChallengesTable from "./CompletedChallengesTable";
@@ -26,12 +27,12 @@ const UserSignUpLineChart = dynamic(() => import("./UserSignUpLineChart"), { ssr
 export default function Dashboard() {
     // Chakra Color Mode
     const brandColor = useColorModeValue("brand.500", "white");
-    const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
+    const boxBg = "brand.neutral3";
     return (
         // <Box pt={{ base: "130px", md: "80px", xl: "50px" }}>
         <Box pt={{ base: "10px", md: "15px", xl: "15px" }}>
             <SimpleGrid columns={{ base: 1 }} gap="20px" mb="20px">
-                <HelloBox />
+                <DashboardBanner />
             </SimpleGrid>
             <SimpleGrid columns={{ base: 1, md: 2, lg: 3, xl: 4 }} gap="20px" mb="20px">
                 <MiniStatistics
@@ -40,6 +41,7 @@ export default function Dashboard() {
                             w="56px"
                             h="56px"
                             bg={boxBg}
+                            borderRadius="50%"
                             icon={<Icon w="32px" h="32px" as={MdBarChart} color={brandColor} />}
                         />
                     }
@@ -112,38 +114,24 @@ export default function Dashboard() {
     );
 }
 
-const HelloBox = () => {
+const DashboardBanner = () => {
     return (
-        <Flex
-            direction={{ base: "column" }}
-            maxH="330px"
-            justifyContent={{ base: "flex-start" }}
-            align="center"
-            backdropFilter="blur(21px)"
-            borderRadius="20px"
-        >
-            <Card>
-                <Flex
-                    mb={{ sm: "10px", md: "0px" }}
-                    direction={{ base: "column" }}
-                    w={{ sm: "100%" }}
-                    textAlign={{ base: "start" }}
-                >
-                    <Flex direction="column" maxWidth="100%" my={{ base: "14px" }} gap="1rem">
-                        <Text
-                            fontSize={{ sm: "lg", lg: "xl" }}
-                            color={"white"}
-                            fontWeight="bold"
-                            ms={{ sm: "8px", md: "0px" }}
-                        >
-                            Good morning, Riftly team
-                        </Text>
-                        <Text fontSize={"sm"} color={"secondaryGray.600"}>
-                            Here is what's happening with your projects today
-                        </Text>
-                    </Flex>
+        <AdminBanner>
+            <Flex
+                mb={{ sm: "10px", md: "0px" }}
+                direction={{ base: "column" }}
+                w={{ sm: "100%" }}
+                textAlign={{ base: "start" }}
+            >
+                <Flex direction="column" maxWidth="100%" my={{ base: "14px" }} gap="1rem">
+                    <Heading fontSize={{ base: "lg", lg: "3xl" }} color={"white"} fontWeight="700">
+                        Good morning, Riftly team 👋
+                    </Heading>
+                    <Text fontSize={"lg"} color={"white"} fontWeight="400">
+                        Here is what's happening with your platform
+                    </Text>
                 </Flex>
-            </Card>
-        </Flex>
+            </Flex>
+        </AdminBanner>
     );
 };

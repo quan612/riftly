@@ -11,12 +11,13 @@ import {
     Tr,
     useColorModeValue,
     Box,
+    Heading,
 } from "@chakra-ui/react";
 import React, { useMemo } from "react";
 import { useGlobalFilter, usePagination, useSortBy, useTable } from "react-table";
 
 import { MdCheckCircle, MdCancel, MdOutlineError } from "react-icons/md";
-import Card from "@components/riftly/card/Card";
+import Card from "@components/shared/Card";
 
 const columnsData = [
     {
@@ -97,10 +98,10 @@ export default function TopCountriesTable() {
             // overflowX={{ sm: "scroll", lg: "hidden" }}
             h="100%"
         >
-            <Flex px="25px" justify="space-between" mb="10px" align="center">
-                <Text color={textColor} fontSize="22px" fontWeight="700" lineHeight="100%">
+            <Flex px="25px" justify="space-between" mb="24px" align="center">
+                <Heading color={textColor} fontSize="xl" fontWeight="700" lineHeight="24px">
                     Top Countries
-                </Text>
+                </Heading>
                 {/* <Menu /> */}
             </Flex>
             <Box
@@ -120,13 +121,14 @@ export default function TopCountriesTable() {
                                         borderColor={borderColor}
                                         width={column.width}
                                     >
-                                        <Flex
-                                            justify="space-between"
-                                            align="center"
-                                            fontSize={{ base: "10px", lg: "14px" }}
-                                            color="gray.400"
-                                        >
-                                            {column.render("Header")}
+                                        <Flex justify="space-between" align="center">
+                                            <Text
+                                                fontSize={{ sm: "12px", lg: "14px" }}
+                                                color="brand.neutral1"
+                                                fontWeight={"400"}
+                                            >
+                                                {column.render("Header")}
+                                            </Text>
                                         </Flex>
                                     </Th>
                                 ))}
@@ -154,8 +156,7 @@ export default function TopCountriesTable() {
                                             data = (
                                                 <Flex align="center">
                                                     <Progress
-                                                        variant="table"
-                                                        colorScheme="blue"
+                                                        variant="noBg"
                                                         h="8px"
                                                         w="108px"
                                                         value={cell.value}

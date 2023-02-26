@@ -10,10 +10,10 @@ import { Modal, ModalOverlay, ModalContent, ModalBody } from "@chakra-ui/react";
 import { useUserRewardQuery } from "@shared/HOC";
 
 import { ChakraBox } from "@theme/additions/framer/FramerChakraComponent";
-import { HeadingSm, TextMd } from "@components/riftly/Typography";
+import { HeadingSm, TextMd } from "@components/shared/Typography";
 import { getUserName } from "@utils/index";
-import { RiftlyIcon } from "@components/riftly/Icons";
-import { RiftlyFace } from "@components/riftly/Logo";
+import { RiftlyIcon } from "@components/shared/Icons";
+import { RiftlyFace } from "@components/shared/Logo";
 
 const usePrevious = (value) => {
     const ref = useRef();
