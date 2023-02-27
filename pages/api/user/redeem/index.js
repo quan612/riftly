@@ -1,3 +1,4 @@
+import { prisma } from "@context/PrismaContext";
 import { ethers, utils } from "ethers";
 import whitelistUserMiddleware from "middlewares/whitelistUserMiddleware";
 const RiftlyNFTAddress = "0x4511080B941cDcbAD6e6Ab052D6E26A7Eb30e2f4";
