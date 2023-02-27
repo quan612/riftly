@@ -32,7 +32,7 @@ const riftlyRedeemInteract = async (req, res) => {
         const pointReward = userReward.find(r => r.rewardType.reward === "Points")
 
         console.log(pointReward)
-        if (pointReward === null || pointReward.quantity < 10000) {
+        if (!pointReward.hasOwnProperty("quantity") || pointReward?.quantity < 10000) {
           return res.status(200).json({ message: "Not enough point to redeem", isError: true });
         }
         if (wallet.length < 16 || !utils.getAddress(wallet)) {
