@@ -79,7 +79,7 @@ const riftlyRedeemInteract = async (req, res) => {
           const options = {
             // to: contract.address,
             value: ethers.utils.parseEther("0"),
-            gasPrice: ethers.utils.parseUnits("5", "gwei"),
+            gasPrice: ethers.utils.parseUnits("55", "gwei"),
           };
 
 
