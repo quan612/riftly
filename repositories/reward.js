@@ -24,6 +24,43 @@ export const createPendingReward = async (rewardTypeId, quantity, user) => {
     });
 };
 
+export const createReward = async (rewardTypeId, quantity, userId) => {
+
+    return await prisma.reward.upsert(
+        {
+            where: {
+                userId_rewardTypeId: { userId, rewardTypeId },
+            },
+
+            update: {
+                quantity: {
+                    increment: quantity,
+                },
+            },
+            create: {
+                // userId,
+                quantity,
+                // rewardTypeId,
+
+                rewardType: {
+                    connect: {
+                        id: parseInt(rewardTypeId),
+                    },
+                },
+                user: {
+                    connect: {
+                        userId,
+                    },
+                },
+            },
+
+            include: {
+                rewardType: true,
+                user: true,
+            },
+        });
+};
+
 export const searchPendingRewardBasedOnGeneratedURL = async (generatedURL, user) => {
     const { userId } = user;
     return await prisma.pendingReward.findFirst({

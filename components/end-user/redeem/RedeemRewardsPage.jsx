@@ -13,13 +13,18 @@ import {
     SimpleGrid,
     Image,
     Grid,
+    useToast,
 } from "@chakra-ui/react";
 import { HeadingLg, HeadingSm, TextSm } from "@components/shared/Typography";
 import { ChakraBox } from "@theme/additions/framer/FramerChakraComponent";
+import { useDeviceDetect } from "lib/hooks";
 
 import { AnimatePresence } from "framer-motion";
 import { RiftlyIcon } from "@components/shared/Icons";
-let isMobile = true;
+import { sleep } from "@utils/index";
+import axios from "axios";
+import { useUserRewardQuery } from "@shared/HOC";
+
 const RedeemRewardsPage = ({ session }) => {
     const [pendingRewards, pendingRewardsSet] = useState([
         { id: 1 },
@@ -32,6 +37,8 @@ const RedeemRewardsPage = ({ session }) => {
         { id: 8 },
         { id: 9 },
     ]);
+
+    const { isMobile } = useDeviceDetect();
     const onClaimReward = (key) => {
         let filterRewards = pendingRewards.filter((q) => q.id !== key);
         pendingRewardsSet(filterRewards);
@@ -75,23 +82,29 @@ const RedeemRewardsPage = ({ session }) => {
                             {pendingRewards.map((reward, index) => {
                                 return (
                                     <Flex
-                                        // alignItems={"center"}
-                                        // justifyContent="center"
+                                        key={index}
                                         w={`${isMobile ? "46%" : "30%"}`}
-                                        // minW="30%"
                                         justifyContent="center"
                                         className="redeem-card-wrapper"
                                     >
                                         <RewardCard
                                             image={"/img/user/feature-1.png"}
-                                            reward={reward}
-                                            key={reward.id}
-                                            id={reward.id}
                                             onAction={onClaimReward}
                                         />
                                     </Flex>
                                 );
                             })}
+                            <Flex
+                                w={`${isMobile ? "46%" : "30%"}`}
+                                justifyContent="center"
+                                className="redeem-card-wrapper"
+                            >
+                                <RedeemCard
+                                    key={12}
+                                    image={"/img/user/feature-2.png"}
+                                    session={session}
+                                />
+                            </Flex>
                         </Flex>
                         {/* </Box> */}
                     </ChakraBox>
@@ -103,7 +116,8 @@ const RedeemRewardsPage = ({ session }) => {
 
 export default RedeemRewardsPage;
 
-const BalanceInfo = () => {
+const BalanceInfo = ({ session }) => {
+    const [userRewards, userRewardLoading] = useUserRewardQuery(session);
     return (
         <ChakraBox
             minW="100%"
@@ -141,12 +155,127 @@ const BalanceInfo = () => {
                             <RiftlyIcon fill={"#fff"} />
                         </Box>
                         <Heading size="lg" color="#fff">
-                            3,200
+                            {userRewards?.length > 0 && userRewards[0].quantity + " "}
                         </Heading>
                     </Flex>
                 </Box>
             </Box>
         </ChakraBox>
+    );
+};
+
+const RedeemCard = ({ image, session }) => {
+    const { wallet } = session?.user;
+
+    const [isLoading, isLoadingSet] = useState(false);
+    const toast = useToast();
+
+    const handleRedeem = async () => {
+        isLoadingSet(true);
+
+        try {
+            await sleep(1000);
+
+            const redeemOp = await axios
+                .post(`/api/user/redeem`)
+                .then((r) => r.data)
+                .catch((err) => {
+                    throw err;
+                });
+            isLoadingSet(false);
+            if (redeemOp.isError) {
+                toast({
+                    title: "Exception",
+                    description: `Catch error: ${redeemOp.message}`,
+                    position: "top-right",
+                    status: "error",
+                    duration: 3000,
+                    isClosable: true,
+                });
+            } else {
+                if (redeemOp?.transactionHash) {
+                    toast({
+                        title: "Success",
+                        // description: `Transaction sent at https://goerli.etherscan.io/tx/${redeemOp?.transactionHash}`,
+                        position: "top-right",
+                        status: "success",
+                        duration: 4000,
+                        isClosable: true,
+                        render: () => (
+                            <Box color="white" p={3} bg="green.300" borderRadius={"20px"}>
+                                <Link
+                                    href={`https://goerli.etherscan.io/tx/${redeemOp?.transactionHash}`}
+                                    target="_blank"
+                                    color="black"
+                                    fontSize={"lg"}
+                                >
+                                    Transaction sent. Check here.
+                                </Link>
+                            </Box>
+                        ),
+                    });
+                }
+            }
+        } catch (error) {
+            isLoadingSet(false);
+        }
+    };
+    return (
+        <Box
+            bg={"brand.neutral4"}
+            borderRadius="16px"
+            w="100%"
+            maxW="200px"
+            className="redeem-card"
+            display={"flex"}
+        >
+            <Flex direction={{ base: "column" }} h="100%">
+                <Box position="relative" h="37%" minH={"37%"} maxH="37%!important">
+                    <Image
+                        boxSize={"100px"}
+                        src={image}
+                        w={{ base: "100%", "3xl": "100%" }}
+                        borderTopRadius="16px"
+                        fit={"fill"}
+                    />
+                </Box>
+                <Flex flexDirection="column" justify="space-between" h="63%" py="4" px="4" w="100%">
+                    <Flex justify="space-between">
+                        <Flex direction="column" gap="5px">
+                            <HeadingSm color={"white"} fontWeight="bold">
+                                Redeemable Test
+                            </HeadingSm>
+
+                            <TextSm color="whiteAlpha.700" opacity="0.64" fontWeight="400">
+                                {"Need > 10000 points and wallet linked"}
+                            </TextSm>
+                        </Flex>
+                    </Flex>
+                    <Flex align="start" alignItems={"center"} justify="space-between" mt="25px">
+                        {/* <Flex alignItems={"center"} gap="5px">
+                            <Box maxH="24px" h="33%" position={"relative"} boxSize="16px">
+                                <RiftlyIcon fill={"#1D63FF"} />
+                            </Box>
+                            <HeadingLg fontWeight="700" color={"white"}>
+                                30
+                            </HeadingLg>
+                        </Flex> */}
+
+                        <Button
+                            w="100%"
+                            variant="outline"
+                            disabled={wallet.length === 0}
+                            onClick={() => {
+                                handleRedeem();
+                            }}
+                            isLoading={isLoading}
+                        >
+                            Redeem
+                        </Button>
+                    </Flex>
+                </Flex>
+            </Flex>
+        </Box>
     );
 };
 

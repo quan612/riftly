@@ -11,7 +11,6 @@ const variants = {
     exit: { opacity: 0, transition: { duration: 1, ...transition } },
 };
 
-
 function RedeemPage({ session }) {
     return (
         <>

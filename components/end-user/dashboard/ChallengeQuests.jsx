@@ -32,8 +32,9 @@ import {
     NftOwnerQuestModal,
 } from "../shared";
 import { RiftlyIcon } from "@components/shared/Icons";
+import Loading from "@components/shared/LoadingContainer/Loading";
 
-const ChallengeQuests = ({ userQuests }) => {
+const ChallengeQuests = ({ isFetchingUserQuests, userQuests }) => {
     const [filterCompleted, filterCompletedSet] = useState(false);
     const trackFirstRender = useRef(true);
     const [newQuests, newQuestsSet] = useState([]);
@@ -50,6 +51,7 @@ const ChallengeQuests = ({ userQuests }) => {
 
     return (
         <Box display="flex" flexDirection={"column"} gap={"16px"} position={"relative"} minH="auto">
+            {isFetchingUserQuests && <Loading />}
             <ChallengesHeader
                 filterCompleted={filterCompleted}
                 filterCompletedSet={filterCompletedSet}

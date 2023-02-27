@@ -329,6 +329,7 @@ function CreateRewardTypes({ upsertRewardTypeAsync, createRewardType, createRewa
                                                     </FormLabel>
 
                                                     <Switch
+                                                        name="isEnabled"
                                                         isChecked={values.isEnabled ? true : false}
                                                         onChange={handleChange}
                                                     />

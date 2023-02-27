@@ -44,6 +44,7 @@ const AddRewardToUser = ({ isSubmitting, onSubmit, mutationError }) => {
         quantity: 1,
         postInDiscordChannels: [],
         generatedURL: "",
+        addRewardDirectly: false,
     });
 
     const generatedRef = useRef();
@@ -72,11 +73,8 @@ const AddRewardToUser = ({ isSubmitting, onSubmit, mutationError }) => {
 
     const onSubmitForm = async (fields, { setStatus, resetForm, setFieldValue }) => {
         try {
-            // alert("SUCCESS!! :-)\n\n" + JSON.stringify(fields, null, 4));
-            // resetForm();
-
             const res = await onSubmit(fields);
-
+            console.log(res);
             if (res.data?.isError) {
                 generatedRef.current.value = "";
                 setStatus(res.data?.message);
@@ -107,7 +105,7 @@ const AddRewardToUser = ({ isSubmitting, onSubmit, mutationError }) => {
             validateOnChange={false}
             onSubmit={onSubmitForm}
         >
-            {({ errors, status, touched, values, setFieldValue }) => {
+            {({ errors, status, touched, values, setFieldValue, handleChange }) => {
                 return (
                     <Box w="100%">
                         <Form>
@@ -397,11 +395,18 @@ const AddRewardToUser = ({ isSubmitting, onSubmit, mutationError }) => {
                                                 )}
                                             </GridItem>
 
-                                            <RewardPreviewCard
-                                                rewardTypeId={values.rewardTypeId}
-                                                rewardTypes={rewardTypes}
-                                            />
-
+                                            <GridItem colSpan={{ base: 1 }}>
+                                                <FormLabel ms="4px" fontSize="md" fontWeight="bold">
+                                                    Add Reward Directly
+                                                </FormLabel>
+                                                <Switch
+                                                    name="addRewardDirectly"
+                                                    isChecked={
+                                                        values.addRewardDirectly ? true : false
+                                                    }
+                                                    onChange={handleChange}
+                                                />
+                                            </GridItem>
                                             <GridItem colSpan={{ base: 1, lg: 2 }}>
                                                 <FormLabel ms="4px" fontSize="md" fontWeight="bold">
                                                     Generated URL
@@ -413,6 +418,10 @@ const AddRewardToUser = ({ isSubmitting, onSubmit, mutationError }) => {
                                                     ref={generatedRef}
                                                 />
                                             </GridItem>
+                                            <RewardPreviewCard
+                                                rewardTypeId={values.rewardTypeId}
+                                                rewardTypes={rewardTypes}
+                                            />
                                         </SimpleGrid>
 
                                         {status && (

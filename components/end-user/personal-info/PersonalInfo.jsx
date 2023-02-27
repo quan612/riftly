@@ -391,7 +391,7 @@ const ConnectionsInfo = ({ session }) => {
                             variant="riftly"
                             ms="4px"
                             disabled={true}
-                            value={"fsdfdf"}
+                            value={"placeholder"}
                         />
                     </GridItem>
                     <GridItem colSpan={1}>

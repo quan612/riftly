@@ -76,7 +76,7 @@ const userClaimRewardAPI = async (req, res) => {
                 // need to post embeded message to a discord channel
                 if (discordChannels.length > 0) {
                     console.log("Posting embeded message to discord channels...")
-                    console.log(discordChannels[0])
+
                     let variables = await prisma.questVariables.findFirst();
                     const { discordBotToken } = variables;
 
