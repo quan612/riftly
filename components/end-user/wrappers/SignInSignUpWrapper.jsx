@@ -22,7 +22,7 @@ import {
     WalletConnectIcon,
 } from "@components/shared/Icons";
 import { useRouter } from "next/router";
-import debounce from "@utils/debounce";
+
 import { ShortContainer } from "containers/user";
 
 import { signIn } from "next-auth/react";
@@ -30,7 +30,7 @@ import axios from "axios";
 import { ChakraBox } from "@theme/additions/framer/FramerChakraComponent";
 import { getDiscordAuthLink, getTwitterAuthLink } from "@utils/helpers";
 import Loading from "@components/shared/LoadingContainer/Loading";
-import { sleep } from "@utils/index";
+import { debounce, sleep } from "@utils/index";
 import Enums from "@enums/index";
 
 import * as gtag from "@lib/ga/gtag";
