@@ -39,9 +39,8 @@ export const createReward = async (rewardTypeId, quantity, userId) => {
             },
             create: {
                 // userId,
-                quantity,
                 // rewardTypeId,
-
+                quantity,
                 rewardType: {
                     connect: {
                         id: parseInt(rewardTypeId),

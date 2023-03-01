@@ -1,9 +1,5 @@
 import React, { useEffect, useState, useCallback, useMemo, useContext } from "react";
 import { ErrorMessage, Field, Form, Formik, FieldArray, getIn } from "formik";
-import { object, array, string, number, ref } from "yup";
-import { utils } from "ethers";
-
-import { UsersContext } from "@context/UsersContext";
 
 import {
     Heading,
@@ -19,10 +15,11 @@ import {
 } from "@chakra-ui/react";
 
 import Enums from "@enums/index";
+import { UsersContext } from "@context/UsersContext";
 
 const FilterUsersSidebar = () => {
     const { filterObj, filterObjSet, resetFilter } = useContext(UsersContext);
-    console.log(filterObj);
+
     return (
         <Box>
             <Formik

@@ -49,6 +49,17 @@ export const withPendingRewardSubmit =
             );
         };
 
+export const useAdminBulkRewardsMutation = () => {
+    const { data, error, isError, isLoading, isSuccess, mutate, mutateAsync } = useMutation((payload) => {
+        return axios
+            .post(`${Enums.BASEPATH}/api/admin/reward/bulk`, payload)
+            .then((r) => r.data);
+
+    });
+
+    return [data, isLoading, mutateAsync];
+}
+
 export const withClaimableRewardQuery =
     (Component) =>
         ({ ...props }) => {

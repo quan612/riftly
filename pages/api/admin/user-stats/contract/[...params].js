@@ -1,6 +1,6 @@
 import { prisma } from "@context/PrismaContext";
 import { getWhiteListUserByUserId } from "repositories/user";
-import { adminMiddleware, withExceptionFilter } from "middlewares/";
+import { adminMiddleware } from "middlewares/";
 
 const Moralis = require("moralis").default;
 const ethers = require("ethers");

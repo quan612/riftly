@@ -286,13 +286,9 @@ const RewardCard = ({ image, id, onAction }) => {
             borderRadius="16px"
             // h="259px"
             w="100%"
-            // minW="200px"
             maxW="200px"
             className="redeem-card"
             display={"flex"}
-            // minH="100%"
-            // minW="120px"
-            // maxW={`${isMobile ? "50%" : "32%"}`}
         >
             <Flex direction={{ base: "column" }} h="100%">
                 <Box position="relative" h="37%" minH={"37%"} maxH="37%!important">

@@ -1,6 +1,6 @@
 import { prisma } from "@context/PrismaContext";
 import { getWhiteListUserByUserId } from "repositories/user";
-import { adminMiddleware, withExceptionFilter } from "middlewares/";
+import { adminMiddleware } from "middlewares/";
 const { EvmChain } = require("@moralisweb3/common-evm-utils");
 
 const Moralis = require("moralis").default;

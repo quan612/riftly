@@ -221,55 +221,52 @@ const AdminBulkUsersAdd = () => {
                                                     );
                                                 })}
                                             </Tbody>
-
-                                            <ButtonGroup mt="16px">
-                                                <Button
-                                                    variant="twitter"
-                                                    onClick={async () => {
-                                                        setInputFile(null);
-                                                        let payload = {
-                                                            usersArray,
-                                                        };
-
-                                                        let createManyOp = await bulkUsersAsync(
-                                                            payload
-                                                        );
-
-                                                        if (createManyOp.isError) {
-                                                            toast({
-                                                                title: "Error",
-                                                                description: ` ${createManyOp.message}`,
-                                                                position: "bottom-right",
-                                                                status: "error",
-                                                                duration: 3000,
-                                                            });
-                                                        } else {
-                                                            toast({
-                                                                title: "Succeed",
-                                                                description: `Added ${createManyOp.count} users`,
-                                                                position: "bottom-right",
-                                                                status: "success",
-                                                                duration: 3000,
-                                                            });
-                                                        }
-                                                        setInputFile(null);
-                                                        usersArraySet([]);
-                                                    }}
-                                                >
-                                                    Bulk Add
-                                                </Button>
-                                                <Button
-                                                    variant="discord"
-                                                    onClick={async () => {
-                                                        setInputFile(null);
-                                                        usersArraySet([]);
-                                                    }}
-                                                >
-                                                    Cancel
-                                                </Button>
-                                            </ButtonGroup>
                                         </Table>
                                     )}
+                                    <ButtonGroup mt="16px">
+                                        <Button
+                                            variant="twitter"
+                                            onClick={async () => {
+                                                setInputFile(null);
+                                                let payload = {
+                                                    usersArray,
+                                                };
+
+                                                let createManyOp = await bulkUsersAsync(payload);
+
+                                                if (createManyOp.isError) {
+                                                    toast({
+                                                        title: "Error",
+                                                        description: ` ${createManyOp.message}`,
+                                                        position: "bottom-right",
+                                                        status: "error",
+                                                        duration: 3000,
+                                                    });
+                                                } else {
+                                                    toast({
+                                                        title: "Succeed",
+                                                        description: `Added ${createManyOp.count} users`,
+                                                        position: "bottom-right",
+                                                        status: "success",
+                                                        duration: 3000,
+                                                    });
+                                                }
+                                                setInputFile(null);
+                                                usersArraySet([]);
+                                            }}
+                                        >
+                                            Bulk Add
+                                        </Button>
+                                        <Button
+                                            variant="discord"
+                                            onClick={async () => {
+                                                setInputFile(null);
+                                                usersArraySet([]);
+                                            }}
+                                        >
+                                            Cancel
+                                        </Button>
+                                    </ButtonGroup>
                                 </Card>
                             </Box>
                         </Flex>

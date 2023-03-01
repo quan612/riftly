@@ -80,7 +80,6 @@ const AddPendingRewardAPI = async (req, res) => {
                         const { discordBotToken } = variables;
 
                         if (discordBotToken.trim().length < 1) {
-
                             console.log("Missing bot token")
                         }
 
@@ -121,9 +120,8 @@ const AddPendingRewardAPI = async (req, res) => {
                         if (errorArray.length > 0) {
                             rewardOp.errorArray = errorArray
                         }
-
-                        return res.status(200).json(rewardOp);
                     }
+                    return res.status(200).json(rewardOp);
                 } else {
                     let pendingReward = await createPendingReward(rewardTypeId, quantity, user);
 

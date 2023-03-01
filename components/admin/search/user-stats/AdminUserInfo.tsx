@@ -21,10 +21,17 @@ import { FaCopy, FaDownload, FaFileCsv } from "react-icons/fa";
 import { useAdminRefreshUserStats } from "@shared/HOC/user";
 import { shortenAddress } from "@utils/shortenAddress";
 import { useCopyToClipboard } from "usehooks-ts";
-
 import moment from "moment";
+import { WhiteListAggregate } from "types/common";
 
-const AdminUserInfo = ({ userDetails }) => {
+
+
+
+interface UsersBannerProps {
+    userDetails?: WhiteListAggregate;
+};
+
+const AdminUserInfo = ({ userDetails }: UsersBannerProps) => {
     const [userStats, isQuerying, refreshUserStatsAsync] = useAdminRefreshUserStats();
     const {
         userId,
@@ -33,7 +40,7 @@ const AdminUserInfo = ({ userDetails }) => {
         email,
         twitterUserName,
         wallet,
-        google,
+        // google,
         userQuest,
         createdAt,
     } = userDetails;
@@ -122,7 +129,7 @@ const AdminUserInfo = ({ userDetails }) => {
                 </FormControl>
             )}
 
-            {google && google?.length > 0 && (
+            {/* {google && google?.length > 0 && (
                 <FormControl gap="8px">
                     <FormLabel fontSize="sm" fontWeight="200" mb="2px">
                         Google
@@ -133,7 +140,7 @@ const AdminUserInfo = ({ userDetails }) => {
                         </Text>
                     </Flex>
                 </FormControl>
-            )}
+            )} */}
 
             <FormControl gap="8px">
                 <FormLabel fontSize="sm" fontWeight="200" mb="2px">

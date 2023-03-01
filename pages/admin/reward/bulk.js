@@ -1,27 +1,21 @@
 import React from "react";
-import dynamic from "next/dynamic";
-const AdminUserStatsSearchComponent = dynamic(() =>
-    import("@components/admin/search/user-stats/AdminUserStatsSearch")
-);
+import { AdminLayout } from "@components/admin";
 
-const AdminSearchUserStatsPage = () => {
-    return (
-        <UsersProvider>
-            <AdminUserStatsSearchComponent />
-        </UsersProvider>
-    );
+import dynamic from "next/dynamic";
+const BulkRewardToUserComponent = dynamic(() => import("@components/admin/reward/BulkRewardsUsers"));
+
+const modsAddress = [];
+
+const AdminBulkRewards = ({ session }) => {
+    return <BulkRewardToUserComponent />;
 };
 
-AdminSearchUserStatsPage.Layout = AdminLayout;
-AdminSearchUserStatsPage.requireAdmin = true;
-export default AdminSearchUserStatsPage;
+AdminBulkRewards.Layout = AdminLayout;
+AdminBulkRewards.requireAdmin = true;
+export default AdminBulkRewards;
 
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "pages/api/auth/[...nextauth]";
-import { AdminLayout } from "@components/admin";
-import UsersProvider from "@context/UsersContext";
-
-
 export async function getServerSideProps(context) {
     const session = await getServerSession(context.req, context.res, authOptions);
     if (!session || session?.user?.isAdmin === false) {

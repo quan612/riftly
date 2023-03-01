@@ -1,15 +1,11 @@
 import React, { useEffect, useState, useCallback, useMemo, useContext } from "react";
-import { ErrorMessage, Field, Form, Formik, FieldArray, getIn } from "formik";
-import { object, array, string, number, ref } from "yup";
-import { utils } from "ethers";
+import { Field, Form, Formik } from "formik";
+import { object } from "yup";
 
 import {
     Heading,
     Box,
     Flex,
-    Link,
-    List,
-    ListItem,
     Text,
     Button,
     useColorMode,
@@ -51,7 +47,7 @@ import Loading from "@components/shared/LoadingContainer/Loading";
 
 import TablePagination from "./TablePagination";
 import RightSideBar from "@components/shared/RightSideBar";
-import Enums from "@enums/index";
+
 import {
     DiscordIcon,
     EmailIcon,
@@ -64,15 +60,20 @@ import {
     TwitterIcon,
     WalletIcon,
 } from "@components/shared/Icons";
-import { AiOutlineUser, AiOutlineSortAscending, AiOutlineSortDescending } from "react-icons/ai";
+import { AiOutlineUser } from "react-icons/ai";
 import { FaEllipsisH } from "react-icons/fa";
 import moment from "moment";
 import AdminUserInfo from "./AdminUserInfo";
 import FilterUsersSidebar from "./FilterUsersSidebar";
-import { downloadCsv, getNftOwners } from "./helper";
+import { downloadCsv } from "./helper";
+
+import type Prisma from "@prisma/client";
 import { UsersContext } from "@context/UsersContext";
 
-const UsersBanner = ({ downloadCsv }) => {
+interface UsersBannerProps {
+    downloadCsv?: () => void;
+};
+const UsersBanner = ({ downloadCsv } : UsersBannerProps) => {
     const { allUsers, filterSidebar } = useContext(UsersContext);
     return (
         <AdminBanner>
@@ -159,129 +160,6 @@ export default function AdminUserStatsSearch() {
         </Flex>
     );
 }
-
-const UserStatsSearchForm = ({ filterObj, onFormSubmit }) => {
-    const initialValues = filterObj;
-    const chains = ["eth", "polygon", "bsc", "avalance", "fantom"];
-
-    const SearchInfoSchema = object().shape({});
-    return (
-        <>
-            <Formik
-                initialValues={initialValues}
-                validationSchema={SearchInfoSchema}
-                onSubmit={async (fields) => {
-                    onFormSubmit(fields);
-                }}
-                validateOnBlur={false}
-                validateOnChange={false}
-            >
-                {({ formik, errors, status, touched, values }) => {
-                    return (
-                        <Box w="100%">
-                            <Form>
-                                <Flex
-                                    flexDirection={{
-                                        base: "row",
-                                    }}
-                                    w="100%"
-                                    h="100%"
-                                    justifyContent="center"
-                                    mb="20px"
-                                    mt={{ base: "50px", md: "20px" }}
-                                    gap="1%"
-                                >
-                                    <Box w={{ base: "100%" }} minW="100%">
-                                        <AdminCard>
-                                            <SimpleGrid
-                                                minChildWidth={"300px"}
-                                                columns={{ base: 2, md: 2 }}
-                                                columnGap={8}
-                                                rowGap={4}
-                                                w="full"
-                                            >
-                                                <GridItem colSpan={1}>
-                                                    <FormControl mb="24px">
-                                                        <FormLabel
-                                                            ms="4px"
-                                                            fontSize="md"
-                                                            fontWeight="bold"
-                                                        >
-                                                            Contract Address
-                                                        </FormLabel>
-                                                        <Field
-                                                            name="contract"
-                                                            type="text"
-                                                            as={Input}
-                                                            variant={"riftly"}
-                                                            fontSize="sm"
-                                                        />
-                                                    </FormControl>
-                                                </GridItem>
-                                                <GridItem colSpan={1}>
-                                                    <FormControl mb="24px">
-                                                        <FormLabel
-                                                            ms="4px"
-                                                            fontSize="md"
-                                                            fontWeight="bold"
-                                                        >
-                                                            Wallet Address
-                                                        </FormLabel>
-                                                        <Field
-                                                            name="wallet"
-                                                            type="text"
-                                                            as={Input}
-                                                            variant={"riftly"}
-                                                        />
-                                                    </FormControl>
-                                                </GridItem>
-                                                <GridItem colSpan={1}>
-                                                    <FormControl mb="24px">
-                                                        <FormLabel
-                                                            ms="4px"
-                                                            fontSize="md"
-                                                            fontWeight="bold"
-                                                        >
-                                                            Chain
-                                                        </FormLabel>
-                                                        <Field name="chainId" as={Select}>
-                                                            {chains.map((type, index) => {
-                                                                return (
-                                                                    <option
-                                                                        key={index}
-                                                                        value={type}
-                                                                    >
-                                                                        {type}
-                                                                    </option>
-                                                                );
-                                                            })}
-                                                        </Field>
-                                                    </FormControl>
-                                                </GridItem>
-                                            </SimpleGrid>
-
-                                            <Button
-                                                w={{ base: "200px" }}
-                                                my="12px"
-                                                type="submit"
-                                                colorScheme="teal"
-                                                size="lg"
-                                                // isLoading={isSubmitting}
-                                                // disabled={isSubmitButtonDisabled(values)}
-                                            >
-                                                Filter
-                                            </Button>
-                                        </AdminCard>
-                                    </Box>
-                                </Flex>
-                            </Form>
-                        </Box>
-                    );
-                }}
-            </Formik>
-        </>
-    );
-};
 
 const ResultTable = ({ data }) => {
     const { filterSidebar, userSidebar, userDetails, viewUserDetails } = useContext(UsersContext);
@@ -410,7 +288,7 @@ const ResultTable = ({ data }) => {
                                 return (
                                     <Tr {...row.getRowProps(getRowProps(row))} key={index}>
                                         {row.cells.map((cell, index) => {
-                                            let data = "";
+                                            let data:any;
 
                                             data = getCellValue(cell, viewUserDetails);
 
@@ -451,9 +329,9 @@ const ResultTable = ({ data }) => {
     );
 };
 
-const getUsername = (userObj) => {
-    const { email, discordUserDiscriminator, twitterUserName, wallet, google, avatar } = userObj;
-
+const getUsername = (userObj: Prisma.WhiteList) => {
+    const { email, discordUserDiscriminator, twitterUserName, wallet, avatar } = userObj;
+   
     return (
         <Flex alignItems={"center"} gap={{ base: "8px", lg: "1rem" }}>
             <Box>
