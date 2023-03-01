@@ -31,6 +31,7 @@ const TablePagination = ({ tableInstance }) => {
             <Flex>
                 <Tooltip label="First Page">
                     <IconButton
+                        aria-label="Go to first page"
                         onClick={() => gotoPage(0)}
                         isDisabled={!canPreviousPage}
                         icon={<ArrowLeftIcon h={3} w={3} />}
@@ -39,6 +40,7 @@ const TablePagination = ({ tableInstance }) => {
                 </Tooltip>
                 <Tooltip label="Previous Page">
                     <IconButton
+                        aria-label="Go to previous page"
                         onClick={previousPage}
                         isDisabled={!canPreviousPage}
                         icon={<ChevronLeftIcon h={6} w={6} />}
@@ -47,7 +49,9 @@ const TablePagination = ({ tableInstance }) => {
             </Flex>
 
             <Flex alignItems="center">
-                <Text flexShrink="0" mr={8}>
+                <Text 
+                // flexShrink="0"
+                 mr={8}>
                     Page{" "}
                     <Text fontWeight="bold" as="span">
                         {pageIndex + 1}
@@ -57,15 +61,17 @@ const TablePagination = ({ tableInstance }) => {
                         {pageOptions?.length}
                     </Text>
                 </Text>
-                <Text flexShrink="0">Go to page:</Text>{" "}
+                <Text 
+                // flexShrink="0"
+                >Go to page:</Text>{" "}
                 <NumberInput
                     ml={2}
                     mr={8}
                     w={28}
                     min={1}
                     max={pageOptions?.length}
-                    onChange={(value) => {
-                        const page = value ? value - 1 : 0;
+                    onChange={(value: any) => {
+                        const page = value ? value  - 1 : 0;
                         gotoPage(page);
                     }}
                     defaultValue={pageIndex + 1}
@@ -94,6 +100,7 @@ const TablePagination = ({ tableInstance }) => {
             <Flex>
                 <Tooltip label="Next Page">
                     <IconButton
+                        aria-label="Go to next page"
                         onClick={nextPage}
                         isDisabled={!canNextPage}
                         icon={<ChevronRightIcon h={6} w={6} />}
@@ -101,6 +108,7 @@ const TablePagination = ({ tableInstance }) => {
                 </Tooltip>
                 <Tooltip label="Last Page">
                     <IconButton
+                        aria-label="Go to last page"
                         onClick={() => gotoPage(pageCount - 1)}
                         isDisabled={!canNextPage}
                         icon={<ArrowRightIcon h={3} w={3} />}
