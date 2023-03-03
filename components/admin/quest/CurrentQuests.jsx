@@ -5,7 +5,6 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { EditQuest, AddQuest } from "..";
 import { useAdminQuestSoftDelete, withAdminQuestQuery } from "shared/HOC/quest";
-import { debounce } from "util";
 
 import {
     Heading,
@@ -34,6 +33,7 @@ import { MdPreview } from "react-icons/md";
 import EditQuestModal from "./EditQuestModal";
 import AddQuestModal from "./AddQuestModal";
 import { RiftlyCheckMark, RiftlyEditIcon } from "@components/shared/Icons";
+import { debounce } from "@util/index";
 
 const CurrentQuests = ({ quests, isLoading, error }) => {
     let router = useRouter();

@@ -31,7 +31,7 @@
       "@styles/*": [
         "styles/*"
       ],
-      "@utils/*": [
+      "@util/*": [
         "util/*"
       ],
       "@repository/*": [

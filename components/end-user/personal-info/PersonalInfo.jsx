@@ -28,7 +28,7 @@ import {
 import { RiftlyFace } from "@components/shared/Logo";
 import axios from "axios";
 
-import { debounce } from "util";
+import { debounce } from "@util/index";
 import { RiftlyTooltip } from "@components/shared/Icons";
 import UploadAvatarModal from "../shared/UploadAvatarModal";
 import { shortenAddress } from "util/shortenAddress";

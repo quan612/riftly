@@ -8,7 +8,7 @@
         "paths": {
             "@components/*": ["components/*"],
             "@styles/*": ["styles/*"],
-            "@utils/*": ["utils/*"],
+            "@util/*": ["util/*"],
             "@repository/*": ["repository/*"],
             "@context/*": ["context/*"],
             "@shared/*": ["shared/*"],
