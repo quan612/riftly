@@ -72,7 +72,7 @@ export const MiniStatistics = (props) => {
               }}>
               {value}
             </StatNumber>
-            {growth ? (
+            {growth !== null ? (
               <Flex align='center'>
                 <Text color={`${growth > 0 ? "green.500" : "red.400"}`} fontSize='xs' fontWeight='700' me='5px'>
                   {growth}%
