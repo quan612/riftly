@@ -52,8 +52,8 @@ const routes = [
         path: "/admin/search/user-quests",
       },
       {
-        name: "User Stats",
-        path: "/admin/search/user-stats",
+        name: "Users",
+        path: "/admin/search/users",
       },
     ],
   },

@@ -3,7 +3,7 @@ import { adminMiddleware, withExceptionFilter } from "middlewares/";
 import { ApiError } from 'next/dist/server/api-utils';
 
 
-let skipNumber = 25
+let skipNumber = 3500
 const adminUserStatsAPI = async (req, res) => {
     const { method } = req;
 
@@ -14,6 +14,7 @@ const adminUserStatsAPI = async (req, res) => {
 
             const userCount = await prisma.whiteList.count();
 
+            console.time()
             const users = await prisma.whiteList.findMany({
                 where: userCondition,
                 skip: currentPage * skipNumber,
@@ -24,11 +25,11 @@ const adminUserStatsAPI = async (req, res) => {
                     },
                 ],
                 select: {
-                    _count: {
-                        select: {
-                            userQuest: true
-                        }
-                    },
+                    // _count: {
+                    //     select: {
+                    //         userQuest: true
+                    //     }
+                    // },
                     wallet: true,
                     twitterUserName: true,
                     discordUserDiscriminator: true,
@@ -49,15 +50,14 @@ const adminUserStatsAPI = async (req, res) => {
                             quest: {
                                 select: {
                                     text: true,
-
                                 }
                             },
                             updatedAt: true,
                             hasClaimed: true
                         },
-                        orderBy: {
-                            updatedAt: 'desc',
-                        },
+                        // orderBy: {
+                        //     updatedAt: 'desc',
+                        // },
                     }
                 },
             });
@@ -70,8 +70,9 @@ const adminUserStatsAPI = async (req, res) => {
                 searchRes.shouldContinue = true;
             }
 
-            searchRes.shouldContinue = false;
-            res.setHeader('Cache-Control', 'max-age=0, s-maxage=18000, stale-while-revalidate');
+            // searchRes.shouldContinue = false;
+            console.timeEnd()
+            res.setHeader('Cache-Control', 'max-age=0, s-maxage=3600, stale-while-revalidate');
             return res.status(200).json(searchRes);
         } catch (error) {
             console.log(error)
