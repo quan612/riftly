@@ -1,3 +1,4 @@
+import { WALLET } from "@enums/index";
 import adminMiddleware from "@middlewares/adminMiddleware";
 import { prisma } from "context/PrismaContext";
 import { getAccountStatusToAdd } from "repositories/user";
@@ -15,7 +16,8 @@ const AdminUserAddAPI = async (req, res) => {
                         usersArray.map(user => {
                             return {
                                 wallet: user.wallet,
-                                status: accountStatus
+                                status: accountStatus,
+                                signUpOrigin: WALLET
                             }
                         })
                     ,

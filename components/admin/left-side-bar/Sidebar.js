@@ -38,7 +38,7 @@ import { useRouter } from "next/router";
 // } from "components/Scrollbar/Scrollbar";
 // import { HSeparator } from "components/Separator/Separator";
 // import { SidebarHelp } from "components/Sidebar/SidebarHelp";
-import React from "react";
+import React, { useCallback } from "react";
 
 // import { Scrollbars } from "react-custom-scrollbars";
 
@@ -55,7 +55,6 @@ function Sidebar(props) {
   const router = useRouter()
   const [state, setState] = React.useState({});
 
-
   const mainPanel = React.useRef();
   let variantChange = "0.2s linear";
 
@@ -67,7 +66,7 @@ function Sidebar(props) {
   };
 
   // this function creates the links and collapses that appear in the sidebar (left menu)
-  const createLinks = (routes) => {
+  const createLinks = useCallback((routes) => {
     // Chakra Color Mode
     let activeBg = useColorModeValue("white", "navy.700");
     let inactiveBg = useColorModeValue("white", "navy.700");
@@ -76,7 +75,7 @@ function Sidebar(props) {
     let sidebarActiveShadow = "0px 7px 11px rgba(0, 0, 0, 0.04)";
     return routes?.map((prop, key) => {
 
-      if (prop.category) {
+      if (prop?.category) {
         return (
           <Accordion allowMultiple key={key}>
             <AccordionItem key={key} border="none">
@@ -182,10 +181,10 @@ function Sidebar(props) {
         </Link>
       );
     });
-  };
+  }, [window]);
   const { logo, routes } = props;
 
-  var links = <>{createLinks(routes)}</>;
+  var links = <>{routes && createLinks(routes)}</>;
 
   let sidebarRadius = "20px";
   let sidebarMargins = "0px";

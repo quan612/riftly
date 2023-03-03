@@ -1,8 +1,8 @@
 import { utils } from "ethers";
 import { prisma } from "@context/PrismaContext";
-import Enums from "@enums/index";
+import Enums, { EMAIL } from "@enums/index";
 
-import { validateEmail } from "@utils/index";
+import { validateEmail } from "util/index";
 import { getAccountStatusToAdd } from "repositories/user";
 const bcrypt = require("bcrypt")
 
@@ -45,7 +45,8 @@ export default async function emailSignUp(req, res) {
                     data: {
                         email,
                         password: hash,
-                        status: accountStatus
+                        status: accountStatus,
+                        signUpOrigin: EMAIL
                     },
                 });
 

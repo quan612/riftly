@@ -13,7 +13,7 @@ import DiscordProvider from "next-auth/providers/discord";
 import TwitterProvider from "next-auth/providers/twitter";
 import UAuth from "@uauth/js";
 import { getVariableConfig } from "repositories/config";
-import { validateEmail } from "@utils/index";
+import { validateEmail } from "util/index";
 const { default: Resolution } = require("@unstoppabledomains/resolution");
 const resolution = new Resolution();
 

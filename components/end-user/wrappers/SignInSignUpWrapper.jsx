@@ -28,9 +28,9 @@ import { ShortContainer } from "containers/user";
 import { signIn } from "next-auth/react";
 import axios from "axios";
 import { ChakraBox } from "@theme/additions/framer/FramerChakraComponent";
-import { getDiscordAuthLink, getTwitterAuthLink } from "@utils/helpers";
+import { getDiscordAuthLink, getTwitterAuthLink } from "util/helpers";
 import Loading from "@components/shared/LoadingContainer/Loading";
-import { debounce, sleep } from "@utils/index";
+import { debounce, sleep } from "util/index";
 import Enums from "@enums/index";
 
 import * as gtag from "@lib/ga/gtag";

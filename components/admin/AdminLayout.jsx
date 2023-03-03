@@ -5,11 +5,13 @@ import MainPanel from "./layout/MainPanel";
 import PanelContent from "./layout/PanelContent";
 import PanelContainer from "./layout/PanelContainer";
 import routes from "./routes";
-import AdminNavbar from "./nav/AdminNavbar";
-import Sidebar from "./left-side-bar/Sidebar";
+
 import { RiftlyLogoWhiteText } from "@components/shared/Logo";
-import { signOut } from "next-auth/react";
 import { useRouter } from "next/router";
+import dynamic from "next/dynamic";
+
+const Sidebar = dynamic(() => import("./left-side-bar/Sidebar"), { ssr: false });
+const AdminNavbar = dynamic(() => import("./nav/AdminNavbar"), { ssr: false });
 
 export default function AdminLayout({ session, children }) {
     const [fixed, setFixed] = useState(false);
@@ -17,15 +19,8 @@ export default function AdminLayout({ session, children }) {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const router = useRouter();
 
-    // React.useEffect(() => {
-    //     console.log(session);
-    //     if (!session || (session && session?.user?.isAdmin === false)) {
-    //         router.push("/admin/sign-in");
-    //     }
-    // }, [session]);
-
     const getActiveRoute = (routes) => {
-        let activeRoute = "Default";
+        let activeRoute = "";
 
         for (let i = 0; i < routes.length; i++) {
             // new

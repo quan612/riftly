@@ -22,6 +22,11 @@ const Enums = {
     WEEKLY: "weekly",
     MONTHLY: "monthly",
 
+    THIS_MONTH: "This Month",
+    LAST_MONTH: "Last Month",
+    LAST_YEAR: "Last Year",
+    THIS_YEAR: "This Year",
+
     // quest related
     JOIN_DISCORD: "Join our Discord",
 

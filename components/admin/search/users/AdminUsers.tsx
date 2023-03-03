@@ -41,7 +41,7 @@ import { useGlobalFilter, usePagination, useSortBy, useTable } from "react-table
 import { BsFilter } from "react-icons/bs";
 import { FaCopy, FaDownload, FaFileCsv } from "react-icons/fa";
 
-import { shortenAddress } from "@utils/shortenAddress";
+import { shortenAddress } from "util/shortenAddress";
 
 import Loading from "@components/shared/LoadingContainer/Loading";
 
@@ -142,7 +142,7 @@ const UsersBanner = ({ downloadCsv } : UsersBannerProps) => {
     );
 };
 
-export default function AdminUserStatsSearch() {
+export default function AdminUsers() {
     const { isLoadingUserStats, filterUsers } = useContext(UsersContext);
 
     return (
@@ -160,6 +160,16 @@ export default function AdminUserStatsSearch() {
         </Flex>
     );
 }
+
+const customFilterRewardsRange = (rows, id, filterValue) => {
+    if (filterValue?.minQty > 0) {
+        return rows.filter(
+            (row) =>
+                row.original[id] >= filterValue.minQty && row.original[id] <= filterValue.maxQty
+        );
+    }
+    return rows;
+};
 
 const ResultTable = ({ data }) => {
     const { filterSidebar, userSidebar, userDetails, viewUserDetails } = useContext(UsersContext);

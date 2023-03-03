@@ -11,7 +11,7 @@ import { useUserRewardQuery } from "@shared/HOC";
 
 import { ChakraBox } from "@theme/additions/framer/FramerChakraComponent";
 import { HeadingSm, TextMd } from "@components/shared/Typography";
-import { getUserName } from "@utils/index";
+import { getUserName } from "util/index";
 import { RiftlyIcon } from "@components/shared/Icons";
 import { RiftlyFace } from "@components/shared/Logo";
 

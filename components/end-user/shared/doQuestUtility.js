@@ -1,5 +1,5 @@
 import Enums from "enums";
-import { getDiscordAuthLink, getTwitterAuthLink } from "@utils/helpers";
+import { getDiscordAuthLink, getTwitterAuthLink } from "util/helpers";
 
 /*@dev
  * if DISCORD_AUTH || TWITTER_AUTH, we do separated quest through redirect links

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext, useCallback } from "react";
-import { debounce } from "@utils/index";
+import { debounce } from "util/index";
 import { useRouter } from "next/router";
 
 import {

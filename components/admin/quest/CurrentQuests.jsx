@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { EditQuest, AddQuest } from "..";
 import { useAdminQuestSoftDelete, withAdminQuestQuery } from "shared/HOC/quest";
-import { debounce } from "utils/";
+import { debounce } from "util";
 
 import {
     Heading,

@@ -2,7 +2,7 @@ import React from "react";
 
 import PageViewsChart from "./google/PageViewsChart";
 import UsersByChart from "./google/UsersByChart";
-import { Heading, Box } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import Dashboard from "./views/Dashboard";
 const AdminGoogleAnalytics = () => {
     return (

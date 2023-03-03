@@ -3,7 +3,7 @@ import { adminMiddleware, withExceptionFilter } from "middlewares/";
 import { ApiError } from 'next/dist/server/api-utils';
 
 
-let skipNumber = 20
+let skipNumber = 25
 const adminUserStatsAPI = async (req, res) => {
     const { method } = req;
 
@@ -39,6 +39,7 @@ const adminUserStatsAPI = async (req, res) => {
                     createdAt: true,
                     rewards: {
                         select: {
+                            rewardTypeId: true,
                             rewardType: true,
                             quantity: true
                         }
@@ -53,23 +54,21 @@ const adminUserStatsAPI = async (req, res) => {
                             },
                             updatedAt: true,
                             hasClaimed: true
-
                         },
                         orderBy: {
                             updatedAt: 'desc',
                         },
-
                     }
                 },
             });
 
             searchRes.userCount = userCount;
             searchRes.users = users;
-            // if (currentPage * skipNumber >= userCount) {
-            //     searchRes.shouldContinue = false;
-            // } else {
-            //     searchRes.shouldContinue = true;
-            // }
+            if (currentPage * skipNumber >= userCount) {
+                searchRes.shouldContinue = false;
+            } else {
+                searchRes.shouldContinue = true;
+            }
 
             searchRes.shouldContinue = false;
             res.setHeader('Cache-Control', 'max-age=0, s-maxage=18000, stale-while-revalidate');
@@ -84,3 +83,9 @@ const adminUserStatsAPI = async (req, res) => {
 };
 
 export default withExceptionFilter(adminMiddleware(adminUserStatsAPI));
+
+export const config = {
+    api: {
+        responseLimit: '8mb',
+    },
+}

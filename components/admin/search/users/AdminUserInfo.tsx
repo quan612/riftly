@@ -19,7 +19,7 @@ import { BiRefresh } from "react-icons/bi";
 import { BsFilter } from "react-icons/bs";
 import { FaCopy, FaDownload, FaFileCsv } from "react-icons/fa";
 import { useAdminRefreshUserStats } from "@shared/HOC/user";
-import { shortenAddress } from "@utils/shortenAddress";
+import { shortenAddress } from "util/shortenAddress";
 import { useCopyToClipboard } from "usehooks-ts";
 import moment from "moment";
 import { WhiteListAggregate } from "types/common";

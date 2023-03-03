@@ -1,3 +1,4 @@
+import { DISCORD, TWITTER, WALLET } from "@enums/index";
 import { prisma } from "context/PrismaContext";
 import { getAccountStatusToAdd } from "./user";
 
@@ -36,6 +37,7 @@ export const updateTwitterUserQuestTransaction = async (quest, userId, userInfo)
                     twitterId: id,
                     twitterUserName: username,
                     status: accountStatus,
+                    signUpOrigin: TWITTER
                 },
             });
 
@@ -87,6 +89,7 @@ export const updateDiscordUserQuestTransaction = async (questId, userId, userInf
                     discordId: id,
                     discordUserDiscriminator: `${username}#${discriminator}`,
                     status: accountStatus,
+                    signUpOrigin: DISCORD
                 },
             });
 
@@ -130,6 +133,7 @@ export const updateUserWalletTransaction = async (questId, userId, wallet) => {
                 data: {
                     wallet,
                     status: accountStatus,
+                    signUpOrigin: WALLET
                 },
             });
             if (newUser) {

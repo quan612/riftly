@@ -1,6 +1,8 @@
 import { analyticsDataClient } from "../../../../context/GoogleApisContext";
 import adminMiddleware from "middlewares/adminMiddleware";
 import { prisma } from "@context/PrismaContext";
+import { THIS_YEAR, LAST_YEAR } from "@enums/index";
+import { getFirstDayOfLastYear, getFirstDayOfYear, getLastDayOfLastYear } from "@utils/index";
 
 async function AnalyticsUserByQuery(req, res) {
     const { method } = req;
@@ -8,92 +10,51 @@ async function AnalyticsUserByQuery(req, res) {
     switch (method) {
         case "POST":
             try {
-                const { byType } = req.body;
+                const { filterBy } = req.body;
 
-
-                let type = "browser"
                 let client = await analyticsDataClient();
 
                 let variables = await prisma.questVariables.findFirst()
 
                 const { googlePropertyId } = variables;
 
+                let startDate = "", endDate = ""
+                switch (filterBy) {
+                    case THIS_YEAR:
+                        startDate = getFirstDayOfYear().toISOString("YYYY-MM-DD").split('T')[0]; //google require YYYY-MM-DD
+                        endDate = "today";
+                        break;
+                    case LAST_YEAR:
+                        startDate = getFirstDayOfLastYear().toISOString("YYYY-MM-DD").split('T')[0];
+                        endDate = getLastDayOfLastYear().toISOString("YYYY-MM-DD").split('T')[0];
+                        break;
+                    default:
+                }
+
+
                 const [response] = await client.runReport({
                     property: `properties/${googlePropertyId}`,
 
-                    // {
-                    //     dimensions: [
-                    //         {
-                    //             name: 'country',
-                    //         },
-                    //         {
-                    //             name: 'region',
-                    //         },
-                    //         {
-                    //             name: 'city',
-                    //         },
-                    //     ],
-                    //     metrics,
-                    //     dateRanges: [
-                    //         {
-                    //             startDate: '2023-01-01',
-                    //             endDate: 'today',
-                    //         },
-                    //     ],
-                    // },
-                    // {
-                    //     dimensions: [
-                    //         {
-                    //             name: 'browser',
-                    //         },
-                    //     ],
-                    //     metrics,
-                    //     dateRanges: [
-                    //         {
-                    //             startDate: '2023-01-01',
-                    //             endDate: 'today',
-                    //         },
-                    //     ],
-                    // },
-
                     dimensions: [
                         {
-                            name: "browser",
+                            name: "deviceCategory",
                         },
                     ],
                     metrics: [
                         {
                             name: "totalUsers",
                         },
-                        // {
-                        //     name: "screenPageViews"
-                        // },
-                        // {
-                        //     name: "sessions"
-                        // },
-                        // {
-                        //     name: "sessionsPerUser"
-                        // },
-                        // {
-                        //     name: "bounceRate"
-                        // },
+
                     ],
                     dateRanges: [
                         {
-                            startDate: "2023-01-01",
-                            endDate: "today",
+                            startDate: startDate, //"2023-01-01",
+                            endDate,
                         },
                     ],
                 });
 
-                // console.log(response)
-                // printRunReportResponse(response);
-                // response.reports.forEach(report => {
-                //     printRunReportResponse(report);
-                // });
-
-                // console.log(response?.rows[0]?.dimensionValues)
-                // console.log(response?.rows[0]?.metricValues)
+                res.setHeader('Cache-Control', 'max-age=0, s-maxage=3600, stale-while-revalidate');
                 res.status(200).json(response);
             } catch (err) {
                 console.log(err)
@@ -129,3 +90,79 @@ function printRunReportResponse(response) {
     // [END analyticsdata_print_run_report_response_rows]
 }
 
+ // console.log(response)
+                // printRunReportResponse(response);
+                // response.reports.forEach(report => {
+                //     printRunReportResponse(report);
+                // });
+
+                // console.log(response?.rows[0]?.dimensionValues)
+                // console.log(response?.rows[0]?.metricValues)
+// let type = "browser"
+// const [response] = await client.runReport({
+//     property: `properties/${googlePropertyId}`,
+
+//     // {
+//     //     dimensions: [
+//     //         {
+//     //             name: 'country',
+//     //         },
+//     //         {
+//     //             name: 'region',
+//     //         },
+//     //         {
+//     //             name: 'city',
+//     //         },
+//     //     ],
+//     //     metrics,
+//     //     dateRanges: [
+//     //         {
+//     //             startDate: '2023-01-01',
+//     //             endDate: 'today',
+//     //         },
+//     //     ],
+//     // },
+//     // {
+//     //     dimensions: [
+//     //         {
+//     //             name: 'browser',
+//     //         },
+//     //     ],
+//     //     metrics,
+//     //     dateRanges: [
+//     //         {
+//     //             startDate: '2023-01-01',
+//     //             endDate: 'today',
+//     //         },
+//     //     ],
+//     // },
+
+//     dimensions: [
+//         {
+//             name: "deviceCategory",
+//         },
+//     ],
+//     metrics: [
+//         {
+//             name: "totalUsers",
+//         },
+//         // {
+//         //     name: "screenPageViews"
+//         // },
+//         // {
+//         //     name: "sessions"
+//         // },
+//         // {
+//         //     name: "sessionsPerUser"
+//         // },
+//         // {
+//         //     name: "bounceRate"
+//         // },
+//     ],
+//     dateRanges: [
+//         {
+//             startDate: "2023-01-01",
+//             endDate: "today",
+//         },
+//     ],
+// });

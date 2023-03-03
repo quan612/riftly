@@ -1,20 +1,26 @@
 import React from "react";
-import { AdminLayout } from "/components/admin";
 import dynamic from "next/dynamic";
-const AdminUserRewardSearchComponent = dynamic(() =>
-    import("@components/admin/search/users/AdminUserRewardSearch")
+const AdminUsersComponent = dynamic(() =>
+    import("@components/admin/search/users/AdminUsers")
 );
 
-const AdminUserRewardSearchPage = () => {
-    return <AdminUserRewardSearchComponent />;
+const AdminSearchUsersPage = () => {
+    return (
+        <UsersProvider>
+            <AdminUsersComponent />
+        </UsersProvider>
+    );
 };
 
-AdminUserRewardSearchPage.Layout = AdminLayout;
-AdminUserRewardSearchPage.requireAdmin = true;
-export default AdminUserRewardSearchPage;
+AdminSearchUsersPage.Layout = AdminLayout;
+AdminSearchUsersPage.requireAdmin = true;
+export default AdminSearchUsersPage;
 
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "pages/api/auth/[...nextauth]";
+import { AdminLayout } from "@components/admin";
+import UsersProvider from "@context/UsersContext";
+
 export async function getServerSideProps(context) {
     const session = await getServerSession(context.req, context.res, authOptions);
     if (!session || session?.user?.isAdmin === false) {

@@ -28,7 +28,7 @@ import {
 
 import { useDeviceDetect } from "lib/hooks";
 import { useRouter } from "next/router";
-import { debounce } from "@utils/index";
+import { debounce } from "util/index";
 import { ChakraBox } from "@theme/additions/framer/FramerChakraComponent";
 
 import "react-phone-number-input/style.css";

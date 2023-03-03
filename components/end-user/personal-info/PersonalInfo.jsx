@@ -28,11 +28,11 @@ import {
 import { RiftlyFace } from "@components/shared/Logo";
 import axios from "axios";
 
-import { debounce } from "utils/";
+import { debounce } from "util";
 import { RiftlyTooltip } from "@components/shared/Icons";
 import UploadAvatarModal from "../shared/UploadAvatarModal";
-import { shortenAddress } from "@utils/shortenAddress";
-import { getDiscordAuthLink, getTwitterAuthLink } from "@utils/helpers";
+import { shortenAddress } from "util/shortenAddress";
+import { getDiscordAuthLink, getTwitterAuthLink } from "util/helpers";
 
 const PersonalInfo = ({ session }) => {
     return (

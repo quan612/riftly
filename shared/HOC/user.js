@@ -4,6 +4,21 @@ import Enums from "enums";
 // import type Prisma from "@prisma/client";
 
 
+export const useAdminUsersSimpleStatisticsQuery = () => {
+    const { data, isLoading } = useQuery("admin-query-users-simple-statistics", async () => {
+
+
+        return axios
+            .get(`${Enums.BASEPATH}/api/admin/user/simple-statistics`)
+            .then((r) => r.data);
+
+    }, { staleTime: 60 });
+
+    return { data, isLoading };
+
+}
+
+
 // interface UsersSearchRes {
 //     users?: Prisma.WhiteList[],
 //     shouldContinue?: boolean

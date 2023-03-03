@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { object, array, string, number } from "yup";
 
-import { debounce } from "utils/";
+import { debounce } from "util";
 import {
     useAdminDiscordChannelsMutation,
     useAdminDiscordChannelsQuery,

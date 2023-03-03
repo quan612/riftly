@@ -32,7 +32,7 @@
         "styles/*"
       ],
       "@utils/*": [
-        "utils/*"
+        "util/*"
       ],
       "@repository/*": [
         "repository/*"

@@ -21,7 +21,7 @@ import { useDeviceDetect } from "lib/hooks";
 
 import { AnimatePresence } from "framer-motion";
 import { RiftlyIcon } from "@components/shared/Icons";
-import { sleep } from "@utils/index";
+import { sleep } from "util/index";
 import axios from "axios";
 import { useUserRewardQuery } from "@shared/HOC";
 

@@ -14,9 +14,20 @@ import {
 import Card from "@components/shared/Card";
 import ApexLineChart from "@components/shared/Charts/ApexLineChart";
 import Enums from "@enums/index";
+import {
+    getFirstDayCurMonth,
+    getLastDayCurMonth,
+    getFirstDayPrevMonth,
+    getLastDayPrevMonth,
+    getFirstDayOfLastYear,
+    getLastDayOfLastYear,
+    getFirstDayOfYear,
+} from "@utils/index";
+import axios from "axios";
+import moment from "moment";
 import dynamic from "next/dynamic";
 
-import React, { useCallback, useRef } from "react";
+import React, { useCallback, useRef, useState, useEffect } from "react";
 import { IoCheckmarkCircle } from "react-icons/io5";
 import { MdBarChart, MdOutlineCalendarToday } from "react-icons/md";
 
@@ -26,27 +37,79 @@ const ApexCharts = dynamic(() => import("apexcharts"), { ssr: false });
 
 const chartId = "sign-up-user-line-chart";
 
+const { THIS_MONTH, LAST_MONTH, THIS_YEAR, LAST_YEAR, WALLET, DISCORD, TWITTER, EMAIL, GOOGLE } =
+    Enums;
+const updateOptionsData = {
+    "This Month": {
+        xaxis: {
+            // type: "datetime",
+            // min: getFirstDayCurMonth().getTime(),
+            // max: new Date(), //getLastDayCurMonth().getTime(), //new Date().getTime(), //getLastDayCurMonth().getTime() //new Date("05 Mar 2023").getTime()
+        },
+    },
+    "Last Month": {
+        xaxis: {
+            // type: "datetime",
+            // min: getFirstDayPrevMonth().getTime(),
+            // max: getLastDayPrevMonth().getTime(),
+            // tickAmount: 6,
+        },
+    },
+    "This Year": {
+        xaxis: {
+            type: "string",
+            // type: "string",
+            // min: getFirstDayOfYear().getTime(),
+            // max: new Date().getTime(),
+            // tickAmount: 6,
+        },
+    },
+    "Last Year": {
+        xaxis: {
+            type: "string",
+            // min: getFirstDayOfLastYear().getTime(),
+            // max: getLastDayOfLastYear().getTime(),
+            // tickAmount: 12,
+        },
+    },
+};
+
 const lineChartDataUserSignUp = [
     {
-        name: Enums.WALLET,
-        data: [50, 64, 48, 66, 49, 68],
+        name: WALLET,
+        data: [
+            { x: "02/01/2023", y: 50 },
+            { x: "02/02/2023", y: 64 },
+            { x: "02/03/2023", y: 48 },
+            { x: "02/04/2023", y: 66 },
+            { x: "02/21/2023", y: 49 },
+            { x: "02/25/2023", y: 68 },
+        ],
+        // data: [
+        //     { x: "JAN", y: 50 },
+        //     { x: "FEB", y: 64 },
+        //     { x: "MAR", y: 48 },
+        //     { x: "APR", y: 66 },
+        //     { x: "MAY", y: 49 },
+        //     { x: "JUN", y: 68 },
+        // ],
         fillColor: "#F6AD55",
     },
-    {
-        name: Enums.EMAIL,
-        data: [30, 40, 24, 46, 20, 46],
-        fillColor: "#68D391",
-    },
-    {
-        name: Enums.DISCORD,
-        data: [14, 22, 24, 36, 5, 6],
-        fillColor: "#B794F4",
-    },
-    {
-        name: Enums.TWITTER,
-        data: [24, 32, 44, 66, 25, 16],
-        fillColor: "#63B3ED",
-    },
+    // {
+    //     name: EMAIL,
+    //     data: [30, 40, 24, 46, 20, 46],
+    //     fillColor: "#68D391",
+    // },
+    // {
+    //     name: DISCORD,
+    //     data: [14, 22, 24, 36, 5, 6],
+    //     fillColor: "#B794F4",
+    // },
+    // {
+    //     name: TWITTER,
+    //     data: [24, 32, 44, 66, 25, 16],
+    //     fillColor: "#63B3ED",
+    // },
 ];
 
 const lineChartOptionsUserSignUp = {
@@ -66,7 +129,7 @@ const lineChartOptionsUserSignUp = {
             color: "#4318FF",
         },
     },
-    colors: ["#F6AD55", "#68D391", "#B794F4", "#63B3ED"],
+    colors: ["#F6AD55", "#B794F4", "#63B3ED", "#68D391", "#FC8181"],
 
     markers: {
         size: 0,
@@ -94,24 +157,24 @@ const lineChartOptionsUserSignUp = {
         type: "line",
     },
     xaxis: {
-        // type: "numeric",
-        categories: ["SEP", "OCT", "NOV", "DEC", "JAN", "FEB"],
+        // type: "string",
+        // type: "datetime",
+        // min: getFirstDayPrevMonth().getTime(),
+        // max: getLastDayPrevMonth().getTime(),
         labels: {
+            show: true,
             style: {
                 colors: "#A3AED0",
                 fontSize: "12px",
                 fontWeight: "500",
             },
         },
-        axisBorder: {
-            show: false,
-        },
-        axisTicks: {
-            show: false,
-        },
+        decimalsInFloat: 0,
+        tickPlacement: "between",
     },
     yaxis: {
         show: false,
+        min: 0,
     },
     legend: {
         show: false,
@@ -119,88 +182,18 @@ const lineChartOptionsUserSignUp = {
     grid: {
         show: false,
         column: {
-            color: ["#7551FF", "#39B8FF"],
+            // color: ["#7551FF", "#39B8FF"],
             opacity: 0.5,
+        },
+        padding: {
+            left: 20,
+            right: 40, // Also you may want to increase this (based on the length of your labels)
         },
     },
     // color: ["#7551FF", "#39B8FF"],
 };
 
-const lineChartOptions = {
-    chart: {
-        toolbar: {
-            show: false,
-        },
-    },
-    tooltip: {
-        theme: "dark",
-    },
-    dataLabels: {
-        enabled: false,
-    },
-    stroke: {
-        curve: "smooth",
-    },
-    xaxis: {
-        // type: "datetime",
-        categories: [
-            "Jan",
-            "Feb",
-            "Mar",
-            "Apr",
-            "May",
-            "Jun",
-            "Jul",
-            "Aug",
-            "Sep",
-            "Oct",
-            "Nov",
-            "Dec",
-        ],
-        axisTicks: {
-            show: false,
-        },
-        axisBorder: {
-            show: false,
-        },
-        labels: {
-            style: {
-                colors: "#fff",
-                fontSize: "12px",
-            },
-        },
-    },
-    yaxis: {
-        labels: {
-            style: {
-                colors: "#fff",
-                fontSize: "12px",
-            },
-        },
-    },
-    legend: {
-        show: false,
-    },
-    grid: {
-        strokeDashArray: 5,
-    },
-    fill: {
-        type: "gradient",
-        gradient: {
-            shade: "light",
-            type: "vertical",
-            shadeIntensity: 0.5,
-            inverseColors: true,
-            opacityFrom: 0.8,
-            opacityTo: 0,
-            stops: [],
-        },
-        colors: ["#fff", "#3182CE"],
-    },
-    colors: ["#fff", "#3182CE"],
-};
-
-export default function UserSignUpLineChart(props) {
+export default function UserSignUpLineChart() {
     // Chakra Color Mode
 
     const textColor = useColorModeValue("secondaryGray.900", "white");
@@ -212,6 +205,117 @@ export default function UserSignUpLineChart(props) {
     const bgFocus = useColorModeValue({ bg: "secondaryGray.300" }, { bg: "whiteAlpha.100" });
 
     const chartRef = useRef();
+
+    const [lineChartData, lineChartDataSet] = useState([]);
+    const [filterBy, filterBySet] = useState(THIS_YEAR);
+    const [totalSignUp, totalSignUpSet] = useState(0);
+
+    const chartDataTranslation = useCallback((apiData, filterByVal) => {
+        const chartData = [];
+        const walletType = {
+            name: WALLET,
+            data: [],
+            fillColor: "#F6AD55",
+        };
+        const discordType = {
+            name: DISCORD,
+            data: [],
+            fillColor: "#B794F4",
+        };
+        const twitterType = {
+            name: TWITTER,
+            data: [],
+            fillColor: "#63B3ED",
+        };
+        const emailType = {
+            name: EMAIL,
+            data: [],
+            fillColor: "#68D391",
+        };
+        const googleType = {
+            name: GOOGLE,
+            data: [],
+            fillColor: "#FC8181",
+        };
+        let total = 0;
+        if (apiData) {
+            apiData?.forEach((r) => {
+                let dateVal =
+                    filterByVal === THIS_MONTH || filterByVal === LAST_MONTH
+                        ? moment.utc(r.dates).format("MMM-DD") //r.dates
+                        : moment.utc(r.dates).format("MMM");
+
+                let count = parseInt(r.count);
+                switch (r.signUpOrigin) {
+                    case WALLET:
+                        total += count;
+                        walletType.data.push({
+                            x: dateVal,
+                            y: count,
+                        });
+                        break;
+                    case DISCORD:
+                        total += count;
+                        discordType.data.push({
+                            x: dateVal,
+                            y: count,
+                        });
+                        break;
+                    case EMAIL:
+                        total += count;
+                        emailType.data.push({
+                            x: dateVal,
+                            y: count,
+                        });
+                        break;
+                    case TWITTER:
+                        total += count;
+                        twitterType.data.push({
+                            x: dateVal,
+                            y: count,
+                        });
+                        break;
+                    case GOOGLE:
+                        total += count;
+                        googleType.data.push({
+                            x: dateVal,
+                            y: count,
+                        });
+                        break;
+                    default:
+                }
+            });
+            chartData.push(walletType);
+            chartData.push(discordType);
+            chartData.push(twitterType);
+            chartData.push(emailType);
+            // chartData.push(googleType);
+        }
+
+        return { chartData, total };
+    }, []);
+
+    const handleFilterBy = async (filterByVal) => {
+        if (filterByVal !== filterBy) {
+            filterBySet(filterByVal);
+
+            let res = await axios
+                .post(`/api/admin/analytics/signup-statistics`, { filterBy: filterByVal })
+                .then((r) => r.data)
+                .catch((err) => console.log(err));
+
+            if (res?.isError) {
+            }
+            if (res?.length > 0) {
+                let { chartData, total } = await chartDataTranslation(res, filterByVal);
+                lineChartDataSet(chartData);
+                totalSignUpSet(total);
+            }
+        }
+    };
+    useEffect(() => {
+        handleFilterBy(LAST_MONTH);
+    }, []);
 
     return (
         <Card justifyContent="center" align="center" direction="column" w="100%" mb="0px" h="100%">
@@ -227,13 +331,37 @@ export default function UserSignUpLineChart(props) {
                             borderRadius="7px"
                         >
                             <Icon as={MdOutlineCalendarToday} color={textColorSecondary} me="4px" />
-                            This Year (placeholder)
+                            {filterBy}
                         </MenuButton>
                         <MenuList>
-                            <MenuItem>This Year</MenuItem>
-                            <MenuItem>Last Year</MenuItem>
-                            <MenuItem>This Month</MenuItem>
-                            <MenuItem>Last Month</MenuItem>
+                            <MenuItem
+                                onClick={() => {
+                                    handleFilterBy(THIS_YEAR);
+                                }}
+                            >
+                                {THIS_YEAR}
+                            </MenuItem>
+                            <MenuItem
+                                onClick={() => {
+                                    handleFilterBy(LAST_YEAR);
+                                }}
+                            >
+                                {LAST_YEAR}
+                            </MenuItem>
+                            <MenuItem
+                                onClick={() => {
+                                    handleFilterBy(THIS_MONTH);
+                                }}
+                            >
+                                {THIS_MONTH}
+                            </MenuItem>
+                            <MenuItem
+                                onClick={() => {
+                                    handleFilterBy(LAST_MONTH);
+                                }}
+                            >
+                                {LAST_MONTH}
+                            </MenuItem>
                         </MenuList>
                     </Menu>
                 </Flex>
@@ -247,7 +375,7 @@ export default function UserSignUpLineChart(props) {
                         fontWeight="700"
                         lineHeight="100%"
                     >
-                        250
+                        {totalSignUp}
                     </Text>
                     <Flex align="center" mb="20px">
                         <Text
@@ -271,7 +399,7 @@ export default function UserSignUpLineChart(props) {
                         <Checkbox
                             colorScheme={"orange"}
                             onChange={() =>
-                                window.ApexCharts.exec(chartId, "toggleSeries", [Enums.WALLET])
+                                window.ApexCharts.exec(chartId, "toggleSeries", [WALLET])
                             }
                             defaultChecked={true}
                         >
@@ -280,7 +408,7 @@ export default function UserSignUpLineChart(props) {
                         <Checkbox
                             colorScheme={"green"}
                             onChange={() =>
-                                window.ApexCharts.exec(chartId, "toggleSeries", [Enums.EMAIL])
+                                window.ApexCharts.exec(chartId, "toggleSeries", [EMAIL])
                             }
                             defaultChecked={true}
                         >
@@ -289,7 +417,7 @@ export default function UserSignUpLineChart(props) {
                         <Checkbox
                             colorScheme={"purple"}
                             onChange={() =>
-                                window.ApexCharts.exec(chartId, "toggleSeries", [Enums.DISCORD])
+                                window.ApexCharts.exec(chartId, "toggleSeries", [DISCORD])
                             }
                             defaultChecked={true}
                         >
@@ -298,7 +426,7 @@ export default function UserSignUpLineChart(props) {
                         <Checkbox
                             colorScheme={"blue"}
                             onChange={() =>
-                                window.ApexCharts.exec(chartId, "toggleSeries", [Enums.TWITTER])
+                                window.ApexCharts.exec(chartId, "toggleSeries", [TWITTER])
                             }
                             defaultChecked={true}
                         >
@@ -308,7 +436,7 @@ export default function UserSignUpLineChart(props) {
                 </Flex>
                 <Box minH="260px" minW="75%" mt="auto">
                     <ApexLineChart
-                        chartData={lineChartDataUserSignUp}
+                        chartData={lineChartData} // lineChartDataUserSignUp
                         chartOptions={lineChartOptionsUserSignUp}
                     />
                 </Box>

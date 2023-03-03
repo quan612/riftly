@@ -12,7 +12,7 @@ import {
 import { useSession } from "next-auth/react"
 import { ShortContainer } from "containers/user";
 import { RiftlyFace, RiftlyLogoWhite } from "@components/shared/Logo";
-import { getUserName } from "@utils/index";
+import { getUserName } from "util/index";
 import { LayoutWrapper } from "@components/end-user/UserLayout";
 
 

@@ -48,3 +48,13 @@ export const getUserName = (session) => {
 export function sleep(ms = 500) {
     return new Promise((res) => setTimeout(res, ms));
 }
+
+export const getTomorrow = () => new Date(new Date().setDate(new Date().getDate() + 1))
+export const getFirstDayCurMonth = () => new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+export const getLastDayCurMonth = () => new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0);
+export const getFirstDayPrevMonth = () => new Date(new Date().getFullYear(), new Date().getMonth() - 1, 1);
+export const getLastDayPrevMonth = () => new Date(new Date().getFullYear(), new Date().getMonth(), 0);
+export const getFirstDayOfYear = () => new Date(new Date().getFullYear(), 0, 1);
+
+export const getFirstDayOfLastYear = () => new Date(new Date().getFullYear() - 1, 0, 1);
+export const getLastDayOfLastYear = () => new Date(new Date().getFullYear() - 1, 11, 31);

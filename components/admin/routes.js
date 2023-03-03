@@ -15,16 +15,9 @@ import React, { Component } from "react";
 const routes = [
   {
     name: "Dashboard",
-    // category: "Dashboard",
     path: "/admin",
     icon: <HomeIcon />,
-    // children: [
-    //   {
-    //     name: "Dashboard",
-    //     path: "/admin",
 
-    //   },
-    // ],
   },
   {
     name: "Reward",

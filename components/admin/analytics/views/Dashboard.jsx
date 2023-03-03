@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { AdminBanner, MiniStatistics } from "@components/shared/Card";
 import { IconBox } from "@components/shared/Icons";
-import { MdAddTask, MdAttachMoney, MdBarChart, MdFileCopy } from "react-icons/md";
+import { MdAddTask, MdAttachMoney, MdBarChart, MdFileCopy, MdPeopleAlt } from "react-icons/md";
+import { FiBarChart2 } from "react-icons/fi";
 import {
     Avatar,
     Box,
@@ -15,12 +16,14 @@ import {
     GridItem,
     Heading,
 } from "@chakra-ui/react";
-import Card from "@components/shared/Card";
+
 import dynamic from "next/dynamic";
 import UsersByDevicePieCart from "./UsersByDevicePieCart";
 import CompletedChallengesTable from "./CompletedChallengesTable";
 import TopCountriesTable from "./TopCountriesTable";
 import UserSignUpReferral from "./UserSignUpReferral";
+import { useAdminUsersSimpleStatisticsQuery } from "@shared/HOC/user";
+import axios from "axios";
 
 const UserSignUpLineChart = dynamic(() => import("./UserSignUpLineChart"), { ssr: false });
 
@@ -28,14 +31,31 @@ export default function Dashboard() {
     // Chakra Color Mode
     const brandColor = useColorModeValue("brand.500", "white");
     const boxBg = "brand.neutral3";
+
+    const { data: aggregatedUserStatistic, isLoading: isLoadingUsersStatistics } =
+        useAdminUsersSimpleStatisticsQuery();
+
+    const [totalSession, totalSessionSet] = useState(0);
+
+    useEffect(async () => {
+        let res = await axios
+            .get(`/api/admin/analytics/user-session`) //user-session  page-view
+            .then((r) => r.data)
+            .catch((err) => console.log(err));
+
+        if (!res.isError) {
+            let sessionTotal = res?.totals[0]?.metricValues[0].value;
+            totalSessionSet(sessionTotal);
+        }
+    }, []);
     return (
-        // <Box pt={{ base: "130px", md: "80px", xl: "50px" }}>
         <Box pt={{ base: "10px", md: "15px", xl: "15px" }}>
             <SimpleGrid columns={{ base: 1 }} gap="20px" mb="20px">
-                <DashboardBanner />
+                <HomeBanner />
             </SimpleGrid>
             <SimpleGrid columns={{ base: 1, md: 2, lg: 3, xl: 4 }} gap="20px" mb="20px">
                 <MiniStatistics
+                    isLoading={isLoadingUsersStatistics}
                     startContent={
                         <IconBox
                             w="56px"
@@ -46,9 +66,10 @@ export default function Dashboard() {
                         />
                     }
                     name="Total Users"
-                    value="11,111"
+                    value={aggregatedUserStatistic?.usersCount}
                 />
                 <MiniStatistics
+                    isLoading={isLoadingUsersStatistics}
                     startContent={
                         <IconBox
                             w="56px"
@@ -59,32 +80,34 @@ export default function Dashboard() {
                         />
                     }
                     name="Total User ETH Volume"
-                    value="$5555"
-                />
-                {/* <MiniStatistics growth="+23%" name="Sales" value="$574.34" /> */}
-                <MiniStatistics
-                    // startContent={
-                    //     <IconBox
-                    //         w="56px"
-                    //         h="56px"
-                    //         bg={boxBg}
-                    //         icon={<Icon w="32px" h="32px" as={MdAttachMoney} color={brandColor} />}
-                    //     />
-                    // }
-                    name="Total Users this week"
-                    value="300"
+                    value={aggregatedUserStatistic?.usersETH}
                 />
                 <MiniStatistics
-                    // startContent={
-                    //     <IconBox
-                    //         w="56px"
-                    //         h="56px"
-                    //         bg={boxBg}
-                    //         icon={<Icon w="32px" h="32px" as={MdAttachMoney} color={brandColor} />}
-                    //     />
-                    // }
+                    isLoading={isLoadingUsersStatistics}
+                    startContent={
+                        <IconBox
+                            w="56px"
+                            h="56px"
+                            bg={boxBg}
+                            borderRadius="50%"
+                            icon={<Icon w="32px" h="32px" as={MdPeopleAlt} color={brandColor} />}
+                        />
+                    }
+                    name="New Users this month"
+                    value={aggregatedUserStatistic?.newUsers?.newUsersThisMonth}
+                    growth={`${aggregatedUserStatistic?.newUsers?.growth}`}
+                />
+                <MiniStatistics
+                    startContent={
+                        <IconBox
+                            w="56px"
+                            h="56px"
+                            bg={boxBg}
+                            icon={<Icon w="32px" h="32px" as={FiBarChart2} color={brandColor} />}
+                        />
+                    }
                     name="Sessions this week"
-                    value="500"
+                    value={totalSession}
                 />
             </SimpleGrid>
             <SimpleGrid columns={{ base: 1, md: 2, lg: 3, xl: 4 }} gap="20px" mb="20px">
@@ -114,7 +137,7 @@ export default function Dashboard() {
     );
 }
 
-const DashboardBanner = () => {
+const HomeBanner = () => {
     return (
         <AdminBanner>
             <Flex

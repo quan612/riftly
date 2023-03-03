@@ -1,5 +1,5 @@
 import adminMiddleware from "@middlewares/adminMiddleware";
-import Enums from "enums";
+import Enums, { DISCORD, TWITTER, WALLET } from "enums";
 import { prisma } from "context/PrismaContext";
 import axios from "axios";
 import { utils } from "ethers";
@@ -45,7 +45,8 @@ const AdminUserAddAPI = async (req, res) => {
                         data: {
                             discordId: user,
                             discordUserDiscriminator: `${username}#${discriminator}`,
-                            status: accountStatus
+                            status: accountStatus,
+                            signUpOrigin: DISCORD
                         },
                     });
 
@@ -77,7 +78,8 @@ const AdminUserAddAPI = async (req, res) => {
                             data: {
                                 twitterId: id,
                                 twitterUserName: username,
-                                status: accountStatus
+                                status: accountStatus,
+                                signUpOrigin: TWITTER
                             },
                         });
 
@@ -98,7 +100,8 @@ const AdminUserAddAPI = async (req, res) => {
                         const newUser = await prisma.whiteList.create({
                             data: {
                                 wallet,
-                                status: accountStatus
+                                status: accountStatus,
+                                signUpOrigin: WALLET
                             },
                         });
 
