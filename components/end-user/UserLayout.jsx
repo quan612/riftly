@@ -32,7 +32,7 @@ export default function UserLayout({ session, children }) {
     // }, [session]);
 
     // React.useEffect(() => {
-    //     console.log(session);
+    //
     //     if (!session || (session && session?.user?.isAdmin)) {
     //         router.push("/user/sign-in");
     //     }

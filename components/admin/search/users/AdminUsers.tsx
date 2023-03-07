@@ -309,7 +309,7 @@ const ResultTable = ({ data }) => {
 
                                                 for (let chunk of chunkSplit) {
                                                     let payload = { selectedRows: chunk };
-                                                    console.log(payload);
+                                
 
                                                     await axios
                                                         .post(
@@ -628,19 +628,24 @@ const getUsername = (userObj: Prisma.WhiteList) => {
     );
 };
 
-const IndeterminateCheckbox = React.forwardRef(({ indeterminate, ...rest }, ref) => {
+const IndeterminateCheckbox = React.forwardRef(({ indeterminate, ...rest }:any, ref) => {
     const defaultRef = React.useRef();
     const resolvedRef = ref || defaultRef;
 
     React.useEffect(() => {
-        resolvedRef.current.indeterminate = indeterminate;
+        if(resolvedRef){
+            // resolvedRef.current.indeterminate = indeterminate;
+        }
+        
     }, [resolvedRef, indeterminate]);
 
     const {checked, onChange} = rest;
     return (
         <>
             {/* <input type="checkbox" ref={resolvedRef} {...rest} /> */}
-            <Checkbox ref={resolvedRef} isChecked={checked} onChange={onChange}/>
+            <Checkbox 
+            // ref={resolvedRef}
+             isChecked={checked} onChange={onChange}/>
         </>
     );
 });
