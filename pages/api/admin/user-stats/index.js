@@ -1,43 +1,34 @@
 import { prisma } from "@context/PrismaContext";
+import { PAGINATION_SKIP } from "@enums/index";
 import { adminMiddleware, withExceptionFilter } from "middlewares/";
 import { ApiError } from 'next/dist/server/api-utils';
 
+let skipNumber = PAGINATION_SKIP
 
-let skipNumber = 3500
 const adminUserStatsAPI = async (req, res) => {
     const { method } = req;
 
     if (method === "POST") {
         try {
             const currentPage = req.query?.page;
-            let searchRes = {}, userCondition = {};
 
-            const userCount = await prisma.whiteList.count();
+            let searchRes = {};
 
-            console.time()
+            // console.time(`RESPONSE TIME request ${currentPage}`)
             const users = await prisma.whiteList.findMany({
-                where: userCondition,
                 skip: currentPage * skipNumber,
                 take: skipNumber,
-                orderBy: [
-                    {
-                        createdAt: "asc",
-                    },
-                ],
                 select: {
-                    // _count: {
-                    //     select: {
-                    //         userQuest: true
-                    //     }
-                    // },
                     wallet: true,
                     twitterUserName: true,
+                    twitterId: true,
                     discordUserDiscriminator: true,
                     whiteListUserData: true,
                     email: true,
                     userId: true,
                     avatar: true,
                     createdAt: true,
+                    updatedAt: true,
                     rewards: {
                         select: {
                             rewardTypeId: true,
@@ -46,6 +37,8 @@ const adminUserStatsAPI = async (req, res) => {
                         }
                     },
                     userQuest: {
+                        skip: 0,
+                        take: 1,
                         select: {
                             quest: {
                                 select: {
@@ -55,23 +48,21 @@ const adminUserStatsAPI = async (req, res) => {
                             updatedAt: true,
                             hasClaimed: true
                         },
-                        // orderBy: {
-                        //     updatedAt: 'desc',
-                        // },
+                        orderBy: {
+                            updatedAt: 'desc',
+                        },
                     }
+                    // _count: {
+                    //     select: {
+                    //         userQuest: true
+                    //     }
+                    // },
                 },
             });
 
-            searchRes.userCount = userCount;
             searchRes.users = users;
-            if (currentPage * skipNumber >= userCount) {
-                searchRes.shouldContinue = false;
-            } else {
-                searchRes.shouldContinue = true;
-            }
 
-            // searchRes.shouldContinue = false;
-            console.timeEnd()
+            // console.timeEnd(`RESPONSE TIME request ${currentPage}`)
             res.setHeader('Cache-Control', 'max-age=0, s-maxage=3600, stale-while-revalidate');
             return res.status(200).json(searchRes);
         } catch (error) {

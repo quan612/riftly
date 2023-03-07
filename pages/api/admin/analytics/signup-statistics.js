@@ -1,5 +1,5 @@
 import Enums, { WALLET, TWITTER, DISCORD, EMAIL, GOOGLE } from "@enums/index";
-import { getFirstDayCurMonth, getFirstDayOfLastYear, getFirstDayOfYear, getFirstDayPrevMonth, getLastDayCurMonth, getLastDayOfLastYear, getLastDayPrevMonth, getTomorrow } from "@utils/index";
+import { getFirstDayCurMonth, getFirstDayOfLastYear, getFirstDayOfYear, getFirstDayPrevMonth, getLastDayCurMonth, getLastDayOfLastYear, getLastDayPrevMonth, getTomorrow } from "@util/index";
 import { prisma } from "context/PrismaContext";
 import adminMiddleware from "middlewares/adminMiddleware";
 import moment from "moment";

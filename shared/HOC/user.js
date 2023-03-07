@@ -18,32 +18,30 @@ export const useAdminUsersSimpleStatisticsQuery = () => {
 
 }
 
-
-// interface UsersSearchRes {
-//     users?: Prisma.WhiteList[],
-//     shouldContinue?: boolean
-// }
 export const useAdminUserStatsQuery = () => {
     const { data, isLoading } = useQuery("admin-query-user-stats", async () => {
+        // console.time()
+        let totalUsers = await axios.get(`/api/admin/user/count`).then(r => r.data); // || 100
+        let skip = Enums.PAGINATION_SKIP;// 100 
+        let totalPages = Math.ceil(totalUsers / skip);
 
-        // let data: Prisma.WhiteList[], page = 0,
-        //     searchRes: UsersSearchRes = {};
+        let data = [];
 
-        let data = [], page = 0,
-            searchRes = {};
+        let pagesArray = Array(totalPages).fill().map((v, i) => i);
 
-        do {
-            searchRes = await axios.post(`/api/admin/user-stats?page=${page}`).then(r => r.data);
-            data = [...data, ...searchRes.users];
-            page = page + 1;
-        } while (searchRes?.shouldContinue)
+        const allResults = await Promise.all(pagesArray.map(i => {
+            return axios.post(`/api/admin/user-stats?page=${i}`).then(r => r.data)
+        }))
 
+        await Promise.all(allResults.map(r => {
+            data = [...data, ...r.users];
+        }))
+        // console.timeEnd()
         return data
 
-    }, { staleTime: 60 * 60 });
+    }, { staleTime: 60 * 60 * 10 });
 
     return { data, isLoading };
-    // return [data, isLoading];
 }
 
 export const useAdminUserMutation = () => {
@@ -68,17 +66,17 @@ export const useAdminUserDelete = () => {
     return [data, isLoading, mutateAsync];
 }
 
-export const useAdminRefreshUserStats = () => {
+export const useAdminUpdateManyUsersETH = () => {
     const queryClient = useQueryClient();
     const { data, error, isError, isLoading, isSuccess, mutate, mutateAsync } = useMutation((payload) => {
         return axios
-            .post(`${Enums.BASEPATH}/api/admin/user/refresh-stats`, payload)
+            .post(`${Enums.BASEPATH}/api/admin/user/update-users-eth`, payload)
             .then((r) => r.data);
 
     }, {
-        onSuccess: () => {
-            queryClient.invalidateQueries("admin-query-user-stats");
-        },
+        // onSuccess: () => {
+        //     queryClient.invalidateQueries("admin-query-user-stats");
+        // },
     });
 
     return [data, isLoading, mutateAsync];

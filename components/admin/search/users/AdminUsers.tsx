@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useMemo, useContext } from "react";
+import React, { useEffect, useState, useCallback, useMemo, useContext, HTMLProps } from "react";
 import { Field, Form, Formik } from "formik";
 import { object } from "yup";
 
@@ -37,7 +37,7 @@ import {
 } from "@chakra-ui/react";
 
 import { AdminBanner, AdminCard } from "@components/shared/Card";
-import { useGlobalFilter, usePagination, useSortBy, useTable } from "react-table";
+import { useGlobalFilter, usePagination, useSortBy, useTable, useRowSelect } from "react-table";
 import { BsFilter } from "react-icons/bs";
 import { FaCopy, FaDownload, FaFileCsv } from "react-icons/fa";
 
@@ -69,11 +69,14 @@ import { downloadCsv } from "./helper";
 
 import type Prisma from "@prisma/client";
 import { UsersContext } from "@context/UsersContext";
+import { ChevronDownIcon } from "@chakra-ui/icons";
+import axios from "axios";
+import Enums from "@enums/index";
 
 interface UsersBannerProps {
     downloadCsv?: () => void;
-};
-const UsersBanner = ({ downloadCsv } : UsersBannerProps) => {
+}
+const UsersBanner = ({ downloadCsv }: UsersBannerProps) => {
     const { allUsers, filterSidebar } = useContext(UsersContext);
     return (
         <AdminBanner>
@@ -161,16 +164,6 @@ export default function AdminUsers() {
     );
 }
 
-const customFilterRewardsRange = (rows, id, filterValue) => {
-    if (filterValue?.minQty > 0) {
-        return rows.filter(
-            (row) =>
-                row.original[id] >= filterValue.minQty && row.original[id] <= filterValue.maxQty
-        );
-    }
-    return rows;
-};
-
 const ResultTable = ({ data }) => {
     const { filterSidebar, userSidebar, userDetails, viewUserDetails } = useContext(UsersContext);
 
@@ -190,7 +183,251 @@ const ResultTable = ({ data }) => {
         },
         useGlobalFilter,
         useSortBy,
-        usePagination
+        usePagination,
+        useRowSelect,
+        (hooks) => {
+            hooks.visibleColumns.push((columns) => [
+                // Let's make a column for selection
+                {
+                    id: "selection",
+                    // The header can use the table's getToggleAllRowsSelectedProps method
+                    // to render a checkbox
+                    Header: ({
+                        isAllRowsSelected,
+                        toggleAllRowsSelected,
+                        getToggleAllRowsSelectedProps,
+                        selectedFlatRows,
+                    }) => {
+                        return (
+                            // <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
+                            //    <Button
+                            //     onClick={() => {
+                            //         toggleAllRowsSelected(isAllRowsSelected ? false : true);
+                            //     }}
+                            // ></Button>
+
+                            <Menu>
+                                <MenuButton
+                                    as={Button}
+                                    variant="blue"
+                                    size="sm"
+                                    pe="0.2rem"
+                                    ps="0.2rem"
+                                    h="32px"
+                                    w="95px"
+                                    fontSize="sm"
+                                    fontWeight="400"
+                                    color={"white"}
+                                    borderRadius="48px"
+                                >
+                                    <ChevronDownIcon w="6" h="5" />
+                                    Actions
+                                </MenuButton>
+                                <MenuList>
+                                    <MenuItem
+                                        onClick={() => {
+                                            toggleAllRowsSelected(isAllRowsSelected ? false : true);
+                                        }}
+                                    >
+                                        Toogle Select
+                                    </MenuItem>
+                                    <MenuItem
+                                        isDisabled={selectedFlatRows.length === 0}
+                                        onClick={async () => {
+                                            const selectedRows = selectedFlatRows
+                                                .filter((r) => {
+                                                    let whiteListUserData =
+                                                        r.original.whiteListUserData;
+                                                    if (whiteListUserData) {
+                                                        let { lastEthUpdated, eth } =
+                                                            whiteListUserData;
+                                                        if (lastEthUpdated) {
+                                                            let hourPast = moment(new Date()).diff(
+                                                                moment(lastEthUpdated),
+                                                                "hours",
+                                                                false
+                                                            );
+
+                                                            if (eth < 0.02 && hourPast > 96) {
+                                                                // if the last time is 0, may not need to update again, using a diffent route to update all
+                                                                return true;
+                                                            }
+                                                            if (eth < 0.02 && hourPast < 96) {
+                                                                return false;
+                                                            }
+
+                                                            if (hourPast < 12) {
+                                                                console.log(
+                                                                    "Not selecting this row as the data too current"
+                                                                );
+                                                                return false;
+                                                            }
+                                                        }
+                                                    }
+                                                    if (r?.original?.wallet?.length > 0) {
+                                                        return true;
+                                                    }
+                                                    return false;
+                                                })
+                                                .map((r) => {
+                                                    return {
+                                                        wallet: r.original.wallet,
+                                                        userId: r.original.userId,
+                                                    };
+                                                });
+                                            if (
+                                                selectedFlatRows.length > 0 &&
+                                                selectedRows.length === 0
+                                            ) {
+                                                return alert(`No operation as data just updated.`);
+                                            }
+
+                                            if (
+                                                selectedRows.length >= 100 &&
+                                                !confirm(
+                                                    `Performing on large dataset of ${selectedRows.length} rows?`
+                                                )
+                                            ) {
+                                                return;
+                                            }
+
+                                            if (selectedRows.length > 0) {
+                                                let skip = Enums.UPDATE_SKIP;
+
+                                                let chunkSplit = [];
+
+                                                for (
+                                                    let i = 0;
+                                                    i < selectedRows.length;
+                                                    i += skip
+                                                ) {
+                                                    chunkSplit = [
+                                                        ...chunkSplit,
+                                                        selectedRows.slice(i, i + skip),
+                                                    ];
+                                                }
+
+                                                for (let chunk of chunkSplit) {
+                                                    let payload = { selectedRows: chunk };
+                                                    console.log(payload);
+
+                                                    await axios
+                                                        .post(
+                                                            `/api/admin/user/update-users-eth`,
+                                                            payload
+                                                        )
+                                                        .then((r) => r.data);
+                                                }
+                                            }
+                                        }}
+                                    >
+                                        Update ETH
+                                    </MenuItem>
+                                    <MenuItem
+                                        isDisabled={selectedFlatRows.length === 0}
+                                        onClick={async () => {
+                                            const selectedRows = selectedFlatRows
+                                                .filter((r) => {
+                                                    let whiteListUserData =
+                                                        r.original.whiteListUserData;
+
+                                                    if (whiteListUserData) {
+                                                        let { lastFollowersUpdated, followers } =
+                                                            whiteListUserData;
+                                                        if (lastFollowersUpdated) {
+                                                            let hourPast = moment(new Date()).diff(
+                                                                moment(lastFollowersUpdated),
+                                                                "hours",
+                                                                false
+                                                            );
+                                                            if (followers === 0 && hourPast > 96) {
+                                                                // if the last time is 0, may not need to update again, using a diffent route to update all
+                                                                return true;
+                                                            }
+                                                            if (followers === 0 && hourPast < 96) {
+                                                                return false;
+                                                            }
+
+                                                            if (hourPast < 24) {
+                                                                console.log(
+                                                                    "Not selecting this row as the data too current"
+                                                                );
+                                                                return false;
+                                                            }
+                                                        }
+                                                    }
+                                                    if (r?.original?.twitterId?.length > 0) {
+                                                        return true;
+                                                    }
+                                                    return false;
+                                                })
+                                                .map((r) => {
+                                                    return {
+                                                        twitterId: r.original.twitterId,
+                                                        userId: r.original.userId,
+                                                    };
+                                                });
+
+                                            if (
+                                                selectedFlatRows.length > 0 &&
+                                                selectedRows.length === 0
+                                            ) {
+                                                return alert(`No operation as data just updated.`);
+                                            }
+
+                                            if (
+                                                selectedRows.length > 0 &&
+                                                confirm(
+                                                    `Performing on large dataset of ${selectedRows.length} rows?`
+                                                )
+                                            ) {
+                                                let skip = Enums.UPDATE_SKIP;
+
+                                                let chunkSplit = [];
+
+                                                for (
+                                                    let i = 0;
+                                                    i < selectedRows.length;
+                                                    i += skip
+                                                ) {
+                                                    chunkSplit = [
+                                                        ...chunkSplit,
+                                                        selectedRows.slice(i, i + skip),
+                                                    ];
+                                                }
+
+                                                for (let chunk of chunkSplit) {
+                                                    let payload = { selectedRows: chunk };
+                                                    console.log(payload);
+
+                                                    await axios.post(
+                                                        `/api/admin/user/update-users-followers`,
+                                                        payload
+                                                    );
+                                                }
+                                            }
+                                        }}
+                                    >
+                                        Update Followers
+                                    </MenuItem>
+                                    <MenuItem isDisabled={true} onClick={() => {}}>
+                                        placeholder
+                                    </MenuItem>
+                                </MenuList>
+                            </Menu>
+                        );
+                    },
+                    // The cell can use the individual row's getToggleRowSelectedProps method
+                    // to the render a checkbox
+                    Cell: ({ row }) => (
+                        <div>
+                            <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
+                        </div>
+                    ),
+                },
+                ...columns,
+            ]);
+        }
     );
 
     const {
@@ -198,9 +435,10 @@ const ResultTable = ({ data }) => {
         getTableBodyProps,
         headerGroups,
         page,
-        prepareRow,
-        state: { pageIndex, pageSize },
         rows, //this give filtered rows
+        prepareRow,
+        selectedFlatRows,
+        state: { pageIndex, pageSize, selectedRowIds },
     } = tableInstance;
 
     const borderColor = useColorModeValue("gray.200", "whiteAlpha.100");
@@ -260,21 +498,37 @@ const ResultTable = ({ data }) => {
                             {headerGroups.map((headerGroup, index) => (
                                 <Tr {...headerGroup.getHeaderGroupProps()} key={index}>
                                     {headerGroup.headers.map((column, index) => {
+                                        // console.log(column);
+                                        if (column.id === "selection") {
+                                            return (
+                                                <Th
+                                                    {...column.getHeaderProps(
+                                                        column.getSortByToggleProps()
+                                                    )}
+                                                    p="0"
+                                                    key={index}
+                                                >
+                                                    {column.render("Header")}
+                                                </Th>
+                                            );
+                                        }
                                         return (
                                             <Th
                                                 {...column.getHeaderProps(
                                                     column.getSortByToggleProps()
                                                 )}
-                                                pe="6px"
                                                 key={index}
                                                 borderColor={borderColor}
+                                                pe="0.25rem"
+                                                ps="0.25rem"
                                             >
                                                 {!column?.hideHeader && (
                                                     <Flex
                                                         align="center"
-                                                        fontSize={{ sm: "8px", lg: "15px" }}
+                                                        fontSize={{ sm: "8px", lg: "14px" }}
                                                         color="gray.400"
                                                         gap="8px"
+                                                        fontWeight={"400"}
                                                     >
                                                         {column.render("Header")}
 
@@ -298,7 +552,20 @@ const ResultTable = ({ data }) => {
                                 return (
                                     <Tr {...row.getRowProps(getRowProps(row))} key={index}>
                                         {row.cells.map((cell, index) => {
-                                            let data:any;
+                                            let data: any;
+
+                                            if (cell.column.id === "selection") {
+                                                return (
+                                                    <Td
+                                                        {...cell.getCellProps()}
+                                                        border="1px solid transparent"
+                                                        borderLeftRadius="20px"
+                                                        pe={"0.5rem"}
+                                                    >
+                                                        {cell.render("Cell")}
+                                                    </Td>
+                                                );
+                                            }
 
                                             data = getCellValue(cell, viewUserDetails);
 
@@ -307,7 +574,7 @@ const ResultTable = ({ data }) => {
                                                     {...cell.getCellProps()}
                                                     key={index}
                                                     fontSize={{ sm: "14px" }}
-                                                    minW={{ sm: "150px", md: "200px", lg: "auto" }}
+                                                    maxW={{ sm: "150px", md: "200px", lg: "200px" }}
                                                     border="1px solid transparent"
                                                     borderLeftRadius={`${
                                                         index === 0 ? "20px" : "0px"
@@ -317,6 +584,8 @@ const ResultTable = ({ data }) => {
                                                             ? "20px"
                                                             : "0px"
                                                     }`}
+                                                    pe={"0.25rem"}
+                                                    ps={"0.25rem"}
                                                 >
                                                     {data}
                                                     {/* {cell.render("Cell")} */}
@@ -341,14 +610,14 @@ const ResultTable = ({ data }) => {
 
 const getUsername = (userObj: Prisma.WhiteList) => {
     const { email, discordUserDiscriminator, twitterUserName, wallet, avatar } = userObj;
-   
+
     return (
         <Flex alignItems={"center"} gap={{ base: "8px", lg: "1rem" }}>
             <Box>
                 <Avatar
-                    size="md"
+                    size="sm"
                     bg="rgba(47, 78, 109, 1)"
-                    icon={<AiOutlineUser fontSize="1.75rem" color="rgba(19, 36, 54, 1)" />}
+                    icon={<AiOutlineUser fontSize="1.25rem" color="rgba(19, 36, 54, 1)" />}
                     src={avatar}
                 />
             </Box>
@@ -358,6 +627,23 @@ const getUsername = (userObj: Prisma.WhiteList) => {
         </Flex>
     );
 };
+
+const IndeterminateCheckbox = React.forwardRef(({ indeterminate, ...rest }, ref) => {
+    const defaultRef = React.useRef();
+    const resolvedRef = ref || defaultRef;
+
+    React.useEffect(() => {
+        resolvedRef.current.indeterminate = indeterminate;
+    }, [resolvedRef, indeterminate]);
+
+    const {checked, onChange} = rest;
+    return (
+        <>
+            {/* <input type="checkbox" ref={resolvedRef} {...rest} /> */}
+            <Checkbox ref={resolvedRef} isChecked={checked} onChange={onChange}/>
+        </>
+    );
+});
 
 // this being here to manipulat the style, sometimes in ancessor its impossible to return the
 // value straightaway for sorting purpose
@@ -477,7 +763,8 @@ const columnData = [
     {
         Header: "LAST ACTIVE",
         accessor: (row) => {
-            let lastFinishedQuestDaytime = row?.userQuest[0]?.updatedAt;
+          
+            let lastFinishedQuestDaytime = row?.userQuest[0]?.updatedAt || row?.updatedAt;
             let dayPast = moment(new Date()).diff(moment(lastFinishedQuestDaytime), "days", false);
             let hourPast = moment(new Date()).diff(
                 moment(lastFinishedQuestDaytime),
@@ -495,11 +782,11 @@ const columnData = [
     },
     {
         Header: "FOLLOWERS",
-        accessor: (row) => row?.whiteListUserData?.data?.followers_count || 0,
+        accessor: (row) => row?.whiteListUserData?.followers || 0,
     },
     {
         Header: "NET WORTH",
-        accessor: (row) => row?.whiteListUserData?.data?.eth || 0,
+        accessor: (row) => row?.whiteListUserData?.eth || 0,
     },
     {
         Header: "ACTION",
@@ -508,3 +795,13 @@ const columnData = [
         hideHeader: true,
     },
 ];
+
+const customFilterRewardsRange = (rows, id, filterValue) => {
+    if (filterValue?.minQty > 0) {
+        return rows.filter(
+            (row) =>
+                row.original[id] >= filterValue.minQty && row.original[id] <= filterValue.maxQty
+        );
+    }
+    return rows;
+};

@@ -12,7 +12,7 @@ const adminUserStatsAPI = async (req, res) => {
         let searchRes = {}, userCondition = {};
 
         try {
-            // const userCount = await prisma.whiteList.count();
+
             let users = await prisma.whiteList.findMany({
                 where: {
                     wallet: { in: walletOwners }

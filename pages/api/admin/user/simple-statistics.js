@@ -1,4 +1,4 @@
-import { getFirstDayCurMonth, getFirstDayPrevMonth, getLastDayCurMonth, getLastDayPrevMonth } from "@utils/index";
+import { getFirstDayCurMonth, getFirstDayPrevMonth, getLastDayCurMonth, getLastDayPrevMonth } from "@util/index";
 import { prisma } from "context/PrismaContext";
 import adminMiddleware from "middlewares/adminMiddleware";
 import moment from "moment";
@@ -22,7 +22,7 @@ const adminUsersCountAPI = async (req, res) => {
 
         //get users eth
         let usersETH = whitelistData.reduce((accumulator, row) => {
-          let eth = parseFloat(row?.data?.eth) || 0.0;
+          let eth = parseFloat(row?.eth) || 0.0;
           return parseFloat(accumulator) + eth
         }, 0.0)
 

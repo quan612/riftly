@@ -5,8 +5,8 @@ import axios from "axios";
 export const downloadCsv = (jsonData) => {
 
   jsonData = jsonData.map((r) => {
-    r.follower = r.whiteListUserData?.data?.followers_count;
-    r.balance = r.whiteListUserData?.data?.eth;
+    r.follower = r.whiteListUserData?.followers;
+    r.balance = r.whiteListUserData?.eth;
 
     delete r.whiteListUserData;
     delete r.userId;

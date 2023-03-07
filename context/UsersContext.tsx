@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { useAdminRefreshUserStats, useAdminUserStatsQuery } from "@shared/HOC/user";
+import {  useAdminUserStatsQuery } from "@shared/HOC/user";
 import { useDisclosure } from "@chakra-ui/react";
 import Enums from "@enums/index";
 import type Prisma from "@prisma/client";

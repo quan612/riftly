@@ -18,7 +18,7 @@ import {
 import { BiRefresh } from "react-icons/bi";
 import { BsFilter } from "react-icons/bs";
 import { FaCopy, FaDownload, FaFileCsv } from "react-icons/fa";
-import { useAdminRefreshUserStats } from "@shared/HOC/user";
+
 import { shortenAddress } from "util/shortenAddress";
 import { useCopyToClipboard } from "usehooks-ts";
 import moment from "moment";
@@ -32,7 +32,7 @@ interface UsersBannerProps {
 };
 
 const AdminUserInfo = ({ userDetails }: UsersBannerProps) => {
-    const [userStats, isQuerying, refreshUserStatsAsync] = useAdminRefreshUserStats();
+    
     const {
         userId,
         avatar,
@@ -149,22 +149,7 @@ const AdminUserInfo = ({ userDetails }: UsersBannerProps) => {
                 <Text fontWeight="400">{questCompleted.length}</Text>
             </FormControl>
 
-            <Icon
-                transition="0.8s"
-                color="green.300"
-                boxSize={7}
-                as={BiRefresh}
-                _hover={{
-                    cursor: "pointer",
-                }}
-                onClick={async () => {
-                    let payload = {
-                        userId,
-                    };
-
-                    await refreshUserStatsAsync(payload);
-                }}
-            />
+            
         </Flex>
     );
 };

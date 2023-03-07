@@ -41,7 +41,7 @@ const handler = async (req, res) => {
                         whiteListUserData: true,
                         userId: true,
                         whiteListUserData: {
-                            select: { data: true }
+                            select: { eth: true, followers: true }
                         }
                     },
                 });

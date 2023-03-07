@@ -34,9 +34,10 @@ model WhiteListUserData {
   id                            Int           @id @default(autoincrement())
   userId                        String        @unique
   user                          WhiteList     @relation(fields: [userId], references: [userId])
-  data                          Json? 
-  lastNotified                  DateTime?
-  canNotifyChallenge            Boolean       @default(false)
+  eth                           Decimal?      @default(0) @db.Decimal(10, 2)
+  lastEthUpdated                DateTime?     
+  followers                     Int?          
+  lastFollowersUpdated          DateTime?     
 }
 model PendingReward {
   id           Int            @id @default(autoincrement())

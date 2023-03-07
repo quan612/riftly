@@ -1,8 +1,3 @@
-// import * as Prisma from "@qhuynhvhslab/anomura-prisma-package";
-// export const { prisma } = await Prisma.createContext();
-
-// if (process.env.NODE_ENV !== "production") global.prisma = prisma;
-
 import { PrismaClient, EquipmentType } from '@prisma/client'
 
 export const prisma =
@@ -10,6 +5,12 @@ export const prisma =
     new PrismaClient({
         // log: ['query']
     })
+
+prisma.$on('query', (e) => {
+    console.log('Query: ' + e.query)
+    console.log('Params: ' + e.params)
+    console.log('Duration: ' + e.duration + 'ms')
+})
 
 export const equipmentType = EquipmentType
 

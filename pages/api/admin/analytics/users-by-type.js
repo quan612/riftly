@@ -2,7 +2,7 @@ import { analyticsDataClient } from "../../../../context/GoogleApisContext";
 import adminMiddleware from "middlewares/adminMiddleware";
 import { prisma } from "@context/PrismaContext";
 import { THIS_YEAR, LAST_YEAR } from "@enums/index";
-import { getFirstDayOfLastYear, getFirstDayOfYear, getLastDayOfLastYear } from "@utils/index";
+import { getFirstDayOfLastYear, getFirstDayOfYear, getLastDayOfLastYear } from "@util/index";
 
 async function AnalyticsUserByQuery(req, res) {
     const { method } = req;

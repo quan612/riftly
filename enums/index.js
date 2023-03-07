@@ -22,6 +22,14 @@ const Enums = {
     WEEKLY: "weekly",
     MONTHLY: "monthly",
 
+    PAGINATION_SKIP: 4000,
+
+    UPDATE_SKIP: 150,
+    /* The number to perform update on large dataset, for when splitting into small chunks,
+    (PRO)   60 seconds can be around 200
+    (HOBBY) 10 seconds must be < 50
+    */
+
     THIS_MONTH: "This Month",
     LAST_MONTH: "Last Month",
     LAST_YEAR: "Last Year",

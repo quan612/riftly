@@ -1,7 +1,7 @@
 import { prisma } from "@context/PrismaContext";
 import whitelistUserMiddleware from "middlewares/whitelistUserMiddleware";
 import Enums from "enums";
-import { AccountStatus } from "@prisma/client";
+import { AccountStatus, VerificationStatus } from "@prisma/client";
 import { utils } from "ethers";
 
 const sendPhoneToSmsHandler = async (req, res) => {
@@ -70,23 +70,6 @@ const sendPhoneToSmsHandler = async (req, res) => {
 
                 const { userId } = userQuery;
 
-                // let currentQuest = await prisma.quest.findUnique({
-                //     where: {
-                //         questId,
-                //     },
-                //     include: {
-                //         type: true,
-                //     },
-                // });
-
-                // const { type } = currentQuest;
-
-                // if (type.name !== Enums.SMS_VERIFICATION) {
-                //     return res.status(200).json({
-                //         isError: true,
-                //         message: "This route is for sms verifcation!",
-                //     });
-                // }
 
                 let smsRecord = await prisma.smsVerification.findUnique({
                     where: {
@@ -123,7 +106,7 @@ const sendPhoneToSmsHandler = async (req, res) => {
                                 upsert: {
                                     create: {
                                         attemptedPhone: e164PhoneNumber,
-                                        status: AccountStatus.PENDING, //codeSendOp.status,
+                                        status: VerificationStatus.PENDING, //codeSendOp.status,
                                         valid: false,
                                     },
                                     update: {

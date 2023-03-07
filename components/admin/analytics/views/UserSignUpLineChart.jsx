@@ -22,7 +22,7 @@ import {
     getFirstDayOfLastYear,
     getLastDayOfLastYear,
     getFirstDayOfYear,
-} from "@utils/index";
+} from "@util/index";
 import axios from "axios";
 import moment from "moment";
 import dynamic from "next/dynamic";
@@ -73,44 +73,6 @@ const updateOptionsData = {
         },
     },
 };
-
-const lineChartDataUserSignUp = [
-    {
-        name: WALLET,
-        data: [
-            { x: "02/01/2023", y: 50 },
-            { x: "02/02/2023", y: 64 },
-            { x: "02/03/2023", y: 48 },
-            { x: "02/04/2023", y: 66 },
-            { x: "02/21/2023", y: 49 },
-            { x: "02/25/2023", y: 68 },
-        ],
-        // data: [
-        //     { x: "JAN", y: 50 },
-        //     { x: "FEB", y: 64 },
-        //     { x: "MAR", y: 48 },
-        //     { x: "APR", y: 66 },
-        //     { x: "MAY", y: 49 },
-        //     { x: "JUN", y: 68 },
-        // ],
-        fillColor: "#F6AD55",
-    },
-    // {
-    //     name: EMAIL,
-    //     data: [30, 40, 24, 46, 20, 46],
-    //     fillColor: "#68D391",
-    // },
-    // {
-    //     name: DISCORD,
-    //     data: [14, 22, 24, 36, 5, 6],
-    //     fillColor: "#B794F4",
-    // },
-    // {
-    //     name: TWITTER,
-    //     data: [24, 32, 44, 66, 25, 16],
-    //     fillColor: "#63B3ED",
-    // },
-];
 
 const lineChartOptionsUserSignUp = {
     chart: {
@@ -444,3 +406,40 @@ export default function UserSignUpLineChart() {
         </Card>
     );
 }
+const lineChartDataUserSignUp = [
+    {
+        name: WALLET,
+        data: [
+            { x: "02/01/2023", y: 50 },
+            { x: "02/02/2023", y: 64 },
+            { x: "02/03/2023", y: 48 },
+            { x: "02/04/2023", y: 66 },
+            { x: "02/21/2023", y: 49 },
+            { x: "02/25/2023", y: 68 },
+        ],
+        // data: [
+        //     { x: "JAN", y: 50 },
+        //     { x: "FEB", y: 64 },
+        //     { x: "MAR", y: 48 },
+        //     { x: "APR", y: 66 },
+        //     { x: "MAY", y: 49 },
+        //     { x: "JUN", y: 68 },
+        // ],
+        fillColor: "#F6AD55",
+    },
+    // {
+    //     name: EMAIL,
+    //     data: [30, 40, 24, 46, 20, 46],
+    //     fillColor: "#68D391",
+    // },
+    // {
+    //     name: DISCORD,
+    //     data: [14, 22, 24, 36, 5, 6],
+    //     fillColor: "#B794F4",
+    // },
+    // {
+    //     name: TWITTER,
+    //     data: [24, 32, 44, 66, 25, 16],
+    //     fillColor: "#63B3ED",
+    // },
+];

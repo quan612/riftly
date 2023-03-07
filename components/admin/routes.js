@@ -43,10 +43,7 @@ const routes = [
     name: "Search",
     category: "Search",
     children: [
-      {
-        name: "Rewards",
-        path: "/admin/search",
-      },
+
       {
         name: "User Quest",
         path: "/admin/search/user-quests",
