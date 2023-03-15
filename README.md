@@ -1,5 +1,3 @@
-
-
 # Description
 
 This is the repo for the Sharing-UI of project Anomura.
@@ -8,7 +6,7 @@ Some endpoints which post a message to a discord server, we need a nodejs server
 
 Vercel Deployment
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/qhuynhvhslab/test&env=DATABASE_URL,NEXTAUTH_URL,NEXT_PUBLIC_NEXTAUTH_SECRET,NEXT_PUBLIC_INFURA_ID,NEXT_PUBLIC_ENABLE_CHALLENGER&envDescription=Postgresql%Db,URL%20For%20Next-Auth,Enter%20Your%20Next-Auth%20Secret%20Key,Infura%20For%20Login,Enable%20Challenger)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/qhuynhvhslab/test&env=DATABASE_URL,NEXTAUTH_URL,NEXT_PUBLIC_NEXTAUTH_SECRET,NEXT_PUBLIC_INFURA_ID,envDescription=Postgresql%Db,URL%20For%20Next-Auth,Enter%20Your%20Next-Auth%20Secret%20Key,Infura%20For%20Login,Enable%20Challenger)
 
 ```
 INSERT INTO public."Admin" (id, wallet, nonce) VALUES (1, 'ENTER YOUR WALLET HERE', '123456789123456789');
@@ -26,8 +24,6 @@ INSERT INTO public."QuestType" (id, name, description) VALUES (12, 'Code Quest',
 INSERT INTO public."QuestType" (id, name, description) VALUES (13, 'Wallet Authenticate', NULL);
 INSERT INTO public."QuestType" (id, name, description) VALUES (14, 'Claim Reward For Owning NFT', NULL);
 INSERT INTO public."QuestType" (id, name, description) VALUES (15, 'Unstoppable Domain Authenticate', NULL);
-INSERT INTO public."QuestType" (id, name, description) VALUES (16, 'SMS Verification', NULL);
-
 
 INSERT INTO public."RewardType" (id, reward) VALUES (1, '$Shell');
 INSERT INTO public."RewardType" (id, reward) VALUES (2, 'Mint List');
@@ -49,11 +45,12 @@ INSERT INTO public."RewardType" (id, reward) VALUES (3, 'Mystery Bowl');
       dotenv -e .env.development -- npx prisma migrate dev
 ```
 
-### Expected: 
+### Expected:
+
 In any sql client, the tables should be created.
 
-
 ### Populate data
+
 Using the sql above
 
 <details>
@@ -63,12 +60,13 @@ Using the sql above
 
 **This is needed before any reward can be awarded to a user**
 
-Image Preview are used for Preview Mode when reward a user from Admin Reward Page, or when a user goes to claim page and claim a certain reward, then 
+Image Preview are used for Preview Mode when reward a user from Admin Reward Page, or when a user goes to claim page and claim a certain reward, then
 the image is embded into discord.
 
 ![Screenshot](screenshots/reward_config_1.png)
 
 Icon is optional
+
 </details>
 
 </details>
@@ -100,11 +98,12 @@ Under http://localhost:3000/admin/quest
 - Daily
 - Claim Reward for owning NFT
 
+### Must create these three quest once:
 
-### Must create these three quest once: 
 Discord Authenticate
 Twitter Authenticate
 Wallet Authenticate
+
 </details>
 
 <details>
@@ -135,7 +134,6 @@ ClientId and Client Secret should be for this config.
 
 </details>
 
-
 <details>
   <summary> Twitter Config</summary>
   
@@ -155,8 +153,6 @@ Save to server config ![Screenshot](screenshots/twitter_auth_6.png)
 
 </details>
 
-
-
 <details>
   <summary> Miscellaneous Config</summary>
   
@@ -166,12 +162,10 @@ Save to server config ![Screenshot](screenshots/twitter_auth_6.png)
 
 **This is needed for General Discord Embed message when a reward is awarded to a user but Not Claimed.**
 
- ![Screenshot](screenshots/misc_config_2.png)
+![Screenshot](screenshots/misc_config_2.png)
 
 > Add Host Url
 
 A general hostname, without any trailing slash at the end.
 
 </details>
-
-

@@ -1,6 +1,6 @@
-const { PrismaClient } = require("@prisma/client");
-const Enums = require("../../enums");
-const prisma = new PrismaClient();
+const { PrismaClient } = require('@prisma/client')
+const Enums = require('../../enums')
+const prisma = new PrismaClient()
 
 const questTypes = [
   {
@@ -43,25 +43,23 @@ const questTypes = [
   {
     type: Enums.CODE_QUEST,
   },
-];
+]
 
 async function main() {
-  console.log("Seeding prisma questType db");
-
   for (let i = 0; i < questTypes.length; i++) {
     await prisma.questType.create({
       data: {
         name: questTypes[i].type,
       },
-    });
+    })
   }
 }
 
 main()
   .catch((e) => {
-    console.error(e);
-    process.exit(1);
+    console.error(e)
+    process.exit(1)
   })
   .finally(async () => {
-    await prisma.$disconnect();
-  });
+    await prisma.$disconnect()
+  })

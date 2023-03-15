@@ -122,6 +122,9 @@ model Quest {
   rewardType            RewardType      @relation(fields: [rewardTypeId], references: [id])
   userQuests            UserQuest[]
   questTypeId           Int
+  style                 QuestStyle      @default(NORMAL)
+  duration              QuestDuration   @default(ONGOING)  
+  image                 String?
 }
 
 model Admin {
@@ -179,9 +182,6 @@ model QuestVariables{
   twitterSecret               String
   twitterBearerToken          String?             @default("")
   pendingRewardImageUrl       String?             @default("")
-  cloudinaryName              String?             @default("")
-  cloudinaryKey               String?             @default("")
-  cloudinarySecret            String?             @default("")
   discordBotToken             String?             @default("")
   hostUrl                     String?             @default("")
   googleClientEmail           String?             @default("")
@@ -242,4 +242,25 @@ enum AccountStatus {
 enum VerificationStatus {
  PENDING
  APPROVED
+}
+
+enum QuestStyle {
+ NORMAL       
+ FEATURED     
+}
+
+enum QuestDuration {
+ ONGOING      
+ LIMITED      
+}
+
+model ConfigImageHosting{
+  id                          Int                 @id @default(autoincrement())
+  cloudinaryName              String?             @default("")
+  cloudinaryKey               String?             @default("")
+  cloudinarySecret            String?             @default("")
+  generalPreset               String?             @default("")
+  avatarPreset                String?             @default("")
+  createdAt                   DateTime            @default(now())
+  updatedAt                   DateTime            @default(now()) @updatedAt
 }

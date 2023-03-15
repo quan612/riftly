@@ -1,0 +1,79 @@
+{
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:eslint-comments/recommended",
+    "plugin:import/errors",
+    "plugin:import/warnings",
+    "plugin:import/typescript",
+    "plugin:prettier/recommended",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
+    "plugin:you-dont-need-lodash-underscore/all"
+  ],
+  "rules": {
+    // "quotes": ["warn", "single", { "avoidEscape": true }],
+    "react/no-unescaped-entities": 0,
+    "@typescript-eslint/no-var-requires": "off",
+    "@typescript-eslint/no-empty-function": "off",
+    "react/prop-types": "off",
+    "import/no-unresolved": ["off", { "caseSensitive": false }],
+    "no-extend-native": "error",
+    "eslint-comments/no-unused-disable": "error",
+    "@typescript-eslint/no-unused-vars": ["off", { "ignoreRestSiblings": true }],
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/no-empty-interface": [
+      "error",
+      {
+        "allowSingleExtends": true
+      }
+    ],
+    "react/react-in-jsx-scope": "off",
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx", ".ts", ".tsx"] }],
+    "prettier/prettier": ["off", { "endOfLine": "auto", "singleQuote": true }],
+    "import/extensions": [
+      "warn",
+      "ignorePackages",
+      {
+        "js": "never",
+        "jsx": "never",
+        "ts": "never",
+        "tsx": "never"
+      }
+    ],
+    "react/display-name": "off"
+  },
+  "parserOptions": { "project": "./tsconfig.json" },
+  "settings": {
+    "react": { "version": "detect" },
+    "import/resolver": {
+      "node": {
+        "paths": ["."],
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+        // "moduleDirectory": ["node_modules", "./src"]
+      }
+    }
+  },
+  "overrides": [
+    {
+      "files": ["**/*.{config,test,spec}.{ts,js}?(x)"],
+      "extends": ["plugin:node/recommended"],
+      "env": { "node": true },
+      "rules": {
+        "node/no-missing-import": "off",
+        "node/no-unpublished-import": "off",
+        "node/no-unpublished-require": "off",
+        "node/no-unsupported-features/es-syntax": ["error", { "ignores": ["modules"] }],
+        "import/no-extraneous-dependencies": ["error", { "devDependencies": true }]
+      }
+    },
+    {
+      "files": ["**/*.{test,spec}.{ts,js}?(x)"],
+      "extends": ["plugin:jest/recommended"]
+    }
+  ],
+  "env": {
+    "browser": true,
+    "node": true
+  }
+}

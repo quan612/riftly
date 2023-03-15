@@ -1,0 +1,48 @@
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+html,
+body {
+  width: 100%;
+}
+
+input[type='text']:focus {
+  outline: none;
+}
+ul {
+  list-style: none;
+}
+a {
+  text-decoration: none;
+  color: #fff;
+}
+
+/* Going to put this in a css module for NFTs*/
+.card {
+  border-radius: 0.8rem;
+  /* box-shadow: 0 16px 38px -12px rgba(225, 225, 225, 0.56),
+		0 4px 25px 0px rgba(225, 225, 225, 0.12), 0 8px 10px -5px rgba(225, 225, 225, 0.2); */
+}
+
+.PhoneInputInput {
+  width: '100%';
+
+  background-color: transparent;
+  height: 40px;
+  border: 1px solid #89a4c2;
+  border-radius: 24px;
+  color: #fff;
+  padding-left: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.PhoneInputCountrySelectArrow {
+  color: white;
+}
+
+.PhoneInputCountryIcon {
+  color: white;
+}
