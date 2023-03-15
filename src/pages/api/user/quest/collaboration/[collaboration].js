@@ -25,9 +25,9 @@ const collaborationQuestQueryAPI = async (req, res) => {
 
             if (
               // only get quest that has collaboration same as query uri
-              q.extendedQuestData.collaboration &&
-              q.extendedQuestData.collaboration.length > 0 &&
-              q.extendedQuestData.collaboration === collaboration
+              q?.extendedQuestData?.collaboration &&
+              q?.extendedQuestData?.collaboration.length > 0 &&
+              q?.extendedQuestData?.collaboration === collaboration
             ) {
               return true
             }

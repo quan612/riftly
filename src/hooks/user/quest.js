@@ -213,7 +213,7 @@ export const useUserFeatureQuestQuery = () => {
 export const useUserCollaborationQuestQuery = () => {
 
   const router = useRouter()
-  const collaboration = typeof router.query?.collaboration === 'string' ? router.query.collaboration : ''
+  const collaboration = typeof router?.query?.collaboration === 'string' ? router?.query?.collaboration : ''
 
   const { data, isLoading } = useQuery(
     'user-query-collaboration-quest',

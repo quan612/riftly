@@ -87,7 +87,7 @@ export default function UserLayout({ session, children }) {
     // } else {
     //   return <LayoutWrapper>{children}</LayoutWrapper>
     // }
-    console.log(33)
+
     return <LayoutWrapper>{children}</LayoutWrapper>
   }
 }

@@ -73,12 +73,12 @@ export default async function walletSignUp(req, res) {
           where: { wallet },
         })
 
-        if (existingUser) {
-          return res.status(200).json({
-            isError: true,
-            message: 'User existed',
-          })
-        }
+        // if (existingUser) {
+        //   return res.status(200).json({
+        //     isError: true,
+        //     message: 'User existed',
+        //   })
+        // }
         if (whiteListUser && existingUser.userId !== whiteListUser?.userId) {
           return res.status(200).json({
             isError: true,
@@ -86,7 +86,7 @@ export default async function walletSignUp(req, res) {
           })
         }
 
-        await updateUserWalletTransaction(walletAuthQuest.questId, whiteListUser?.userId, wallet)
+        await updateUserWalletTransaction(walletAuthQuest.questId, existingUser?.userId, wallet)
 
         // await trackRequest(req)
         return res.status(200).json({ message: 'Link wallet successfully.' })

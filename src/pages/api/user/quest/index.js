@@ -19,7 +19,7 @@ const userQuestQueryHandler = async (req, res) => {
         let quests = availableQuests
           .filter((q) => {
 
-            if (q.extendedQuestData.collaboration && q.extendedQuestData.collaboration.length > 0) {
+            if (q?.extendedQuestData?.collaboration && q?.extendedQuestData?.collaboration?.length > 0) {
               return false
             }
 
