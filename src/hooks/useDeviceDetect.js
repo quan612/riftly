@@ -3,6 +3,7 @@ import React from 'react'
 export default function useDeviceDetect() {
   const [isMobile, setIsMobile] = React.useState(null)
   React.useEffect(() => {
+    /* eslint-disable no-useless-escape */
     if (
       /(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|ipad|iris|kindle|Android|Silk|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(
         navigator.userAgent,
@@ -15,6 +16,7 @@ export default function useDeviceDetect() {
     } else {
       setIsMobile(false)
     }
+    /* eslint-enable no-useless-escape */
   }, [])
 
   return { isMobile }

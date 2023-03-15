@@ -20,24 +20,18 @@ import {
 import { RiftlyIcon } from '@components/shared/Icons'
 import Loading from '@components/shared/LoadingContainer/Loading'
 
-import { useUserQuestClaim, useUserQuestQuery, useUserQuestSubmit } from '@hooks/user/quest'
+import {
+  useUserQuestClaim,
+  useUserQuestQuery,
+  useUserFeatureQuestQuery,
+  useUserQuestSubmit,
+} from '@hooks/user/quest'
 
 const ChallengeQuests = () => {
   const [filterCompleted, filterCompletedSet] = useState(false)
   const trackFirstRender = useRef(true)
-  const [newQuests, newQuestsSet] = useState([])
-  const [completedQuests, completedQuestsSet] = useState([])
 
   const { data: userQuests, isLoading: isFetchingUserQuests } = useUserQuestQuery()
-
-  useEffect(() => {
-    if (userQuests) {
-      let completed = userQuests.filter((q) => q.hasClaimed === true)
-      completedQuestsSet(completed)
-      let newQ = userQuests.filter((q) => q.hasClaimed === false)
-      newQuestsSet(newQ)
-    }
-  }, [userQuests, filterCompleted])
 
   return (
     <Box display="flex" flexDirection={'column'} gap={'16px'} position={'relative'} minH="auto">
@@ -46,8 +40,9 @@ const ChallengeQuests = () => {
 
       <Box h="auto" display={'flex'} flexDirection={'column'} gap={'16px'}>
         {userQuests &&
+          userQuests.length > 0 &&
           userQuests
-            .filter((q) => {
+            ?.filter((q) => {
               if (filterCompleted) {
                 return q.hasClaimed === true
               } else {
@@ -249,21 +244,21 @@ const UserQuestBox = ({ quest, index, currentQuests, filterCompleted, onTest }) 
       }
       showScoreSet(true)
       scorePopupTimeout = setTimeout(() => {
-        // showScoreSet(false)
+        showScoreSet(false)
         clearTimeout(scorePopupTimeout)
       }, 500)
 
-      // invalidCacheTimeout = setTimeout(() => {
-      //   queryClient.invalidateQueries('user-reward-query')
-      //   queryClient.invalidateQueries('user-query-user-quest')
-      //   disableBtnSet(false)
-      //   clearTimeout(invalidCacheTimeout)
-      // }, 2000)
+      invalidCacheTimeout = setTimeout(() => {
+        queryClient.invalidateQueries('user-reward-query')
+        queryClient.invalidateQueries('user-query-user-quest')
+        disableBtnSet(false)
+        clearTimeout(invalidCacheTimeout)
+      }, 2000)
     } catch (error) {
       console.log(error)
       toast({
         title: 'Exception',
-        description: `Catch error at quest: ${quest.text}. Please contact admin.`,
+        description: `Catch error at quest Id: ${questId}. Please contact admin.`,
         position: 'top-right',
         status: 'error',
         duration: 5000,

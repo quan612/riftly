@@ -68,7 +68,7 @@ const testAPI = async (req, res) => {
       })
     } catch (error) {
       console.log(error)
-      return res.status(200).json({ isError: true, message: error.message })
+      res.status(200).json({ isError: true, message: error.message })
     }
   }
   throw new ApiError(400, `Method ${req.method} Not Allowed`)

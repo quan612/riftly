@@ -1,4 +1,4 @@
-import { getAllEnableQuestsForUser, getQuestsDoneByThisUser } from 'repositories/quest'
+import { getAllEnableQuestsForUser, getQuestsStartedByThisUser } from 'repositories/quest'
 import whitelistUserMiddleware from 'middlewares/whitelistUserMiddleware'
 import Enums from 'enums'
 
@@ -14,7 +14,7 @@ const unstoppableAuthQuestQueryAPI = async (req, res) => {
         let availableQuests = await getAllEnableQuestsForUser()
 
         console.log(`** Get quests done by this user **`)
-        let finishedQuest = await getQuestsDoneByThisUser(whiteListUser.userId)
+        let finishedQuest = await getQuestsStartedByThisUser(whiteListUser.userId)
 
         let quests = availableQuests
           .filter((q) => {

@@ -453,7 +453,7 @@ const ForgotPassword = ({ setView }) => {
     if (resetPassword.isError) {
       errorSet(resetPassword.message)
     } else {
-      setView(RESET_PASSWORD_SUCCESS)
+      // setView(RESET_PASSWORD_SUCCESS)
     }
   }
 

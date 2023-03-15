@@ -41,7 +41,7 @@ export default async function passwordReset(req, res) {
         return res.status(200).json({ message: 'Password reset.' })
       } catch (error) {
         console.log(error)
-        return res.status(200).json({ isError: true, message: error.message })
+        res.status(200).json({ isError: true, message: error.message })
       }
       break
     default:

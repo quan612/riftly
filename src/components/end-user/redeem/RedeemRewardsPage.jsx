@@ -143,7 +143,9 @@ const BalanceInfo = ({ session }) => {
 }
 
 const RedeemCard = ({ image, session }) => {
-  const { wallet } = session?.user
+  const {
+    user: { wallet },
+  } = session
 
   const [isLoading, isLoadingSet] = useState(false)
   const toast = useToast()

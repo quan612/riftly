@@ -7,12 +7,13 @@ const { default: Resolution } = require('@unstoppabledomains/resolution')
 
 const submitUnstoppableAuthQuest = async (req, res) => {
   const { method } = req
+  const whiteListUser = req.whiteListUser
+  const { questId, rewardTypeId, quantity, extendedQuestData, uauthUser } = req.body
+  let userQuest
 
   switch (method) {
     case 'POST':
-      const whiteListUser = req.whiteListUser
-      const { questId, rewardTypeId, quantity, extendedQuestData, uauthUser } = req.body
-      let userQuest
+
       try {
         if (!uauthUser) {
           return res.status(200).json({
@@ -81,7 +82,7 @@ const submitUnstoppableAuthQuest = async (req, res) => {
         return res.status(200).json(userQuest)
       } catch (error) {
         console.log(error)
-        return res.status(200).json({ isError: true, message: error.message, questId })
+        res.status(200).json({ isError: true, message: error.message, questId })
       }
       break
     default:

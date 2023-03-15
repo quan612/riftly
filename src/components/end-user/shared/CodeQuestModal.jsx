@@ -118,7 +118,7 @@ const CodeQuestModal = ({ isOpen, onClose, currentQuest }) => {
       {currentView === UNCLAIMABLE && (
         <AnimatePresence mode="popLayout">
           <ChakraBox layout color="red.300" key="code-quest-error" exit={{ opacity: 0 }}>
-            {error}
+            {inputError}
           </ChakraBox>
           <Button variant="blue" onClick={handleOnClose} w="100%" borderRadius="24px">
             Back to Challenges

@@ -7,10 +7,10 @@ import { utils } from 'ethers'
 const sendPhoneToSmsHandler = async (req, res) => {
   const { method } = req
 
+  const { account, type, phoneNumber, token } = req.body
   switch (method) {
     case 'POST':
-      //
-      const { account, type, phoneNumber, token } = req.body
+
       try {
         //TODO: Apply rate limit or similar
         if (!phoneNumber) {
@@ -137,9 +137,9 @@ const sendPhoneToSmsHandler = async (req, res) => {
             .status(200)
             .json({ isError: true, message: 'Phone format is invalid or not found.' })
         }
-        return res.status(200).json({ isError: true, message: error.message })
+        res.status(200).json({ isError: true, message: error.message })
       }
-      break
+      break;
     default:
       res.setHeader('Allow', ['POST'])
       res.status(405).end(`Method ${method} Not Allowed`)

@@ -3,7 +3,7 @@ import whitelistUserMiddleware from 'middlewares/whitelistUserMiddleware'
 import Enums from 'enums'
 import { QuestStyle, QuestDuration } from '@prisma/client'
 
-const userQuestQueryHandler = async (req, res) => {
+const userFeatureQuestQueryHandler = async (req, res) => {
   const { method } = req
 
   switch (method) {
@@ -18,12 +18,15 @@ const userQuestQueryHandler = async (req, res) => {
 
         let quests = availableQuests
           .filter((q) => {
-
             if (q.extendedQuestData.collaboration && q.extendedQuestData.collaboration.length > 0) {
               return false
             }
 
-            if (q.style === QuestStyle.FEATURED) {
+            if (q.hasClaimed) {
+              return false
+            }
+
+            if (q.style === QuestStyle.NORMAL) {
               return false
             }
 
@@ -32,7 +35,7 @@ const userQuestQueryHandler = async (req, res) => {
           .map((aq) => {
             let relatedQuest = finishedQuest.find((q) => q.questId === aq.questId)
             if (relatedQuest) {
-              //Enums.DAILY_SHELL
+
               if (
                 relatedQuest?.quest.type.name === Enums.DAILY_SHELL &&
                 relatedQuest?.extendedUserQuestData?.frequently === Enums.DAILY
@@ -69,7 +72,7 @@ const userQuestQueryHandler = async (req, res) => {
             }
 
             return aq
-          })
+          }).filter(q => q.hasClaimed === false)
 
         return res.status(200).json(quests)
       } catch (err) {
@@ -82,4 +85,4 @@ const userQuestQueryHandler = async (req, res) => {
       res.status(405).end(`Method ${method} Not Allowed`)
   }
 }
-export default whitelistUserMiddleware(userQuestQueryHandler)
+export default whitelistUserMiddleware(userFeatureQuestQueryHandler)

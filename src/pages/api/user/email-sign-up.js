@@ -50,7 +50,7 @@ export default async function emailSignUp(req, res) {
         return res.status(200).json({ message: 'New account created.' })
       } catch (error) {
         // console.log(error)
-        return res.status(200).json({ isError: true, message: error.message })
+        res.status(200).json({ isError: true, message: error.message })
       }
       break
     default:

@@ -9,13 +9,13 @@ import {
 
 const claimIndividualQuestAPI = async (req, res) => {
   const { method } = req
+  const { userId } = req.whiteListUser
+  const { questId } = req.body
 
+  let userQuest
   switch (method) {
     case 'POST':
-      const { userId } = req.whiteListUser
-      const { questId } = req.body
 
-      let userQuest
       try {
         // query the type based on questId
         let currentQuest = await prisma.quest.findUnique({
@@ -106,7 +106,7 @@ const claimIndividualQuestAPI = async (req, res) => {
         return res.status(200).json(userQuest)
       } catch (error) {
         console.log(error)
-        return res.status(200).json({ isError: true, message: error.message, questId })
+        res.status(200).json({ isError: true, message: error.message, questId })
       }
       break
     default:

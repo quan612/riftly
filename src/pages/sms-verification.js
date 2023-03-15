@@ -61,14 +61,14 @@ function SMSVerificationPage() {
     }
 
     phoneNumberSet(e)
-  })
+  }, [])
 
   const onEnterCode = useCallback((val, codeError) => {
     if (codeError) {
       codeErrorSet(null)
     }
     codeSet(val)
-  })
+  }, [])
 
   const onSendPhone = async () => {
     let isPossibleNumber = isPossiblePhoneNumber(phoneNumber)
@@ -249,7 +249,7 @@ function SMSVerificationPage() {
               variant="blue"
               onClick={() => {
                 setView(WELCOME)
-                handleOnClose()
+
               }}
               minW="100%"
               borderRadius="24px"

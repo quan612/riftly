@@ -5,11 +5,11 @@ import { utils } from 'ethers'
 
 const sendCodeToTwilioVerifyHandler = async (req, res) => {
   const { method } = req
-
+  const { account, type, code } = req.body
+  let userQuest
   switch (method) {
     case 'POST':
-      const { account, type, code } = req.body
-      let userQuest
+
       try {
         if (!code) {
           return res.status(200).json({
@@ -120,9 +120,9 @@ const sendCodeToTwilioVerifyHandler = async (req, res) => {
           return res.status(200).json({ isError: true, message: 'Code expired' })
         }
 
-        return res.status(200).json({ isError: true, message: error.message })
+        res.status(200).json({ isError: true, message: error.message })
       }
-
+      break;
     default:
       res.setHeader('Allow', ['POST'])
       res.status(405).end(`Method ${method} Not Allowed`)

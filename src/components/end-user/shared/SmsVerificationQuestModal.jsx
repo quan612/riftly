@@ -240,7 +240,7 @@ const SmsVerificationQuestModal = ({ isOpen, onClose, quest }) => {
           <Button
             variant="blue"
             onClick={() => {
-              setView(CONNECTABLE)
+              setView(WELCOME)
               handleOnClose()
             }}
             minW="100%"

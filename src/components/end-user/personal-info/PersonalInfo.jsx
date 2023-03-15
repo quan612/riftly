@@ -32,6 +32,7 @@ import { debounce, getTwitterAuthLink, getDiscordAuthLink } from '@util/index'
 import { RiftlyTooltip } from '@components/shared/Icons'
 import UploadAvatarModal from '../shared/UploadAvatarModal'
 import { shortenAddress } from '@util/index'
+import { WalletAuthQuestModal } from '../shared'
 
 const PersonalInfo = ({ session }) => {
   return (
@@ -250,7 +251,9 @@ const Settings = () => {
 }
 
 const ConnectionsInfo = ({ session }) => {
-  const { wallet, twitter, discord } = session?.user
+  const {
+    user: { wallet, twitter, discord },
+  } = session
 
   const getDiscordInfo = useCallback(() => {
     if (discord?.length > 0) {
@@ -430,7 +433,9 @@ const AccountInfo = ({ session }) => {
   }
 
   const uploadAvatarModal = useDisclosure()
-  const { avatar, email } = session?.user
+  const {
+    user: { avatar, email },
+  } = session
 
   const getUserAvatar = useCallback(
     (avatar) => {

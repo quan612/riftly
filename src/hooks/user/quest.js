@@ -93,7 +93,8 @@ export const usePhoneNumberQuestSubmit = () => {
 
   return [data, isLoading, mutateAsync]
 }
-// only after code sent to user phone
+
+/* only after code sent to user phone*/
 export const usePhoneCodeQuestSubmit = () => {
   const queryClient = useQueryClient()
 
@@ -118,6 +119,7 @@ export const useUserQuestClaim = () => {
     (payload) => {
       return axios.post(`/api/user/quest/claim`, payload).then((r) => r.data)
     },
+    // manual invalid on component side, not here
   )
 
   return [data, isLoading, mutateAsync]
@@ -182,19 +184,37 @@ export const useUserImageQuestSubmit = () => {
   return [data, isLoading, mutateAsync]
 }
 
+
+/*******************************Query********************************************** */
 export const useUserQuestQuery = () => {
   const { data, isLoading } = useQuery(
     'user-query-user-quest',
     async () => {
       return axios.get(`${Enums.BASEPATH}/api/user/quest/`).then((r) => r.data)
     },
-    { staleTime: 5 },
+    { staleTime: 60 },
+  )
+
+  return { data, isLoading }
+}
+
+export const useUserFeatureQuestQuery = () => {
+  const { data, isLoading } = useQuery(
+    'user-query-feature-quest',
+    async () => {
+      return axios.get(`${Enums.BASEPATH}/api/user/quest/get-featured`).then((r) => r.data)
+    },
+    { staleTime: 60 },
   )
 
   return { data, isLoading }
 }
 
 export const useUserCollaborationQuestQuery = () => {
+
+  const router = useRouter()
+  const collaboration = typeof router.query?.collaboration === 'string' ? router.query.collaboration : ''
+
   const { data, isLoading } = useQuery(
     'user-query-collaboration-quest',
     async () => {

@@ -25,10 +25,10 @@ export default async function webPushSubscriptionHandler(req, res) {
             p256dh,
           },
         })
-        return res.status(200).json({ message: 'Subscription succeed.', newSubscription })
+        res.status(200).json({ message: 'Subscription succeed.', newSubscription })
       } catch (error) {
         console.log(error)
-        return res.status(200).json({ isError: true, message: error.message })
+        res.status(200).json({ isError: true, message: error.message })
       }
       break
     default:

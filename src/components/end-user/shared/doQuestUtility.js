@@ -6,7 +6,7 @@ import Enums from 'enums'
  * else submit a quest through api
  *
  */
-export const doQuestUtility = async (router, quest, currentQuests, onSubmit) => {
+export const doQuestUtility = async (router, quest, onSubmit) => {
   const { questId, type, quantity, rewardTypeId, extendedQuestData } = quest
 
   if (type.name === Enums.UNSTOPPABLE_AUTH) {
@@ -52,10 +52,8 @@ export const doQuestUtility = async (router, quest, currentQuests, onSubmit) => 
   let submission = {
     questId,
   }
+  console.log('questId', questId)
 
-  try {
-    return await onSubmit(submission, currentQuests)
-  } catch (error) {
-    throw error
-  }
+  return await onSubmit(submission)
+
 }

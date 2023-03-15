@@ -10,12 +10,12 @@ import Moralis from 'moralis'
 // ADD GUARD TO THIS QUEST, Like require more reward point to initiate
 const submitNftQuest = async (req, res) => {
   const { method } = req
-
+  const { userId } = req.whiteListUser
+  const { questId } = req.body
+  let userQuest
   switch (method) {
     case 'POST':
-      const { userId } = req.whiteListUser
-      const { questId } = req.body
-      let userQuest
+
       try {
         let currentQuest = await prisma.quest.findUnique({
           where: {
@@ -131,7 +131,7 @@ const submitNftQuest = async (req, res) => {
         })
       } catch (error) {
         console.log(error)
-        return res.status(200).json({ isError: true, message: error.message, questId })
+        res.status(200).json({ isError: true, message: error.message, questId })
       }
       break
     default:

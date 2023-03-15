@@ -15,14 +15,14 @@ export const config = {
 
 const submitImageQuestAPI = async (req, res) => {
   const { method } = req
+  const whiteListUser = req.whiteListUser
 
+  const { questId, extendedQuestData, imageBase64 } = req.body
+  let userQuest
   switch (method) {
     case 'POST':
       try {
-        const whiteListUser = req.whiteListUser
 
-        const { questId, extendedQuestData, imageBase64 } = req.body
-        let userQuest
 
         let currentQuest = await prisma.quest.findUnique({
           where: {
@@ -70,7 +70,7 @@ const submitImageQuestAPI = async (req, res) => {
         return res.status(200).json(userQuest)
       } catch (error) {
         console.log(error)
-        return res.status(200).json({ isError: true, message: error.message })
+        res.status(200).json({ isError: true, message: error.message })
       }
       break
     default:
@@ -79,19 +79,6 @@ const submitImageQuestAPI = async (req, res) => {
   }
 }
 
-const convert = async (image) => {
-  // Decoded image in UInt8 Byte array
-  // const image = await jpeg.decode(img, { useTArray: true })
-
-  const numChannels = 3
-  const numPixels = image.width * image.height
-  const values = new Int32Array(numPixels * numChannels)
-
-  for (let i = 0; i < numPixels; i++)
-    for (let c = 0; c < numChannels; ++c) values[i * numChannels + c] = image.data[i * 4 + c]
-
-  return tf.tensor3d(values, [image.height, image.width, numChannels], 'int32')
-}
 
 export default whitelistUserMiddleware(submitImageQuestAPI)
 

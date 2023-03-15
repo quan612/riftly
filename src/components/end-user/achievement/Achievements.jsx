@@ -254,46 +254,6 @@ const AchievementHeader = () => {
 const TripBox = ({ id, item, index }) => {
   const toast = useToast()
   const queryClient = useQueryClient()
-  const [disableBtn, disableBtnSet] = useState(false)
-
-  const [showScore, showScoreSet] = useState(false)
-  let scorePopupTimeout, invalidCacheTimeout
-
-  useEffect(() => {
-    return () => {
-      clearTimeout(scorePopupTimeout)
-      clearTimeout(invalidCacheTimeout)
-    }
-  }, [])
-
-  const claimQuest = useCallback(async (questId) => {
-    disableBtnSet(true)
-    try {
-      showScoreSet(true)
-      scorePopupTimeout = setTimeout(() => {
-        showScoreSet(false)
-        clearTimeout(scorePopupTimeout)
-      }, 500)
-
-      invalidCacheTimeout = setTimeout(() => {
-        queryClient.invalidateQueries('userQueryQuest')
-        queryClient.invalidateQueries('user-reward-query')
-        disableBtnSet(false)
-        clearTimeout(invalidCacheTimeout)
-      }, 2000)
-    } catch (error) {
-      console.log(error)
-      toast({
-        title: 'Exception',
-        description: `Catch error at quest: ${quest.text}. Please contact admin.`,
-        position: 'top-right',
-        status: 'error',
-        duration: 5000,
-        isClosable: true,
-      })
-      disableBtnSet(false)
-    }
-  })
 
   const getClaimButton = useCallback(() => {
     if (!item) return null

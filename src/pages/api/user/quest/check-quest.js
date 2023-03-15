@@ -1,4 +1,4 @@
-import { getAllEnableQuestsForUser, getQuestsDoneByThisUser } from 'repositories/quest'
+import { getAllEnableQuestsForUser, getQuestsStartedByThisUser } from 'repositories/quest'
 import whitelistUserMiddleware from 'middlewares/whitelistUserMiddleware'
 import Enums from 'enums'
 import { prisma } from 'context/PrismaContext'

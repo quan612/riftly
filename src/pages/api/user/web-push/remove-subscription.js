@@ -30,10 +30,10 @@ export default async function removeWebPushSubscriptionHandler(req, res) {
           })
         }
 
-        return res.status(200).json({ message: 'Unsubscribe succeed.' })
+        res.status(200).json({ message: 'Unsubscribe succeed.' })
       } catch (error) {
         console.log(error)
-        return res.status(200).json({ isError: true, message: error.message })
+        res.status(200).json({ isError: true, message: error.message })
       }
       break
     default:

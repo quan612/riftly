@@ -38,40 +38,38 @@ export const authOptions = {
       name: 'web3-wallet',
       type: 'credentials',
       authorize: async (credentials, req) => {
-        try {
-          let { address, signature } = credentials
 
-          if (!address || !signature) throw new Error('Missing address or signature')
+        let { address, signature } = credentials
 
-          if (utils.getAddress(address) && !utils.isAddress(address))
-            throw new Error('Invalid address')
+        if (!address || !signature) throw new Error('Missing address or signature')
 
-          const user = await prisma.whiteList.findFirst({
-            where: {
-              wallet: { equals: address, mode: 'insensitive' },
-            },
-          })
+        if (utils.getAddress(address) && !utils.isAddress(address))
+          throw new Error('Invalid address')
 
-          if (!user) {
-            throw new Error('This wallet account is not in our record.')
-          }
+        const user = await prisma.whiteList.findFirst({
+          where: {
+            wallet: { equals: address, mode: 'insensitive' },
+          },
+        })
 
-          const msg = `${Enums.USER_SIGN_MSG}`
-
-          const msgBufferHex = ethUtil.bufferToHex(Buffer.from(msg, 'utf8'))
-
-          const originalAddress = recoverPersonalSignature({
-            data: msgBufferHex,
-            signature: signature.trim(),
-          })
-
-          if (originalAddress.toLowerCase() !== address.toLowerCase())
-            throw new Error('Signature verification failed')
-
-          return { address: originalAddress, isAdmin: false, userId: user.userId }
-        } catch (error) {
-          throw error
+        if (!user) {
+          throw new Error('This wallet account is not in our record.')
         }
+
+        const msg = `${Enums.USER_SIGN_MSG}`
+
+        const msgBufferHex = ethUtil.bufferToHex(Buffer.from(msg, 'utf8'))
+
+        const originalAddress = recoverPersonalSignature({
+          data: msgBufferHex,
+          signature: signature.trim(),
+        })
+
+        if (originalAddress.toLowerCase() !== address.toLowerCase())
+          throw new Error('Signature verification failed')
+
+        return { address: originalAddress, isAdmin: false, userId: user.userId }
+
       },
     }),
     CredentialsProvider({
@@ -79,47 +77,45 @@ export const authOptions = {
       name: 'Unstoppable authentication',
       type: 'credentials',
       authorize: async (credentials, req) => {
-        try {
-          let { uathUser, address, message, signature, authorization } = credentials
 
-          // if (!address || !uathUser || !authorization) {
+        let { uathUser, address, message, signature, authorization } = credentials
 
-          //     throw new Error("Missing unstoppable info");
-          // }
+        // if (!address || !uathUser || !authorization) {
 
-          if (utils.getAddress(address) && !utils.isAddress(address))
-            throw new Error('Invalid address')
+        //     throw new Error("Missing unstoppable info");
+        // }
 
-          const user = await prisma.whiteList.findFirst({
-            where: {
-              uathUser,
-            },
-          })
-          // let test = await uauth.user();
+        if (utils.getAddress(address) && !utils.isAddress(address))
+          throw new Error('Invalid address')
 
-          let type = 'sig',
-            version = 'v1'
+        const user = await prisma.whiteList.findFirst({
+          where: {
+            uathUser,
+          },
+        })
+        // let test = await uauth.user();
 
-          const {
-            address: originalAddress,
-            message: originalMessage,
-            signature: originalSignature,
-          } = await uauth.getAuthorizationAccount(JSON.parse(authorization), type, version)
+        let type = 'sig',
+          version = 'v1'
 
-          return {
-            address,
-            message,
-            signature,
-            isAdmin: false,
-            userId: user?.userId,
-            uauthUser: uathUser,
-            originalAddress,
-            originalMessage,
-            originalSignature,
-          }
-        } catch (error) {
-          throw error
+        const {
+          address: originalAddress,
+          message: originalMessage,
+          signature: originalSignature,
+        } = await uauth.getAuthorizationAccount(JSON.parse(authorization), type, version)
+
+        return {
+          address,
+          message,
+          signature,
+          isAdmin: false,
+          userId: user?.userId,
+          uauthUser: uathUser,
+          originalAddress,
+          originalMessage,
+          originalSignature,
         }
+
       },
     }),
     CredentialsProvider({
@@ -261,7 +257,7 @@ export const authOptions = {
           return `/quest-redirect?error=${error}`
         }
         if (existingUser.status === AccountStatus.PENDING && isSMSVerificationRequired) {
-          return `/sms-verification?account=${address}&type=${Enums.DISCORD}`
+          return `/sms-verification?account=${discordId}&type=${Enums.DISCORD}`
         }
         return true
       }
@@ -279,7 +275,7 @@ export const authOptions = {
           return `/quest-redirect?error=${error}`
         }
         if (existingUser.status === AccountStatus.PENDING && isSMSVerificationRequired) {
-          return `/sms-verification?account=${address}&type=${Enums.TWITTER}`
+          return `/sms-verification?account=${twitterId}&type=${Enums.TWITTER}`
         }
         return true
       }

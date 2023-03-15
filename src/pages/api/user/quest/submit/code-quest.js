@@ -4,12 +4,12 @@ import Enums from 'enums'
 
 const submitCodeQuest = async (req, res) => {
   const { method } = req
-
+  const { userId } = req.whiteListUser
+  const { questId, inputCode } = req.body
+  let userQuest
   switch (method) {
     case 'POST':
-      const { userId } = req.whiteListUser
-      const { questId, inputCode } = req.body
-      let userQuest
+
       try {
         if (!inputCode) {
           return res.status(200).json({
@@ -38,7 +38,7 @@ const submitCodeQuest = async (req, res) => {
 
         let foundOtherAnswersCorrect = -1
 
-        if (extendedQuestData.hasOwnProperty('otherAnswers')) {
+        if (extendedQuestData?.otherAnswers) {
           let { otherAnswers } = extendedQuestData
           let answersArray = otherAnswers.split(',')
 
@@ -135,7 +135,7 @@ const submitCodeQuest = async (req, res) => {
         }
       } catch (error) {
         console.log(error)
-        return res.status(200).json({ isError: true, message: error.message, questId })
+        res.status(200).json({ isError: true, message: error.message, questId })
       }
       break
     default:

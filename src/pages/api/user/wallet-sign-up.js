@@ -92,7 +92,7 @@ export default async function walletSignUp(req, res) {
         return res.status(200).json({ message: 'Link wallet successfully.' })
       } catch (error) {
         console.log(error)
-        return res.status(200).json({ isError: true, message: error.message })
+        res.status(200).json({ isError: true, message: error.message })
       }
       break
     default:

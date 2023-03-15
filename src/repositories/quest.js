@@ -65,7 +65,7 @@ export const getAllEnableQuestsForUser = async () => {
   })
 }
 
-export const getQuestsDoneByThisUser = async (userId) => {
+export const getQuestsStartedByThisUser = async (userId) => {
   return await prisma.userQuest.findMany({
     where: {
       userId,
