@@ -31,17 +31,15 @@ const UserQuestProvider = ({ children }) => {
             break
           case Enums.OWNING_NFT_CLAIM:
             questSelectedSet(quest)
-
             nftOwnQuestModal.onOpen()
             break
           case Enums.UNSTOPPABLE_AUTH:
             questSelectedSet(quest)
-
             unstoppableQuestModal.onOpen()
             break
 
           default:
-          // await doQuestUtility(router, quest, onSubmit)
+            await doQuestUtility(router, quest, onSubmit)
         }
       } catch (error) {
         console.log(error)
