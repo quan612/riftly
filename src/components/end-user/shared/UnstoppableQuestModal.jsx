@@ -132,7 +132,7 @@ const UnstoppableQuestModal = ({ isOpen, onClose, currentQuest }) => {
           )}
           <ChakraBox w="100%" key="unstoppable-quest-submit" layout>
             <Button variant="blue" onClick={handleOnSubmit} w="100%" isLoading={isSubmittingQuest}>
-              Link
+              Submit
             </Button>
           </ChakraBox>
         </AnimatePresence>

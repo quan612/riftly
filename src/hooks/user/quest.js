@@ -227,18 +227,6 @@ export const useUserCollaborationQuestQuery = () => {
   return { data, isLoading }
 }
 
-export const useUserUnstoppableAuthQuestQuery = () => {
-  const { data, isLoading } = useQuery(
-    'user-query-unstoppable-quest',
-    async () => {
-      return axios.get(`${Enums.BASEPATH}/api/user/quest/unstoppable-quest`).then((r) => r.data)
-    },
-    { staleTime: 60 },
-  )
-
-  return { data, isLoading }
-}
-
 export const useUserImageQuestQuery = () => {
   const router = useRouter()
   const imageQuestEvent = typeof router.query?.eventName === 'string' ? router.query.eventName : ''
