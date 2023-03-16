@@ -31,6 +31,18 @@ export const remove_duplicates_es6 = (arr) => {
   return Array.from(it)
 }
 
+export const checkPasswordStrength = (password) => {
+  // Define a regular expression to match at least one lowercase letter, one uppercase letter, and one number
+  var regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
+
+  // Test the password against the regular expression
+  if (regex.test(password)) {
+    return true;
+  } else {
+    return false; //"Weak password. Please include at least one lowercase letter, one uppercase letter, one number, and have a minimum length of 8 characters.";
+  }
+}
+
 export const getUserName = (session) => {
 
   switch (session?.provider) {

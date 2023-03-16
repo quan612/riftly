@@ -2,7 +2,7 @@ import { utils } from 'ethers'
 import { prisma } from '@context/PrismaContext'
 import Enums, { EMAIL } from '@enums/index'
 
-import { validateEmail } from 'util/index'
+import { checkPasswordStrength, validateEmail } from 'util/index'
 import { getAccountStatusToAdd } from 'repositories/user'
 const bcrypt = require('bcrypt')
 
@@ -34,6 +34,9 @@ export default async function emailSignUp(req, res) {
         }
         if (password.trim().length === 0) {
           throw new Error('Blank password.')
+        }
+        if (!checkPasswordStrength(password)) {
+          throw new Error('Weak password. Please include at least one lowercase letter, one uppercase letter, one number, and have a minimum length of 8 characters.')
         }
 
         const hash = await bcrypt.hash(password, 10)

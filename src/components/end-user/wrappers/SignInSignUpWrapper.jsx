@@ -28,7 +28,7 @@ import { ShortContainer } from '@components/end-user/wrappers'
 import { signIn } from 'next-auth/react'
 import axios from 'axios'
 import { ChakraBox } from '@theme/additions/framer/FramerChakraComponent'
-import { getTwitterAuthLink, getDiscordAuthLink } from '@util/index'
+import { getTwitterAuthLink, getDiscordAuthLink, checkPasswordStrength } from '@util/index'
 import Loading from '@components/shared/LoadingContainer/Loading'
 import { debounce, sleep } from 'util/index'
 import Enums from '@enums/index'
@@ -282,8 +282,6 @@ export const EmailWrapper = React.forwardRef(({ isSignIn = false, setView }, ref
       setLoading(true)
       await sleep(1000)
       let signInRes = await signIn('email', {
-        // redirect: false,
-
         redirect: false,
         email,
         password,
@@ -312,6 +310,12 @@ export const EmailWrapper = React.forwardRef(({ isSignIn = false, setView }, ref
     let password = passwordRef.current.value
     if (!email || !password) {
       return errorSet('Email or password cannot be blank')
+    }
+
+    if (!checkPasswordStrength(password)) {
+      return errorSet(
+        'Weak password. Please include at least one lowercase letter, one uppercase letter, one number, and have a minimum length of 8 characters.',
+      )
     }
     errorSet(null)
     let payload = {
