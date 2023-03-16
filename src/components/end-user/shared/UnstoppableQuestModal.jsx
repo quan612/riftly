@@ -58,18 +58,19 @@ const UnstoppableQuestModal = ({ isOpen, onClose, currentQuest }) => {
 
   async function handleOnSubmit() {
     /** Submit this quest */
-    const { questId, type, rewardTypeId, quantity, extendedQuestData } = submissionQuest
+
     if (!uauthUser) {
       return
     }
+
+    const { questId } = currentQuest
     let payload = {
       questId,
       uauthUser,
     }
     let res = await submitQuest(payload)
-
     if (res?.isError) {
-      setError(res.message)
+      errorSet(res.message)
     } else {
       setView(SUBMITTED)
     }
@@ -130,13 +131,7 @@ const UnstoppableQuestModal = ({ isOpen, onClose, currentQuest }) => {
             </ChakraBox>
           )}
           <ChakraBox w="100%" key="unstoppable-quest-submit" layout>
-            <Button
-              variant="blue"
-              onClick={handleOnSubmit}
-              w="100%"
-
-              // isLoading={isSubmittingQuest}
-            >
+            <Button variant="blue" onClick={handleOnSubmit} w="100%" isLoading={isSubmittingQuest}>
               Link
             </Button>
           </ChakraBox>
