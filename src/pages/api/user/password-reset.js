@@ -2,7 +2,7 @@ import { utils } from 'ethers'
 import { prisma } from '@context/PrismaContext'
 import Enums from '@enums/index'
 
-import { validateEmail } from 'util/index'
+import { checkPasswordStrength, validateEmail } from 'util/index'
 const bcrypt = require('bcrypt')
 
 export default async function passwordReset(req, res) {
