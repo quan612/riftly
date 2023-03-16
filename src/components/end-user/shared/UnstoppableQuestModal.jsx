@@ -30,6 +30,8 @@ const UnstoppableQuestModal = ({ isOpen, onClose, currentQuest }) => {
   const [uauthUser, setUauthUser] = useState(null)
   const [questData, isSubmittingQuest, submitQuest] = useUnstoppableAuthQuestSubmit()
 
+  console.log(currentQuest)
+
   const handleOnClose = useCallback(() => {
     errorSet(null)
     onClose()

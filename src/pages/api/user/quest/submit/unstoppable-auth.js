@@ -11,6 +11,7 @@ const submitUnstoppableAuthQuest = async (req, res) => {
   const { questId, uauthUser } = req.body
   let userQuest
 
+  console.log("questId", questId)
   switch (method) {
     case 'POST':
 
@@ -45,8 +46,6 @@ const submitUnstoppableAuthQuest = async (req, res) => {
             message: 'This route is for unstoppable quest!',
           })
         }
-
-        const { questId } = currentQuest
         // TODO: Manual check kind of quest, if Limited then check quest data to see whether it expired, maybe in a middleware
 
         let entry = await prisma.UserQuest.findUnique({
