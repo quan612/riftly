@@ -69,6 +69,7 @@ const UnstoppableQuestModal = ({ isOpen, onClose, currentQuest }) => {
       uauthUser,
     }
     let res = await submitQuest(payload)
+    console.log(res)
     if (res?.isError) {
       errorSet(res.message)
     } else {
