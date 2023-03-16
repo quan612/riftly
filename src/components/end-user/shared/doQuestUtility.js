@@ -24,11 +24,11 @@ export const doQuestUtility = async (router, quest, onSubmit) => {
   if (type.name === Enums.DISCORD_AUTH) {
     let discordLink = await getDiscordAuthLink()
 
-    return window.open(discordLink, '_blank')
+    return window.open(discordLink, '_self')
   }
   if (type.name === Enums.TWITTER_AUTH) {
     let twitterLink = await getTwitterAuthLink()
-    return window.open(twitterLink, '_blank')
+    return window.open(twitterLink, '_self')
   }
   if (type.name === Enums.JOIN_DISCORD) {
     let discordServer = extendedQuestData.discordServer
@@ -52,7 +52,7 @@ export const doQuestUtility = async (router, quest, onSubmit) => {
   let submission = {
     questId,
   }
-  console.log('questId', questId)
+
 
   return await onSubmit(submission)
 

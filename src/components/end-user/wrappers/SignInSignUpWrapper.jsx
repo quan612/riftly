@@ -223,7 +223,6 @@ export const SignInSignUpWrapper = ({ isSignIn = false }) => {
             <Input
               variant={'riftly'}
               type="text"
-              size="lg"
               placeholder="Email"
               ref={inputRefs.emailRef}
               defaultValue={inputRefs.emailRef.current.value}
@@ -231,8 +230,6 @@ export const SignInSignUpWrapper = ({ isSignIn = false }) => {
             <Button
               w="100%"
               variant="blue"
-              size="lg"
-              fontSize="18px"
               onClick={() => {
                 setView(EMAIL)
               }}
@@ -241,7 +238,6 @@ export const SignInSignUpWrapper = ({ isSignIn = false }) => {
             </Button>
             <Button
               variant="ghost-blue"
-              fontSize="18px"
               onClick={() => {
                 router.push('/welcome')
               }}

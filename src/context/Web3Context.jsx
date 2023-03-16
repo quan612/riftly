@@ -11,7 +11,7 @@ const API_ADMIN = `${Enums.BASEPATH}/api/admin`
 const API_USER = `${Enums.BASEPATH}/api/user`
 
 import UAuth from '@uauth/js'
-// import { useWalletAuthQuestSubmit } from "@hooks/quest";
+
 const { default: Resolution } = require('@unstoppabledomains/resolution')
 const resolution = new Resolution()
 

@@ -193,9 +193,7 @@ export const authOptions = {
   },
   callbacks: {
     signIn: async (user, account, profile) => {
-      if (user?.account?.provider === 'admin-authenticate') {
-        return true
-      }
+
       let isSMSVerificationRequired = await getIsSMSVerificationRequired()
       if (user?.account?.provider === 'unstoppable-authenticate') {
         let uathUser = user.credentials.uathUser
@@ -246,6 +244,7 @@ export const authOptions = {
 
       if (user?.account?.provider === 'discord') {
         let discordId = user.account.providerAccountId
+        console.log("discordId", discordId)
         const existingUser = await prisma.whiteList.findFirst({
           where: {
             discordId,
@@ -262,6 +261,7 @@ export const authOptions = {
         return true
       }
       if (user?.account?.provider === 'twitter') {
+
         let twitterId = user.account.providerAccountId
 
         const existingUser = await prisma.whiteList.findFirst({
@@ -279,8 +279,8 @@ export const authOptions = {
         }
         return true
       }
-
       if (user?.account?.provider === 'web3-wallet') {
+
         let userId = user?.user?.userId
         let address = user?.user?.address
         const existingUser = await prisma.whiteList.findUnique({
@@ -306,7 +306,9 @@ export const authOptions = {
       return url
     },
     async jwt({ token, user, account, profile }) {
+
       if (user) {
+
         token.profile = profile
         token.user = user
         token.provider = account?.provider
@@ -315,34 +317,53 @@ export const authOptions = {
       return token
     },
     async session({ session, token }) {
-      if (token.provider === 'admin-authenticate') {
-        session.profile = token.profile || null
-        session.user = token.user
-        session.provider = token.provider
-        return session
-      } else {
-        let userQuery = await prisma.whiteList.findFirst({
+      console.log(`#######################################################################`)
+      let userQuery;
+      if (token.provider === "twitter") {
+        userQuery = await prisma.whiteList.findFirst({
           where: {
-            userId: token?.user?.userId,
+            twitterId: token?.user?.id,
           },
-        })
-
-        session.profile = token.profile || null
-        session.user = token.user
-        session.provider = token.provider
-
-        session.user.twitter = userQuery?.twitterUserName || ''
-        session.user.discord = userQuery?.discordUserDiscriminator || ''
-        session.user.email = userQuery?.email || ''
-        session.user.avatar = userQuery?.avatar || ''
-        session.user.wallet = userQuery?.wallet || ''
-
-        if (!session.user.userId) {
-          session.user.userId = userQuery.userId
-          session.user.uathUser = userQuery?.uathUser || ''
-        }
-        return session
+        });
       }
+      if (token.provider === "discord") {
+        userQuery = await prisma.whiteList.findFirst({
+          where: {
+            discordId: token?.user?.id,
+          },
+        });
+      }
+      if (token.provider === "web3-wallet") {
+        userQuery = await prisma.whiteList.findFirst({
+          where: {
+            wallet: token?.user?.address,
+          },
+        });
+      }
+      if (token.provider === 'email') {
+        userQuery = await prisma.whiteList.findFirst({
+          where: {
+            email: token?.user?.email,
+          },
+        });
+      }
+
+      session.profile = token.profile || null
+      session.user = token.user
+      session.provider = token.provider
+
+      session.user.twitter = userQuery?.twitterUserName || ''
+      session.user.discord = userQuery?.discordUserDiscriminator || ''
+      session.user.email = userQuery?.email || ''
+      session.user.avatar = userQuery?.avatar || ''
+      session.user.wallet = userQuery?.wallet || ''
+      session.user.uathUser = userQuery?.uathUser || ''
+
+      if (!session.user.userId) {
+        session.user.userId = userQuery?.userId
+      }
+
+      return session
     },
   },
   secret: NEXTAUTH_SECRET,

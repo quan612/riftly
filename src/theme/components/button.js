@@ -4,9 +4,15 @@ export const buttonStyles = {
   components: {
     Button: {
       baseStyle: {
-        borderRadius: '16px',
+        w: 'auto',
+        height: { 'xs': '24px', '2xs': '32px', 'md': '40px', 'lg': '48px' },
+        paddingX: { xs: '8px', '2xs': '12px', '2sm': '16px', 'lg': '24px' },
+        fontSize: { xs: '12px', '2xs': '14px', '2sm': '16px', 'lg': '18px' },
+        fontWeight: 'semibold',
+        borderRadius: '48px',
+        border: '1px solid',
         boxShadow: '45px 76px 113px 7px rgba(112, 144, 176, 0.08)',
-        transition: '.25s all ease',
+        transition: '0.8s',
         boxSizing: 'border-box',
         _focus: {
           boxShadow: 'none',
@@ -15,6 +21,7 @@ export const buttonStyles = {
           boxShadow: 'none',
         },
       },
+
       variants: {
         outline: () => ({
           borderRadius: '16px',
@@ -32,83 +39,12 @@ export const buttonStyles = {
             bg: mode('brand.600', 'brand.400')(props),
           },
         }),
-        darkBrand: (props) => ({
-          bg: mode('brand.900', 'brand.400')(props),
-          color: 'white',
-          _focus: {
-            bg: mode('brand.900', 'brand.400')(props),
-          },
-          _active: {
-            bg: mode('brand.900', 'brand.400')(props),
-          },
-          _hover: {
-            bg: mode('brand.800', 'brand.400')(props),
-          },
-        }),
-        lightBrand: (props) => ({
-          bg: mode('#F2EFFF', 'whiteAlpha.100')(props),
-          color: mode('brand.500', 'white')(props),
-          _focus: {
-            bg: mode('#F2EFFF', 'whiteAlpha.100')(props),
-          },
-          _active: {
-            bg: mode('secondaryGray.300', 'whiteAlpha.100')(props),
-          },
-          _hover: {
-            bg: mode('secondaryGray.400', 'whiteAlpha.200')(props),
-          },
-        }),
-        light: (props) => ({
-          bg: mode('secondaryGray.300', 'whiteAlpha.100')(props),
-          color: mode('secondaryGray.900', 'white')(props),
-          _focus: {
-            bg: mode('secondaryGray.300', 'whiteAlpha.100')(props),
-          },
-          _active: {
-            bg: mode('secondaryGray.300', 'whiteAlpha.100')(props),
-          },
-          _hover: {
-            bg: mode('secondaryGray.400', 'whiteAlpha.200')(props),
-          },
-        }),
-        action: (props) => ({
-          fontWeight: '500',
-          borderRadius: '50px',
-          bg: mode('secondaryGray.300', 'brand.400')(props),
-          color: mode('brand.500', 'white')(props),
-          _focus: {
-            bg: mode('secondaryGray.300', 'brand.400')(props),
-          },
-          _active: { bg: mode('secondaryGray.300', 'brand.400')(props) },
-          _hover: {
-            bg: mode('secondaryGray.200', 'brand.400')(props),
-          },
-        }),
-        setup: (props) => ({
-          fontWeight: '500',
-          borderRadius: '50px',
-          bg: mode('transparent', 'brand.400')(props),
-          border: mode('1px solid', '0px solid')(props),
-          borderColor: mode('secondaryGray.400', 'transparent')(props),
-          color: mode('secondaryGray.900', 'white')(props),
-          _focus: {
-            bg: mode('transparent', 'brand.400')(props),
-          },
-          _active: { bg: mode('transparent', 'brand.400')(props) },
-          _hover: {
-            bg: mode('secondaryGray.100', 'brand.400')(props),
-          },
-        }),
+
         signIn: (props) => ({
-          w: { base: 'auto', md: '192px' },
-          h: { base: '40px', lg: '48px' },
-          fontSize: { base: '16px', lg: '18px' },
-          border: '1px solid',
           borderColor: 'brand.blue',
-          borderRadius: '48px',
           bg: 'transparent',
           color: 'white',
-          transition: '0.8s',
+
           _hover: {
             transition: '0.8s',
             bg: 'brand.blue',
@@ -135,55 +71,10 @@ export const buttonStyles = {
             color: '#fff',
           },
         }),
-
-        blue: (props) => ({
-          w: { base: 'auto', md: '192px' },
-          h: { base: '40px', 'xl': '48px' },
-          fontSize: { base: '16px', lg: '18px' },
-
-          border: '1px solid',
-          borderColor: 'transparent',
-          borderRadius: '48px',
-          bg: 'brand.blue',
-          color: '#fff',
-          transition: '0.8s',
-          _hover: {
-            transition: '0.8s',
-            bg: '#fff',
-            color: 'brand.blue',
-            _disabled: {
-              bg: 'brand.blue',
-              color: '#fff',
-              opacity: 0.4,
-            },
-          },
-          _disabled: {
-            opacity: 0.4,
-          },
-          _focus: {
-            transition: '0.8s',
-            bg: '#fff',
-            color: 'brand.blue',
-            _disabled: {
-              bg: 'brand.blue',
-              color: '#fff',
-              opacity: 0.4,
-            },
-          },
-          _active: {
-            bg: '#fff',
-            border: '1px solid',
-            borderColor: 'brand.blue',
-            color: 'brand.blue',
-          },
-        }),
-
         'ghost-blue': (props) => ({
-          minWidth: '96px',
           borderColor: 'transparent',
           bg: 'transparent',
           color: 'brand.blue',
-          transition: '0.8s',
           marginTop: '-12px',
           outline: 'none',
           _hover: {
@@ -197,7 +88,6 @@ export const buttonStyles = {
             },
           },
           _disabled: {
-            color: 'brand.blue',
             opacity: 0.6,
           },
           _focus: {
@@ -252,98 +142,151 @@ export const buttonStyles = {
             textDecoration: 'underline',
           },
         }),
+        blue: (props) => ({
+          borderColor: 'transparent',
+          bg: 'brand.blue',
+          color: '#fff',
+
+          _hover: {
+            transition: '0.8s',
+            bg: '#fff',
+            color: 'brand.blue',
+            _disabled: {
+              bg: 'brand.blue',
+              color: '#fff',
+              opacity: 0.4,
+            },
+          },
+          _disabled: {
+            opacity: 0.4,
+          },
+          _focus: {
+            transition: '0.8s',
+            bg: '#fff',
+            color: 'brand.blue',
+            _disabled: {
+              bg: 'brand.blue',
+              color: '#fff',
+              opacity: 0.4,
+            },
+          },
+          _active: {
+            bg: '#fff',
+
+            borderColor: 'brand.blue',
+            color: 'brand.blue',
+          },
+        }),
 
         cyan: (props) => ({
-          w: { base: 'auto', lg: '192px' },
-          h: { base: '40px', lg: '48px' },
-          fontSize: { base: '16px', lg: '18px' },
+          borderColor: 'transparent',
           bg: 'brand.cyan',
-          borderRadius: '48px',
           color: '#fff',
-          transition: '0.8s',
+
           _hover: {
             transition: '0.8s',
             bg: '#fff',
             color: 'brand.cyan',
+            _disabled: {
+              bg: 'brand.cyan',
+              color: '#fff',
+              opacity: 0.4,
+            },
           },
           _disabled: {
-            cursor: 'not-allowed',
-            borderColor: 'brand.neutral1',
-            color: 'brand.neutral1',
-            _placeholder: { color: 'brand.neutral3' },
+            opacity: 0.4,
           },
-          // _focus: {
-          //   bg: mode("brand.900", "brand.400")(props),
-          // },
-          // _active: {
-          //   bg: mode("blue.400", "blue.300")(props),
-          // },
+          _focus: {
+            transition: '0.8s',
+            bg: '#fff',
+            color: 'brand.cyan',
+            _disabled: {
+              bg: 'brand.cyan',
+              color: '#fff',
+              opacity: 0.4,
+            },
+          },
+          _active: {
+            bg: '#fff',
+            border: '1px solid',
+            borderColor: 'brand.blue',
+            color: 'brand.blue',
+          },
         }),
 
         twitter: (props) => ({
-          w: { base: 'auto', md: '192px' },
-          h: { base: '40px', lg: '48px' },
-          fontSize: { base: '16px', lg: '18px' },
-          fontWeight: 'semibold',
-          bg: mode('transparent', 'transparent')(props),
+          borderColor: 'blue.300',
+          bg: 'transparent',
           color: 'white',
-          border: '1px solid',
-          borderColor: mode('blue.300', 'blue.300')(props),
-          borderRadius: '48px',
-          transition: '0.8s',
           _hover: {
             transition: '0.8s',
             bg: 'blue.300',
             svg: {
-              fill: mode('white', 'blue.300'),
+              fill: 'white',
               transition: '0.8s',
             },
           },
-          // _focus: {
-          //   bg: mode("brand.900", "brand.400")(props),
-          // },
+          _disabled: {
+            opacity: 0.4,
+          },
+          _focus: {
+            transition: '0.8s',
+            bg: 'blue.300',
+            color: '#fff',
+            svg: {
+              fill: 'white',
+              transition: '0.8s',
+            },
+            _disabled: {
+              bg: 'blue.300',
+              color: '#fff',
+              opacity: 0.4,
+            },
+          },
           _active: {
-            bg: mode('blue.400', 'blue.400')(props),
+            bg: 'blue.300',
           },
         }),
 
         discord: (props) => ({
-          w: { base: 'auto', sm: '192px' },
-          h: { base: '40px', lg: '48px' },
-          fontSize: { base: '16px', lg: '18px' },
-          fontWeight: 'semibold',
-          bg: 'transparent', //mode("transparent", "purple.300")(props),
+          bg: 'transparent',
           color: 'white',
-          border: '1px solid',
-          borderColor: 'purple.300', //"mode("purple.300", "secondaryGray.400")(props),
-          borderRadius: '48px',
-          transition: '0.8s',
+          borderColor: 'purple.300',
           _hover: {
             transition: '0.8s',
             bg: 'purple.300',
             svg: {
-              fill: 'white', //mode("white", "purple.300"),
+              fill: 'white',
               transition: '0.8s',
             },
           },
-          // _focus: {
-          //   bg: mode("brand.900", "brand.400")(props),
-          // },
+          _disabled: {
+            opacity: 0.4,
+          },
+          _focus: {
+            transition: '0.8s',
+            bg: 'purple.300',
+            color: '#fff',
+            svg: {
+              fill: 'white',
+              transition: '0.8s',
+            },
+            _disabled: {
+              bg: 'purple.300',
+              color: '#fff',
+              opacity: 0.4,
+            },
+          },
           _active: {
-            bg: mode('purple.400', 'purple.400')(props),
+            bg: 'purple.300',
+            borderColor: 'purple.300',
+            color: '#fff',
           },
         }),
         wallet: (props) => ({
-          w: { base: 'auto', md: '192px' },
-          h: { base: '40px', lg: '48px' },
-          fontSize: { base: '16px', lg: '18px' },
-          fontWeight: 'semibold',
+          borderColor: 'orange.300',
           bg: 'transparent',
           color: 'white',
-          border: '1px solid',
-          borderColor: 'orange.300',
-          borderRadius: '48px',
-          transition: '0.8s',
           _hover: {
             transition: '0.8s',
             bg: 'orange.300',
@@ -352,24 +295,33 @@ export const buttonStyles = {
               transition: '0.8s',
             },
           },
-          // _focus: {
-          //   bg: mode("brand.900", "brand.400")(props),
-          // },
+          _disabled: {
+            opacity: 0.4,
+          },
+          _focus: {
+            transition: '0.8s',
+            bg: 'orange.300',
+            color: '#fff',
+            svg: {
+              fill: 'white',
+              transition: '0.8s',
+            },
+            _disabled: {
+              bg: 'orange.300',
+              color: '#fff',
+              opacity: 0.4,
+            },
+          },
           _active: {
-            bg: mode('orange.400', 'orange.400')(props),
+            bg: 'orange.300',
+            color: '#fff',
           },
         }),
         google: (props) => ({
-          w: { base: 'auto', md: '192px' },
-          h: { base: '40px', lg: '48px' },
-          fontSize: { base: '16px', lg: '18px' },
-          fontWeight: 'semibold',
-          bg: mode('transparent', 'transparent')(props),
+          borderColor: 'red.300',
+          bg: 'transparent',
           color: 'white',
-          border: '1px solid',
-          borderColor: mode('red.300', 'red.300')(props),
-          borderRadius: '48px',
-          transition: '0.8s',
+
           _hover: {
             transition: '0.8s',
             bg: 'red.300',
@@ -377,12 +329,141 @@ export const buttonStyles = {
               fill: 'white',
               transition: '0.8s',
             },
+            _disabled: {
+
+              svg: {
+                fill: 'red.300',
+                transition: '0.8s',
+              },
+            },
           },
-          // _focus: {
-          //   bg: mode("brand.900", "brand.400")(props),
-          // },
+          _disabled: {
+            opacity: 0.4,
+          },
+          _focus: {
+            transition: '0.8s',
+            bg: 'red.300',
+            color: '#fff',
+            svg: {
+              fill: 'white',
+              transition: '0.8s',
+            },
+            _disabled: {
+              bg: 'red.300',
+              color: '#fff',
+              opacity: 0.4,
+            },
+          },
           _active: {
-            bg: mode('red.400', 'red.400')(props),
+            bg: 'red.300',
+          },
+        }),
+
+        'light-blue': (props) => ({
+          borderColor: 'transparent',
+          bg: 'blue.300',
+          color: '#fff',
+
+          _hover: {
+            transition: '0.8s',
+            bg: '#fff',
+            color: 'blue.300',
+            _disabled: {
+              bg: 'blue.300',
+              color: '#fff',
+              opacity: 0.4,
+            },
+          },
+          _disabled: {
+            opacity: 0.4,
+          },
+          _focus: {
+            transition: '0.8s',
+            bg: '#fff',
+            color: 'blue.300',
+            _disabled: {
+              bg: 'blue.300',
+              color: '#fff',
+              opacity: 0.4,
+            },
+          },
+          _active: {
+            bg: '#fff',
+
+            borderColor: 'blue.300',
+            color: 'blue.300',
+          },
+        }),
+
+        'outline-blue': (props) => ({
+          borderColor: 'brand.blue',
+          bg: 'transparent',
+          color: '#fff',
+
+          _hover: {
+            transition: '0.8s',
+            bg: 'brand.blue',
+            color: '#fff',
+            _disabled: {
+              bg: 'transparent',
+              color: '#fff',
+              opacity: 0.4,
+            },
+          },
+          _disabled: {
+            opacity: 0.4,
+          },
+          _focus: {
+            transition: '0.8s',
+            bg: 'brand.blue',
+            color: '#fff',
+            borderColor: '#fff',
+            _disabled: {
+              bg: 'transparent',
+              color: '#fff',
+              opacity: 0.4,
+            },
+          },
+          _active: {
+            bg: 'transparent',
+            borderColor: 'brand.blue',
+            color: 'brand.blue',
+          },
+        }),
+
+        gray: (props) => ({
+          borderColor: 'transparent',
+          bg: 'gray.400',
+          color: '#fff',
+
+          _hover: {
+            transition: '0.8s',
+            bg: '#fff',
+            color: 'gray.400',
+            _disabled: {
+              bg: 'gray.400',
+              color: '#fff',
+              opacity: 0.4,
+            },
+          },
+          _disabled: {
+            opacity: 0.4,
+          },
+          _focus: {
+            transition: '0.8s',
+            bg: '#fff',
+            color: 'gray.400',
+            _disabled: {
+              bg: 'gray.400',
+              color: '#fff',
+              opacity: 0.4,
+            },
+          },
+          _active: {
+            bg: '#fff',
+
+            borderColor: 'gray.400',
+            color: 'gray.400',
           },
         }),
       },

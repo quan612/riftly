@@ -18,7 +18,7 @@ export default async function discordRedirect(req, res) {
     case 'GET':
       try {
         const session = await getSession({ req })
-
+        console.log("discord redirect runnning")
         let whiteListUser = await isWhiteListUser(session)
 
         const { code } = req.query
@@ -108,7 +108,8 @@ export default async function discordRedirect(req, res) {
           })
 
           if (discordQuestOfThisUser) {
-            let error = 'Discord quest has finished.'
+            console.log(discordQuestOfThisUser)
+            let error = 'Discord quest has done before.'
             return res.status(200).redirect(`/quest-redirect?error=${error}`)
           }
         }

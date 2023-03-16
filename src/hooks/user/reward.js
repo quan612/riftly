@@ -5,7 +5,6 @@ import Enums from 'enums'
 
 export const useUserRewardQuery = (session) => {
   let userId = session?.user?.userId
-
   const { data, isLoading } = useQuery(
     ['user-reward-query', userId],
     () => {

@@ -13,7 +13,7 @@ const userFeatureQuestQueryHandler = async (req, res) => {
 
         let availableQuests = await getAllEnableQuestsForUser()
 
-        console.log(`** Get quests done by this user **`)
+
         let finishedQuest = await getQuestsStartedByThisUser(userId)
 
         let quests = availableQuests

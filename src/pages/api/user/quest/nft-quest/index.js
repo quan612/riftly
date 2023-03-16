@@ -15,10 +15,10 @@ const owningNftQuestQueryAPI = async (req, res) => {
         }
         const whiteListUser = req.whiteListUser
 
-        console.log(`** Get all enabled quests for user **`)
+
         let availableQuests = await getAllEnableQuestsForUser()
 
-        console.log(`** Get quests done by this user **`)
+
         let finishedQuest = await getQuestsStartedByThisUser(whiteListUser.userId)
 
         let quests = availableQuests

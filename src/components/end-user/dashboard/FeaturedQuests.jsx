@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react'
+import React, { useEffect, useState, useCallback, useContext, useRef } from 'react'
 import { Heading, Box, Flex, Button, Image, useToast, useDisclosure } from '@chakra-ui/react'
 import { HeadingLg, HeadingSm, TextSm } from '@components/shared/Typography'
 import { ChakraBox } from '@theme/additions/framer/FramerChakraComponent'
@@ -10,89 +10,10 @@ import Enums from '@enums/index'
 import { doQuestUtility } from '../shared/doQuestUtility'
 import { CodeQuestModal, NftOwnerQuestModal, WalletAuthQuestModal } from '../shared'
 import { useQueryClient } from 'react-query'
+import { UserQuestContext } from '@context/UserQuestContext'
 
 const FeatureQuests = () => {
   const { data: featureQuests, isLoading: isFetchingFeatureQuests } = useUserFeatureQuestQuery()
-  const [submitQuestData, isSubmittingQuest, onSubmit] = useUserQuestSubmit()
-  const [claimUserQuestData, isClaimingUserQuest, onClaim] = useUserQuestClaim()
-  const queryClient = useQueryClient()
-  let scorePopupTimeout, invalidCacheTimeout
-
-  const codeQuestModal = useDisclosure()
-  const codeQuestRef = useRef({})
-
-  const walletAuthQuestModal = useDisclosure()
-
-  const nftOwnQuestModal = useDisclosure()
-  const nftOwnQuestRef = useRef({})
-
-  const router = useRouter()
-  const toast = useToast()
-  console.log(featureQuests)
-
-  const doQuest = useCallback(async (quest) => {
-    try {
-      switch (quest.type.name) {
-        case Enums.CODE_QUEST:
-          codeQuestRef.current = quest
-          codeQuestModal.onOpen()
-          break
-        case Enums.WALLET_AUTH:
-          walletAuthQuestModal.onOpen()
-          break
-        case Enums.OWNING_NFT_CLAIM:
-          nftOwnQuestRef.current = quest
-          nftOwnQuestModal.onOpen()
-          break
-
-        default:
-          await doQuestUtility(router, quest, onSubmit)
-      }
-    } catch (error) {
-      console.log(error)
-      toast({
-        title: 'Exception',
-        description: `Catch error at quest: ${quest.text}. Please contact admin.`,
-        position: 'top-right',
-        status: 'error',
-        duration: 5000,
-        isClosable: true,
-      })
-    }
-  }, [])
-
-  const claimQuest = useCallback(async (questId) => {
-    // disableBtnSet(true)
-    try {
-      let res = await onClaim({ questId })
-      if (res.isError) {
-        throw res.message
-      }
-      // showScoreSet(true)
-      // scorePopupTimeout = setTimeout(() => {
-      //   showScoreSet(false)
-      //   clearTimeout(scorePopupTimeout)
-      // }, 500)
-
-      invalidCacheTimeout = setTimeout(() => {
-        queryClient.invalidateQueries('user-reward-query')
-        queryClient.invalidateQueries('user-query-user-quest')
-        // disableBtnSet(false)
-        // clearTimeout(invalidCacheTimeout)
-      }, 2000)
-    } catch (error) {
-      console.log(error)
-      toast({
-        title: 'Exception',
-        description: `Catch error at quest id: ${questId}. Please contact admin.`,
-        position: 'top-right',
-        status: 'error',
-        duration: 5000,
-        isClosable: true,
-      })
-      // disableBtnSet(false)
-    }
-  })
 
   return (
     <>
@@ -111,56 +32,19 @@ const FeatureQuests = () => {
               overflowY={'none'}
             >
               {featureQuests.map((quest, index) => {
-                return (
-                  <FeatureCard
-                    key={quest.id}
-                    quest={quest}
-                    doQuest={doQuest}
-                    claimQuest={claimQuest}
-                  />
-                  // <Box bg={"brand.neutral4"} borderRadius="16px" h="259px" minW="200px"></Box>
-                )
+                return <FeatureCard key={quest.id} quest={quest} />
               })}
             </Box>
           </ChakraBox>
         )}
       </AnimatePresence>
-      {codeQuestRef?.current && (
-        <CodeQuestModal
-          isOpen={codeQuestModal.isOpen}
-          onClose={() => {
-            codeQuestRef.current = {}
-            codeQuestModal.onClose()
-          }}
-          currentQuest={codeQuestRef.current}
-        />
-      )}
-      {walletAuthQuestModal.isOpen && (
-        <WalletAuthQuestModal
-          isOpen={walletAuthQuestModal.isOpen}
-          onClose={() => {
-            walletAuthQuestModal.onClose()
-          }}
-        />
-      )}
-
-      {nftOwnQuestRef?.current && (
-        <NftOwnerQuestModal
-          isOpen={nftOwnQuestModal.isOpen}
-          onClose={() => {
-            nftOwnQuestRef.current = {}
-            nftOwnQuestModal.onClose()
-          }}
-          currentQuest={nftOwnQuestRef.current}
-        />
-      )}
     </>
   )
 }
 
 export default FeatureQuests
 
-const FeatureCard = ({ quest, doQuest, claimQuest }) => {
+const FeatureCard = ({ quest }) => {
   const { text, description } = quest
 
   return (
@@ -177,7 +61,7 @@ const FeatureCard = ({ quest, doQuest, claimQuest }) => {
         </Box>
         <Flex flexDirection="column" justify="space-between" h="63%" py="4" px="4">
           <Body text={text} description={description} />
-          <Footer quest={quest} doQuest={doQuest} claimQuest={claimQuest} />
+          <Footer quest={quest} />
         </Flex>
       </Flex>
     </Box>
@@ -200,8 +84,54 @@ const Body = ({ text, description }) => {
   )
 }
 
-const Footer = ({ quest, doQuest, claimQuest }) => {
+const Footer = ({ quest }) => {
   const { isClaimable, questId, quantity } = quest
+
+  const { isSubmittingQuest, doQuest } = useContext(UserQuestContext)
+
+  const [, isClaimingUserQuest, onUserQuestClaim] = useUserQuestClaim()
+  const toast = useToast()
+  const queryClient = useQueryClient()
+  let invalidCacheTimeout, scorePopupTimeout
+
+  const [disableBtn, disableBtnSet] = useState(false)
+  const [showScore, showScoreSet] = useState(false)
+
+  useEffect(() => {
+    return () => {
+      clearTimeout(scorePopupTimeout)
+      clearTimeout(invalidCacheTimeout)
+    }
+  }, [])
+
+  const claimQuest = useCallback(async (questId) => {
+    disableBtnSet(true)
+    try {
+      let res = await onUserQuestClaim({ questId })
+      if (res.isError) {
+        throw res.message
+      }
+
+      invalidCacheTimeout = setTimeout(() => {
+        queryClient.invalidateQueries('user-reward-query')
+        queryClient.invalidateQueries('user-query-user-quest')
+        queryClient.invalidateQueries('user-query-feature-quest')
+        disableBtnSet(false)
+        clearTimeout(invalidCacheTimeout)
+      }, 1000)
+    } catch (error) {
+      console.log(error)
+      toast({
+        title: 'Exception',
+        description: `Catch error at quest id: ${questId}. Please contact admin.`,
+        position: 'top-right',
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      })
+      disableBtnSet(false)
+    }
+  })
   return (
     <Flex align="start" alignItems={'center'} justify="space-between" mt="25px">
       <Flex alignItems={'center'} gap="5px">
@@ -219,6 +149,8 @@ const Footer = ({ quest, doQuest, claimQuest }) => {
         borderRadius="48px"
         px="12px"
         py="5px"
+        isLoading={isClaimingUserQuest || isSubmittingQuest}
+        disabled={disableBtn}
         onClick={() => {
           if (!isClaimable) {
             doQuest(quest)

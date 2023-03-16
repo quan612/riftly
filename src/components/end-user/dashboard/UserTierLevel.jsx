@@ -316,12 +316,14 @@ const LevelUpModal = ({ tier, isOpen, onClose }) => {
       <ModalContent
         bg="brand.neutral3"
         h="35%"
-        w="33%"
+        w={{ base: '100%', lg: '33%' }}
         maxH={'429px'}
         maxW="container.sm"
         borderRadius="24px"
         mt="16%"
         transition={'1.25s'}
+        me={{ base: '24px', xl: '0px' }}
+        ms={{ base: '24px', xl: '0px' }}
       >
         <ModalBody display={'flex'} alignItems={'center'} justifyContent={'center'} w="100%">
           <Flex

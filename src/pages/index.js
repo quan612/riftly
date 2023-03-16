@@ -2,6 +2,9 @@ import React, { useEffect } from 'react'
 import Head from 'next/head'
 
 import dynamic from 'next/dynamic'
+
+import UserQuestProvider from '@context/UserQuestContext'
+
 const RiftlyIndividualQuestBoardComponent = dynamic(() =>
   import('@components/end-user/dashboard/RiftlyIndividualQuestBoard'),
 )
@@ -35,11 +38,13 @@ function Home({ session }) {
         /> */}
         <link rel="icon" href="/faviconShell.png" />
       </Head>
-      <ChakraBox initial="hidden" animate="enter" exit="exit" variants={variants}>
-        <Flex flexDirection="column" gap="16px">
-          <RiftlyIndividualQuestBoardComponent session={session} />
-        </Flex>
-      </ChakraBox>
+      <UserQuestProvider>
+        <ChakraBox initial="hidden" animate="enter" exit="exit" variants={variants}>
+          <Flex flexDirection="column" gap="16px">
+            <RiftlyIndividualQuestBoardComponent session={session} />
+          </Flex>
+        </ChakraBox>
+      </UserQuestProvider>
     </>
   )
 }
@@ -50,6 +55,7 @@ import { getServerSession } from 'next-auth/next'
 import { authOptions } from 'pages/api/auth/[...nextauth]'
 import { ChakraBox } from '@theme/additions/framer/FramerChakraComponent'
 import { Flex } from '@chakra-ui/react'
+
 
 export async function getServerSideProps(context) {
   const session = await getServerSession(context.req, context.res, authOptions)

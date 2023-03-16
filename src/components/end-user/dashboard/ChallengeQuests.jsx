@@ -1,31 +1,18 @@
-import React, { useEffect, useState, useCallback, useRef } from 'react'
-import Enums from 'enums'
-import { useRouter } from 'next/router'
-import { Heading, Box, Flex, Text, Button, useDisclosure, useToast } from '@chakra-ui/react'
+import React, { useEffect, useState, useCallback, useRef, useContext } from 'react'
+
+import { Heading, Box, Flex, Text, Button, useToast } from '@chakra-ui/react'
 import { ChakraBox } from '@theme/additions/framer/FramerChakraComponent'
 
-import { AnimatePresence, motion, AnimateSharedLayout, LayoutGroup } from 'framer-motion'
+import { AnimatePresence } from 'framer-motion'
 import { useQueryClient } from 'react-query'
 
-import { doQuestUtility } from '../shared/doQuestUtility'
-
 import { HeadingLg, HeadingSm, TextSm } from '@components/shared/Typography'
-import {
-  SmsVerificationQuestModal,
-  CodeQuestModal,
-  WalletAuthQuestModal,
-  NftOwnerQuestModal,
-} from '../shared'
 
 import { RiftlyIcon } from '@components/shared/Icons'
 import Loading from '@components/shared/LoadingContainer/Loading'
 
-import {
-  useUserQuestClaim,
-  useUserQuestQuery,
-  useUserFeatureQuestQuery,
-  useUserQuestSubmit,
-} from '@hooks/user/quest'
+import { useUserQuestClaim, useUserQuestQuery } from '@hooks/user/quest'
+import { UserQuestContext } from '@context/UserQuestContext'
 
 const ChallengeQuests = () => {
   const [filterCompleted, filterCompletedSet] = useState(false)
@@ -62,13 +49,7 @@ const ChallengeQuests = () => {
                   borderRadius={'16px'}
                 >
                   <Box display="flex" flexDirection={'row'} w="100%">
-                    <UserQuestBox
-                      quest={quest}
-                      index={index}
-                      key={index}
-                      currentQuests={userQuests}
-                      filterCompleted={filterCompleted}
-                    />
+                    <UserQuestBox quest={quest} filterCompleted={filterCompleted} key={index} />
                   </Box>
                 </Box>
               )
@@ -167,29 +148,16 @@ const ChallengesHeader = ({ filterCompleted, filterCompletedSet }) => {
   )
 }
 
-const UserQuestBox = ({ quest, index, currentQuests, filterCompleted, onTest }) => {
-  let router = useRouter()
+const UserQuestBox = ({ quest, filterCompleted }) => {
+  const { isSubmittingQuest, doQuest } = useContext(UserQuestContext)
+
+  const [, isClaimingUserQuest, onUserQuestClaim] = useUserQuestClaim()
   const toast = useToast()
   const queryClient = useQueryClient()
-
-  const [submitQuestData, isSubmittingQuest, onSubmit] = useUserQuestSubmit()
-  const [claimUserQuestData, isClaimingUserQuest, onClaim] = useUserQuestClaim()
+  let invalidCacheTimeout, scorePopupTimeout
 
   const [disableBtn, disableBtnSet] = useState(false)
-
   const [showScore, showScoreSet] = useState(false)
-  let scorePopupTimeout, invalidCacheTimeout
-
-  const codeQuestModal = useDisclosure()
-  const codeQuestRef = useRef({})
-
-  const walletAuthQuestModal = useDisclosure()
-
-  const nftOwnQuestModal = useDisclosure()
-  const nftOwnQuestRef = useRef({})
-
-  const smsVerificationQuestModal = useDisclosure()
-  const smsQuestRef = useRef({})
 
   useEffect(() => {
     return () => {
@@ -198,47 +166,9 @@ const UserQuestBox = ({ quest, index, currentQuests, filterCompleted, onTest }) 
     }
   }, [])
 
-  const doQuest = useCallback(
-    async (quest) => {
-      try {
-        switch (quest.type.name) {
-          case Enums.CODE_QUEST:
-            codeQuestRef.current = quest
-            codeQuestModal.onOpen()
-            break
-          case Enums.WALLET_AUTH:
-            walletAuthQuestModal.onOpen()
-            break
-          case Enums.OWNING_NFT_CLAIM:
-            nftOwnQuestRef.current = quest
-            nftOwnQuestModal.onOpen()
-            break
-          case Enums.SMS_VERIFICATION:
-            smsQuestRef.current = quest
-            smsVerificationQuestModal.onOpen()
-            break
-          default:
-            await doQuestUtility(router, quest, currentQuests, onSubmit)
-        }
-      } catch (error) {
-        console.log(error)
-        toast({
-          title: 'Exception',
-          description: `Catch error at quest: ${quest.text}. Please contact admin.`,
-          position: 'top-right',
-          status: 'error',
-          duration: 5000,
-          isClosable: true,
-        })
-      }
-    },
-    [currentQuests],
-  )
-
-  const claimQuest = useCallback(async (questId) => {
-    disableBtnSet(true)
+  const onClaimQuest = useCallback(async (questId) => {
     try {
-      let res = await onClaim({ questId })
+      let res = await onUserQuestClaim({ questId })
       if (res.isError) {
         throw res.message
       }
@@ -246,7 +176,7 @@ const UserQuestBox = ({ quest, index, currentQuests, filterCompleted, onTest }) 
       scorePopupTimeout = setTimeout(() => {
         showScoreSet(false)
         clearTimeout(scorePopupTimeout)
-      }, 500)
+      }, 750)
 
       invalidCacheTimeout = setTimeout(() => {
         queryClient.invalidateQueries('user-reward-query')
@@ -264,7 +194,6 @@ const UserQuestBox = ({ quest, index, currentQuests, filterCompleted, onTest }) 
         duration: 5000,
         isClosable: true,
       })
-      disableBtnSet(false)
     }
   })
 
@@ -328,7 +257,12 @@ const UserQuestBox = ({ quest, index, currentQuests, filterCompleted, onTest }) 
                   </>
                 )}
               </Flex>
-              <Flex position="relative" h="100%" alignItems={'center'} flex="20%">
+              <Flex
+                position="relative"
+                h="100%"
+                alignItems={'center'}
+                // flex="20%"
+              >
                 {filterCompleted && (
                   <Text
                     color="brand.neutral0"
@@ -371,7 +305,7 @@ const UserQuestBox = ({ quest, index, currentQuests, filterCompleted, onTest }) 
                         initial="hidden"
                         animate="visible"
                         exit="removed"
-                        minW="120px"
+                        w="100%"
                       >
                         <Text
                           className="score"
@@ -385,8 +319,6 @@ const UserQuestBox = ({ quest, index, currentQuests, filterCompleted, onTest }) 
                       </ChakraBox>
                     )}
                     <Button
-                      size={'sm'}
-                      maxW="120px"
                       variant={quest.isClaimable ? 'cyan' : 'blue'}
                       transitionDuration={'0.5s'}
                       onClick={() => {
@@ -394,7 +326,7 @@ const UserQuestBox = ({ quest, index, currentQuests, filterCompleted, onTest }) 
                           doQuest(quest)
                         } else {
                           const { questId } = quest
-                          claimQuest(questId)
+                          onClaimQuest(questId)
                         }
                       }}
                       isLoading={isSubmittingQuest || isClaimingUserQuest}
@@ -409,44 +341,6 @@ const UserQuestBox = ({ quest, index, currentQuests, filterCompleted, onTest }) 
           </Box>
         </Box>
       </Box>
-      {codeQuestRef?.current && (
-        <CodeQuestModal
-          isOpen={codeQuestModal.isOpen}
-          onClose={() => {
-            codeQuestRef.current = {}
-            codeQuestModal.onClose()
-          }}
-          currentQuest={codeQuestRef.current}
-        />
-      )}
-      {walletAuthQuestModal.isOpen && (
-        <WalletAuthQuestModal
-          isOpen={walletAuthQuestModal.isOpen}
-          onClose={() => {
-            walletAuthQuestModal.onClose()
-          }}
-        />
-      )}
-      {smsVerificationQuestModal.isOpen && (
-        <SmsVerificationQuestModal
-          isOpen={smsVerificationQuestModal.isOpen}
-          onClose={() => {
-            smsQuestRef.current = {}
-            smsVerificationQuestModal.onClose()
-          }}
-          quest={smsQuestRef.current}
-        />
-      )}
-      {nftOwnQuestRef?.current && (
-        <NftOwnerQuestModal
-          isOpen={nftOwnQuestModal.isOpen}
-          onClose={() => {
-            nftOwnQuestRef.current = {}
-            nftOwnQuestModal.onClose()
-          }}
-          currentQuest={nftOwnQuestRef.current}
-        />
-      )}
     </>
   )
 }

@@ -32,6 +32,7 @@ export const remove_duplicates_es6 = (arr) => {
 }
 
 export const getUserName = (session) => {
+
   switch (session?.provider) {
     case 'discord':
       return session?.profile?.username + '#' + session?.profile?.discriminator

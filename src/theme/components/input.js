@@ -6,12 +6,14 @@ export const inputStyles = {
         field: {
           fontWeight: 400,
           borderRadius: '8px',
+          height: { base: '24px', '2xs': '32px', 'md': '40px', 'lg': '48px' },
+          fontSize: { base: '12px', '2xs': '14px', '2sm': '16px', 'lg': '18px' },
         },
       },
       sizes: {
         xs: {
           field: {
-            fontSize: 'xs',
+            fontSize: '12px',
             height: '24px',
             // paddingX: 2,
           },
@@ -80,6 +82,7 @@ export const inputStyles = {
         }),
         riftly: (props) => ({
           field: {
+            height: { base: '24px', '2xs': '32px', 'md': '40px', 'lg': '48px' },
             color: 'white',
             border: '1px solid',
             borderColor: 'brand.neutral2',

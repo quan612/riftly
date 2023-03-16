@@ -1,13 +1,17 @@
-import React, { useRef } from 'react'
+import React, { useRef, useContext } from 'react'
 
 import { AnimatePresence } from 'framer-motion'
 
 import UserTierLevel from './UserTierLevel'
 import FeatureQuests from './FeaturedQuests'
 import ChallengeQuests from './ChallengeQuests'
+import { UserQuestContext } from '@context/UserQuestContext'
+import { CodeQuestModal, NftOwnerQuestModal, WalletAuthQuestModal } from '../shared'
 
 const RiftlyIndividualQuestBoard = ({ session }) => {
   let levelProgress = useRef(0)
+  const { codeQuestModal, walletAuthQuestModal, nftOwnQuestModal, questSelected } =
+    useContext(UserQuestContext)
 
   return (
     <>
@@ -17,6 +21,30 @@ const RiftlyIndividualQuestBoard = ({ session }) => {
         <FeatureQuests key="feature" />
         <ChallengeQuests key="challenge" />
       </AnimatePresence>
+
+      {codeQuestModal && (
+        <CodeQuestModal
+          isOpen={codeQuestModal.isOpen}
+          onClose={() => codeQuestModal.onClose()}
+          currentQuest={questSelected}
+        />
+      )}
+
+      {walletAuthQuestModal.isOpen && (
+        <WalletAuthQuestModal
+          isOpen={walletAuthQuestModal.isOpen}
+          onClose={() => {
+            walletAuthQuestModal.onClose()
+          }}
+        />
+      )}
+      {nftOwnQuestModal.isOpen && (
+        <NftOwnerQuestModal
+          isOpen={nftOwnQuestModal.isOpen}
+          onClose={() => nftOwnQuestModal.onClose()}
+          currentQuest={questSelected}
+        />
+      )}
     </>
   )
 }
