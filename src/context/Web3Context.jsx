@@ -82,91 +82,6 @@ export function Web3Provider({ session, children }) {
     })
   }
 
-  const adminSignIn = async (walletType) => {
-    if (!walletType) {
-      throw new Error('Missing type of wallet when trying to setup wallet provider')
-    }
-
-    let addresses, providerInstance
-    if (walletType === Enums.METAMASK) {
-      providerInstance = new ethers.providers.Web3Provider(window.ethereum)
-      addresses = await providerInstance.send('eth_requestAccounts', [])
-      subscribeProvider(window.ethereum)
-    } else if (walletType === Enums.WALLETCONNECT) {
-      let provider = new WalletConnectProvider({
-        infuraId: process.env.NEXT_PUBLIC_INFURA_ID,
-        qrcodeModalOptions: {
-          mobileLinks: ['trust'],
-          desktopLinks: ['encrypted ink'],
-        },
-      })
-      await provider.enable()
-
-      providerInstance = new ethers.providers.Web3Provider(provider)
-      addresses = provider.accounts
-
-      subscribeProvider(provider)
-    }
-
-    try {
-      if (addresses.length === 0) {
-        throw new Error('Account is locked, or is not connected, or is in pending request.')
-      }
-
-      const admin = await axios
-        .get(API_ADMIN, {
-          params: {
-            address: addresses[0],
-          },
-        })
-        .then((r) => r.data)
-
-      if (!admin) {
-        throw new Error('Cannot authenticate as admin with current wallet account')
-      }
-
-      const nonce = admin.nonce.trim()
-
-      const promise = new Promise((resolve, reject) => {
-        adminSignTimeout = setTimeout(async () => {
-          const signer = await providerInstance.getSigner()
-          let signature
-          try {
-            signature = await signer
-              .signMessage(`${Enums.ADMIN_SIGN_MSG}: ${nonce}`)
-              .catch((err) => {
-                throw new Error('User rejects signing.')
-              })
-          } catch (error) {
-            clearTimeout(adminSignTimeout)
-            reject(error)
-          }
-
-          if (signature && addresses[0]) {
-            signIn('admin-authenticate', {
-              redirect: true,
-              signature,
-              address: addresses[0],
-              callbackUrl: `${window.location.origin}/admin`,
-            }).catch((error) => {
-              reject(error.message)
-            })
-            clearTimeout(adminSignTimeout)
-            resolve()
-          }
-          reject('Missing address or signature')
-        }, 500)
-      })
-      return promise
-    } catch (error) {
-      if (error.message.indexOf('user rejected signing') !== -1) {
-        throw new Error('User rejected signing')
-      } else {
-        throw error
-      }
-    }
-  }
-
   const signInWithWallet = async (walletType, payload = null) => {
     if (!walletType) {
       throw new Error('Missing wallet type.')
@@ -373,7 +288,6 @@ export function Web3Provider({ session, children }) {
   return (
     <Web3Context.Provider
       value={{
-        adminSignIn,
         signInWithWallet,
         SignOut,
         signUpWithWallet,

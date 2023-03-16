@@ -46,16 +46,36 @@ const FeatureCard = ({ quest }) => {
   return (
     <Box bg={'brand.neutral4'} borderRadius="16px" h="259px" w="auto" minW="200px" maxW="33%">
       <Flex direction={{ base: 'column' }} h="100%">
-        <Box position="relative" h="37%" minH={'37%'} maxH="37%!important">
+        <Box
+          position="relative"
+          h="99px"
+          // h="37%" minH={'40%'} maxH="37%!important"
+          // flex="1"
+        >
           <Image
-            boxSize={'100px'}
+            boxSize={'100%'}
             src={quest?.image}
             w={{ base: '100%', '3xl': '100%' }}
             borderTopRadius="16px"
             fit={'fill'}
           />
         </Box>
-        <Flex flexDirection="column" justify="space-between" h="63%" py="4" px="4">
+        <Flex
+          flexDirection="column"
+          // justify="space-between"
+          pt="16px"
+          px="12px"
+          //  h="63%"
+          // overflow={'auto'}
+          flex="1"
+          // h="160x"
+          gap="4px"
+          // sx={{
+          //   '::-webkit-scrollbar': {
+          //     display: 'none',
+          //   },
+          // }}
+        >
           <Body text={text} description={description} />
           <Footer quest={quest} />
         </Flex>
@@ -68,11 +88,11 @@ const Body = ({ text, description }) => {
   return (
     <Flex justify="space-between">
       <Flex direction="column" gap="5px">
-        <HeadingSm color={'white'} fontWeight="bold">
+        <HeadingSm color={'white'} fontWeight="bold" noOfLines={'2'}>
           {text}
         </HeadingSm>
 
-        <TextSm color="whiteAlpha.700" opacity="0.64" fontWeight="400">
+        <TextSm color="whiteAlpha.700" opacity="0.64" fontWeight="400" noOfLines={'2'}>
           {description}
         </TextSm>
       </Flex>
@@ -129,7 +149,7 @@ const Footer = ({ quest }) => {
     }
   })
   return (
-    <Flex align="start" alignItems={'center'} justify="space-between" mt="25px">
+    <Flex align="start" alignItems={'center'} justify="space-between">
       <Flex alignItems={'center'} gap="5px">
         <Box maxH="24px" h="33%" position={'relative'} boxSize="16px">
           <RiftlyIcon fill={'#1D63FF'} />

@@ -24,7 +24,7 @@ export const buttonStyles = {
 
       variants: {
         outline: () => ({
-          borderRadius: '16px',
+
         }),
         brand: (props) => ({
           bg: mode('brand.500', 'brand.400')(props),

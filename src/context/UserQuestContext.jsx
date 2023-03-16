@@ -13,6 +13,7 @@ const UserQuestProvider = ({ children }) => {
   const codeQuestModal = useDisclosure()
   const walletAuthQuestModal = useDisclosure()
   const nftOwnQuestModal = useDisclosure()
+  const unstoppableQuestModal = useDisclosure()
   const toast = useToast()
   const router = useRouter()
   const [submitQuestData, isSubmittingQuest, onSubmit] = useUserQuestSubmit()
@@ -33,9 +34,14 @@ const UserQuestProvider = ({ children }) => {
 
             nftOwnQuestModal.onOpen()
             break
+          case Enums.UNSTOPPABLE_AUTH:
+            questSelectedSet(quest)
+
+            unstoppableQuestModal.onOpen()
+            break
 
           default:
-            await doQuestUtility(router, quest, onSubmit)
+          // await doQuestUtility(router, quest, onSubmit)
         }
       } catch (error) {
         console.log(error)
@@ -65,6 +71,7 @@ const UserQuestProvider = ({ children }) => {
         codeQuestModal,
         walletAuthQuestModal,
         nftOwnQuestModal,
+        unstoppableQuestModal,
         questSelected,
         isSubmittingQuest,
         doQuest,

@@ -27,6 +27,10 @@ export default async function passwordReset(req, res) {
           throw new Error('Blank password.')
         }
 
+        if (!checkPasswordStrength(password)) {
+          throw new Error('Weak password. Please include at least one lowercase letter, one uppercase letter, one number, and have a minimum length of 8 characters.')
+        }
+
         const hash = await bcrypt.hash(password, 10)
 
         await prisma.whiteList.update({

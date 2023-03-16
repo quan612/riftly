@@ -7,11 +7,17 @@ import FeatureQuests from './FeaturedQuests'
 import ChallengeQuests from './ChallengeQuests'
 import { UserQuestContext } from '@context/UserQuestContext'
 import { CodeQuestModal, NftOwnerQuestModal, WalletAuthQuestModal } from '../shared'
+import UnstoppableQuestModal from '../shared/UnstoppableQuestModal'
 
 const RiftlyIndividualQuestBoard = ({ session }) => {
   let levelProgress = useRef(0)
-  const { codeQuestModal, walletAuthQuestModal, nftOwnQuestModal, questSelected } =
-    useContext(UserQuestContext)
+  const {
+    codeQuestModal,
+    walletAuthQuestModal,
+    nftOwnQuestModal,
+    unstoppableQuestModal,
+    questSelected,
+  } = useContext(UserQuestContext)
 
   return (
     <>
@@ -42,6 +48,13 @@ const RiftlyIndividualQuestBoard = ({ session }) => {
         <NftOwnerQuestModal
           isOpen={nftOwnQuestModal.isOpen}
           onClose={() => nftOwnQuestModal.onClose()}
+          currentQuest={questSelected}
+        />
+      )}
+      {unstoppableQuestModal.isOpen && (
+        <UnstoppableQuestModal
+          isOpen={unstoppableQuestModal.isOpen}
+          onClose={() => unstoppableQuestModal.onClose()}
           currentQuest={questSelected}
         />
       )}

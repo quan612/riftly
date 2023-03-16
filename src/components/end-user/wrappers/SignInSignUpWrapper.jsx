@@ -407,7 +407,8 @@ export const EmailWrapper = React.forwardRef(({ isSignIn = false, setView }, ref
             <Text
               fontSize="md"
               color="brand.neutral1"
-              onClick={() => setView(FORGOT_PASSWORD)}
+              disabled={true}
+              // onClick={() => setView(FORGOT_PASSWORD)}
               _hover={{
                 cursor: 'pointer',
               }}

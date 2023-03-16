@@ -8,7 +8,7 @@ const { default: Resolution } = require('@unstoppabledomains/resolution')
 const submitUnstoppableAuthQuest = async (req, res) => {
   const { method } = req
   const whiteListUser = req.whiteListUser
-  const { questId, rewardTypeId, quantity, extendedQuestData, uauthUser } = req.body
+  const { questId, uauthUser } = req.body
   let userQuest
 
   switch (method) {
@@ -18,7 +18,7 @@ const submitUnstoppableAuthQuest = async (req, res) => {
         if (!uauthUser) {
           return res.status(200).json({
             isError: true,
-            message: 'Missing unstoppable!',
+            message: 'Missing unstoppable domain account!',
           })
         }
 
@@ -39,13 +39,15 @@ const submitUnstoppableAuthQuest = async (req, res) => {
           })
         }
 
-        /** This route is for image upload quest */
         if (currentQuest.type.name !== Enums.UNSTOPPABLE_AUTH) {
           return res.status(200).json({
             isError: true,
             message: 'This route is for unstoppable quest!',
           })
         }
+
+
+        // TODO: Manual check kind of quest, if Limited then check quest data to see whether it expired
 
         let entry = await prisma.UserQuest.findUnique({
           where: {
@@ -60,14 +62,14 @@ const submitUnstoppableAuthQuest = async (req, res) => {
           })
         }
 
-        // checked unstoppable if existed
         let existingUnstoppableUser = await prisma.whiteList.findFirst({
           where: {
             uathUser: uauthUser,
           },
         })
+
         if (existingUnstoppableUser) {
-          let error = 'Same unstoppable domain authenticated'
+          let error = 'Same unstoppable domain authenticated!'
           return res.status(200).json({
             isError: true,
             message: error,
@@ -78,7 +80,7 @@ const submitUnstoppableAuthQuest = async (req, res) => {
         const resolution = new Resolution()
         let walletOwner = await resolution.owner(uauthUser)
 
-        await updateUserUnstopabbleAndAddRewardTransaction(currentQuest, whiteListUser, uauthUser)
+        await updateUserUnstopabbleAndAddRewardTransaction(currentQuest, whiteListUser?.userId, uauthUser)
         return res.status(200).json(userQuest)
       } catch (error) {
         console.log(error)
@@ -91,4 +93,5 @@ const submitUnstoppableAuthQuest = async (req, res) => {
   }
 }
 
+// This only allows for login user
 export default whitelistUserMiddleware(submitUnstoppableAuthQuest)

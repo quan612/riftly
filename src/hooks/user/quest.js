@@ -145,18 +145,17 @@ export const useUserOwningNftQuestSubmit = () => {
   return [data, isLoading, mutateAsync]
 }
 
-export const useUserUnstoppableAuthQuestSubmit = () => {
+export const useUnstoppableAuthQuestSubmit = () => {
   const queryClient = useQueryClient()
 
   const { data, error, isLoading, mutateAsync } = useMutation(
-    (quest) => {
+    (payload) => {
       return axios
-        .post(`${Enums.BASEPATH}/api/user/quest/submit/unstoppable-auth`, quest)
+        .post(`${Enums.BASEPATH}/api/user/quest/submit/unstoppable-auth`, payload)
         .then((r) => r.data)
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries('user-reward-query')
         queryClient.invalidateQueries('user-query-user-quest')
       },
     },
@@ -165,7 +164,7 @@ export const useUserUnstoppableAuthQuestSubmit = () => {
   return [data, isLoading, mutateAsync]
 }
 
-export const useUserImageQuestSubmit = () => {
+export const useImageUploadSubmit = () => {
   const queryClient = useQueryClient()
 
   const { data, error, isLoading, mutateAsync } = useMutation(

@@ -147,64 +147,51 @@ export const updateUserWalletTransaction = async (questId, userId, wallet) => {
 
 export const updateUserUnstopabbleAndAddRewardTransaction = async (
   quest,
-  whiteListUser,
+  userId,
   uauthUser,
 ) => {
   console.log(`**Update user unstopable**`)
   let { questId, rewardTypeId, quantity } = quest
 
-  let currentQuest = await prisma.quest.findUnique({
-    where: {
-      questId,
-    },
-  })
 
-  const { userId } = whiteListUser
-
-  let updatedUser = prisma.whiteList.update({
-    where: { userId },
-    data: {
-      uathUser: uauthUser,
-    },
-  })
-
-  console.log(`**Create / Update reward for user**`)
-  let claimedReward = prisma.reward.upsert({
-    where: {
-      userId_rewardTypeId: { userId, rewardTypeId },
-    },
-    update: {
-      quantity: {
-        increment: currentQuest.quantity,
+  if (userId) {
+    let updatedUser = prisma.whiteList.update({
+      where: { userId },
+      data: {
+        uathUser: uauthUser,
       },
-    },
-    create: {
-      userId,
-      quantity,
-      rewardTypeId,
-    },
+    })
 
-    select: {
-      userId: true,
-      quantity: true,
-      user: true,
-      rewardTypeId: true,
-      rewardType: true,
-    },
-  })
+    let userQuest = prisma.userQuest.create({
+      data: {
+        userId,
+        questId,
+        rewardedTypeId: rewardTypeId,
+        rewardedQty: quantity,
+      },
+    })
 
-  console.log(`**Save to UserQuest, to keep track that its done**`)
-  let userQuest = prisma.userQuest.create({
-    data: {
-      userId,
-      questId,
-      rewardedTypeId: rewardTypeId,
-      rewardedQty: currentQuest.quantity,
-    },
-  })
+    await prisma.$transaction([updatedUser, userQuest])
+  } else {
+    let accountStatus = await getAccountStatusToAdd()
+    let newUser = await prisma.whiteList.create({
+      data: {
+        uathUser: uauthUser,
+        status: accountStatus,
+        signUpOrigin: WALLET,
+      },
+    })
+    if (newUser) {
+      await prisma.userQuest.create({
+        data: {
+          userId: newUser.userId,
+          questId,
+          isClaimable: true,
+        },
+      })
+    }
+  }
 
-
-  await prisma.$transaction([updatedUser, claimedReward, userQuest])
 
 }
 

@@ -1,7 +1,7 @@
-import React, { useEffect, useState, useContext, useCallback } from 'react'
+import React, { useState, useContext, useCallback } from 'react'
 import { Heading, Text, Button, Image, Input } from '@chakra-ui/react'
 
-import { ChakraBox, FramerButton } from '@theme/additions/framer/FramerChakraComponent'
+import { ChakraBox } from '@theme/additions/framer/FramerChakraComponent'
 
 const SUBMITTABLE = 1
 const SUBMITTED = 2
@@ -10,7 +10,7 @@ const UNCLAIMABLE = 4
 
 import { AnimatePresence, AnimateSharedLayout, motion } from 'framer-motion'
 import { useCodeQuestSubmit } from '@hooks/user/quest'
-import { RiftlyModalCloseButton } from '@components/shared/Buttons'
+
 import { debounce } from 'util/index'
 import ModalWrapper from '../wrappers/ModalWrapper'
 

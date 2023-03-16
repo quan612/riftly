@@ -64,12 +64,12 @@ const Settings = () => {
   useEffect(async () => {
     if ('serviceWorker' in navigator) {
       let existingRegistration = await navigator.serviceWorker.getRegistration()
-      console.log('existingRegistration', existingRegistration)
+      // console.log('existingRegistration', existingRegistration)
       if (existingRegistration) {
         swRegistrationRef.current = existingRegistration
         let existingSubscription = await swRegistrationRef?.current?.pushManager?.getSubscription()
 
-        console.log('existingSubscription', existingSubscription)
+        // console.log('existingSubscription', existingSubscription)
         if (existingSubscription) {
           switchSbSet(true)
         } else {
@@ -85,7 +85,7 @@ const Settings = () => {
               let existingSubscription =
                 await swRegistrationRef?.current?.pushManager?.getSubscription()
 
-              console.log('existingSubscription', existingSubscription)
+              // console.log('existingSubscription', existingSubscription)
               if (existingSubscription) {
                 switchSbSet(true)
               } else {
@@ -107,7 +107,7 @@ const Settings = () => {
   }, [])
 
   const handleOnSubscribeChange = async () => {
-    console.log(swRegistrationRef)
+    // console.log(swRegistrationRef)
     if (swRegistrationRef.current) {
       let existingSubscription = await swRegistrationRef?.current?.pushManager?.getSubscription()
 
@@ -404,14 +404,17 @@ const ConnectionsInfo = ({ session }) => {
             <Text ms="4px" mb="8px" fontSize="lg" fontWeight="400" color="red.300">
               Google
             </Text>
-            <Input
+            {/* <Input
               type="text"
               fontSize="md"
               variant="riftly"
               ms="4px"
               disabled={true}
-              value={'placeholder'}
-            />
+              // value={'placeholder'}
+            /> */}
+            <Button w="100%" variant="outline" disabled={true}>
+              Connect Google
+            </Button>
           </GridItem>
           <GridItem colSpan={1}>
             <Text ms="4px" mb="8px" fontSize="lg" fontWeight="400" color="orange.300">
@@ -512,7 +515,12 @@ const AccountInfo = ({ session }) => {
                         <FormLabel ms="4px" fontSize="md" fontWeight="bold" color="#fff">
                           Password
                         </FormLabel>
-                        <Button w="100%" variant="outline" disabled={getButtonState()}>
+                        <Button
+                          w="100%"
+                          variant="outline"
+                          // disabled={getButtonState()}
+                          disabled={true}
+                        >
                           Reset Password
                         </Button>
                       </FormControl>

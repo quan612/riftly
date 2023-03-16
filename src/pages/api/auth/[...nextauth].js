@@ -185,7 +185,7 @@ export const authOptions = {
   ],
   debug: false,
   session: {
-    jwt: true,
+    strategy: "jwt",
     maxAge: 60 * 60 * 5,
   },
   jwt: {

@@ -52,9 +52,6 @@ const submitIndividualQuestAPI = async (req, res) => {
             break
           case Enums.DAILY_SHELL:
             console.log(`**Submit Daily quest**`)
-
-
-
             if (currentUserQuest) {
               let lastStarted =
                 currentUserQuest.extendedUserQuestData?.lastStarted || currentUserQuest.createdAt
