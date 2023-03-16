@@ -1,7 +1,7 @@
 import { prisma } from '@context/PrismaContext'
 import whitelistUserMiddleware from 'middlewares/whitelistUserMiddleware'
 import Enums from 'enums'
-import { updateUserUnstopabbleAndAddRewardTransaction } from 'repositories/transactions'
+import { updateUserUnstoppabbleTransaction } from 'repositories/transactions'
 
 const { default: Resolution } = require('@unstoppabledomains/resolution')
 
@@ -46,8 +46,8 @@ const submitUnstoppableAuthQuest = async (req, res) => {
           })
         }
 
-
-        // TODO: Manual check kind of quest, if Limited then check quest data to see whether it expired
+        const { questId } = currentQuest
+        // TODO: Manual check kind of quest, if Limited then check quest data to see whether it expired, maybe in a middleware
 
         let entry = await prisma.UserQuest.findUnique({
           where: {
@@ -80,7 +80,7 @@ const submitUnstoppableAuthQuest = async (req, res) => {
         const resolution = new Resolution()
         let walletOwner = await resolution.owner(uauthUser)
 
-        await updateUserUnstopabbleAndAddRewardTransaction(currentQuest, whiteListUser?.userId, uauthUser)
+        await updateUserUnstoppabbleTransaction(questId, whiteListUser?.userId, uauthUser)
         return res.status(200).json(userQuest)
       } catch (error) {
         console.log(error)
