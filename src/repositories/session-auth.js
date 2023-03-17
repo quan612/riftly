@@ -7,7 +7,6 @@ export const isWhiteListUser = async (session) => {
   }
 
   let user
-
   if (session?.provider === 'discord') {
     user = await prisma.whiteList.findFirst({
       where: {
@@ -15,7 +14,6 @@ export const isWhiteListUser = async (session) => {
       },
     })
   }
-
   if (session?.provider === 'twitter') {
     user = await prisma.whiteList.findFirst({
       where: {
@@ -23,7 +21,6 @@ export const isWhiteListUser = async (session) => {
       },
     })
   }
-
   if (session?.provider === 'email') {
     user = await prisma.whiteList.findUnique({
       where: {
@@ -31,12 +28,19 @@ export const isWhiteListUser = async (session) => {
       },
     })
   }
-
-  // session login through wallet
-  if (session?.user?.address) {
+  if (session?.provider === 'unstoppable-authenticate') {
     user = await prisma.whiteList.findUnique({
       where: {
-        wallet: utils.getAddress(session?.user?.address),
+        uathUser: session?.user?.uathUser,
+      },
+    })
+  }
+
+  // session login through wallet
+  if (session?.user?.wallet) {
+    user = await prisma.whiteList.findUnique({
+      where: {
+        wallet: utils.getAddress(session?.user?.wallet),
       },
     })
   }

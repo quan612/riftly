@@ -310,7 +310,7 @@ export const authOptions = {
       }
 
       session.profile = token.profile || null
-      session.user = token.user
+      // session.user = token.user
       session.provider = token.provider
 
       session.user.twitter = userQuery?.twitterUserName || ''

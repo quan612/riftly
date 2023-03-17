@@ -55,8 +55,8 @@ export const getUserName = (session) => {
     case 'email':
       return session?.user?.email
     default:
-      if (session?.user?.address.length > 16) return shortenAddress(session?.user?.address)
-      return '' //session?.user?.wallet || shortenAddress(session?.user?.address);
+      if (session?.user?.wallet.length > 16) return shortenAddress(session?.user?.wallet)
+      return ''
   }
 }
 
