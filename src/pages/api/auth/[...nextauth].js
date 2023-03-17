@@ -83,15 +83,15 @@ export const authOptions = {
       authorize: async (credentials, req) => {
         const { authorization } = credentials;
         if (!authorization) {
-          console.log('Missing aut')
+
           throw new Error('Missing auth')
         }
-
-        const isValid = await verifyUathLogin(authorization, process.env.NEXT_PUBLIC_UNSTOPPABLE_CLIENT_ID)
-        console.log("isValid", isValid)
-        if (!isValid) {
-          throw new Error('Invalid auth login')
-        }
+        console.log(authorization)
+        // const isValid = await verifyUathLogin(authorization, process.env.NEXT_PUBLIC_UNSTOPPABLE_CLIENT_ID)
+        // console.log("isValid", isValid)
+        // if (!isValid) {
+        //   throw new Error('Invalid auth login')
+        // }
 
         const uathUser = authorization.idToken.sub
         return {
