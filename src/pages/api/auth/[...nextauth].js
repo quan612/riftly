@@ -182,7 +182,7 @@ export const authOptions = {
 
       let isSMSVerificationRequired = await getIsSMSVerificationRequired()
       if (user?.account?.provider === 'unstoppable-authenticate') {
-        return true
+
         let uathUser = user?.credentials?.uathUser
         const existingUser = await prisma.whiteList.findFirst({
           where: {
