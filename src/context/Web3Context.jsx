@@ -5,37 +5,16 @@ import { ethers, utils } from 'ethers'
 import axios from 'axios'
 import Enums from 'enums'
 import WalletConnectProvider from '@walletconnect/web3-provider'
-
-const util = require('util')
-const API_ADMIN = `${Enums.BASEPATH}/api/admin`
-const API_USER = `${Enums.BASEPATH}/api/user`
-
 import UAuth from '@uauth/js'
 
 const { default: Resolution } = require('@unstoppabledomains/resolution')
 const resolution = new Resolution()
-
-const uauth = new UAuth({
-  clientID: process.env.NEXT_PUBLIC_UNSTOPPABLE_CLIENT_ID,
-  redirectUri: process.env.NEXT_PUBLIC_UNSTOPPABLE_REDIRECT_URI,
-  scope: 'openid wallet',
-})
 
 export const Web3Context = React.createContext()
 export function Web3Provider({ session, children }) {
   const [web3Error, setWeb3Error] = useState(null)
 
   let signMessageTimeout, adminSignTimeout
-
-  function iOS() {
-    return (
-      ['iPad Simulator', 'iPhone Simulator', 'iPod Simulator', 'iPad', 'iPhone', 'iPod'].includes(
-        navigator.platform,
-      ) ||
-      // iPad on iOS 13 detection
-      (navigator.userAgent.includes('Mac') && 'ontouchend' in document)
-    )
-  }
 
   useEffect(() => {
     removeLocalStorageWalletConnect()
@@ -126,30 +105,27 @@ export function Web3Provider({ session, children }) {
       if (addresses.length === 0) {
         throw new Error('Account is locked, or is not connected, or is in pending request.')
       }
-      const user = await axios
-        .get(API_USER, {
-          params: {
-            address: addresses[0],
-          },
-        })
-        .then((r) => r.data)
+      // const user = await axios
+      //   .get(`${Enums.BASEPATH}/api/user`, {
+      //     params: {
+      //       address: addresses[0],
+      //     },
+      //   })
+      //   .then((r) => r.data)
 
-      if (!user || user.isError) {
-        throw new Error('User not found, please sign up.')
-      }
+      // if (!user || user.isError) {
+      //   throw new Error('User not found, please sign up.')
+      // }
 
       const promise = new Promise((resolve, reject) => {
         let timeout = setTimeout(async function () {
           try {
-            let signer, signature
-
-            signer = await providerInstance.getSigner()
-
-            signature = await signer.signMessage(`${Enums.USER_SIGN_MSG}`).catch((err) => {
+            const signer = await providerInstance.getSigner()
+            const signature = await signer.signMessage(`${Enums.USER_SIGN_MSG}`).catch((err) => {
               throw new Error('User rejects signing.')
             })
 
-            if (signature && addresses[0]) {
+            if (signature && addresses[0] && signature) {
               signIn('web3-wallet', {
                 redirect: true,
                 signature,
@@ -242,47 +218,31 @@ export function Web3Provider({ session, children }) {
     signOut()
   }
 
-  const tryConnectAsUnstoppable = async () => {
-    try {
-      const authorization = await uauth.loginWithPopup()
-      // console.log(authorization);
-      // let authorization = true;
-      if (authorization) {
-        let user = await uauth.user()
-        // console.log(user);
-        let uathUser = user.sub
-        let address = user?.wallet_address
-        let message = user?.eip4361_message
-        let signature = user?.eip4361_message
-
-        // let uathUser = "quan612.wallet";
-        // let address = "0x9128c112f6bb0b2d888607ae6d36168930a37087";
-        // let message = "";
-        // let signature = "";
-
-        signIn('unstoppable-authenticate', {
-          redirect: true,
-          uathUser,
-          address,
-          message,
-          signature,
-          authorization: JSON.stringify(authorization),
-        })
-          .then(({ ok, error }) => {
-            if (ok) {
-              return true
-            } else {
-              return false
-            }
-          })
-          .catch((err) => {})
-      } else {
-        setWeb3Error('Cannot authenticate with unstoppable')
-      }
-    } catch (error) {
-      console.log(error)
-      setWeb3Error(error.message)
+  const unstoppableLogin = async () => {
+    const uauth = new UAuth({
+      clientID: process.env.NEXT_PUBLIC_UNSTOPPABLE_CLIENT_ID,
+      redirectUri: process.env.NEXT_PUBLIC_UNSTOPPABLE_REDIRECT_URI,
+      scope: 'openid wallet',
+    })
+    const authorization = await uauth.loginWithPopup()
+    // console.log(authorization);
+    // let authorization = true;
+    if (!authorization) {
+      throw new Error('Missing authorization ')
     }
+    // const user = await uauth.user()
+    console.log(authorization)
+    // // let uathUser = "quan612.wallet";
+    // // let address = "0x9128c112f6bb0b2d888607ae6d36168930a37087";
+    // // let message = "";
+    // // let signature = "";
+
+    return await signIn('unstoppable-authenticate', {
+      redirect: true,
+      authorization,
+      // authorization: JSON.stringify(authorization),
+      callbackUrl: `${window.location.origin}`,
+    })
   }
 
   return (
@@ -291,7 +251,7 @@ export function Web3Provider({ session, children }) {
         signInWithWallet,
         SignOut,
         signUpWithWallet,
-        tryConnectAsUnstoppable,
+        unstoppableLogin,
         web3Error,
         setWeb3Error,
         session,

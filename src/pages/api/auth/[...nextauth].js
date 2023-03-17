@@ -23,13 +23,13 @@ const uauth = new UAuth({
   scope: 'openid wallet',
 })
 
-const CryptoJS = require('crypto-js')
 const bcrypt = require('bcrypt')
-
 const { NEXTAUTH_SECRET } = process.env
 
 import { AccountStatus } from '@prisma/client'
 import { getIsSMSVerificationRequired } from 'repositories/user'
+import axios from 'axios'
+import verifyUathLogin from '@util/verifyUathLogin'
 
 export const authOptions = {
   providers: [
@@ -46,15 +46,16 @@ export const authOptions = {
         if (utils.getAddress(address) && !utils.isAddress(address))
           throw new Error('Invalid address')
 
-        const user = await prisma.whiteList.findFirst({
-          where: {
-            wallet: { equals: address, mode: 'insensitive' },
-          },
-        })
+        // unnessary check  
+        // const user = await prisma.whiteList.findFirst({
+        //   where: {
+        //     wallet: { equals: address, mode: 'insensitive' },
+        //   },
+        // })
 
-        if (!user) {
-          throw new Error('This wallet account is not in our record.')
-        }
+        // if (!user) {
+        //   throw new Error('This wallet account is not in our record.')
+        // }
 
         const msg = `${Enums.USER_SIGN_MSG}`
 
@@ -68,53 +69,35 @@ export const authOptions = {
         if (originalAddress.toLowerCase() !== address.toLowerCase())
           throw new Error('Signature verification failed')
 
-        return { address: originalAddress, isAdmin: false, userId: user.userId }
+        return {
+          address: originalAddress, isAdmin: false,
+          //  userId: user.userId 
+        }
 
       },
     }),
     CredentialsProvider({
-      id: 'unstoppable-authenticate',
-      name: 'Unstoppable authentication',
-      type: 'credentials',
+      id: "unstoppable-authenticate",
+      name: "Unstoppable authentication",
+      type: "credentials",
       authorize: async (credentials, req) => {
+        const { authorization } = credentials;
+        if (!authorization) {
+          throw new Error('Missing auth')
+        }
 
-        let { uathUser, address, message, signature, authorization } = credentials
+        const isValid = await verifyUathLogin(authorization, process.env.NEXT_PUBLIC_UNSTOPPABLE_CLIENT_ID)
+        if (!isValid) {
+          throw new Error('Invalid auth login')
+        }
 
-        // if (!address || !uathUser || !authorization) {
-
-        //     throw new Error("Missing unstoppable info");
-        // }
-
-        if (utils.getAddress(address) && !utils.isAddress(address))
-          throw new Error('Invalid address')
-
-        const user = await prisma.whiteList.findFirst({
-          where: {
-            uathUser,
-          },
-        })
-        // let test = await uauth.user();
-
-        let type = 'sig',
-          version = 'v1'
-
-        const {
-          address: originalAddress,
-          message: originalMessage,
-          signature: originalSignature,
-        } = await uauth.getAuthorizationAccount(JSON.parse(authorization), type, version)
+        const uathUser = authorization.idToken.sub
 
         return {
-          address,
-          message,
-          signature,
           isAdmin: false,
-          userId: user?.userId,
-          uauthUser: uathUser,
-          originalAddress,
-          originalMessage,
-          originalSignature,
-        }
+
+          uathUser
+        };
 
       },
     }),
@@ -196,61 +179,30 @@ export const authOptions = {
 
       let isSMSVerificationRequired = await getIsSMSVerificationRequired()
       if (user?.account?.provider === 'unstoppable-authenticate') {
-        let uathUser = user.credentials.uathUser
+        let uathUser = user?.credentials?.uathUser
         const existingUser = await prisma.whiteList.findFirst({
           where: {
-            uathUser: uathUser,
+            uathUser,
           },
         })
         if (!existingUser) {
-          let error = `Unstoppable domain ${uathUser} is not linked.`
-
+          let error = `Unstoppable domain ${uathUser} is not linked to any account.`
           return `/quest-redirect?error=${error}`
         }
 
-        let credentials = user?.credentials
-        let userInfo = user?.user
-
-        if (
-          // credentials.address.toLowerCase() != userInfo.address.toLowerCase() ||
-          credentials.message != userInfo.message ||
-          credentials.signature != userInfo.signature
-        ) {
-          let error = `Invalid unstoppable authorization.`
-          return `/quest-redirect?error=${error}`
-        }
-        return false // not supporting right now
+        return true
       }
       if (user?.account?.provider === 'email') {
-        try {
-          let email = user?.user?.email
-
-          await prisma.whiteList.findFirst({
-            where: {
-              email,
-            },
-          })
-
-          // should not be here, throw from authorize
-          // if (existingUser.status === AccountStatus.PENDING) {
-          //     throw new Error(`/sms-verification?account=${email}&type=${Enums.EMAIL}`);
-          // }
-
-          return true
-        } catch (error) {
-          return false
-        }
+        return true
       }
-
+      /** Manual handling sign in check as we cannot do anything at authorize */
       if (user?.account?.provider === 'discord') {
-        let discordId = user.account.providerAccountId
-        console.log("discordId", discordId)
+        const discordId = user?.account?.providerAccountId
         const existingUser = await prisma.whiteList.findFirst({
           where: {
             discordId,
           },
         })
-
         if (!existingUser) {
           let error = `Discord ${user.profile.username}%23${user.profile.discriminator} not found in our database.`
           return `/quest-redirect?error=${error}`
@@ -260,16 +212,14 @@ export const authOptions = {
         }
         return true
       }
+      /** Manual handling sign in check as we cannot do anything at authorize */
       if (user?.account?.provider === 'twitter') {
-
-        let twitterId = user.account.providerAccountId
-
+        const twitterId = user?.account?.providerAccountId
         const existingUser = await prisma.whiteList.findFirst({
           where: {
             twitterId,
           },
         })
-
         if (!existingUser) {
           let error = `Twitter account ${user.user.name} not found.`
           return `/quest-redirect?error=${error}`
@@ -280,12 +230,12 @@ export const authOptions = {
         return true
       }
       if (user?.account?.provider === 'web3-wallet') {
-
-        let userId = user?.user?.userId
-        let address = user?.user?.address
-        const existingUser = await prisma.whiteList.findUnique({
+        // let userId = user?.user?.userId
+        let address = user.user.address
+        const existingUser = await prisma.whiteList.findFirst({
           where: {
-            userId,
+            // userId,
+            wallet: { equals: address, mode: 'insensitive' },
           },
         })
 
@@ -293,10 +243,10 @@ export const authOptions = {
           let error = `Wallet account ${address} not found in our database.`
           return `/quest-redirect?error=${error}`
         }
-
         if (existingUser.status === AccountStatus.PENDING && isSMSVerificationRequired) {
           return `/sms-verification?account=${address}&type=${Enums.WALLET}`
         }
+
         return true
       }
 
@@ -317,7 +267,7 @@ export const authOptions = {
       return token
     },
     async session({ session, token }) {
-      console.log(`#######################################################################`)
+      console.log(`Session handling #######################################################################`)
       let userQuery;
       if (token.provider === "twitter") {
         userQuery = await prisma.whiteList.findFirst({
@@ -336,7 +286,7 @@ export const authOptions = {
       if (token.provider === "web3-wallet") {
         userQuery = await prisma.whiteList.findFirst({
           where: {
-            wallet: token?.user?.address,
+            wallet: { equals: token?.user?.address, mode: 'insensitive' },
           },
         });
       }
@@ -358,10 +308,7 @@ export const authOptions = {
       session.user.avatar = userQuery?.avatar || ''
       session.user.wallet = userQuery?.wallet || ''
       session.user.uathUser = userQuery?.uathUser || ''
-
-      if (!session.user.userId) {
-        session.user.userId = userQuery?.userId
-      }
+      session.user.userId = userQuery.userId;
 
       return session
     },
@@ -376,3 +323,7 @@ export default (req, res) => {
   }
   return NextAuth(req, res, authOptions)
 }
+
+
+
+

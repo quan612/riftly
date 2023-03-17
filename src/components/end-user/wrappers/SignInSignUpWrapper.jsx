@@ -18,6 +18,7 @@ import {
   DiscordIcon,
   GoogleIcon,
   MetamaskIcon,
+  StarIcon,
   TwitterIcon,
   WalletConnectIcon,
 } from '@components/shared/Icons'
@@ -34,6 +35,7 @@ import { debounce, sleep } from 'util/index'
 import Enums from '@enums/index'
 
 import * as gtag from '@lib/ga/gtag'
+import PartnersSignInModal from '../shared/PartnersSignInModal'
 
 const NON_EMAIL = 1
 const EMAIL = 2
@@ -44,6 +46,7 @@ export const SignInSignUpWrapper = ({ isSignIn = false }) => {
   const router = useRouter()
   const walletSignInModal = useDisclosure()
   const walletSignUpModal = useDisclosure()
+  const partnersSignInModal = useDisclosure()
   const [view, setView] = useState(NON_EMAIL)
 
   const inputRefs = {
@@ -53,6 +56,14 @@ export const SignInSignUpWrapper = ({ isSignIn = false }) => {
 
   return (
     <>
+      {partnersSignInModal?.isOpen && (
+        <PartnersSignInModal
+          isOpen={partnersSignInModal.isOpen}
+          onClose={() => {
+            partnersSignInModal.onClose()
+          }}
+        />
+      )}
       {walletSignInModal?.isOpen && (
         <WalletSignInModal
           isOpen={walletSignInModal.isOpen}
@@ -71,7 +82,197 @@ export const SignInSignUpWrapper = ({ isSignIn = false }) => {
           }}
         />
       )}
-      {view === NON_EMAIL && (
+
+      {view === NON_EMAIL && isSignIn && (
+        <>
+          <Flex
+            flexDirection={'column'}
+            gap="8px"
+            justify="flex-start"
+            w="100%"
+            justifyContent={'flex-start'}
+          >
+            <Heading fontSize="24px" color="#fff" fontWeight={'700'}>
+              {isSignIn ? 'Welcome Back!' : "Let's get started"}
+            </Heading>
+            <Text fontSize="md" color={'brand.neutral1'}>
+              {isSignIn
+                ? 'Sign in with your credentials'
+                : 'Create an account with your preferred method'}
+            </Text>
+          </Flex>
+          <ButtonGroup
+            spacing={{ base: '12px', lg: '16px' }}
+            w="100%"
+            justifyContent={'space-between'}
+          >
+            <Button
+              onClick={async () => {
+                if (isSignIn) {
+                  signIn('discord', {
+                    callbackUrl: `${window.location.origin}`,
+                  })
+                } else {
+                  if (typeof window !== 'undefined' && window.gtag) {
+                    console.log('Discord sign up tracked')
+                    gtag.event({
+                      action: 'sign_up_success',
+                      method: Enums.DISCORD,
+                      label: 'Discord signs up successfully',
+                    })
+                  }
+                  let discordLink = await getDiscordAuthLink()
+                  return window.open(discordLink, '_self')
+                }
+              }}
+              variant="discord"
+              w={'47%'}
+            >
+              <HStack>
+                <DiscordIcon />
+                <Text>Discord</Text>
+              </HStack>
+            </Button>
+
+            <Button
+              onClick={async () => {
+                if (isSignIn) {
+                  signIn('twitter', {
+                    callbackUrl: `${window.location.origin}`,
+                  })
+                } else {
+                  if (typeof window !== 'undefined' && window.gtag) {
+                    console.log('Twitter sign up tracked')
+                    gtag.event({
+                      action: 'sign_up_success',
+                      method: Enums.TWITTER,
+                      label: 'Twitter signs up successfully',
+                    })
+                  }
+                  let twitterLink = await getTwitterAuthLink()
+                  return window.open(twitterLink, '_self')
+                }
+              }}
+              variant="twitter"
+              w={'47%'}
+            >
+              <HStack>
+                <TwitterIcon />
+                <Text>Twitter</Text>
+              </HStack>
+            </Button>
+            <Button
+              onClick={() => {
+                if (isSignIn) {
+                  // signIn("google",{
+                  //   callbackUrl: `${window.location.origin}`,
+                  // });
+                  // signIn("twitter");
+                } else {
+                  if (typeof window !== 'undefined' && window.gtag) {
+                    console.log('Google sign up tracked')
+                    gtag.event({
+                      action: 'sign_up_success',
+                      method: Enums.GOOGLE,
+                      label: 'Google signs up successfully',
+                    })
+                  }
+                  // let twitterLink = await getTwitterAuthLink();
+                  // return window.open(twitterLink, "_self");
+                }
+              }}
+              disabled={true}
+              variant="google"
+              w={'47%'}
+            >
+              <HStack>
+                <GoogleIcon />
+                <Text>Google</Text>
+              </HStack>
+            </Button>
+          </ButtonGroup>
+          <ButtonGroup
+            spacing={{ base: '12px', lg: '16px' }}
+            w="100%"
+            justifyContent={'space-between'}
+          >
+            <Button
+              onClick={() => {
+                if (isSignIn) {
+                  partnersSignInModal.onOpen()
+                }
+              }}
+              variant="outline-green"
+              w={'47%'}
+            >
+              <HStack>
+                <StarIcon /> <Text>Partners</Text>
+              </HStack>
+            </Button>
+
+            <Button
+              onClick={() => {
+                if (isSignIn) {
+                  walletSignInModal.onOpen()
+                } else {
+                  walletSignUpModal.onOpen()
+                }
+              }}
+              variant="wallet"
+              w={'47%'}
+            >
+              <HStack>
+                <MetamaskIcon /> <Text>Wallet</Text>
+              </HStack>
+            </Button>
+          </ButtonGroup>
+          <Flex w="100%" justifyContent={'center'}>
+            <Flex w="33%" alignItems={'center'}>
+              <Divider color={'#597BA1'} opacity={'1'} />
+            </Flex>
+
+            <Heading w="33%" color="#fff" align={'center'} fontSize={{ base: '18px', lg: '24px' }}>
+              or
+            </Heading>
+            <Flex w="33%" alignItems={'center'}>
+              <Divider color={'#597BA1'} opacity={'1'} />
+            </Flex>
+          </Flex>
+          <Flex
+            w="100%"
+            justifyContent={'center'}
+            flexDirection="column"
+            alignItems={'center'}
+            gap={{ base: '16px', lg: '24px' }}
+          >
+            <Input
+              variant={'riftly'}
+              type="text"
+              placeholder="Email"
+              ref={inputRefs.emailRef}
+              defaultValue={inputRefs.emailRef.current.value}
+            />
+            <Button
+              w="100%"
+              variant="blue"
+              onClick={() => {
+                setView(EMAIL)
+              }}
+            >
+              Continue
+            </Button>
+            <Button
+              variant="ghost-blue"
+              onClick={() => {
+                router.push('/welcome')
+              }}
+            >
+              Back
+            </Button>
+          </Flex>
+        </>
+      )}
+      {view === NON_EMAIL && !isSignIn && (
         <>
           <Flex
             flexDirection={'column'}
@@ -164,11 +365,11 @@ export const SignInSignUpWrapper = ({ isSignIn = false }) => {
                   // signIn("twitter");
                 } else {
                   if (typeof window !== 'undefined' && window.gtag) {
-                    console.log('Discord sign up tracked')
+                    console.log('Google sign up tracked')
                     gtag.event({
                       action: 'sign_up_success',
-                      method: Enums.DISCORD,
-                      label: 'Discord signs up successfully',
+                      method: Enums.GOOGLE,
+                      label: 'Google signs up successfully',
                     })
                   }
                   // let twitterLink = await getTwitterAuthLink();

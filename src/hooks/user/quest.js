@@ -12,7 +12,8 @@ export const useUserQuestSubmit = () => {
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries('user-query-user-quest')
+        queryClient.invalidateQueries(['user-query-user-quest', 'user-query-feature-quest']);
+
       },
     },
   )
@@ -31,7 +32,9 @@ export const useCodeQuestSubmit = () => {
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries('user-query-user-quest')
+        // queryClient.invalidateQueries('user-query-user-quest');
+        // queryClient.invalidateQueries('user-query-feature-quest');
+        queryClient.invalidateQueries(['user-query-user-quest', 'user-query-feature-quest']);
       },
     },
   )
@@ -50,7 +53,9 @@ export const useNftOwningQuestSubmit = () => {
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries('user-query-user-quest')
+        // queryClient.invalidateQueries('user-query-user-quest');
+        // queryClient.invalidateQueries('user-query-feature-quest');
+        queryClient.invalidateQueries(['user-query-user-quest', 'user-query-feature-quest']);
       },
     },
   )
@@ -67,7 +72,9 @@ export const useWalletAuthQuestSubmit = () => {
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries('user-query-user-quest')
+        // queryClient.invalidateQueries('user-query-user-quest');
+        // queryClient.invalidateQueries('user-query-feature-quest');
+        queryClient.invalidateQueries(['user-query-user-quest', 'user-query-feature-quest']);
       },
     },
   )
@@ -136,8 +143,8 @@ export const useUserOwningNftQuestSubmit = () => {
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries('user-reward-query')
-        queryClient.invalidateQueries('user-query-user-quest')
+        // queryClient.invalidateQueries('user-query-user-quest')
+        queryClient.invalidateQueries(['user-query-user-quest', 'user-query-feature-quest']);
       },
     },
   )
@@ -156,7 +163,9 @@ export const useUnstoppableAuthQuestSubmit = () => {
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries('user-query-user-quest')
+        // queryClient.invalidateQueries('user-query-user-quest'); //
+        // queryClient.invalidateQueries('user-query-feature-quest');
+        queryClient.invalidateQueries(['user-query-user-quest', 'user-query-feature-quest']);
       },
     },
   )

@@ -178,6 +178,8 @@ export const buttonStyles = {
           },
         }),
 
+
+
         cyan: (props) => ({
           borderColor: 'transparent',
           bg: 'brand.cyan',
@@ -428,6 +430,75 @@ export const buttonStyles = {
             bg: 'transparent',
             borderColor: 'brand.blue',
             color: 'brand.blue',
+          },
+        }),
+
+        'outline-light-blue': (props) => ({
+          borderColor: 'blue.300',
+          bg: 'transparent',
+          color: '#fff',
+
+          _hover: {
+            transition: '0.8s',
+            bg: 'blue.300',
+            color: '#fff',
+            _disabled: {
+              bg: 'transparent',
+              color: '#fff',
+              opacity: 0.4,
+            },
+          },
+          _disabled: {
+            opacity: 0.4,
+          },
+          _focus: {
+            transition: '0.8s',
+            bg: 'blue.300',
+            color: '#fff',
+            borderColor: '#fff',
+            _disabled: {
+              bg: 'transparent',
+              color: '#fff',
+              opacity: 0.4,
+            },
+          },
+          _active: {
+            bg: 'transparent',
+            borderColor: 'blue.300',
+            color: 'blue.300',
+          },
+        }),
+        'outline-green': (props) => ({
+          borderColor: 'green.300',
+          bg: 'transparent',
+          color: 'white',
+          _hover: {
+            transition: '0.8s',
+            bg: 'green.300',
+            svg: {
+              fill: 'white',
+              transition: '0.8s',
+            },
+          },
+          _disabled: {
+            opacity: 0.4,
+          },
+          _focus: {
+            transition: '0.8s',
+            bg: 'green.300',
+            color: '#fff',
+            svg: {
+              fill: 'white',
+              transition: '0.8s',
+            },
+            _disabled: {
+              bg: 'green.300',
+              color: '#fff',
+              opacity: 0.4,
+            },
+          },
+          _active: {
+            bg: 'green.300',
           },
         }),
 

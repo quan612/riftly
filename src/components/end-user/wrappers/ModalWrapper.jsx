@@ -9,7 +9,7 @@ const ModalWrapper = ({ isOpen, onClose, handleOnClose, gap = '36px', children }
       <ModalOverlay />
       <ModalContent
         borderRadius="16px"
-        minH="225px"
+        minH={{ base: '275px', lg: '384px' }}
         // w={{ base: "280px", md: "container.sm" }}
         w={'container.sm'}
         bg={'brand.neutral4'}
@@ -28,7 +28,7 @@ const ModalWrapper = ({ isOpen, onClose, handleOnClose, gap = '36px', children }
           justifyContent={'center'}
           w="100%"
           maxH={'100%'}
-          padding={{ base: '42px 60px 48px 60px', lg: '84px 120px 96px 120px' }}
+          padding={{ base: '42px 60px 48px 60px', md: '84px 120px 96px 120px' }}
         >
           <Flex
             gap={gap}

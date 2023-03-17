@@ -1,7 +1,8 @@
 import { Icon, Tooltip, Flex } from '@chakra-ui/react'
-import {} from 'react-icons/bs'
+import { Image } from '@chakra-ui/react'
 import { BiEdit } from 'react-icons/bi'
-import {} from 'react-icons/bs'
+
+import { AiFillStar } from "react-icons/ai";
 import { BsTwitter, BsDiscord, BsGoogle, BsCheckLg, BsInfoCircle } from 'react-icons/bs'
 
 export const IconBox = (props) => {
@@ -11,6 +12,17 @@ export const IconBox = (props) => {
     <Flex alignItems={'center'} justifyContent={'center'} borderRadius={'8px'} {...rest}>
       {icon}
     </Flex>
+  )
+}
+
+export const UnstoppableIcon = () => {
+  return (
+    <Image
+      position={'relative'}
+      src="/img/user/UD Icon.png"
+      w={{ base: '22px', lg: '22px' }}
+      fit={'fill'}
+    />
   )
 }
 
@@ -146,6 +158,17 @@ export const MetamaskIcon = ({ width = '24px', height = '24px' }) => {
   )
 }
 
+export const StarIcon = ({ width = '19px', height = '18px' }) => {
+  return (
+    <Icon
+      transition="0.8s"
+      color={'green.300'}
+      as={AiFillStar}
+      boxSize='5'
+    />
+  )
+}
+
 export const WalletConnectIcon = ({ width = '24px', height = '24px' }) => {
   return (
     <Icon>
@@ -200,7 +223,6 @@ export const DiscordIcon = ({ fill = true }) => {
       transition="0.8s"
       color={'purple.300'}
       as={BsDiscord}
-      //  w="100%" h="100%"
     />
   )
 }

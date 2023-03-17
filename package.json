@@ -45,6 +45,7 @@
     "formidable": "^2.1.1",
     "formik": "^2.2.9",
     "framer-motion": "^6.5.1",
+    "jose": "^4.10.0",
     "moment": "^2.29.4",
     "moralis": "^2.11.1",
     "next": "^12.2.0",

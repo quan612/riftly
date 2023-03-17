@@ -57,25 +57,10 @@ const FeatureCard = ({ quest }) => {
             src={quest?.image}
             w={{ base: '100%', '3xl': '100%' }}
             borderTopRadius="16px"
-            fit={'fill'}
+            fit={'cover'}
           />
         </Box>
-        <Flex
-          flexDirection="column"
-          // justify="space-between"
-          pt="16px"
-          px="12px"
-          //  h="63%"
-          // overflow={'auto'}
-          flex="1"
-          // h="160x"
-          gap="4px"
-          // sx={{
-          //   '::-webkit-scrollbar': {
-          //     display: 'none',
-          //   },
-          // }}
-        >
+        <Flex flexDirection="column" pt="16px" px="12px" flex="1" gap="4px">
           <Body text={text} description={description} />
           <Footer quest={quest} />
         </Flex>
@@ -149,7 +134,7 @@ const Footer = ({ quest }) => {
     }
   })
   return (
-    <Flex align="start" alignItems={'center'} justify="space-between">
+    <Flex align="start" alignItems={'center'} justify="space-between" mt="auto" pb="8px">
       <Flex alignItems={'center'} gap="5px">
         <Box maxH="24px" h="33%" position={'relative'} boxSize="16px">
           <RiftlyIcon fill={'#1D63FF'} />
