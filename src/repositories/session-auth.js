@@ -29,7 +29,7 @@ export const isWhiteListUser = async (session) => {
     })
   }
   if (session?.provider === 'unstoppable-authenticate') {
-    user = await prisma.whiteList.findUnique({
+    user = await prisma.whiteList.findFirst({
       where: {
         uathUser: session?.user?.uathUser,
       },
