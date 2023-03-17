@@ -242,8 +242,8 @@ export function Web3Provider({ session, children }) {
 
     await signIn('unstoppable-authenticate', {
       redirect: false,
-      authorization,
-      // authorization: JSON.stringify(authorization),
+      // authorization,
+      authorization: JSON.stringify(authorization),
       callbackUrl: `${window.location.origin}`,
     })
   }
