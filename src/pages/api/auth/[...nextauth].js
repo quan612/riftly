@@ -82,11 +82,12 @@ export const authOptions = {
       type: "credentials",
       authorize: async (credentials, req) => {
         const { authorization } = credentials;
+        console.log(authorization)
         if (!authorization) {
-
+          console.log("authorization")
           throw new Error('Missing auth')
         }
-        console.log(authorization)
+
         // const isValid = await verifyUathLogin(authorization, process.env.NEXT_PUBLIC_UNSTOPPABLE_CLIENT_ID)
         // console.log("isValid", isValid)
         // if (!isValid) {
