@@ -18,11 +18,11 @@ import { useUnstoppableAuthQuestSubmit } from '@hooks/user/quest'
 const { default: Resolution } = require('@unstoppabledomains/resolution')
 const resolution = new Resolution()
 
-const uauth = new UAuth({
-  clientID: process.env.NEXT_PUBLIC_UNSTOPPABLE_CLIENT_ID,
-  redirectUri: process.env.NEXT_PUBLIC_UNSTOPPABLE_REDIRECT_URI,
-  scope: 'openid wallet',
-})
+// const uauth = new UAuth({
+//   clientID: process.env.NEXT_PUBLIC_UNSTOPPABLE_CLIENT_ID,
+//   redirectUri: process.env.NEXT_PUBLIC_UNSTOPPABLE_REDIRECT_URI,
+//   scope: 'openid wallet',
+// })
 
 const UnstoppableQuestModal = ({ isOpen, onClose, currentQuest }) => {
   const [error, errorSet] = useState(null)
@@ -30,33 +30,36 @@ const UnstoppableQuestModal = ({ isOpen, onClose, currentQuest }) => {
   const [uauthUser, setUauthUser] = useState(null)
   const [questData, isSubmittingQuest, submitQuest] = useUnstoppableAuthQuestSubmit()
 
-  console.log(currentQuest)
-
   const handleOnClose = useCallback(() => {
     errorSet(null)
     onClose()
   }, [])
 
   const handleUnstoppableLogin = useCallback(async () => {
-    // let auth = "quan612.crypto";
-    errorSet(null)
-    try {
-      const authorization = await uauth.loginWithPopup()
-      console.log(authorization)
-      // let test = await resolution.owner(auth);
-      if (authorization) {
-        let user = await uauth.user()
-        console.log(user)
-        setUauthUser(user.sub)
-        setView(SUBMITTABLE)
-      } else {
-        // console.log(authorization);
-        errorSet('something wrong')
+    if (typeof window !== 'undefined') {
+      const uauth = new UAuth({
+        clientID: process.env.NEXT_PUBLIC_UNSTOPPABLE_CLIENT_ID,
+        redirectUri: `${window.location.origin}`,
+        scope: 'openid wallet',
+      })
+      errorSet(null)
+      try {
+        const authorization = await uauth.loginWithPopup()
+        // console.log(authorization)
+
+        if (authorization) {
+          let user = await uauth.user()
+          setUauthUser(user.sub)
+          setView(SUBMITTABLE)
+        } else {
+          // console.log(authorization);
+          errorSet('Cannot get auth object from Unstoppable Login')
+        }
+      } catch (error) {
+        errorSet(error.message)
       }
-    } catch (error) {
-      errorSet(error.message)
     }
-  }, [])
+  }, [window])
 
   async function handleOnSubmit() {
     /** Submit this quest */

@@ -22,7 +22,7 @@ const PartnersSignInModal = ({ isOpen, onClose }) => {
 
   const onLoginUnstoppable = useCallback(async () => {
     try {
-      await unstoppableLogin()
+      await unstoppableLogin(`${window.location.origin}/user/sign-in`)
 
       setView(AUTHENTICATED)
     } catch (error) {

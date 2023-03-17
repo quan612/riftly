@@ -11,24 +11,14 @@ import { utils } from 'ethers'
 import Enums from 'enums'
 import DiscordProvider from 'next-auth/providers/discord'
 import TwitterProvider from 'next-auth/providers/twitter'
-import UAuth from '@uauth/js'
 import { getVariableConfig } from 'repositories/config'
 import { validateEmail } from 'util/index'
-const { default: Resolution } = require('@unstoppabledomains/resolution')
-const resolution = new Resolution()
-
-const uauth = new UAuth({
-  clientID: process.env.NEXT_PUBLIC_UNSTOPPABLE_CLIENT_ID,
-  redirectUri: process.env.NEXT_PUBLIC_UNSTOPPABLE_REDIRECT_URI,
-  scope: 'openid wallet',
-})
 
 const bcrypt = require('bcrypt')
 const { NEXTAUTH_SECRET } = process.env
 
 import { AccountStatus } from '@prisma/client'
 import { getIsSMSVerificationRequired } from 'repositories/user'
-import axios from 'axios'
 import verifyUathLogin from '@util/verifyUathLogin'
 
 export const authOptions = {
@@ -39,23 +29,12 @@ export const authOptions = {
       type: 'credentials',
       authorize: async (credentials, req) => {
 
-        let { address, signature } = credentials
+        let { wallet, signature } = credentials
 
-        if (!address || !signature) throw new Error('Missing address or signature')
+        if (!wallet || !signature) throw new Error('Missing wallet or signature')
 
-        if (utils.getAddress(address) && !utils.isAddress(address))
-          throw new Error('Invalid address')
-
-        // unnessary check  
-        // const user = await prisma.whiteList.findFirst({
-        //   where: {
-        //     wallet: { equals: address, mode: 'insensitive' },
-        //   },
-        // })
-
-        // if (!user) {
-        //   throw new Error('This wallet account is not in our record.')
-        // }
+        if (utils.getAddress(wallet) && !utils.isAddress(wallet))
+          throw new Error('Invalid wallet address')
 
         const msg = `${Enums.USER_SIGN_MSG}`
 
@@ -66,11 +45,11 @@ export const authOptions = {
           signature: signature.trim(),
         })
 
-        if (originalAddress.toLowerCase() !== address.toLowerCase())
+        if (originalAddress.toLowerCase() !== wallet.toLowerCase())
           throw new Error('Signature verification failed')
 
         return {
-          address: originalAddress, isAdmin: false,
+          wallet: originalAddress, isAdmin: false,
           //  userId: user.userId 
         }
 
@@ -90,11 +69,11 @@ export const authOptions = {
 
         authorization = JSON.parse(authorization)
 
-        // const isValid = await verifyUathLogin(authorization, process.env.NEXT_PUBLIC_UNSTOPPABLE_CLIENT_ID)
-        // console.log("isValid", isValid)
-        // if (!isValid) {
-        //   throw new Error('Invalid auth login')
-        // }
+        const isValid = await verifyUathLogin(authorization, process.env.NEXT_PUBLIC_UNSTOPPABLE_CLIENT_ID)
+        console.log("isValid", isValid)
+        if (!isValid) {
+          throw new Error('Invalid auth login')
+        }
 
         const uathUser = authorization.idToken.sub
         return {
@@ -235,20 +214,20 @@ export const authOptions = {
       }
       if (user?.account?.provider === 'web3-wallet') {
         // let userId = user?.user?.userId
-        let address = user.user.address
+        let wallet = user.user.wallet
         const existingUser = await prisma.whiteList.findFirst({
           where: {
             // userId,
-            wallet: { equals: address, mode: 'insensitive' },
+            wallet: { equals: wallet, mode: 'insensitive' },
           },
         })
 
         if (!existingUser) {
-          let error = `Wallet account ${address} not found in our database.`
+          let error = `Wallet account ${wallet} not found in our database.`
           return `/quest-redirect?error=${error}`
         }
         if (existingUser.status === AccountStatus.PENDING && isSMSVerificationRequired) {
-          return `/sms-verification?account=${address}&type=${Enums.WALLET}`
+          return `/sms-verification?account=${wallet}&type=${Enums.WALLET}`
         }
 
         return true
@@ -290,7 +269,7 @@ export const authOptions = {
       if (token.provider === "web3-wallet") {
         userQuery = await prisma.whiteList.findFirst({
           where: {
-            wallet: { equals: token?.user?.address, mode: 'insensitive' },
+            wallet: { equals: token?.user?.wallet, mode: 'insensitive' },
           },
         });
       }
@@ -310,9 +289,10 @@ export const authOptions = {
       }
 
       session.profile = token.profile || null
-      // session.user = token.user
+      session.user = token.user
       session.provider = token.provider
 
+      session.user.isAdmin = false;
       session.user.twitter = userQuery?.twitterUserName || ''
       session.user.discord = userQuery?.discordUserDiscriminator || ''
       session.user.email = userQuery?.email || ''

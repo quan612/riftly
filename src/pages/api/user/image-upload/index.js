@@ -7,6 +7,7 @@ const ImageUploadAPI = async (req, res) => {
   switch (method) {
     case 'POST':
       try {
+        return res.status(200).json({ isError: true, message: "For later" })
         console.log(`** Uploading image to cloudinary **`)
         const whiteListUser = req.whiteListUser
         const { data } = req.body
@@ -15,7 +16,7 @@ const ImageUploadAPI = async (req, res) => {
           public_id: whiteListUser.userId,
           upload_preset: '',
         })
-        return res.status(200).json(uploaded)
+        res.status(200).json(uploaded)
       } catch (err) {
         console.log(err)
         res.status(500).json({ err })
@@ -31,7 +32,7 @@ export default whitelistUserMiddleware(ImageUploadAPI)
 export const config = {
   api: {
     bodyParser: {
-      sizeLimit: '4mb',
+      sizeLimit: '2mb',
     },
   },
 }

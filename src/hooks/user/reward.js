@@ -8,11 +8,10 @@ export const useUserRewardQuery = (session) => {
   const { data, isLoading } = useQuery(
     ['user-reward-query', userId],
     () => {
-      return axios.get(`${Enums.BASEPATH}/api/user/reward/getClaimed/${userId}`).then((r) => r.data)
+      return axios.get(`${Enums.BASEPATH}/api/user/reward/get-claimed/${userId}`).then((r) => r.data)
     },
     {
       staleTime: 60 * 60,
-
       enabled: userId !== undefined,
     },
   )

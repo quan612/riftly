@@ -31,7 +31,7 @@ function RedeemPage({ session }) {
           property="twitter:image"
           content="https://anomuragame.com/DeepSeaChallengerThumbnail_2.png"
         /> */}
-        <link rel="icon" href="/faviconShell.png" />
+        <link rel="icon" href="/Sparkle.svg" />
       </Head>
       <ChakraBox initial="hidden" animate="enter" exit="exit" variants={variants}>
         <Flex flexDirection="column" gap="16px">

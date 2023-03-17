@@ -1,7 +1,6 @@
 import { prisma } from '@context/PrismaContext'
 import whitelistUserMiddleware from 'middlewares/whitelistUserMiddleware'
 import axios from 'axios'
-import Enums from 'enums'
 import { updateClaimAndPendingRewardTransaction } from 'repositories/transactions'
 
 const userClaimRewardAPI = async (req, res) => {
@@ -10,6 +9,10 @@ const userClaimRewardAPI = async (req, res) => {
   switch (method) {
     case 'POST':
       try {
+        return res.status(200).json({
+          isError: true,
+          message: `Disable path as not having any UI to claim from user perspective!`,
+        })
         const whiteListUser = req.whiteListUser
         const { generatedURL, rewardTypeId, userId } = req.body
 

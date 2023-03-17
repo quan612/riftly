@@ -1,7 +1,5 @@
 import { prisma } from 'context/PrismaContext'
 
-import whitelistUserMiddleware from 'middlewares/whitelistUserMiddleware'
-
 // should only return Id, not secret so we need to early exit in case someone tries to query one.
 const UserConfigsQueryAPI = async (req, res) => {
   const { method } = req
@@ -12,7 +10,7 @@ const UserConfigsQueryAPI = async (req, res) => {
         const { type } = req.query
 
         if (type !== 'discordId' && type !== 'twitterId') {
-          return res.status(200).json({ isError: true, message: 'Only for querying Id' })
+          return res.status(200).json({ isError: true, message: 'Only for querying Social Type Id' })
         }
         let configs = await prisma.questVariables.findFirst()
         let configType = configs[type]

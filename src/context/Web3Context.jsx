@@ -1,20 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { signIn, signOut } from 'next-auth/react'
-
 import { ethers, utils } from 'ethers'
 import axios from 'axios'
 import Enums from 'enums'
 import WalletConnectProvider from '@walletconnect/web3-provider'
 import UAuth from '@uauth/js'
-
-const { default: Resolution } = require('@unstoppabledomains/resolution')
-const resolution = new Resolution()
-const uauth = new UAuth({
-  clientID: process.env.NEXT_PUBLIC_UNSTOPPABLE_CLIENT_ID,
-  // redirectUri: process.env.NEXT_PUBLIC_UNSTOPPABLE_REDIRECT_URI,
-  redirectUri: 'https://www.riftly.xyz/user/sign-in',
-  scope: 'openid wallet',
-})
 
 export const Web3Context = React.createContext()
 export function Web3Provider({ session, children }) {
@@ -78,7 +68,7 @@ export function Web3Provider({ session, children }) {
       await signIn('web3-wallet', {
         redirect: true,
         signature,
-        address,
+        wallet: address,
         callbackUrl: `${window.location.origin}`,
       }).catch((error) => {
         throw new Error(error.message)
@@ -135,7 +125,7 @@ export function Web3Provider({ session, children }) {
               signIn('web3-wallet', {
                 redirect: true,
                 signature,
-                address: addresses[0],
+                wallet: addresses[0],
                 callbackUrl: `${window.location.origin}`,
               }).catch((error) => {
                 reject(error.message)
@@ -224,25 +214,21 @@ export function Web3Provider({ session, children }) {
     signOut()
   }
 
-  const unstoppableLogin = async () => {
+  const unstoppableLogin = async (redirectUri) => {
+    const uauth = new UAuth({
+      clientID: process.env.NEXT_PUBLIC_UNSTOPPABLE_CLIENT_ID,
+      redirectUri, //'https://www.riftly.xyz/user/sign-in',
+      scope: 'openid wallet',
+    })
     const authorization = await uauth.loginWithPopup()
-    // console.log(authorization);
-    // let authorization = true;
+
     if (!authorization) {
       console.log('no auth')
       throw new Error('Missing authorization ')
     }
-    console.log('has auth')
-    // const user = await uauth.user()
-    // console.log(authorization)
-    // // let uathUser = "quan612.wallet";
-    // // let address = "0x9128c112f6bb0b2d888607ae6d36168930a37087";
-    // // let message = "";
-    // // let signature = "";
 
     await signIn('unstoppable-authenticate', {
       redirect: false,
-      // authorization,
       authorization: JSON.stringify(authorization),
       callbackUrl: `${window.location.origin}`,
     })

@@ -87,10 +87,10 @@ const Body = ({ text, description }) => {
 
 const Footer = ({ quest }) => {
   const { isClaimable, questId, quantity } = quest
-
   const { isSubmittingQuest, doQuest } = useContext(UserQuestContext)
-
   const [, isClaimingUserQuest, onUserQuestClaim] = useUserQuestClaim()
+  const { data, isLoading: isFetchingFeatureQuests } = useUserFeatureQuestQuery()
+
   const toast = useToast()
   const queryClient = useQueryClient()
   let invalidCacheTimeout, scorePopupTimeout
@@ -105,6 +105,12 @@ const Footer = ({ quest }) => {
     }
   }, [])
 
+  const getButtonState = useCallback(() => {
+    if (disableBtn) return true
+    if (isClaimingUserQuest || isSubmittingQuest || isFetchingFeatureQuests) return true
+    return false
+  }, [disableBtn, isClaimingUserQuest, isSubmittingQuest, isFetchingFeatureQuests])
+
   const claimQuest = useCallback(async (questId) => {
     disableBtnSet(true)
     try {
@@ -115,9 +121,8 @@ const Footer = ({ quest }) => {
 
       invalidCacheTimeout = setTimeout(() => {
         queryClient.invalidateQueries('user-reward-query')
-        queryClient.invalidateQueries('user-query-user-quest')
         queryClient.invalidateQueries('user-query-feature-quest')
-        disableBtnSet(false)
+
         clearTimeout(invalidCacheTimeout)
       }, 1000)
     } catch (error) {
@@ -150,8 +155,8 @@ const Footer = ({ quest }) => {
         borderRadius="48px"
         px="12px"
         py="5px"
-        isLoading={isClaimingUserQuest || isSubmittingQuest}
-        disabled={disableBtn}
+        isLoading={isClaimingUserQuest || isSubmittingQuest || isFetchingFeatureQuests}
+        disabled={getButtonState()}
         onClick={() => {
           if (!isClaimable) {
             doQuest(quest)

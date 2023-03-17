@@ -1,7 +1,5 @@
 import React, { useRef, useContext } from 'react'
-
 import { AnimatePresence } from 'framer-motion'
-
 import UserTierLevel from './UserTierLevel'
 import FeatureQuests from './FeaturedQuests'
 import ChallengeQuests from './ChallengeQuests'
@@ -18,7 +16,7 @@ const RiftlyIndividualQuestBoard = ({ session }) => {
     unstoppableQuestModal,
     questSelected,
   } = useContext(UserQuestContext)
-  console.log(session)
+
   return (
     <>
       {/* To avoid challenges header to jump around */}

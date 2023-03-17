@@ -8,6 +8,11 @@ const getPendingRewardApi = async (req, res) => {
   switch (method) {
     case 'GET':
       try {
+        return res.status(200).json({
+          isError: true,
+          message: `Disable path as not having any UI to claim from user perspective!`,
+        })
+
         const whiteListUser = req.whiteListUser
         const { username, generatedURL } = req.query
         if (!username) return res.status(200).json({ message: 'Await' })
@@ -26,9 +31,8 @@ const getPendingRewardApi = async (req, res) => {
 
         if (pendingReward.userId !== whiteListUser.userId) {
           return res.status(200).json({
-            message: `User ${
-              whiteListUser.wallet ? whiteListUser.wallet : whiteListUser.userId
-            } does not own this reward `,
+            message: `User ${whiteListUser.wallet ? whiteListUser.wallet : whiteListUser.userId
+              } does not own this reward `,
             isError: true,
           })
         }

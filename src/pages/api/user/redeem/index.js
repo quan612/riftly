@@ -62,8 +62,6 @@ const riftlyRedeemInteract = async (req, res) => {
 
         if (tokens.length > 0) {
           let tokenId = tokens[0].toString()
-          console.log('tokenId ', tokenId)
-
           let riftlyRedeemJson = require('./riftly-redeem.json')
 
           const riftlyRedeemContract = new ethers.Contract(

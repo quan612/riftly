@@ -152,6 +152,7 @@ const UserQuestBox = ({ quest, filterCompleted }) => {
   const { isSubmittingQuest, doQuest } = useContext(UserQuestContext)
 
   const [, isClaimingUserQuest, onUserQuestClaim] = useUserQuestClaim()
+  const { data: userQuests, isLoading: isFetchingUserQuests } = useUserQuestQuery()
   const toast = useToast()
   const queryClient = useQueryClient()
   let invalidCacheTimeout, scorePopupTimeout
@@ -167,6 +168,7 @@ const UserQuestBox = ({ quest, filterCompleted }) => {
   }, [])
 
   const onClaimQuest = useCallback(async (questId) => {
+    disableBtnSet(true)
     try {
       let res = await onUserQuestClaim({ questId })
       if (res.isError) {
@@ -178,10 +180,12 @@ const UserQuestBox = ({ quest, filterCompleted }) => {
         clearTimeout(scorePopupTimeout)
       }, 750)
 
-      invalidCacheTimeout = setTimeout(() => {
-        queryClient.invalidateQueries('user-reward-query')
-        queryClient.invalidateQueries('user-query-user-quest')
-        disableBtnSet(false)
+      invalidCacheTimeout = setTimeout(async () => {
+        await Promise.all([
+          queryClient.invalidateQueries('user-reward-query'),
+          queryClient.invalidateQueries('user-query-user-quest'),
+        ])
+
         clearTimeout(invalidCacheTimeout)
       }, 2000)
     } catch (error) {
@@ -196,6 +200,12 @@ const UserQuestBox = ({ quest, filterCompleted }) => {
       })
     }
   })
+
+  const getButtonState = useCallback(() => {
+    if (disableBtn) return true
+    if (isClaimingUserQuest || isSubmittingQuest || isFetchingUserQuests) return true
+    return false
+  }, [disableBtn, isClaimingUserQuest, isSubmittingQuest, isFetchingUserQuests])
 
   return (
     <>
@@ -330,7 +340,7 @@ const UserQuestBox = ({ quest, filterCompleted }) => {
                         }
                       }}
                       isLoading={isSubmittingQuest || isClaimingUserQuest}
-                      disabled={disableBtn}
+                      disabled={getButtonState()}
                     >
                       {quest.isClaimable ? 'Claim' : 'Start'}
                     </Button>
