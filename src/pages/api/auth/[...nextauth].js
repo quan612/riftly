@@ -81,12 +81,14 @@ export const authOptions = {
       name: "Unstoppable authentication",
       type: "credentials",
       authorize: async (credentials, req) => {
-        const { authorization } = credentials;
-        console.log(authorization)
+        let { authorization } = credentials;
+
         if (!authorization) {
           console.log("authorization")
           throw new Error('Missing auth')
         }
+
+        authorization = JSON.parse(authorization)
 
         // const isValid = await verifyUathLogin(authorization, process.env.NEXT_PUBLIC_UNSTOPPABLE_CLIENT_ID)
         // console.log("isValid", isValid)
