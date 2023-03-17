@@ -234,7 +234,7 @@ export function Web3Provider({ session, children }) {
     }
     console.log('has auth')
     // const user = await uauth.user()
-    console.log(authorization)
+    // console.log(authorization)
     // // let uathUser = "quan612.wallet";
     // // let address = "0x9128c112f6bb0b2d888607ae6d36168930a37087";
     // // let message = "";
