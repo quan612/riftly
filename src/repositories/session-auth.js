@@ -35,7 +35,6 @@ export const isWhiteListUser = async (session) => {
       },
     })
   }
-
   // session login through wallet
   if (session?.user?.wallet) {
     user = await prisma.whiteList.findUnique({

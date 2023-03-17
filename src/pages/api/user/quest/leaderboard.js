@@ -47,7 +47,8 @@ export default async function getQuestLeaderBoardAPI(req, res) {
 
         res.status(200).json(questData)
       } catch (err) {
-        res.status(500).json({ err })
+        console.log(err)
+        res.status(200).json({ isError: true, message: err.message })
       }
       break
     default:

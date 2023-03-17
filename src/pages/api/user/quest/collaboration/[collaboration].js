@@ -48,7 +48,7 @@ const collaborationQuestQueryAPI = async (req, res) => {
 
         return res.status(200).json(quests)
       } catch (err) {
-        res.status(500).json({ error: err.message })
+        res.status(200).json({ error: err.message })
       }
       break
 

@@ -75,7 +75,7 @@ const handler = async (req, res) => {
         res.status(200).json(userQuestData)
       } catch (err) {
         console.log(err)
-        res.status(500).json({ err })
+        res.status(200).json({ isError: true, message: err.message })
       }
       break
     default:

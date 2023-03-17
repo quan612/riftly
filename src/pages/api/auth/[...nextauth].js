@@ -232,7 +232,6 @@ export const authOptions = {
 
         return true
       }
-
       return false
     },
     async redirect({ url, baseUrl }) {

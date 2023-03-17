@@ -17,6 +17,7 @@ const RiftlyIndividualQuestBoard = ({ session }) => {
     questSelected,
   } = useContext(UserQuestContext)
 
+  console.log(session)
   return (
     <>
       {/* To avoid challenges header to jump around */}

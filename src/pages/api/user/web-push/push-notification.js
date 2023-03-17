@@ -44,7 +44,7 @@ export default async function pushNotification(req, res) {
           }
           webpush
             .sendNotification(subscriptionObj, buf)
-            .then(function () {})
+            .then(function () { })
             .catch(function () {
               console.log(
                 'ERROR in sending Notification, endpoint removed ' + subscriptionObj.endpoint,
@@ -57,7 +57,7 @@ export default async function pushNotification(req, res) {
         res.status(200).json({ message: 'ok' })
       } catch (err) {
         console.log(err)
-        res.status(500).json({ isError: true, message: err.message })
+        res.status(200).json({ isError: true, message: err.message })
       }
       break
     default:

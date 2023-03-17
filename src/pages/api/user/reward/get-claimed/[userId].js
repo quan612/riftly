@@ -21,7 +21,8 @@ const getClaimedRewardForUserAPI = async (req, res) => {
 
         res.status(200).json(rewarded)
       } catch (error) {
-        res.status(500).json({ error: error.message })
+        console.log(error)
+        res.status(200).json({ isError: true, message: error.message })
       }
       break
     default:
