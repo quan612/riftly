@@ -11,7 +11,8 @@ const { default: Resolution } = require('@unstoppabledomains/resolution')
 const resolution = new Resolution()
 const uauth = new UAuth({
   clientID: process.env.NEXT_PUBLIC_UNSTOPPABLE_CLIENT_ID,
-  redirectUri: process.env.NEXT_PUBLIC_UNSTOPPABLE_REDIRECT_URI,
+  // redirectUri: process.env.NEXT_PUBLIC_UNSTOPPABLE_REDIRECT_URI,
+  redirectUri: 'https://www.riftly.xyz/user/sign-in',
   scope: 'openid wallet',
 })
 
