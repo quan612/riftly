@@ -9,6 +9,11 @@ import UAuth from '@uauth/js'
 
 const { default: Resolution } = require('@unstoppabledomains/resolution')
 const resolution = new Resolution()
+const uauth = new UAuth({
+  clientID: process.env.NEXT_PUBLIC_UNSTOPPABLE_CLIENT_ID,
+  redirectUri: process.env.NEXT_PUBLIC_UNSTOPPABLE_REDIRECT_URI,
+  scope: 'openid wallet',
+})
 
 export const Web3Context = React.createContext()
 export function Web3Provider({ session, children }) {
@@ -219,17 +224,14 @@ export function Web3Provider({ session, children }) {
   }
 
   const unstoppableLogin = async () => {
-    const uauth = new UAuth({
-      clientID: process.env.NEXT_PUBLIC_UNSTOPPABLE_CLIENT_ID,
-      redirectUri: process.env.NEXT_PUBLIC_UNSTOPPABLE_REDIRECT_URI,
-      scope: 'openid wallet',
-    })
     const authorization = await uauth.loginWithPopup()
     // console.log(authorization);
     // let authorization = true;
     if (!authorization) {
+      console.log('no auth')
       throw new Error('Missing authorization ')
     }
+    console.log('has auth')
     // const user = await uauth.user()
     console.log(authorization)
     // // let uathUser = "quan612.wallet";
@@ -237,7 +239,7 @@ export function Web3Provider({ session, children }) {
     // // let message = "";
     // // let signature = "";
 
-    return await signIn('unstoppable-authenticate', {
+    await signIn('unstoppable-authenticate', {
       redirect: true,
       authorization,
       // authorization: JSON.stringify(authorization),

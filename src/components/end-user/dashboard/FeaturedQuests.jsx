@@ -55,7 +55,7 @@ const FeatureCard = ({ quest }) => {
           <Image
             boxSize={'100%'}
             src={quest?.image}
-            w={{ base: '100%', '3xl': '100%' }}
+            w={'100%'}
             borderTopRadius="16px"
             fit={'cover'}
           />
@@ -134,7 +134,7 @@ const Footer = ({ quest }) => {
     }
   })
   return (
-    <Flex align="start" alignItems={'center'} justify="space-between" mt="auto" pb="8px">
+    <Flex align="start" alignItems={'center'} justify="space-between" mt="auto" pb="6px">
       <Flex alignItems={'center'} gap="5px">
         <Box maxH="24px" h="33%" position={'relative'} boxSize="16px">
           <RiftlyIcon fill={'#1D63FF'} />
