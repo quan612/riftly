@@ -46,6 +46,8 @@ export const checkPasswordStrength = (password) => {
 export const getUserName = (session) => {
 
   switch (session?.provider) {
+    case 'unstoppable-authenticate':
+      return session?.user?.uathUser
     case 'discord':
       return session?.profile?.username + '#' + session?.profile?.discriminator
     case 'twitter':
