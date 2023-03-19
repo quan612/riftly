@@ -1,6 +1,7 @@
 import whitelistUserMiddleware from './whitelistUserMiddleware'
 import { QuestDuration } from '@prisma/client'
 import moment from 'moment'
+import { prisma } from '@context/PrismaContext'
 
 /** This middle apply to all quest to check for state*/
 
