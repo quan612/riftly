@@ -1,7 +1,7 @@
 import { getAllEnableQuestsForUser, getQuestsStartedByThisUser } from 'repositories/quest'
 import whitelistUserMiddleware from 'middlewares/whitelistUserMiddleware'
 import Enums from 'enums'
-import { QuestStyle } from '@prisma/client'
+import { QuestStyle, QuestDuration } from '@prisma/client'
 import moment from 'moment'
 
 const userFeatureQuestQueryHandler = async (req, res) => {
