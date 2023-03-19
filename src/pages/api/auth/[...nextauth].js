@@ -249,7 +249,7 @@ export const authOptions = {
       return token
     },
     async session({ session, token }) {
-      console.log(`Session handling #######################################################################`)
+      // console.log(`Session handling #######################################################################`)
       let userQuery;
       if (token.provider === "twitter") {
         userQuery = await prisma.whiteList.findFirst({

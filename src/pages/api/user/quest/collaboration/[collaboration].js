@@ -1,6 +1,5 @@
 import { getAllEnableQuestsForUser, getQuestsStartedByThisUser } from 'repositories/quest'
 import whitelistUserMiddleware from 'middlewares/whitelistUserMiddleware'
-import Enums from 'enums'
 
 const collaborationQuestQueryAPI = async (req, res) => {
   const { method } = req
@@ -10,7 +9,7 @@ const collaborationQuestQueryAPI = async (req, res) => {
       try {
         const { collaboration } = req.query
         const whiteListUser = req.whiteListUser
-        console.log(`** Get all enabled quests for user **`)
+
         let availableQuests = await getAllEnableQuestsForUser()
 
 
@@ -18,11 +17,6 @@ const collaborationQuestQueryAPI = async (req, res) => {
 
         let quests = availableQuests
           .filter((q) => {
-            // for now dont show code quest on collaboration
-            // if (q.type.name === Enums.CODE_QUEST) {
-            //     return false;
-            // }
-
             if (
               // only get quest that has collaboration same as query uri
               q?.extendedQuestData?.collaboration &&

@@ -4,10 +4,18 @@ import Enums from 'enums'
 import { AccountStatus, VerificationStatus } from '@prisma/client'
 import { utils } from 'ethers'
 
+const disabled = true
 const sendPhoneToSmsHandler = async (req, res) => {
   const { method } = req
 
-  const { account, type, phoneNumber, token } = req.body
+  const { account, type, phoneNumber } = req.body
+
+  if (disabled) {
+    return res.status(200).json({
+      isError: true,
+      message: 'Disabled!',
+    })
+  }
   switch (method) {
     case 'POST':
 

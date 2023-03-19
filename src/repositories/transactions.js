@@ -276,11 +276,16 @@ export const claimUserDailyQuestTransaction = async (
     },
   })
 
-  let userQuest = prisma.UserQuest.update({
+  let userQuest = prisma.UserQuest.upsert({
     where: {
       userId_questId: { userId, questId },
     },
-    data: {
+    update: {
+      extendedUserQuestData,
+    },
+    create: {
+      userId,
+      questId,
       extendedUserQuestData,
     },
   })

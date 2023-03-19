@@ -15,6 +15,26 @@ export const useUserQuestSubmit = () => {
         // queryClient.invalidateQueries(['user-query-user-quest', 'user-query-feature-quest']);
         queryClient.invalidateQueries('user-query-user-quest');
         queryClient.invalidateQueries('user-query-feature-quest');
+      },
+    },
+  )
+
+  return [data, isLoading, mutateAsync]
+}
+
+export const useUserDailyQuestSubmit = () => {
+  const queryClient = useQueryClient()
+
+  const { data, error, isError, isLoading, isSuccess, mutate, mutateAsync } = useMutation(
+    (payload) => {
+
+      return axios.post(`${Enums.BASEPATH}/api/user/quest/submit/recurrent`, payload).then((r) => r.data)
+    },
+    {
+      onSuccess: () => {
+        // queryClient.invalidateQueries(['user-query-user-quest', 'user-query-feature-quest']);
+        queryClient.invalidateQueries('user-query-user-quest');
+        queryClient.invalidateQueries('user-query-feature-quest');
 
       },
     },
@@ -234,38 +254,6 @@ export const useUserCollaborationQuestQuery = () => {
         .then((r) => r.data)
     },
     { enabled: !!collaboration, staleTime: 60 },
-  )
-
-  return { data, isLoading }
-}
-
-export const useUserImageQuestQuery = () => {
-  const router = useRouter()
-  const imageQuestEvent = typeof router.query?.eventName === 'string' ? router.query.eventName : ''
-
-  const { data, isLoading } = useQuery(
-    'user-query-image-quest',
-    async () => {
-      return axios
-        .get(`${Enums.BASEPATH}/api/user/quest/image-quest?eventName=${imageQuestEvent}`)
-        .then((r) => r.data)
-    },
-    { enabled: imageQuestEvent.length > 0, staleTime: 60 },
-  )
-
-  return { data, isLoading }
-}
-
-export const useUserOwningNftQuestQuery = () => {
-  const router = useRouter()
-  const nft = typeof router.query?.nft === 'string' ? router.query.nft : ''
-
-  const { data, isLoading } = useQuery(
-    'user-query-nft',
-    async () => {
-      return axios.get(`${Enums.BASEPATH}/api/user/quest/nft-quest?nft=${nft}`).then((r) => r.data)
-    },
-    { enabled: !!nft, staleTime: 60 },
   )
 
   return { data, isLoading }

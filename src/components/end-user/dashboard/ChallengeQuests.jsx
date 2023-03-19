@@ -20,6 +20,8 @@ const ChallengeQuests = () => {
 
   const { data: userQuests, isLoading: isFetchingUserQuests } = useUserQuestQuery()
 
+  console.log(userQuests)
+
   return (
     <Box display="flex" flexDirection={'column'} gap={'16px'} position={'relative'} minH="auto">
       {isFetchingUserQuests && <Loading />}
@@ -149,7 +151,7 @@ const ChallengesHeader = ({ filterCompleted, filterCompletedSet }) => {
 }
 
 const UserQuestBox = ({ quest, filterCompleted }) => {
-  const { isSubmittingQuest, doQuest } = useContext(UserQuestContext)
+  const { isSubmittingQuest, isSubmittingDaily, doQuest } = useContext(UserQuestContext)
 
   const [, isClaimingUserQuest, onUserQuestClaim] = useUserQuestClaim()
   const { data: userQuests, isLoading: isFetchingUserQuests } = useUserQuestQuery()
@@ -203,9 +205,10 @@ const UserQuestBox = ({ quest, filterCompleted }) => {
 
   const getButtonState = useCallback(() => {
     if (disableBtn) return true
-    if (isClaimingUserQuest || isSubmittingQuest || isFetchingUserQuests) return true
+    if (isClaimingUserQuest || isSubmittingQuest || isFetchingUserQuests || isSubmittingDaily)
+      return true
     return false
-  }, [disableBtn, isClaimingUserQuest, isSubmittingQuest, isFetchingUserQuests])
+  }, [disableBtn, isClaimingUserQuest, isSubmittingQuest, isFetchingUserQuests, isSubmittingDaily])
 
   return (
     <>
@@ -339,7 +342,7 @@ const UserQuestBox = ({ quest, filterCompleted }) => {
                           onClaimQuest(questId)
                         }
                       }}
-                      isLoading={isSubmittingQuest || isClaimingUserQuest}
+                      isLoading={isSubmittingQuest || isClaimingUserQuest || isSubmittingDaily}
                       disabled={getButtonState()}
                     >
                       {quest.isClaimable ? 'Claim' : 'Start'}

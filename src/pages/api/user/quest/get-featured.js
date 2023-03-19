@@ -1,7 +1,7 @@
 import { getAllEnableQuestsForUser, getQuestsStartedByThisUser } from 'repositories/quest'
 import whitelistUserMiddleware from 'middlewares/whitelistUserMiddleware'
 import Enums from 'enums'
-import { QuestStyle, QuestDuration } from '@prisma/client'
+import { QuestStyle } from '@prisma/client'
 
 const userFeatureQuestQueryHandler = async (req, res) => {
   const { method } = req
@@ -10,10 +10,7 @@ const userFeatureQuestQueryHandler = async (req, res) => {
     case 'GET':
       try {
         const { userId } = req.whiteListUser
-
         let availableQuests = await getAllEnableQuestsForUser()
-
-
         let finishedQuest = await getQuestsStartedByThisUser(userId)
 
         let quests = availableQuests
@@ -21,58 +18,44 @@ const userFeatureQuestQueryHandler = async (req, res) => {
             if (q.extendedQuestData?.collaboration && q.extendedQuestData?.collaboration?.length > 0) {
               return false
             }
-
-            if (q.hasClaimed) {
-              return false
-            }
-
             if (q.style === QuestStyle.NORMAL) {
               return false
             }
-
             return true
           })
           .map((aq) => {
             let relatedQuest = finishedQuest.find((q) => q.questId === aq.questId)
-            if (relatedQuest) {
 
-              if (
-                relatedQuest?.quest.type.name === Enums.DAILY_SHELL &&
-                relatedQuest?.extendedUserQuestData?.frequently === Enums.DAILY
-              ) {
-                let lastStarted = relatedQuest?.extendedUserQuestData?.lastStarted
-                let lastClaimed = relatedQuest?.extendedUserQuestData?.lastClaimed
-                let [today] = new Date().toISOString().split('T')
+            if (aq.type.name === Enums.DAILY_SHELL) {
+              let lastClaimed = moment.utc(relatedQuest?.extendedUserQuestData?.lastClaimed).format("yyyy-MM-DD")
+              let today = moment.utc(new Date().toISOString()).format("yyyy-MM-DD")
+              aq.isClaimable = true
 
-                if (today > lastStarted || !lastStarted) {
-                  aq.isClaimable = false
-                } else {
-                  aq.isClaimable = true
-                }
-                if (today > lastClaimed || !lastClaimed) {
-                  aq.hasClaimed = false
-                } else {
-                  aq.hasClaimed = true
-                }
+              if (today > lastClaimed || !lastClaimed) {
+                aq.hasClaimed = false
+              } else {
+                aq.hasClaimed = true
               }
-
-              // THE REST
-              else {
+              return aq
+            }
+            else {
+              if (relatedQuest) {
                 aq.isClaimable = relatedQuest.isClaimable
                 aq.hasClaimed = relatedQuest.hasClaimed
                 aq.rewardedQty = relatedQuest.rewardedQty
+              } else {
+                aq.isClaimable = false
+                aq.hasClaimed = false
+                aq.rewardedQty = 0
               }
-            } else {
-              aq.isClaimable = false
-              aq.hasClaimed = false
-              aq.rewardedQty = 0
-            }
-            if (relatedQuest?.quest.type.name === Enums.CODE_QUEST) {
-              delete aq.extendedQuestData
-            }
+              if (relatedQuest?.quest.type.name === Enums.CODE_QUEST) {
+                //remove the answer from querying
+                delete aq.extendedQuestData
+              }
 
-            return aq
-          }).filter(q => q.hasClaimed === false)
+              return aq
+            }
+          })
 
         return res.status(200).json(quests)
       } catch (err) {

@@ -3,24 +3,28 @@ import { prisma } from '@context/PrismaContext'
 import Enums from '@enums/index'
 
 import { checkPasswordStrength, validateEmail } from 'util/index'
+import whitelistUserMiddleware from '@middlewares/whitelistUserMiddleware'
 const bcrypt = require('bcrypt')
 
-export default async function passwordReset(req, res) {
+async function passwordReset(req, res) {
   const { method } = req
-
+  const whiteListUser = req.whiteListUser
   switch (method) {
     case 'POST':
       try {
         const { email, password } = req.body
 
-        const existingUser = await prisma.whiteList.findUnique({
-          where: {
-            email,
-          },
-        })
+        // const existingUser = await prisma.whiteList.findUnique({
+        //   where: {
+        //     email,
+        //   },
+        // })
 
-        if (!existingUser) {
-          return res.status(200).json({ isError: true, message: 'Non existent user.' })
+        // if (!existingUser) {
+        //   return res.status(200).json({ isError: true, message: 'Non existent user.' })
+        // }
+        if (whiteListUser.email !== email) {
+          return res.status(200).json({ isError: true, message: 'Wrong action.' })
         }
 
         if (password.trim().length === 0) {
@@ -53,3 +57,5 @@ export default async function passwordReset(req, res) {
       res.status(405).end(`Method ${method} Not Allowed`)
   }
 }
+
+export default whitelistUserMiddleware(passwordReset)

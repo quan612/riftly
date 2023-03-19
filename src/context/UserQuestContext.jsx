@@ -3,7 +3,7 @@ import React, { useState, useEffect, useCallback } from 'react'
 import { useDisclosure, useToast } from '@chakra-ui/react'
 import Enums from '@enums/index'
 import { doQuestUtility } from '@components/end-user/shared/doQuestUtility'
-import { useUserQuestSubmit } from '@hooks/user/quest'
+import { useUserDailyQuestSubmit, useUserQuestSubmit } from '@hooks/user/quest'
 import { useRouter } from 'next/router'
 
 export const UserQuestContext = React.createContext()
@@ -17,6 +17,7 @@ const UserQuestProvider = ({ children }) => {
   const toast = useToast()
   const router = useRouter()
   const [submitQuestData, isSubmittingQuest, onSubmit] = useUserQuestSubmit()
+  const [submitDailyQuestData, isSubmittingDaily, onSubmitDaily] = useUserDailyQuestSubmit()
 
   const doQuest = useCallback(
     async (quest) => {
@@ -37,7 +38,6 @@ const UserQuestProvider = ({ children }) => {
             questSelectedSet(quest)
             unstoppableQuestModal.onOpen()
             break
-
           default:
             await doQuestUtility(router, quest, onSubmit)
         }
@@ -72,6 +72,7 @@ const UserQuestProvider = ({ children }) => {
         unstoppableQuestModal,
         questSelected,
         isSubmittingQuest,
+        isSubmittingDaily,
         doQuest,
       }}
     >

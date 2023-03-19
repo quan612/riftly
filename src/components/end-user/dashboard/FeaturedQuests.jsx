@@ -87,7 +87,7 @@ const Body = ({ text, description }) => {
 
 const Footer = ({ quest }) => {
   const { isClaimable, questId, quantity } = quest
-  const { isSubmittingQuest, doQuest } = useContext(UserQuestContext)
+  const { isSubmittingQuest, isSubmittingDaily, doQuest } = useContext(UserQuestContext)
   const [, isClaimingUserQuest, onUserQuestClaim] = useUserQuestClaim()
   const { data, isLoading: isFetchingFeatureQuests } = useUserFeatureQuestQuery()
 
@@ -107,9 +107,16 @@ const Footer = ({ quest }) => {
 
   const getButtonState = useCallback(() => {
     if (disableBtn) return true
-    if (isClaimingUserQuest || isSubmittingQuest || isFetchingFeatureQuests) return true
+    if (isClaimingUserQuest || isSubmittingQuest || isFetchingFeatureQuests || isSubmittingDaily)
+      return true
     return false
-  }, [disableBtn, isClaimingUserQuest, isSubmittingQuest, isFetchingFeatureQuests])
+  }, [
+    disableBtn,
+    isClaimingUserQuest,
+    isSubmittingQuest,
+    isFetchingFeatureQuests,
+    isSubmittingDaily,
+  ])
 
   const claimQuest = useCallback(async (questId) => {
     disableBtnSet(true)
@@ -155,7 +162,9 @@ const Footer = ({ quest }) => {
         borderRadius="48px"
         px="12px"
         py="5px"
-        isLoading={isClaimingUserQuest || isSubmittingQuest || isFetchingFeatureQuests}
+        isLoading={
+          isClaimingUserQuest || isSubmittingQuest || isFetchingFeatureQuests || isSubmittingDaily
+        }
         disabled={getButtonState()}
         onClick={() => {
           if (!isClaimable) {

@@ -3,10 +3,19 @@ import Enums from 'enums'
 import { AccountStatus, VerificationStatus } from '@prisma/client'
 import { utils } from 'ethers'
 
+const disabled = true
+
 const sendCodeToTwilioVerifyHandler = async (req, res) => {
   const { method } = req
   const { account, type, code } = req.body
   let userQuest
+
+  if (disabled) {
+    return res.status(200).json({
+      isError: true,
+      message: 'Disabled!',
+    })
+  }
   switch (method) {
     case 'POST':
 

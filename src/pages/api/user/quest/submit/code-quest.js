@@ -1,11 +1,14 @@
 import { prisma } from '@context/PrismaContext'
 import whitelistUserMiddleware from 'middlewares/whitelistUserMiddleware'
 import Enums from 'enums'
+import userQuestSubmitMiddleware from '@middlewares/userQuestSubmitMiddleware'
 
 const submitCodeQuest = async (req, res) => {
   const { method } = req
   const { userId } = req.whiteListUser
   const { questId, inputCode } = req.body
+
+  const currentQuest = req.currentQuest; // got from userQuestSubmitMiddleware
   let userQuest
   switch (method) {
     case 'POST':
@@ -18,14 +21,14 @@ const submitCodeQuest = async (req, res) => {
           })
         }
 
-        let currentQuest = await prisma.quest.findUnique({
-          where: {
-            questId,
-          },
-          include: {
-            type: true,
-          },
-        })
+        // let currentQuest = await prisma.quest.findUnique({
+        //   where: {
+        //     questId,
+        //   },
+        //   include: {
+        //     type: true,
+        //   },
+        // })
 
         const { type, extendedQuestData } = currentQuest
 
@@ -108,29 +111,6 @@ const submitCodeQuest = async (req, res) => {
               extendedUserQuestData,
             },
           })
-
-          // if (entry) {
-
-          //     await prisma.UserQuest.update({
-          //         where: {
-          //             userId_questId: { userId, questId },
-          //         },
-
-          //         data: {
-          //             extendedUserQuestData,
-          //         },
-          //     });
-          // } else {
-          //     await prisma.UserQuest.create({
-          //         data: {
-          //             userId,
-          //             questId,
-          //             extendedUserQuestData: {
-          //                 count: 1,
-          //             },
-          //         },
-          //     });
-          // }
           return res.status(200).json({ isError: true, message: 'Wrong code submitted' })
         }
       } catch (error) {
@@ -144,4 +124,5 @@ const submitCodeQuest = async (req, res) => {
   }
 }
 
-export default whitelistUserMiddleware(submitCodeQuest)
+// export default whitelistUserMiddleware(submitCodeQuest)
+export default userQuestSubmitMiddleware(submitCodeQuest)

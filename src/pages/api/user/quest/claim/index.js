@@ -6,6 +6,8 @@ import {
   claimUserQuestTransaction,
   claimUserDailyQuestTransaction,
 } from 'repositories/transactions'
+import moment from 'moment'
+import userQuestSubmitMiddleware from '@middlewares/userQuestSubmitMiddleware'
 
 const claimIndividualQuestAPI = async (req, res) => {
   const { method } = req
@@ -48,26 +50,48 @@ const claimIndividualQuestAPI = async (req, res) => {
         })
 
         if (type.name === Enums.DAILY_SHELL) {
-          console.log(`**Claim daily quest**`)
+
           let extendedUserQuestData = {}
+          // let [today] = new Date().toISOString().split('T')
+          let today = moment.utc(new Date().toISOString()).format("yyyy-MM-DD")
           if (currentUserQuest) {
-            let lastClaimed = currentUserQuest.extendedUserQuestData?.lastClaimed
-            let [today] = new Date().toISOString().split('T')
+            let lastClaimed = moment.utc(currentUserQuest.extendedUserQuestData?.lastClaimed).format("yyyy-MM-DD")
+
             if (today <= lastClaimed) {
               return res.status(200).json({
                 isError: true,
                 message: 'This quest already claimed today! Wait until next day',
               })
             }
+
             extendedUserQuestData = { ...currentUserQuest.extendedUserQuestData }
+            // let yesterday = moment.utc().subtract(1, 'day').toDate();
+            let diff = moment.utc(today).diff(
+              lastClaimed,
+              'days',
+              true,
+            )
+            console.log(today)
+            console.log(lastClaimed)
+            console.log("diffffffffffffffff", diff)
+            if (!lastClaimed || diff > 1) {
+              //reset in_a_row
+              extendedUserQuestData.in_a_row = 1
+            } else {
+              extendedUserQuestData.in_a_row++
+            }
+            extendedUserQuestData.count++
+
           } else {
+            //first time claim daily
             extendedUserQuestData = { ...currentQuest.extendedUserQuestData }
+            extendedUserQuestData.in_a_row = 1;
+            extendedUserQuestData.count = 1;
           }
 
-          if (extendedUserQuestData.frequently === 'daily') {
-            const [currentDay] = new Date().toISOString().split('T')
-            extendedUserQuestData.lastClaimed = currentDay
-          }
+          /***** */
+          console.log(today)
+          extendedUserQuestData.lastClaimed = today
 
           userQuest = await claimUserDailyQuestTransaction(
             questId,
@@ -115,4 +139,5 @@ const claimIndividualQuestAPI = async (req, res) => {
   }
 }
 
-export default whitelistUserMiddleware(claimIndividualQuestAPI)
+// export default whitelistUserMiddleware(claimIndividualQuestAPI)
+export default whitelistUserMiddleware(userQuestSubmitMiddleware(claimIndividualQuestAPI))
