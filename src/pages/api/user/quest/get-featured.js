@@ -22,6 +22,27 @@ const userFeatureQuestQueryHandler = async (req, res) => {
             if (q.style === QuestStyle.NORMAL) {
               return false
             }
+            if (q.duration === QuestDuration.LIMITED) {
+              const startDate = q?.extendedQuestData?.startDate
+              const endDate = q?.extendedQuestData?.endDate
+              const todayISO = new Date().toISOString()
+
+              if (startDate) {
+                const startDateISO = moment.utc(new Date(startDate).toISOString())
+                const startDateDiff = moment.utc(todayISO).diff(startDateISO, 'days', false)
+                if (startDateDiff < 0) {
+                  return false
+                }
+              }
+              if (endDate) {
+                const endDateISO = moment.utc(new Date(endDate).toISOString())
+                const endDateDiff = moment.utc(todayISO).diff(endDateISO, 'days', false)
+                if (endDateDiff < 0) {
+                  return false
+                }
+              }
+              return false
+            }
             return true
           })
           .map((aq) => {
