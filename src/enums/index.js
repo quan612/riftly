@@ -40,14 +40,17 @@ const Enums = {
   TWITTER_RETWEET: 'Retweet a Tweet',
   FOLLOW_TWITTER: 'Follow Twitter Account',
   FOLLOW_INSTAGRAM: 'Follow Instagram Account',
+  LIMITED_FREE_SHELL: 'Limited Free $SHELL',
 
   DAILY_SHELL: 'Daily Shell Quest',
 
-  OWNING_NFT_CLAIM: 'Claim Reward For Owning NFT',
-  IMAGE_UPLOAD_QUEST: 'Image Upload Quest',
-  LIMITED_FREE_SHELL: 'Limited Free $SHELL',
+  OWNING_NFT_CLAIM: 'Claim Reward For Owning NFT', //nft quest
+  IMAGE_UPLOAD_QUEST: 'Image Upload Quest', // image quest
 
-  CODE_QUEST: 'Code Quest',
+
+  CODE_QUEST: 'Code Quest', // code
+
+
   UNSTOPPABLE_AUTH: 'Unstoppable Domain Authenticate',
   DISCORD_AUTH: 'Discord Authenticate',
   TWITTER_AUTH: 'Twitter Authenticate',

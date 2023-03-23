@@ -7,29 +7,90 @@ const applyMiddleware = (middleware) => (request, response) =>
       result instanceof Error ? reject(result) : resolve(result),
     )
   })
-
 const getIP = (request) =>
+  // request.ip.replace(/:\d+[^:]*$/, '') ||
   request.ip ||
   request.headers['x-forwarded-for'] ||
   request.headers['x-real-ip'] ||
   request.connection.remoteAddress
 
-export const getRateLimitMiddlewares = ({
-  limit = 10,
+
+const fivePerMinute = ({
+  limit = 5,
   windowMs = 60 * 1000,
-  delayAfter = Math.round(10 / 2),
-  delayMs = 500,
+  delayAfter = Math.round(5 / 3),
+  delayMs = 2000,
 } = {}) => [
-  slowDown({ keyGenerator: getIP, windowMs, delayAfter, delayMs }),
-  rateLimit({ keyGenerator: getIP, windowMs, max: limit }),
-]
-
-const middlewares = getRateLimitMiddlewares()
-
-async function applyRateLimit(request, response) {
+    slowDown({ keyGenerator: getIP, windowMs, delayAfter, delayMs }),
+    rateLimit({ keyGenerator: getIP, windowMs, max: limit }),
+  ]
+const fivePerMinuteMiddlewares = fivePerMinute()
+export async function fivePerMinuteRateLimit(request, response) {
   await Promise.all(
-    middlewares.map(applyMiddleware).map((middleware) => middleware(request, response)),
+    fivePerMinuteMiddlewares.map(applyMiddleware).map((middleware) => middleware(request, response)),
   )
 }
 
-export default applyRateLimit
+/* sign up routes */
+const signUp = ({
+  limit = 5,
+  windowMs = 86400000,
+  delayAfter = 3,
+  delayMs = 2000,
+} = {}) => [
+    slowDown({ keyGenerator: getIP, windowMs, delayAfter, delayMs }),
+    rateLimit({
+      keyGenerator: getIP, windowMs, max: limit, handler: (req, res, next) => {
+        console.log("signup Limit reached test")
+        res.status(429).send("Too many request")
+      }
+    }),
+  ]
+const signUpMiddlewares = signUp()
+export async function signUpRateLimit(request, response) {
+  await Promise.all(
+    signUpMiddlewares.map(applyMiddleware).map((middleware) => middleware(request, response)),
+  )
+}
+
+/* submit quest routes */
+const submitQuest = ({
+  limit = 15,
+  windowMs = 3600000,
+  delayAfter = 10,
+  delayMs = 2000,
+} = {}) => [
+    slowDown({ keyGenerator: getIP, windowMs, delayAfter, delayMs }),
+    rateLimit({
+      keyGenerator: getIP, windowMs, max: limit, handler: () => {
+        console.log("Limit reached test")
+      }
+    }),
+  ]
+const submitQuestMiddlewares = submitQuest()
+export async function submitQuestRateLimit(request, response) {
+  await Promise.all(
+    submitQuestMiddlewares.map(applyMiddleware).map((middleware) => middleware(request, response)),
+  )
+}
+
+/* submit quest routes */
+const claimQuest = ({
+  limit = 15,
+  windowMs = 3600000,
+  delayAfter = 10,
+  delayMs = 2000,
+} = {}) => [
+    slowDown({ keyGenerator: getIP, windowMs, delayAfter, delayMs }),
+    rateLimit({
+      keyGenerator: getIP, windowMs, max: limit, handler: () => {
+        console.log("Limit reached test")
+      }
+    }),
+  ]
+const claimQuestMiddlewares = claimQuest()
+export async function claimQuestRateLimit(request, response) {
+  await Promise.all(
+    claimQuestMiddlewares.map(applyMiddleware).map((middleware) => middleware(request, response)),
+  )
+}

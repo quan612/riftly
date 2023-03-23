@@ -6,6 +6,7 @@ import { getWhiteListUserByUserId } from 'repositories/user'
 import { utils } from 'ethers'
 import { EvmChain } from '@moralisweb3/evm-utils'
 import Moralis from 'moralis'
+import { fivePerMinuteRateLimit } from '@middlewares/applyRateLimit'
 
 // ADD GUARD TO THIS QUEST, Like require more reward point to initiate
 const submitNftQuest = async (req, res) => {
@@ -116,6 +117,7 @@ const submitNftQuest = async (req, res) => {
               utils.getAddress(r.token_address) === utils.getAddress(extendedQuestData.contract),
           )
 
+          await fivePerMinuteRateLimit(req, res)
           if (haveNft) {
             await submitUserQuestTransaction(questId, userId)
             return res.status(200).json(userQuest)

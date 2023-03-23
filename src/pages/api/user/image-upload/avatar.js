@@ -1,6 +1,5 @@
 import whitelistUserMiddleware from 'middlewares/whitelistUserMiddleware'
 import { prisma } from '@context/PrismaContext'
-
 let cloudinary = require('cloudinary').v2
 
 //@TODO: rate limit

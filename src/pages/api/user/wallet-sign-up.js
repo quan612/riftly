@@ -7,6 +7,7 @@ import { getQuestByTypeId, getQuestType } from 'repositories/quest'
 import { updateUserWalletTransaction } from 'repositories/transactions'
 import { isWhiteListUser } from 'repositories/session-auth'
 import { getSession } from 'next-auth/react'
+import { signUpRateLimit } from '@middlewares/applyRateLimit'
 
 export default async function walletSignUp(req, res) {
   const { method } = req
@@ -82,6 +83,7 @@ export default async function walletSignUp(req, res) {
 
         await updateUserWalletTransaction(walletAuthQuest.questId, whiteListUser?.userId, wallet)
 
+        await signUpRateLimit(req, res)
         // await trackRequest(req)
         return res.status(200).json({ message: 'Link wallet successfully.' })
       } catch (error) {

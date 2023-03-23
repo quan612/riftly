@@ -1,4 +1,5 @@
-import { signUpRateLimit } from "@middlewares/applyRateLimit"
+import { fivePerMinuteRateLimit } from "@middlewares/applyRateLimit"
+
 
 export default async function handler(req, res) {
   const { method } = req
@@ -6,9 +7,8 @@ export default async function handler(req, res) {
   switch (method) {
     case 'GET':
       try {
-        await signUpRateLimit(req, res)
-      } catch (err) {
-        console.log(err)
+        await fivePerMinuteRateLimit(req, res)
+      } catch {
         return res.status(429).send('Too many requests')
       }
 

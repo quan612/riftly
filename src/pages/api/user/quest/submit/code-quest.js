@@ -1,7 +1,9 @@
-import { prisma } from '@context/PrismaContext'
+
 import whitelistUserMiddleware from 'middlewares/whitelistUserMiddleware'
 import Enums from 'enums'
 import userQuestSubmitMiddleware from '@middlewares/userQuestSubmitMiddleware'
+import { getUserQuest, trackCorrectCodeQuestSubmit, trackWrongCodeQuestSubmit } from 'repositories/user-quest'
+import moment from 'moment'
 
 const submitCodeQuest = async (req, res) => {
   const { method } = req
@@ -20,15 +22,6 @@ const submitCodeQuest = async (req, res) => {
             message: 'Missing input!',
           })
         }
-
-        // let currentQuest = await prisma.quest.findUnique({
-        //   where: {
-        //     questId,
-        //   },
-        //   include: {
-        //     type: true,
-        //   },
-        // })
 
         const { type, extendedQuestData } = currentQuest
 
@@ -53,64 +46,64 @@ const submitCodeQuest = async (req, res) => {
           })
         }
 
-        let entry = await prisma.UserQuest.findUnique({
-          where: {
-            userId_questId: { userId, questId },
-          },
-        })
+        let userEntry = await getUserQuest(userId, questId)
 
         let extendedUserQuestData = {}
 
-        if (entry) {
+        if (userEntry) {
           extendedUserQuestData = {
-            ...entry.extendedUserQuestData,
-            count: entry.extendedUserQuestData.count + 1,
+            ...userEntry.extendedUserQuestData,
+            count: userEntry.extendedUserQuestData.count + 1,
           }
         } else {
           extendedUserQuestData.count = 1
         }
 
-        extendedUserQuestData.lastSubmitted = new Date()
-          .toISOString()
-          .replace('T', ' ')
-          .replace('Z', '')
+        // extendedUserQuestData.lastSubmitted = new Date()
+        //   .toISOString()
+        //   .replace('T', ' ')
+        //   .replace('Z', '')
+        extendedUserQuestData.lastSubmitted = moment.utc(new Date().toISOString())
+
         // either matching secret code, or similar answers
         if (
           inputCode.toLowerCase() === extendedQuestData.secretCode.toLowerCase() ||
           foundOtherAnswersCorrect !== -1
         ) {
-          userQuest = await prisma.UserQuest.upsert({
-            where: {
-              userId_questId: { userId, questId },
-            },
-            update: {
-              isClaimable: true,
-              extendedUserQuestData,
-            },
-            create: {
-              userId,
-              questId,
-              isClaimable: true,
-              extendedUserQuestData,
-            },
-          })
+          // userQuest = await prisma.UserQuest.upsert({
+          //   where: {
+          //     userId_questId: { userId, questId },
+          //   },
+          //   update: {
+          //     isClaimable: true,
+          //     extendedUserQuestData,
+          //   },
+          //   create: {
+          //     userId,
+          //     questId,
+          //     isClaimable: true,
+          //     extendedUserQuestData,
+          //   },
+          // })
+          userQuest = await trackCorrectCodeQuestSubmit(userId, questId, extendedUserQuestData)
           return res.status(200).json(userQuest)
         } else {
           // update count wrong submission
 
-          userQuest = await prisma.UserQuest.upsert({
-            where: {
-              userId_questId: { userId, questId },
-            },
-            update: {
-              extendedUserQuestData,
-            },
-            create: {
-              userId,
-              questId,
-              extendedUserQuestData,
-            },
-          })
+          // userQuest = await prisma.UserQuest.upsert({
+          //   where: {
+          //     userId_questId: { userId, questId },
+          //   },
+          //   update: {
+          //     extendedUserQuestData,
+          //   },
+          //   create: {
+          //     userId,
+          //     questId,
+          //     extendedUserQuestData,
+          //   },
+          // })
+          userQuest = await trackWrongCodeQuestSubmit(userId, questId, extendedUserQuestData)
           return res.status(200).json({ isError: true, message: 'Wrong code submitted' })
         }
       } catch (error) {
@@ -125,4 +118,4 @@ const submitCodeQuest = async (req, res) => {
 }
 
 // export default whitelistUserMiddleware(submitCodeQuest)
-export default userQuestSubmitMiddleware(submitCodeQuest)
+export default whitelistUserMiddleware(userQuestSubmitMiddleware(submitCodeQuest))

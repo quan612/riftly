@@ -2,6 +2,9 @@ import { prisma } from '@context/PrismaContext'
 import whitelistUserMiddleware from 'middlewares/whitelistUserMiddleware'
 import Enums from 'enums'
 import { updateUserUnstoppabbleTransaction } from 'repositories/transactions'
+import userQuestSubmitMiddleware from '@middlewares/userQuestSubmitMiddleware'
+import { fivePerMinuteRateLimit } from '@middlewares/applyRateLimit'
+import withExceptionFilter from '@middlewares/withExceptionFilter'
 
 const { default: Resolution } = require('@unstoppabledomains/resolution')
 
@@ -9,82 +12,49 @@ const submitUnstoppableAuthQuest = async (req, res) => {
   const { method } = req
   const whiteListUser = req.whiteListUser
   const { questId, uauthUser } = req.body
+  const currentQuest = req.currentQuest
   let userQuest
 
-  console.log("questId", questId)
   switch (method) {
     case 'POST':
-
-      try {
-        if (!uauthUser) {
-          return res.status(200).json({
-            isError: true,
-            message: 'Missing unstoppable domain account!',
-          })
-        }
-
-        // query the type based on questId
-        let currentQuest = await prisma.quest.findUnique({
-          where: {
-            questId,
-          },
-          include: {
-            type: true,
-          },
-        })
-
-        if (!currentQuest) {
-          return res.status(200).json({
-            isError: true,
-            message: 'This quest not existed!',
-          })
-        }
-
-        if (currentQuest.type.name !== Enums.UNSTOPPABLE_AUTH) {
-          return res.status(200).json({
-            isError: true,
-            message: 'This route is for unstoppable quest!',
-          })
-        }
-        // TODO: Manual check kind of quest, if Limited then check quest data to see whether it expired, maybe in a middleware
-
-        let entry = await prisma.UserQuest.findUnique({
-          where: {
-            userId_questId: { userId: whiteListUser.userId, questId },
-          },
-        })
-
-        if (entry) {
-          return res.status(200).json({
-            isError: true,
-            message: 'This quest already submitted before!',
-          })
-        }
-
-        let existingUnstoppableUser = await prisma.whiteList.findFirst({
-          where: {
-            uathUser: uauthUser,
-          },
-        })
-
-        if (existingUnstoppableUser) {
-          let error = 'Same unstoppable domain authenticated!'
-          return res.status(200).json({
-            isError: true,
-            message: error,
-          })
-        }
-
-        // checking validity of uauthUser
-        const resolution = new Resolution()
-        let walletOwner = await resolution.owner(uauthUser)
-
-        await updateUserUnstoppabbleTransaction(questId, whiteListUser?.userId, uauthUser)
-        return res.status(200).json(userQuest)
-      } catch (error) {
-        console.log(error)
-        res.status(200).json({ isError: true, message: error.message, questId })
+      if (!uauthUser) {
+        throw new Error('Missing unstoppable domain account.')
       }
+
+      if (currentQuest.type.name !== Enums.UNSTOPPABLE_AUTH) {
+        throw new Error('Wrong route')
+      }
+
+      let existingUnstoppableUser = await prisma.whiteList.findFirst({
+        where: {
+          uathUser: uauthUser,
+        },
+      })
+
+      if (existingUnstoppableUser) {
+        throw new Error('Same unstoppable domain authenticated')
+      }
+
+      await fivePerMinuteRateLimit(req, res)
+
+      let entry = await prisma.UserQuest.findUnique({
+        where: {
+          userId_questId: { userId: whiteListUser.userId, questId },
+        },
+      })
+
+      if (entry) {
+        throw new Error('This quest already submitted before')
+      }
+
+      // checking validity of uauthUser
+      const resolution = new Resolution()
+      let walletOwner = await resolution.owner(uauthUser)
+
+      await updateUserUnstoppabbleTransaction(questId, whiteListUser?.userId, uauthUser)
+
+      res.status(200).json(userQuest)
+
       break
     default:
       res.setHeader('Allow', ['PUT'])
@@ -92,5 +62,6 @@ const submitUnstoppableAuthQuest = async (req, res) => {
   }
 }
 
-// This only allows for login user
-export default whitelistUserMiddleware(submitUnstoppableAuthQuest)
+export default withExceptionFilter(
+  whitelistUserMiddleware(userQuestSubmitMiddleware(submitUnstoppableAuthQuest)),
+)
