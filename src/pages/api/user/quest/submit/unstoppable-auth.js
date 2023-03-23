@@ -15,51 +15,47 @@ const submitUnstoppableAuthQuest = async (req, res) => {
   const currentQuest = req.currentQuest
   let userQuest
 
-  switch (method) {
-    case 'POST':
-      if (!uauthUser) {
-        throw new Error('Missing unstoppable domain account.')
-      }
+  // checking validity of uauthUser
+  const resolution = new Resolution()
+  let walletOwner = await resolution.owner(uauthUser)
 
-      if (currentQuest.type.name !== Enums.UNSTOPPABLE_AUTH) {
-        throw new Error('Wrong route')
-      }
-
-      let existingUnstoppableUser = await prisma.whiteList.findFirst({
-        where: {
-          uathUser: uauthUser,
-        },
-      })
-
-      if (existingUnstoppableUser) {
-        throw new Error('Same unstoppable domain authenticated')
-      }
-
-      await fivePerMinuteRateLimit(req, res)
-
-      let entry = await prisma.UserQuest.findUnique({
-        where: {
-          userId_questId: { userId: whiteListUser.userId, questId },
-        },
-      })
-
-      if (entry) {
-        throw new Error('This quest already submitted before')
-      }
-
-      // checking validity of uauthUser
-      const resolution = new Resolution()
-      let walletOwner = await resolution.owner(uauthUser)
-
-      await updateUserUnstoppabbleTransaction(questId, whiteListUser?.userId, uauthUser)
-
-      res.status(200).json(userQuest)
-
-      break
-    default:
-      res.setHeader('Allow', ['PUT'])
-      res.status(405).end(`Method ${method} Not Allowed`)
+  if (method !== "POST") {
+    throw new Error('Only for post request')
   }
+
+  if (!uauthUser) {
+    throw new Error('Missing unstoppable domain account.')
+  }
+  if (currentQuest.type.name !== Enums.UNSTOPPABLE_AUTH) {
+    throw new Error('Wrong route')
+  }
+
+  let existingUnstoppableUser = await prisma.whiteList.findFirst({
+    where: {
+      uathUser: uauthUser,
+    },
+  })
+
+  if (existingUnstoppableUser) {
+    throw new Error('Same unstoppable domain authenticated')
+  }
+
+  await fivePerMinuteRateLimit(req, res)
+
+  let entry = await prisma.UserQuest.findUnique({
+    where: {
+      userId_questId: { userId: whiteListUser.userId, questId },
+    },
+  })
+
+  if (entry) {
+    throw new Error('This quest already submitted before')
+  }
+
+
+  await updateUserUnstoppabbleTransaction(questId, whiteListUser?.userId, uauthUser)
+
+  res.status(200).json(userQuest)
 }
 
 export default withExceptionFilter(
