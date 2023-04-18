@@ -1,9 +1,5 @@
 # Description
 
-This is the repo for the Sharing-UI of project Anomura.
-
-Some endpoints which post a message to a discord server, we need a nodejs server to handle discordjs package, currently we cannot have discordjs within this repo due to Vercel only supports Node runtime execution up to v14 at the time of development. Discordjs needs v16.
-
 Vercel Deployment
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/qhuynhvhslab/test&env=DATABASE_URL,NEXTAUTH_URL,NEXT_PUBLIC_NEXTAUTH_SECRET,NEXT_PUBLIC_INFURA_ID,envDescription=Postgresql%Db,URL%20For%20Next-Auth,Enter%20Your%20Next-Auth%20Secret%20Key,Infura%20For%20Login,Enable%20Challenger)
