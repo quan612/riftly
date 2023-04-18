@@ -4,7 +4,7 @@ export const ETH_NETWORKS = [
     name: 'Ethereum Mainnet',
     network: "mainnet",
     explorer: 'https://etherscan.io',
-    // rpcProvider: 'https://eth-mainnet.alchemyapi.io/v2/-XTnV8lVkZQkba_NR6pFIgSeaGI4ccmb',
+
     CONTRACT_ADDRESSES: {
       REDEEM: '0xa5B83b3d3Bc15cac84cb48d6953DCcA83cCBB912',
     },

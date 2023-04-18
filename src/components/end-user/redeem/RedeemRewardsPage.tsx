@@ -225,7 +225,7 @@ const RewardCard = ({ image, item }) => {
         <Box position="relative" h="96px" minH="96px">
           <Image boxSize={'100%'} src={image} borderTopRadius="16px" fit={'cover'} />
         </Box>
-        <Flex flexDirection="column" justify="space-between" py="4" px="4" w="100%" flex="1">
+        <Flex flexDirection="column" justify="space-between" py="3" px="3" w="100%" flex="1">
           <Flex justify="space-between">
             {/* BODY */}
             <Flex className="shop-item-body" direction="column" gap="5px" noOfLines={2}>
@@ -233,7 +233,10 @@ const RewardCard = ({ image, item }) => {
                 {title}
               </HeadingSm>
 
-              <TextSm color="whiteAlpha.700" opacity="0.64" fontWeight="400" noOfLines={2}>
+              {/* <TextSm color="whiteAlpha.700" opacity="0.64" fontWeight="400" noOfLines={2}>
+                 {description} 
+              </TextSm> */}
+              <TextSm color="white" noOfLines={2} fontStyle="italic">
                 {/* {description} */}
                 Available: {redeemAvailable}
               </TextSm>
