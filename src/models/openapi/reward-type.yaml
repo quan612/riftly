@@ -1,0 +1,47 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Converted from reward-type.yaml with typeconv",
+    "version": "1",
+    "x-id": "reward-type.yaml",
+    "x-comment": "Generated from src\\models\\reward-type.ts by core-types-json-schema (https://github.com/grantila/core-types-json-schema) on behalf of typeconv (https://github.com/grantila/typeconv)"
+  },
+  "paths": {},
+  "components": {
+    "schemas": {
+      "RewardType": {
+        "properties": {
+          "id": {
+            "title": "RewardType.id",
+            "type": "number"
+          },
+          "reward": {
+            "title": "RewardType.reward",
+            "type": "string"
+          },
+          "rewardPreview": {
+            "title": "RewardType.rewardPreview",
+            "type": "string"
+          },
+          "rewardIcon": {
+            "title": "RewardType.rewardIcon",
+            "type": "string"
+          },
+          "isEnabled": {
+            "title": "RewardType.isEnabled",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "reward",
+          "isEnabled"
+        ],
+        "additionalProperties": false,
+        "title": "RewardType",
+        "description": "@swagger components:\r\n schemas:\r\n   RewardType:\r\n     type: object\r\n     properties:\r\n       id:\r\n         type: number\r\n       reward:\r\n         type: string\r\n       rewardPreview:\r\n         type: string\r\n       rewardIcon:\r\n         type: string\r\n       isEnabled:\r\n         type: boolean",
+        "type": "object"
+      }
+    }
+  }
+}

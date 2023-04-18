@@ -1,5 +1,4 @@
 import { prisma } from '@context/PrismaContext'
-import { AccountStatus } from '@prisma/client'
 
 export const getUserQuest = async (userId, questId) => {
   return await prisma.UserQuest.findUnique({

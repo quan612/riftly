@@ -15,7 +15,9 @@ const Enums = {
     SHELL: '$Shell',
   },
   ADMIN_SIGN_MSG: 'Sign to authenticate as admin',
-  USER_SIGN_MSG: 'Welcome to the Cove’s DeepSea Challenger!\nSign in to start earning treasure.',
+  USER_SIGN_MSG: 'Welcome to Riftly!\nSign in to start earning treasure.',
+
+
 
   DAILY: 'daily',
   HOURLY: 'hourly',

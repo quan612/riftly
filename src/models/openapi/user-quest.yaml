@@ -1,0 +1,79 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Converted from user-quest.yaml with typeconv",
+    "version": "1",
+    "x-id": "user-quest.yaml",
+    "x-comment": "Generated from src\\models\\user-quest.ts by core-types-json-schema (https://github.com/grantila/core-types-json-schema) on behalf of typeconv (https://github.com/grantila/typeconv)"
+  },
+  "paths": {},
+  "components": {
+    "schemas": {
+      "UserQuest": {
+        "properties": {
+          "id": {
+            "title": "UserQuest.id",
+            "type": "number"
+          },
+          "questId": {
+            "title": "UserQuest.questId",
+            "type": "string"
+          },
+          "extendedUserQuestData": {
+            "title": "UserQuest.extendedUserQuestData"
+          },
+          "createdAt": {
+            "title": "UserQuest.createdAt"
+          },
+          "rewardedQty": {
+            "title": "UserQuest.rewardedQty",
+            "type": "number"
+          },
+          "rewardedTypeId": {
+            "title": "UserQuest.rewardedTypeId",
+            "type": "number"
+          },
+          "quest": {
+            "title": "UserQuest.quest"
+          },
+          "rewardType": {
+            "title": "UserQuest.rewardType"
+          },
+          "updatedAt": {
+            "title": "UserQuest.updatedAt"
+          },
+          "isHidden": {
+            "title": "UserQuest.isHidden",
+            "type": "boolean"
+          },
+          "hasClaimed": {
+            "title": "UserQuest.hasClaimed",
+            "type": "boolean"
+          },
+          "isClaimable": {
+            "title": "UserQuest.isClaimable",
+            "type": "boolean"
+          },
+          "userId": {
+            "title": "UserQuest.userId",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "questId",
+          "createdAt",
+          "quest",
+          "updatedAt",
+          "isHidden",
+          "hasClaimed",
+          "isClaimable",
+          "userId"
+        ],
+        "additionalProperties": false,
+        "title": "UserQuest",
+        "type": "object"
+      }
+    }
+  }
+}

@@ -20,8 +20,6 @@ const ChallengeQuests = () => {
 
   const { data: userQuests, isLoading: isFetchingUserQuests } = useUserQuestQuery()
 
-  console.log(userQuests)
-
   return (
     <Box display="flex" flexDirection={'column'} gap={'16px'} position={'relative'} minH="auto">
       {isFetchingUserQuests && <Loading />}

@@ -1,0 +1,103 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Converted from quest.yaml with typeconv",
+    "version": "1",
+    "x-id": "quest.yaml",
+    "x-comment": "Generated from src\\models\\quest.ts by core-types-json-schema (https://github.com/grantila/core-types-json-schema) on behalf of typeconv (https://github.com/grantila/typeconv)"
+  },
+  "paths": {},
+  "components": {
+    "schemas": {
+      "Quest": {
+        "properties": {
+          "id": {
+            "title": "Quest.id",
+            "type": "number"
+          },
+          "text": {
+            "title": "Quest.text",
+            "type": "string"
+          },
+          "completedText": {
+            "title": "Quest.completedText",
+            "type": "string"
+          },
+          "rewardTypeId": {
+            "title": "Quest.rewardTypeId",
+            "type": "number"
+          },
+          "quantity": {
+            "title": "Quest.quantity",
+            "type": "number"
+          },
+          "isEnabled": {
+            "title": "Quest.isEnabled",
+            "type": "boolean"
+          },
+          "isRequired": {
+            "title": "Quest.isRequired",
+            "type": "boolean"
+          },
+          "isDeleted": {
+            "title": "Quest.isDeleted",
+            "type": "boolean"
+          },
+          "description": {
+            "title": "Quest.description",
+            "type": "string"
+          },
+          "extendedQuestData": {
+            "title": "Quest.extendedQuestData"
+          },
+          "questId": {
+            "title": "Quest.questId",
+            "type": "string"
+          },
+          "createdAt": {
+            "title": "Quest.createdAt"
+          },
+          "updatedAt": {
+            "title": "Quest.updatedAt"
+          },
+          "rewardType": {
+            "title": "Quest.rewardType"
+          },
+          "userQuests": {
+            "items": {},
+            "title": "Quest.userQuests",
+            "type": "array"
+          },
+          "questTypeId": {
+            "title": "Quest.questTypeId",
+            "type": "number"
+          },
+          "image": {
+            "title": "Quest.image",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "text",
+          "completedText",
+          "rewardTypeId",
+          "quantity",
+          "isEnabled",
+          "isRequired",
+          "isDeleted",
+          "questId",
+          "createdAt",
+          "updatedAt",
+          "rewardType",
+          "userQuests",
+          "questTypeId"
+        ],
+        "additionalProperties": false,
+        "title": "Quest",
+        "description": "@swagger components:\r\n schemas:\r\n   Quest:\r\n     type: object\r\n     properties:\r\n       id:\r\n         type: number\r\n       text:\r\n         type: string\r\n       completedText:\r\n         type: string\r\n       rewardTypeId:\r\n         type: number\r\n       quantity:\r\n         type: number\r\n       isEnabled:\r\n         type: boolean\r\n       isRequired:\r\n         type: boolean\r\n       isDeleted:\r\n         type: boolean\r\n       description:\r\n         type: string\r\n       extendedQuestData:\r\n         type: object\r\n       questId:\r\n         type: string\r\n       createdAt:\r\n         type: string\r\n         format: date-time\r\n       updatedAt:\r\n         type: string\r\n         format: date-time \r\n       rewardType:\r\n         $ref: '#/components/schemas/RewardType'\r\n       userQuests:\r\n         $ref: '#/components/schemas/UserQuest'\r\n       questTypeId:\r\n         type: number\r\n       image:\r\n         type: string",
+        "type": "object"
+      }
+    }
+  }
+}

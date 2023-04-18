@@ -1,0 +1,54 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Converted from reward.yaml with typeconv",
+    "version": "1",
+    "x-id": "reward.yaml",
+    "x-comment": "Generated from src\\models\\reward.ts by core-types-json-schema (https://github.com/grantila/core-types-json-schema) on behalf of typeconv (https://github.com/grantila/typeconv)"
+  },
+  "paths": {},
+  "components": {
+    "schemas": {
+      "Reward": {
+        "properties": {
+          "id": {
+            "title": "Reward.id",
+            "type": "number"
+          },
+          "rewardTypeId": {
+            "title": "Reward.rewardTypeId",
+            "type": "number"
+          },
+          "quantity": {
+            "title": "Reward.quantity",
+            "type": "number"
+          },
+          "createdAt": {
+            "title": "Reward.createdAt"
+          },
+          "updatedAt": {
+            "title": "Reward.updatedAt"
+          },
+          "rewardType": {
+            "title": "Reward.rewardType"
+          },
+          "userId": {
+            "title": "Reward.userId",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "rewardTypeId",
+          "quantity",
+          "createdAt",
+          "updatedAt",
+          "rewardType"
+        ],
+        "additionalProperties": false,
+        "title": "Reward",
+        "type": "object"
+      }
+    }
+  }
+}

@@ -16,7 +16,7 @@ const getIP = (request) =>
 
 
 const fivePerMinute = ({
-  limit = 5,
+  limit = 55,
   windowMs = 60 * 1000,
   delayAfter = Math.round(5 / 3),
   delayMs = 2000,
@@ -92,5 +92,28 @@ const claimQuestMiddlewares = claimQuest()
 export async function claimQuestRateLimit(request, response) {
   await Promise.all(
     claimQuestMiddlewares.map(applyMiddleware).map((middleware) => middleware(request, response)),
+  )
+}
+
+
+/* redeem shop item routes */
+const redeemShop = ({
+  limit = 1,
+  windowMs = 20 * 1000,
+  delayAfter = 1,
+  delayMs = 2000,
+} = {}) => [
+    slowDown({ keyGenerator: getIP, windowMs, delayAfter, delayMs }),
+    // rateLimit({
+    //   keyGenerator: getIP, windowMs, max: limit, handler: () => {
+    //     console.log("Limit reached")
+    //   }
+    // }),
+    rateLimit({ keyGenerator: getIP, windowMs, max: limit }),
+  ]
+const redeemShopMiddlewares = redeemShop()
+export async function redeemShopRateLimit(request, response) {
+  await Promise.all(
+    redeemShopMiddlewares.map(applyMiddleware).map((middleware) => middleware(request, response)),
   )
 }

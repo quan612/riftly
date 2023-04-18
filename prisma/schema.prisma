@@ -25,10 +25,10 @@ model WhiteList {
   uathUser                      String?               @default("")
   email                         String?               @unique
   password                      String?               @default("")
-  smsVerification               SmsVerification?
   avatar                        String?
   status                        AccountStatus?        @default(PENDING)
   signUpOrigin                  String?               @default("Wallet")
+  shopItemRedeem                ShopItemRedeem[]
 }
 model WhiteListUserData {
   id                            Int           @id @default(autoincrement())
@@ -40,8 +40,7 @@ model WhiteListUserData {
   lastFollowersUpdated          DateTime?     
 }
 model PendingReward {
-  id           Int            @id @default(autoincrement())
-  wallet       String?   
+  id           Int            @id @default(autoincrement())  
   generatedURL String         @default(uuid())
   isClaimed    Boolean        @default(false)
   rewardTypeId Int    
@@ -57,7 +56,6 @@ model PendingReward {
 model Reward {
   id           Int         @id @default(autoincrement())
   rewardTypeId Int 
-  wallet       String? 
   quantity     Int         @default(0)
   createdAt    DateTime    @default(now())
   updatedAt    DateTime    @default(now()) @updatedAt
@@ -103,7 +101,6 @@ model UserQuest {
 
   @@unique([userId, questId])
 }
-
 model Quest {
   id                    Int             @id @default(autoincrement())
   type                  QuestType       @relation(fields: [questTypeId], references: [id])
@@ -126,21 +123,12 @@ model Quest {
   duration              QuestDuration   @default(ONGOING)  
   image                 String?
 }
-
 model Admin {
-  id     Int     @id @default(autoincrement())
-  wallet String  @unique
-  nonce  String?
+  id            Int       @id @default(autoincrement())
+  wallet        String    @unique
+  username      String?
+  nonce         String?
 }
-
-model MoralisNftData {
-  id                  Int                 @id @default(autoincrement())
-  contractAddress     String              @unique
-  contractData        Json?
-  createdAt           DateTime            @default(now())
-  updatedAt           DateTime            @default(now()) @updatedAt
-}
-
 model LogError {
     id                Int                 @id @default(autoincrement())
     url               String
@@ -149,7 +137,6 @@ model LogError {
     content           Json?
     createdAt         DateTime            @default(now())
 }
-
 model logRegister {
     id                Int                 @id @default(autoincrement())
     url               String
@@ -159,18 +146,6 @@ model logRegister {
     ip                String?
     createdAt         DateTime            @default(now())
 }
-
-model shellRedeemed {
-    id                Int                 @id @default(autoincrement())
-    wallet            String?             @unique
-    rewards           String[] 
-    rewardPointer     Int                 @default(-1)
-    isRedeemed        Boolean             @default(false)
-    createdAt         DateTime            @default(now())
-    updatedAt         DateTime            @default(now()) @updatedAt
-    userId            String?             @unique
-}
-
 model QuestVariables{
   id                          Int                 @id @default(autoincrement())
   vercel_env                  String
@@ -192,6 +167,7 @@ model QuestVariables{
   smsAuthToken                String?             @default("")
   smsServiceId                String?             @default("")
   requiredSmsVerification     Boolean             @default(false)
+  apiKey                      String?             @default("")
   createdAt                   DateTime            @default(now())
   updatedAt                   DateTime            @default(now()) @updatedAt
 }
@@ -202,20 +178,8 @@ model Discord {
   channel                     String?         
   isEnabled                   Boolean         @default(true)
   isDeleted                   Boolean         @default(false)
-  postMessageWhenClaimed      Boolean         @default(true)
   createdAt                   DateTime        @default(now())
   updatedAt                   DateTime        @default(now()) @updatedAt
-}
-
-model SmsVerification {
-  id                          Int                     @id @default(autoincrement())
-  user                        WhiteList               @relation(fields: [userId], references: [userId])
-  userId                      String                  @unique
-  attemptedPhone              String                  @unique
-  status                      VerificationStatus      @default(PENDING)
-  valid                       Boolean                 @default(false)
-  createdAt                   DateTime                @default(now())
-  updatedAt                   DateTime                @default(now()) @updatedAt
 }
 
 model WebPushSubscription {
@@ -263,4 +227,93 @@ model ConfigImageHosting{
   avatarPreset                String?             @default("")
   createdAt                   DateTime            @default(now())
   updatedAt                   DateTime            @default(now()) @updatedAt
+}
+
+model ConfigRedeemableContract {
+  id                          Int                 @id @default(autoincrement())
+  contract                    String              @unique
+  maxRedeemable               Int                 @default(0)
+  totalRedeemable             Int                 @default(0)
+  text                        String              @default("")
+  description                 String              @default("")
+  image                       String?             @default("")
+  nftType                     String?             @default("")
+  isEnabled                   Boolean             @default(true)
+  requirements                RedeemRequirement[]
+  contractAbi                 Json?               
+}
+
+model RedeemRequirement {
+  id                Int                           @id @default(autoincrement())
+  requirementId     String                        @unique
+  kind              String                        @default("")
+  relationId        Int
+  conditional       Json?                         
+
+  redeem            ConfigRedeemableContract?     @relation(fields: [redeemId], references: [id], onDelete: Cascade)
+  redeemId          Int?      
+}
+
+model NftContractData {
+  id                          Int                 @id @default(autoincrement())
+  name                        String              
+  address                     String              @unique
+  chain                       String              @default("eth")
+  data                        Json?
+  updatedAt                   DateTime            @default(now()) @updatedAt         
+}
+
+enum ItemType {
+ OFFCHAIN       
+ ONCHAIN     
+}
+
+enum ContractType {
+ ERC20       
+ ERC721     
+}
+
+model ShopItem {
+  id                          Int                       @id @default(autoincrement())
+  title                       String                    @default("")
+  description                 String                    @default("")
+  image                       String?                   @default("")
+  available                   Int                       @default(1)
+  maxPerAccount               Int                       @default(1)
+  multiplier                  Int                       @default(1)
+  isEnabled                   Boolean                   @default(true)
+  requirements                ShopItemRequirement[]
+  itemType                    ItemType                  @default(OFFCHAIN)  
+  shopItemRedeem              ShopItemRedeem[]      
+  
+  contractAddress             String?                   @unique
+  contractType                ContractType?             @default(ERC20)
+  abi                         Json? 
+}
+
+model ShopItemRequirement {
+  id                          Int                       @id @default(autoincrement())
+  requirementId               String                    @unique
+  requirementType             String                    @default("")
+  relationId                  Int 
+  conditional                 Json?                           
+  shopItem                    ShopItem?                 @relation(fields: [shopItemId], references: [id], onDelete: Cascade)
+  shopItemId                  Int?      
+}
+
+enum RedeemStatus {
+ AVAILABLE
+ PENDING
+ REDEEMED
+}
+model ShopItemRedeem {
+  id                          Int                 @id @default(autoincrement())
+  shopItem                    ShopItem            @relation(fields: [shopItemId], references: [id])
+  shopItemId                  Int
+  redeemedBy                  WhiteList?          @relation(fields: [userId], references: [userId])
+  userId                      String?    
+  status                      RedeemStatus        @default(PENDING)      
+  extendedRedeemData          Json?
+  createdAt                   DateTime            @default(now())
+  updatedAt                   DateTime            @default(now()) @updatedAt         
 }

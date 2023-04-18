@@ -6,7 +6,8 @@ export default async function handler(req, res) {
   switch (method) {
     case 'GET':
       try {
-        await signUpRateLimit(req, res)
+        // await signUpRateLimit(req, res)
+        // res.status(200).json({ message: "ok" })
       } catch (err) {
         console.log(err)
         return res.status(429).send('Too many requests')

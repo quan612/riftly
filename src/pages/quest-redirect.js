@@ -39,7 +39,6 @@ function QuestRedirectPage() {
             {router?.query?.result}
           </Heading>
         )}
-
         {router?.query?.error && (
           <Heading size="lg" color="#fff" mb="16px" align="center">
             {router?.query?.error}

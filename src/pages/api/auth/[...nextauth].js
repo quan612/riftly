@@ -217,7 +217,6 @@ export const authOptions = {
         let wallet = user.user.wallet
         const existingUser = await prisma.whiteList.findFirst({
           where: {
-            // userId,
             wallet: { equals: wallet, mode: 'insensitive' },
           },
         })
