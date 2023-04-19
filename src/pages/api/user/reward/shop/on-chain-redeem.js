@@ -22,7 +22,7 @@ const handler = async (req, res) => {
     })
   }
   console.log("ON-chain")
-  await redeemShopRateLimit(req, res)
+  // await redeemShopRateLimit(req, res)
 
   const { userId, wallet } = req.whiteListUser
   const { id: shopItemId } = req.body
@@ -42,7 +42,7 @@ const handler = async (req, res) => {
     await prisma.$transaction(
       async (tx) => {
         await tx.$executeRaw`select * from public."ShopItemRedeem" p where p."status"='AVAILABLE' FOR UPDATE;`;
-        await sleep(2000)
+        await sleep(3000)
 
         let result = await tx.$executeRaw`UPDATE "ShopItemRedeem" SET "userId"=${userId}, "status"='PENDING' where "id" in (select id from public."ShopItemRedeem" p where p."status" = 'AVAILABLE' and p."shopItemId"=${shopItemId}limit 1);`;
 

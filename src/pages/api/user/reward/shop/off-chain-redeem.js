@@ -28,7 +28,7 @@ const handler = async (req, res) => {
     await prisma.$transaction(
       async (tx) => {
         await tx.$executeRaw`select * from public."ShopItemRedeem" p where p."status"='AVAILABLE' FOR UPDATE;`;
-        await sleep(2000)
+        await sleep(3000)
 
         let result = await tx.$executeRaw`UPDATE "ShopItemRedeem" SET "userId"=${userId}, "status"='REDEEMED' where "id" in (select id from public."ShopItemRedeem" p where p."status" = 'AVAILABLE' and p."shopItemId"=${shopItemId} limit 1);`;
 
@@ -55,7 +55,7 @@ const handler = async (req, res) => {
       },
     )
 
-    await redeemShopRateLimit(req, res)
+    // await redeemShopRateLimit(req, res)
     return res.status(200).json({
       message: `ok`,
     })
