@@ -29,7 +29,7 @@ const handler = async (req, res) => {
   const shopItem = req.shopItem
 
 
-  if (wallet.length < 16 || !utils.getAddress(wallet)) {
+  if (!wallet || wallet.length < 16 || !utils.getAddress(wallet)) {
     return res
       .status(200)
       .json({ message: 'Wallet account not linked or invalid wallet address', isError: true })
