@@ -21,7 +21,7 @@ INSERT INTO public."QuestType" (id, name, description) VALUES (13, 'Wallet Authe
 INSERT INTO public."QuestType" (id, name, description) VALUES (14, 'Claim Reward For Owning NFT', NULL);
 INSERT INTO public."QuestType" (id, name, description) VALUES (15, 'Unstoppable Domain Authenticate', NULL);
 
-INSERT INTO public."RewardType" (id, reward) VALUES (1, '$Shell');
+INSERT INTO public."RewardType" (id, reward) VALUES (1, 'Points');
 INSERT INTO public."RewardType" (id, reward) VALUES (2, 'Mint List');
 INSERT INTO public."RewardType" (id, reward) VALUES (3, 'Mystery Bowl');
 ```
