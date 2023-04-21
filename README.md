@@ -22,8 +22,7 @@ INSERT INTO public."QuestType" (id, name, description) VALUES (14, 'Claim Reward
 INSERT INTO public."QuestType" (id, name, description) VALUES (15, 'Unstoppable Domain Authenticate', NULL);
 
 INSERT INTO public."RewardType" (id, reward) VALUES (1, 'Points');
-INSERT INTO public."RewardType" (id, reward) VALUES (2, 'Mint List');
-INSERT INTO public."RewardType" (id, reward) VALUES (3, 'Mystery Bowl');
+
 ```
 
 ## How to use
