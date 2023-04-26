@@ -9,7 +9,7 @@
       "@components/*": ["components/*"],
       "@styles/*": ["styles/*"],
       "@util/*": ["util/*"],
-      "@repository/*": ["repository/*"],
+      "@repositories/*": ["repositories/*"],
       "@context/*": ["context/*"],
       "@middlewares/*": ["middlewares/*"],
       "@hooks/*": ["hooks/*"],

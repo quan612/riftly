@@ -2,9 +2,6 @@ import { prisma } from '@context/PrismaContext'
 import whitelistUserMiddleware from 'middlewares/whitelistUserMiddleware'
 import Enums from 'enums'
 
-// const sharp = require('sharp');
-import axios from 'axios'
-
 export const config = {
   api: {
     bodyParser: {

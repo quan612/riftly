@@ -1,4 +1,4 @@
-import { PrismaClient, EquipmentType } from '@prisma/client'
+import { PrismaClient } from '@prisma/client'
 
 export const prisma =
   global.prisma ||
@@ -6,12 +6,11 @@ export const prisma =
     // log: ['query']
   })
 
-prisma.$on('query', (e) => {
-  console.log('Query: ' + e.query)
-  console.log('Params: ' + e.params)
-  console.log('Duration: ' + e.duration + 'ms')
-})
+// prisma.$on('query', (e) => {
+//   console.log('Query: ' + e.query)
+//   console.log('Params: ' + e.params)
+//   console.log('Duration: ' + e.duration + 'ms')
+// })
 
-export const equipmentType = EquipmentType
 
 if (process.env.NODE_ENV !== 'production') global.prisma = prisma

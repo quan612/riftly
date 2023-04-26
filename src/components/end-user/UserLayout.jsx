@@ -22,16 +22,6 @@ function use100vh() {
 }
 
 export default function UserLayout({ session, children }) {
-  let router = useRouter()
-
-  if (session && session?.user?.isAdmin) {
-    return (
-      <LayoutWrapper>
-        <RiftlyConnectBoard />
-      </LayoutWrapper>
-    )
-  }
-
   if (session) {
     return (
       <LayoutWrapper>

@@ -7,6 +7,7 @@ import { RiftlyIcon } from '@components/shared/Icons'
 import { useUserFeatureQuestQuery, useUserQuestClaim } from '@hooks/user/quest'
 import { useQueryClient } from 'react-query'
 import { UserQuestContext } from '@context/UserQuestContext'
+import { QUERY_USER_REWARD } from '@hooks/user/reward'
 
 const FeatureQuests = () => {
   const { data: featureQuests, isLoading: isFetchingFeatureQuests } = useUserFeatureQuestQuery()
@@ -127,7 +128,7 @@ const Footer = ({ quest }) => {
       }
 
       invalidCacheTimeout = setTimeout(() => {
-        queryClient.invalidateQueries('user-reward-query')
+        queryClient.invalidateQueries(QUERY_USER_REWARD)
         queryClient.invalidateQueries('user-query-feature-quest')
 
         clearTimeout(invalidCacheTimeout)

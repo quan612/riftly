@@ -36,6 +36,7 @@
 
 import { Quest } from "./quest";
 import { RewardType } from "./reward-type";
+import { WhiteList } from "./whitelist";
 
 export interface UserQuest {
   id: number,
@@ -50,6 +51,6 @@ export interface UserQuest {
   isHidden: boolean,
   hasClaimed: boolean,
   isClaimable: boolean,
-  // user: WhiteList,
+  user?: WhiteList,
   userId: string,
 }

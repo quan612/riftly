@@ -2,19 +2,24 @@ import { useQueryClient, useQuery, useMutation } from 'react-query'
 import axios from 'axios'
 import Enums from 'enums'
 import { useRouter } from 'next/router'
+import { UserQuest } from 'models/user-quest'
+import { QUERY_USER_REWARD } from './reward'
+
+export const QUERY_USER_QUEST = 'user-query-user-quest'
 
 export const useUserQuestSubmit = () => {
   const queryClient = useQueryClient()
 
   const { data, error, isError, isLoading, isSuccess, mutate, mutateAsync } = useMutation(
     (payload) => {
-      return axios.post(`${Enums.BASEPATH}/api/user/quest/submit`, payload).then((r) => r.data)
+      return axios
+        .post(`${Enums.BASEPATH}/api/user/quest/submit/general`, payload)
+        .then((r) => r.data)
     },
     {
       onSuccess: () => {
-        // queryClient.invalidateQueries(['user-query-user-quest', 'user-query-feature-quest']);
-        queryClient.invalidateQueries('user-query-user-quest');
-        queryClient.invalidateQueries('user-query-feature-quest');
+        queryClient.invalidateQueries(QUERY_USER_QUEST)
+        queryClient.invalidateQueries('user-query-feature-quest')
       },
     },
   )
@@ -27,15 +32,14 @@ export const useUserDailyQuestSubmit = () => {
 
   const { data, error, isError, isLoading, isSuccess, mutate, mutateAsync } = useMutation(
     (payload) => {
-
-      return axios.post(`${Enums.BASEPATH}/api/user/quest/submit/recurrent`, payload).then((r) => r.data)
+      return axios
+        .post(`${Enums.BASEPATH}/api/user/quest/submit/recurrent`, payload)
+        .then((r) => r.data)
     },
     {
       onSuccess: () => {
-        // queryClient.invalidateQueries(['user-query-user-quest', 'user-query-feature-quest']);
-        queryClient.invalidateQueries('user-query-user-quest');
-        queryClient.invalidateQueries('user-query-feature-quest');
-
+        queryClient.invalidateQueries(QUERY_USER_QUEST)
+        queryClient.invalidateQueries('user-query-feature-quest')
       },
     },
   )
@@ -54,9 +58,8 @@ export const useCodeQuestSubmit = () => {
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries('user-query-user-quest');
-        queryClient.invalidateQueries('user-query-feature-quest');
-        // queryClient.invalidateQueries(['user-query-user-quest', 'user-query-feature-quest']);
+        queryClient.invalidateQueries(QUERY_USER_QUEST)
+        queryClient.invalidateQueries('user-query-feature-quest')
       },
     },
   )
@@ -75,9 +78,8 @@ export const useNftOwningQuestSubmit = () => {
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries('user-query-user-quest');
-        queryClient.invalidateQueries('user-query-feature-quest');
-        // queryClient.invalidateQueries(['user-query-user-quest', 'user-query-feature-quest']);
+        queryClient.invalidateQueries(QUERY_USER_QUEST)
+        queryClient.invalidateQueries('user-query-feature-quest')
       },
     },
   )
@@ -94,8 +96,8 @@ export const useWalletAuthQuestSubmit = () => {
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries('user-query-user-quest');
-        queryClient.invalidateQueries('user-query-feature-quest');
+        queryClient.invalidateQueries(QUERY_USER_QUEST)
+        queryClient.invalidateQueries('user-query-feature-quest')
       },
     },
   )
@@ -114,8 +116,8 @@ export const usePhoneNumberQuestSubmit = () => {
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries('user-query-user-quest');
-        queryClient.invalidateQueries('user-query-feature-quest');
+        queryClient.invalidateQueries(QUERY_USER_QUEST)
+        queryClient.invalidateQueries('user-query-feature-quest')
       },
     },
   )
@@ -135,8 +137,8 @@ export const usePhoneCodeQuestSubmit = () => {
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries('user-query-user-quest');
-        queryClient.invalidateQueries('user-query-feature-quest');
+        queryClient.invalidateQueries(QUERY_USER_QUEST)
+        queryClient.invalidateQueries('user-query-feature-quest')
       },
     },
   )
@@ -166,9 +168,8 @@ export const useUserOwningNftQuestSubmit = () => {
     },
     {
       onSuccess: () => {
-        // queryClient.invalidateQueries(['user-query-user-quest', 'user-query-feature-quest']);
-        queryClient.invalidateQueries('user-query-user-quest');
-        queryClient.invalidateQueries('user-query-feature-quest');
+        queryClient.invalidateQueries(QUERY_USER_QUEST)
+        queryClient.invalidateQueries('user-query-feature-quest')
       },
     },
   )
@@ -187,8 +188,8 @@ export const useUnstoppableAuthQuestSubmit = () => {
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries('user-query-user-quest');
-        queryClient.invalidateQueries('user-query-feature-quest');
+        queryClient.invalidateQueries(QUERY_USER_QUEST)
+        queryClient.invalidateQueries('user-query-feature-quest')
       },
     },
   )
@@ -207,7 +208,7 @@ export const useImageUploadSubmit = () => {
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries('user-reward-query')
+        queryClient.invalidateQueries(QUERY_USER_REWARD)
       },
     },
   )
@@ -215,15 +216,16 @@ export const useImageUploadSubmit = () => {
   return [data, isLoading, mutateAsync]
 }
 
-
 /*******************************Query********************************************** */
 export const useUserQuestQuery = () => {
   const { data, isLoading } = useQuery(
-    'user-query-user-quest',
+    QUERY_USER_QUEST,
     async () => {
-      return axios.get(`${Enums.BASEPATH}/api/user/quest/`).then((r) => r.data)
+      return axios
+        .get<UserQuest[]>(`${Enums.BASEPATH}/api/user/quest/get-normal`)
+        .then((r) => r.data)
     },
-    { staleTime: 60 },
+    { staleTime: Infinity, cacheTime: 60 * 60 },
   )
 
   return { data, isLoading }
@@ -233,18 +235,20 @@ export const useUserFeatureQuestQuery = () => {
   const { data, isLoading } = useQuery(
     'user-query-feature-quest',
     async () => {
-      return axios.get(`${Enums.BASEPATH}/api/user/quest/get-featured`).then((r) => r.data)
+      return axios
+        .get<UserQuest[]>(`${Enums.BASEPATH}/api/user/quest/get-featured`)
+        .then((r) => r.data)
     },
-    { staleTime: 60 },
+    { staleTime: Infinity, cacheTime: 60 * 60 },
   )
 
   return { data, isLoading }
 }
 
 export const useUserCollaborationQuestQuery = () => {
-
   const router = useRouter()
-  const collaboration = typeof router?.query?.collaboration === 'string' ? router?.query?.collaboration : ''
+  const collaboration =
+    typeof router?.query?.collaboration === 'string' ? router?.query?.collaboration : ''
 
   const { data, isLoading } = useQuery(
     'user-query-collaboration-quest',

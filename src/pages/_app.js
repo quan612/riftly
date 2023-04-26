@@ -18,7 +18,17 @@ export function reportWebVitals(metric) {
   // console.log(metric);
 }
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      refetchOnmount: false,
+      refetchOnReconnect: false,
+      retry: false,
+      staleTime: 5 * 60 * 1000,
+    },
+  },
+});
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter()
@@ -37,8 +47,8 @@ function MyApp({ Component, pageProps }) {
     <SessionProvider
       session={pageProps.session}
       basePath={`/api/auth`}
-      refetchInterval={3600} // Re-fetches session when window is focused
-      refetchOnWindowFocus={true}
+      refetchInterval={86400} // Re-fetches session when window is focused
+      refetchOnWindowFocus={false}
     >
       <Web3Provider session={pageProps.session}>
         <QueryClientProvider client={queryClient}>

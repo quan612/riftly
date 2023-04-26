@@ -25,7 +25,6 @@ const usePrevious = (value) => {
 }
 
 function getPoints(level) {
-  // return 20 * level * (level + 4);
   return ((Math.pow(level, 2) + level) / 2) * 100 - level * 100
 }
 

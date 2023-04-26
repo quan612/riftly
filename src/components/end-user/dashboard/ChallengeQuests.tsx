@@ -11,8 +11,9 @@ import { HeadingLg, HeadingSm, TextSm } from '@components/shared/Typography'
 import { RiftlyIcon } from '@components/shared/Icons'
 import Loading from '@components/shared/LoadingContainer/Loading'
 
-import { useUserQuestClaim, useUserQuestQuery } from '@hooks/user/quest'
+import { QUERY_USER_QUEST, useUserQuestClaim, useUserQuestQuery } from '@hooks/user/quest'
 import { UserQuestContext } from '@context/UserQuestContext'
+import { QUERY_USER_REWARD } from '@hooks/user/reward'
 
 const ChallengeQuests = () => {
   const [filterCompleted, filterCompletedSet] = useState(false)
@@ -67,7 +68,7 @@ const ChallengesHeader = ({ filterCompleted, filterCompletedSet }) => {
       <Heading color="white" fontWeight="600" size="md">
         Challenges
       </Heading>
-      <Box display={'flex'} align="end">
+      <Flex align="end">
         <Box
           display={'flex'}
           flexDirection="row"
@@ -143,7 +144,7 @@ const ChallengesHeader = ({ filterCompleted, filterCompletedSet }) => {
             {/* </AnimateSharedLayout> */}
           </Flex>
         </Box>
-      </Box>
+      </Flex>
     </Box>
   )
 }
@@ -170,7 +171,7 @@ const UserQuestBox = ({ quest, filterCompleted }) => {
   const onClaimQuest = useCallback(async (questId) => {
     disableBtnSet(true)
     try {
-      let res = await onUserQuestClaim({ questId })
+      const res = await onUserQuestClaim({ questId })
       if (res.isError) {
         throw res.message
       }
@@ -182,8 +183,8 @@ const UserQuestBox = ({ quest, filterCompleted }) => {
 
       invalidCacheTimeout = setTimeout(async () => {
         await Promise.all([
-          queryClient.invalidateQueries('user-reward-query'),
-          queryClient.invalidateQueries('user-query-user-quest'),
+          queryClient.invalidateQueries(QUERY_USER_REWARD),
+          queryClient.invalidateQueries(QUERY_USER_QUEST),
         ])
 
         clearTimeout(invalidCacheTimeout)
@@ -199,7 +200,7 @@ const UserQuestBox = ({ quest, filterCompleted }) => {
         isClosable: true,
       })
     }
-  })
+  }, [])
 
   const getButtonState = useCallback(() => {
     if (disableBtn) return true

@@ -55,5 +55,5 @@ export interface WhiteList {
   avatar?: string,
   status?: AccountStatus,
   signUpOrigin?: string,
-  // redeemTracker?: RedeemableTracker, // not ready
+
 }

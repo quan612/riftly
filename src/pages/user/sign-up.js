@@ -11,7 +11,7 @@ function SignUp() {
   const { data: session, status } = useSession()
   const router = useRouter()
   React.useEffect(() => {
-    if (session && !session?.isAdmin) {
+    if (session) {
       router.push('/')
     }
   }, [session])

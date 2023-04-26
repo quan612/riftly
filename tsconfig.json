@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
-    "target": "es6",
+    // "target": "es6",
+    "target": "es2020",
     "allowJs": true,
     "skipLibCheck": true,
     "strict": false,
@@ -29,7 +30,18 @@
       "@lib/*": ["lib/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.js",
+    "**/*.jsx",
+    "src/pages/indextsx",
+    "next-env.d.ts",
+    "next-auth.d.ts",
+    "src/models/shop-item-redeem.ts"
+
+],
   "exclude": ["node_modules"],
   "ts-node": {
     "compilerOptions": {

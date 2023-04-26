@@ -53,7 +53,7 @@ import { authOptions } from 'pages/api/auth/[...nextauth]'
 export async function getServerSideProps(context) {
   const session = await getServerSession(context.req, context.res, authOptions)
 
-  if (!session || session?.user?.isAdmin) {
+  if (!session) {
     return {
       redirect: {
         destination: '/welcome',

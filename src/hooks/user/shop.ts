@@ -1,20 +1,22 @@
 import { useQueryClient, useQuery, useMutation } from 'react-query'
 import axios from 'axios'
 import Enums from 'enums'
-import { useRouter } from 'next/router'
+import { ShopItem } from 'models/shop-item'
+import { QUERY_USER_REWARD } from './reward'
+
+export const SHOP_ITEM_QUERY = 'shop-item-query'
 
 export const useShopItemQuery = () => {
   const { data, isLoading } = useQuery(
-    'shop-item-query',
+    SHOP_ITEM_QUERY,
     async () => {
-      return axios.get(`${Enums.BASEPATH}/api/user/reward/shop/get-shop-item`).then((r) => r.data)
+      return axios.get<ShopItem[]>(`${Enums.BASEPATH}/api/user/reward/shop/get-shop-item`).then((r) => r.data)
     },
     { staleTime: 60 },
   )
 
   return { data, isLoading }
 }
-
 
 export const useOffChainShopItemRedeemMutation = () => {
   const queryClient = useQueryClient()
@@ -25,8 +27,8 @@ export const useOffChainShopItemRedeemMutation = () => {
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries('shop-item-query');
-        queryClient.invalidateQueries('user-reward-query');
+        queryClient.invalidateQueries(SHOP_ITEM_QUERY);
+        queryClient.invalidateQueries(QUERY_USER_REWARD);
       },
     },
   )
@@ -43,8 +45,8 @@ export const useOnChainShopItemRedeemMutation = () => {
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries('shop-item-query');
-        queryClient.invalidateQueries('user-reward-query');
+        queryClient.invalidateQueries(SHOP_ITEM_QUERY);
+        queryClient.invalidateQueries(QUERY_USER_REWARD);
       },
     },
   )

@@ -17,8 +17,7 @@ import useDeviceDetect from '@hooks/useDeviceDetect'
 
 import { AnimatePresence } from 'framer-motion'
 import { RiftlyIcon } from '@components/shared/Icons'
-import { sleep } from 'util/index'
-import axios from 'axios'
+
 import { useUserRewardQuery } from '@hooks/user/reward'
 import {
   useOffChainShopItemRedeemMutation,

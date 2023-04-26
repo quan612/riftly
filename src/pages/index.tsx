@@ -1,12 +1,21 @@
 import React, { useEffect } from 'react'
 import Head from 'next/head'
+import { GetServerSideProps } from 'next'
+
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next'
+import { getServerSession } from 'next-auth/next'
+import { authOptions } from 'pages/api/auth/[...nextauth]'
+import { ChakraBox } from '@theme/additions/framer/FramerChakraComponent'
+import { Flex } from '@chakra-ui/react'
 
 import dynamic from 'next/dynamic'
 
 import UserQuestProvider from '@context/UserQuestContext'
 
 const RiftlyIndividualQuestBoardComponent = dynamic(() =>
-  import('@components/end-user/dashboard/RiftlyIndividualQuestBoard'),
+  import('@components/end-user/dashboard/RiftlyIndividualQuestBoard'), {
+    ssr: false
+  }
 )
 
 const transition = { duration: 0.5, ease: [0.43, 0.13, 0.23, 0.96] }
@@ -17,6 +26,7 @@ const variants = {
 }
 
 function Home({ session }) {
+  console.log(session)
   return (
     <>
       <Head>
@@ -51,17 +61,11 @@ function Home({ session }) {
 Home.requireUser = true
 export default Home
 
-import { getServerSession } from 'next-auth/next'
-import { authOptions } from 'pages/api/auth/[...nextauth]'
-import { ChakraBox } from '@theme/additions/framer/FramerChakraComponent'
-import { Flex } from '@chakra-ui/react'
-
-
-export async function getServerSideProps(context) {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  // export async function getServerSideProps(context) {
   const session = await getServerSession(context.req, context.res, authOptions)
 
-
-  if (!session || session?.user?.isAdmin) {
+  if (!session) {
     return {
       redirect: {
         destination: '/welcome',

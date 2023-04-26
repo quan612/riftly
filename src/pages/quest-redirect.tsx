@@ -10,7 +10,7 @@ import { getUserName } from 'util/index'
 import { LayoutWrapper } from '@components/end-user/UserLayout'
 
 function QuestRedirectPage() {
-  let router = useRouter()
+  const router = useRouter()
   const { data: session, status } = useSession()
   return (
     <LayoutWrapper>
@@ -35,12 +35,12 @@ function QuestRedirectPage() {
         </Flex>
 
         {router?.query?.result && (
-          <Heading size="lg" color="#fff" mb="16px" align="center">
+          <Heading size="lg" color="#fff" mb="16px" textAlign="center">
             {router?.query?.result}
           </Heading>
         )}
         {router?.query?.error && (
-          <Heading size="lg" color="#fff" mb="16px" align="center">
+          <Heading size="lg" color="#fff" mb="16px" textAlign="center">
             {router?.query?.error}
           </Heading>
         )}

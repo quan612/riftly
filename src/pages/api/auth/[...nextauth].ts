@@ -1,4 +1,4 @@
-import NextAuth from 'next-auth/next'
+import NextAuth, { NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import {
   recoverPersonalSignature,
@@ -20,6 +20,7 @@ const { NEXTAUTH_SECRET } = process.env
 import { AccountStatus } from '@prisma/client'
 import { getIsSMSVerificationRequired } from 'repositories/user'
 import verifyUathLogin from '@util/verifyUathLogin'
+import { Authorization } from '@uauth/js'
 
 export const authOptions = {
   providers: [
@@ -27,9 +28,18 @@ export const authOptions = {
       id: 'web3-wallet',
       name: 'web3-wallet',
       type: 'credentials',
+      credentials: {
+        wallet: {
+          label: 'Walet',
+          type: 'text',
+        },
+        signature: {
+          label: 'Signature',
+          type: 'text',
+        },
+      },
       authorize: async (credentials, req) => {
-
-        let { wallet, signature } = credentials
+        const { wallet, signature } = credentials
 
         if (!wallet || !signature) throw new Error('Missing wallet or signature')
 
@@ -49,38 +59,43 @@ export const authOptions = {
           throw new Error('Signature verification failed')
 
         return {
-          wallet: originalAddress, isAdmin: false,
-          //  userId: user.userId 
-        }
-
+          wallet: originalAddress,
+        } as any
       },
     }),
     CredentialsProvider({
-      id: "unstoppable-authenticate",
-      name: "Unstoppable authentication",
-      type: "credentials",
+      id: 'unstoppable-authenticate',
+      name: 'Unstoppable authentication',
+      type: 'credentials',
+      credentials: {
+        authorization: {
+          label: 'Authorization',
+          type: 'object',
+        },
+      },
       authorize: async (credentials, req) => {
-        let { authorization } = credentials;
+        const { authorization } = credentials
 
         if (!authorization) {
-          console.log("authorization")
           throw new Error('Missing auth')
         }
 
-        authorization = JSON.parse(authorization)
+        const uathAuthorization: Authorization = JSON.parse(authorization)
 
-        const isValid = await verifyUathLogin(authorization, process.env.NEXT_PUBLIC_UNSTOPPABLE_CLIENT_ID)
-        console.log("isValid", isValid)
+        const isValid = await verifyUathLogin(
+          authorization,
+          process.env.NEXT_PUBLIC_UNSTOPPABLE_CLIENT_ID,
+        )
+
         if (!isValid) {
           throw new Error('Invalid auth login')
         }
 
-        const uathUser = authorization.idToken.sub
-        return {
-          isAdmin: false,
-          uathUser
-        };
+        const uathUser: string = uathAuthorization?.idToken?.sub
 
+        return {
+          uathUser,
+        } as any
       },
     }),
     CredentialsProvider({
@@ -124,17 +139,17 @@ export const authOptions = {
           throw new Error('Wrong password entered.')
         }
 
-        let isSMSVerificationRequired = await getIsSMSVerificationRequired()
+        const isSMSVerificationRequired = await getIsSMSVerificationRequired()
 
         if (currentUser.status === AccountStatus.PENDING && isSMSVerificationRequired) {
           throw new Error(`Pending Sign Up`)
         }
 
         return {
-          isAdmin: false,
+          id: currentUser.id,
           userId: currentUser.userId,
           email: currentUser.email,
-        }
+        } as any
       },
     }),
     DiscordProvider({
@@ -150,26 +165,28 @@ export const authOptions = {
   ],
   debug: false,
   session: {
-    strategy: "jwt",
+    strategy: 'jwt' as const,
     maxAge: 60 * 60 * 5,
   },
   jwt: {
-    signingKey: NEXTAUTH_SECRET,
+    // signingKey: process.env.NEXTAUTH_SECRET || "",
+    maxAge: 60 * 60 * 5,
+
   },
   callbacks: {
-    signIn: async (user, account, profile) => {
-
-      let isSMSVerificationRequired = await getIsSMSVerificationRequired()
+    signIn: async (user) => {
+      const isSMSVerificationRequired = await getIsSMSVerificationRequired()
       if (user?.account?.provider === 'unstoppable-authenticate') {
+        // let uathUser: any = user?.credentials?.uathUser
+        const uathUser = user?.credentials?.uathUser
 
-        let uathUser = user?.credentials?.uathUser
         const existingUser = await prisma.whiteList.findFirst({
           where: {
             uathUser,
           },
         })
         if (!existingUser) {
-          let error = `Unstoppable domain ${uathUser} is not linked to any account.`
+          const error = `Unstoppable domain ${uathUser} is not linked to any account.`
           return `/quest-redirect?error=${error}`
         }
 
@@ -187,7 +204,7 @@ export const authOptions = {
           },
         })
         if (!existingUser) {
-          let error = `Discord ${user.profile.username}%23${user.profile.discriminator} not found in our database.`
+          const error = `Discord ${user.profile.username}%23${user.profile.discriminator} not found in our database.`
           return `/quest-redirect?error=${error}`
         }
         if (existingUser.status === AccountStatus.PENDING && isSMSVerificationRequired) {
@@ -204,7 +221,7 @@ export const authOptions = {
           },
         })
         if (!existingUser) {
-          let error = `Twitter account ${user.user.name} not found.`
+          const error = `Twitter account ${user.user.name} not found.`
           return `/quest-redirect?error=${error}`
         }
         if (existingUser.status === AccountStatus.PENDING && isSMSVerificationRequired) {
@@ -213,8 +230,7 @@ export const authOptions = {
         return true
       }
       if (user?.account?.provider === 'web3-wallet') {
-        // let userId = user?.user?.userId
-        let wallet = user.user.wallet
+        const wallet = user.user.wallet
         const existingUser = await prisma.whiteList.findFirst({
           where: {
             wallet: { equals: wallet, mode: 'insensitive' },
@@ -222,7 +238,7 @@ export const authOptions = {
         })
 
         if (!existingUser) {
-          let error = `Wallet account ${wallet} not found in our database.`
+          const error = `Wallet account ${wallet} not found in our database.`
           return `/quest-redirect?error=${error}`
         }
         if (existingUser.status === AccountStatus.PENDING && isSMSVerificationRequired) {
@@ -237,9 +253,7 @@ export const authOptions = {
       return url
     },
     async jwt({ token, user, account, profile }) {
-
       if (user) {
-
         token.profile = profile
         token.user = user
         token.provider = account?.provider
@@ -249,55 +263,52 @@ export const authOptions = {
     },
     async session({ session, token }) {
       // console.log(`Session handling #######################################################################`)
-      let userQuery;
-      if (token.provider === "twitter") {
+      let userQuery
+      if (token.provider === 'twitter') {
         userQuery = await prisma.whiteList.findFirst({
           where: {
             twitterId: token?.user?.id,
           },
-        });
+        })
       }
-      if (token.provider === "discord") {
+      if (token.provider === 'discord') {
         userQuery = await prisma.whiteList.findFirst({
           where: {
             discordId: token?.user?.id,
           },
-        });
+        })
       }
-      if (token.provider === "web3-wallet") {
+      if (token.provider === 'web3-wallet') {
         userQuery = await prisma.whiteList.findFirst({
           where: {
             wallet: { equals: token?.user?.wallet, mode: 'insensitive' },
           },
-        });
+        })
       }
       if (token.provider === 'email') {
         userQuery = await prisma.whiteList.findFirst({
           where: {
             email: token?.user?.email,
           },
-        });
+        })
       }
       if (token.provider === 'unstoppable-authenticate') {
         userQuery = await prisma.whiteList.findFirst({
           where: {
             uathUser: token?.user?.uathUser,
           },
-        });
+        })
       }
-
-      session.profile = token.profile || null
       session.user = token.user
       session.provider = token.provider
 
-      session.user.isAdmin = false;
       session.user.twitter = userQuery?.twitterUserName || ''
       session.user.discord = userQuery?.discordUserDiscriminator || ''
       session.user.email = userQuery?.email || ''
       session.user.avatar = userQuery?.avatar || ''
       session.user.wallet = userQuery?.wallet || ''
       session.user.uathUser = userQuery?.uathUser || ''
-      session.user.userId = userQuery.userId;
+      session.user.userId = userQuery.userId
 
       return session
     },
@@ -312,7 +323,3 @@ export default (req, res) => {
   }
   return NextAuth(req, res, authOptions)
 }
-
-
-
-
