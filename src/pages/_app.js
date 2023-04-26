@@ -57,7 +57,6 @@ function MyApp({ Component, pageProps }) {
               strategy="lazyOnload"
               src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}`}
             />
-
             <Script strategy="lazyOnload">
               {`
                                 window.dataLayer = window.dataLayer || [];
@@ -73,7 +72,6 @@ function MyApp({ Component, pageProps }) {
                 <AnimatePresence mode="wait" initial={false} transitionDuration="0.2s">
                   <Component {...pageProps} key={router.asPath} />
                 </AnimatePresence>
-
                 <Analytics />
               </UserLayout>
             </ChakraProvider>

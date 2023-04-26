@@ -74,5 +74,9 @@
     "swr": "^1.2.1",
     "ts-jest": "^27.0.5",
     "typescript": "^4.9.4"
+  },
+  "browser":{
+    "prisma": false,
+    "cloudinary": false
   }
 }

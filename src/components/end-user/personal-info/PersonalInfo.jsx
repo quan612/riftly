@@ -1,26 +1,20 @@
 import React, { useContext, useEffect, useState, useCallback, useRef } from 'react'
 import { Web3Context } from '@context/Web3Context'
-import Enums from 'enums'
-import { ErrorMessage, Field, Form, Formik, useFormik } from 'formik'
+
+import { Field, Form, Formik } from 'formik'
 import {
   useToast,
   Heading,
   Box,
-  Container,
-  Flex,
   SimpleGrid,
   FormControl,
   FormLabel,
-  FormErrorMessage,
   Input,
   Switch,
-  Select,
-  Checkbox,
   GridItem,
   ButtonGroup,
   Button,
   Text,
-  Divider,
   Icon,
   useDisclosure,
   Image,

@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react'
 import Head from 'next/head'
-import { GetServerSideProps } from 'next'
 
-import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next'
+import { GetServerSidePropsContext } from 'next'
 import { getServerSession } from 'next-auth/next'
 import { authOptions } from 'pages/api/auth/[...nextauth]'
 import { ChakraBox } from '@theme/additions/framer/FramerChakraComponent'

@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { signIn, signOut } from 'next-auth/react'
-import { ethers, utils } from 'ethers'
-import axios from 'axios'
+// import { ethers } from 'ethers'
 import Enums from 'enums'
-import WalletConnectProvider from '@walletconnect/web3-provider'
-import UAuth from '@uauth/js'
+// import WalletConnectProvider from '@walletconnect/web3-provider'
+// import UAuth from '@uauth/js'
 
 export const Web3Context = React.createContext()
 export function Web3Provider({ session, children }) {
@@ -36,7 +35,7 @@ export function Web3Provider({ session, children }) {
     }
   }, [session])
 
-  const subscribeProvider = async (provider) => {
+  const subscribeProvider = useCallback(async (provider) => {
     provider.on('error', (e) => console.error('WS Error', e))
     provider.on('end', (e) => console.error('WS End', e))
 
@@ -55,13 +54,12 @@ export function Web3Provider({ session, children }) {
     provider.on('disconnect', async (error) => {
       SignOut()
     })
-  }
+  }, [])
 
-  const signInWithWallet = async (walletType, payload = null) => {
+  const signInWithWallet = useCallback(async (walletType, payload = null) => {
     if (!walletType) {
       throw new Error('Missing wallet type.')
     }
-
     if (payload) {
       //automatic sign in without sign message
       let { signature, address } = payload
@@ -77,13 +75,16 @@ export function Web3Provider({ session, children }) {
     }
     try {
       let addresses, providerInstance
+      const { ethers } = (await import('ethers')).default
 
       if (walletType === Enums.METAMASK) {
         providerInstance = new ethers.providers.Web3Provider(window.ethereum)
         addresses = await providerInstance.send('eth_requestAccounts', [])
         subscribeProvider(window.ethereum)
       } else if (walletType === Enums.WALLETCONNECT) {
-        let provider = new WalletConnectProvider({
+        const WalletConnectProvider = (await import('@walletconnect/web3-provider')).default
+
+        const provider = new WalletConnectProvider({
           infuraId: process.env.NEXT_PUBLIC_INFURA_ID,
           qrcodeModalOptions: {
             mobileLinks: ['trust', 'metamask', 'coinbase', 'rainbow'],
@@ -91,9 +92,7 @@ export function Web3Provider({ session, children }) {
           },
         })
         await provider.enable()
-
         providerInstance = new ethers.providers.Web3Provider(provider)
-
         addresses = provider?.accounts
         subscribeProvider(provider)
       }
@@ -101,18 +100,6 @@ export function Web3Provider({ session, children }) {
       if (addresses.length === 0) {
         throw new Error('Account is locked, or is not connected, or is in pending request.')
       }
-      // const user = await axios
-      //   .get(`${Enums.BASEPATH}/api/user`, {
-      //     params: {
-      //       address: addresses[0],
-      //     },
-      //   })
-      //   .then((r) => r.data)
-
-      // if (!user || user.isError) {
-      //   throw new Error('User not found, please sign up.')
-      // }
-
       const promise = new Promise((resolve, reject) => {
         let timeout = setTimeout(async function () {
           try {
@@ -151,20 +138,24 @@ export function Web3Provider({ session, children }) {
         throw error
       }
     }
-  }
+  }, [])
 
-  const signUpWithWallet = async (walletType) => {
+  const signUpWithWallet = useCallback(async (walletType) => {
     if (!walletType) {
       throw new Error('Missing type of wallet when trying to setup wallet provider')
     }
 
     let addresses, providerInstance
 
+    const { ethers } = (await import('ethers')).default
+
     if (walletType === Enums.METAMASK) {
       providerInstance = new ethers.providers.Web3Provider(window.ethereum)
       addresses = await providerInstance.send('eth_requestAccounts', [])
     } else if (walletType === Enums.WALLETCONNECT) {
-      let provider = new WalletConnectProvider({
+      const WalletConnectProvider = (await import('@walletconnect/web3-provider')).default
+
+      const provider = new WalletConnectProvider({
         infuraId: process.env.NEXT_PUBLIC_INFURA_ID,
         qrcodeModalOptions: {
           mobileLinks: ['trust'],
@@ -206,15 +197,17 @@ export function Web3Provider({ session, children }) {
     })
 
     return promise
-  }
+  }, [])
 
-  const SignOut = async () => {
+  const SignOut = useCallback(async () => {
     removeLocalStorageWalletConnect()
     removeLocalStorageUath()
     signOut()
-  }
+  }, [])
 
-  const unstoppableLogin = async (redirectUri) => {
+  const unstoppableLogin = useCallback(async (redirectUri) => {
+    const UAuth = (await import('@uauth/js')).default
+
     const uauth = new UAuth({
       clientID: process.env.NEXT_PUBLIC_UNSTOPPABLE_CLIENT_ID,
       redirectUri, //'https://www.riftly.xyz/user/sign-in',
@@ -224,7 +217,7 @@ export function Web3Provider({ session, children }) {
 
     if (!authorization) {
       console.log('no auth')
-      throw new Error('Missing authorization ')
+      throw new Error('Missing authorization')
     }
 
     await signIn('unstoppable-authenticate', {
@@ -232,7 +225,7 @@ export function Web3Provider({ session, children }) {
       authorization: JSON.stringify(authorization),
       callbackUrl: `${window.location.origin}`,
     })
-  }
+  }, [])
 
   return (
     <Web3Context.Provider
