@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { signIn, signOut } from 'next-auth/react'
-// import { ethers } from 'ethers'
+
 import Enums from 'enums'
 // import WalletConnectProvider from '@walletconnect/web3-provider'
 // import UAuth from '@uauth/js'
@@ -75,7 +75,7 @@ export function Web3Provider({ session, children }) {
     }
     try {
       let addresses, providerInstance
-      const { ethers } = (await import('ethers')).default
+      const { ethers } = await import('ethers')
 
       if (walletType === Enums.METAMASK) {
         providerInstance = new ethers.providers.Web3Provider(window.ethereum)
@@ -147,7 +147,7 @@ export function Web3Provider({ session, children }) {
 
     let addresses, providerInstance
 
-    const { ethers } = (await import('ethers')).default
+    const { ethers } = await import('ethers')
 
     if (walletType === Enums.METAMASK) {
       providerInstance = new ethers.providers.Web3Provider(window.ethereum)
