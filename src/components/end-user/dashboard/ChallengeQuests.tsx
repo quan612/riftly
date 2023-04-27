@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useRef, useContext } from 'react'
+import React, { useEffect, useState, useCallback, useContext } from 'react'
 
 import { Heading, Box, Flex, Text, Button, useToast } from '@chakra-ui/react'
 import { ChakraBox } from '@theme/additions/framer/FramerChakraComponent'
@@ -7,7 +7,6 @@ import { AnimatePresence } from 'framer-motion'
 import { useQueryClient } from 'react-query'
 
 import { HeadingLg, HeadingSm, TextSm } from '@components/shared/Typography'
-
 import { RiftlyIcon } from '@components/shared/Icons'
 import Loading from '@components/shared/LoadingContainer/Loading'
 
@@ -17,13 +16,12 @@ import { QUERY_USER_REWARD } from '@hooks/user/reward'
 
 const ChallengeQuests = () => {
   const [filterCompleted, filterCompletedSet] = useState(false)
-  const trackFirstRender = useRef(true)
-
   const { data: userQuests, isLoading: isFetchingUserQuests } = useUserQuestQuery()
+
 
   return (
     <Box display="flex" flexDirection={'column'} gap={'16px'} position={'relative'} minH="auto">
-      {isFetchingUserQuests && <Loading />}
+      {(isFetchingUserQuests  )&& <Loading />}
       <ChallengesHeader filterCompleted={filterCompleted} filterCompletedSet={filterCompletedSet} />
 
       <Box h="auto" display={'flex'} flexDirection={'column'} gap={'16px'}>

@@ -442,6 +442,7 @@ const UserTierAvatar = ({ avatar }) => {
     <Box
       className="quest-user-avatar"
       minW={{ base: '96px', lg: '128px' }}
+      w={{ base: '96px', lg: '128px' }}
       h="100%"
       display="flex"
       justifyContent="center"

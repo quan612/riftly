@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback, useContext } from 'react'
-import { Heading, Box, Flex, Button, Image, useToast } from '@chakra-ui/react'
+import { Heading, Box, Flex, Button, useToast } from '@chakra-ui/react'
 import { HeadingLg, HeadingSm, TextSm } from '@components/shared/Typography'
 import { ChakraBox } from '@theme/additions/framer/FramerChakraComponent'
 import { AnimatePresence } from 'framer-motion'
@@ -9,6 +9,7 @@ import { useQueryClient } from 'react-query'
 import { UserQuestContext } from '@context/UserQuestContext'
 import { QUERY_USER_REWARD } from '@hooks/user/reward'
 
+import Image from 'next/image'
 const FeatureQuests = () => {
   const { data: featureQuests, isLoading: isFetchingFeatureQuests } = useUserFeatureQuestQuery()
 
@@ -47,18 +48,14 @@ const FeatureCard = ({ quest }) => {
   return (
     <Box bg={'brand.neutral4'} borderRadius="16px" h="259px" w="auto" minW="200px" maxW="33%">
       <Flex direction={{ base: 'column' }} h="100%">
-        <Box
-          position="relative"
-          h="99px"
-          // h="37%" minH={'40%'} maxH="37%!important"
-          // flex="1"
-        >
+        <Box position="relative" h="99px" borderTopRadius="16px">
           <Image
-            boxSize={'100%'}
             src={quest?.image}
-            w={'100%'}
+            height="99px"
+            width="200px"
             borderTopRadius="16px"
-            fit={'cover'}
+            objectFit={'cover'}
+            style={{ borderTopLeftRadius: '16px', borderTopRightRadius: '16px' }}
           />
         </Box>
         <Flex flexDirection="column" pt="16px" px="12px" flex="1" gap="4px">

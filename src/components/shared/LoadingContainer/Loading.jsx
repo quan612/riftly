@@ -1,5 +1,5 @@
-import React from 'react'
-import { Image, Input, ModalOverlay, Modal, ModalContent, ModalBody } from '@chakra-ui/react'
+import { ModalOverlay, Modal, ModalContent } from '@chakra-ui/react'
+import Image from 'next/image'
 
 export default function Loading() {
   return (
@@ -13,12 +13,14 @@ export default function Loading() {
         alignItems="center"
         justifyContent={'center'}
         boxShadow="none"
+        className="loading"
       >
         <Image
           position={'absolute'}
-          src="/img/user/loading.gif"
-          w={{ base: '100px', lg: '150px' }}
-          fit={'fill'}
+          src="/img/user/loading.webp"
+          width="150px"
+          height="70px"
+          objectFit="cover"
         />
       </ModalContent>
     </Modal>

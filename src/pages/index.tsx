@@ -13,7 +13,7 @@ import UserQuestProvider from '@context/UserQuestContext'
 
 const RiftlyIndividualQuestBoardComponent = dynamic(() =>
   import('@components/end-user/dashboard/RiftlyIndividualQuestBoard'), {
-    ssr: false
+    ssr: true
   }
 )
 
