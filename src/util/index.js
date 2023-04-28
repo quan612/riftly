@@ -49,9 +49,11 @@ export const getUserName = (session) => {
     case 'unstoppable-authenticate':
       return session?.user?.uathUser
     case 'discord':
-      return session?.profile?.username + '#' + session?.profile?.discriminator
+      // return session?.profile?.username + '#' + session?.profile?.discriminator
+      return session?.user?.discord;
     case 'twitter':
-      return session?.profile?.data?.username
+      // return session?.profile?.data?.username
+      return session?.user?.twitter;
     case 'email':
       return session?.user?.email
     default:
