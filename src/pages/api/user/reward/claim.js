@@ -1,7 +1,7 @@
 import { prisma } from '@context/PrismaContext'
 import whitelistUserMiddleware from 'middlewares/whitelistUserMiddleware'
-import axios from 'axios'
-import { updateClaimAndPendingRewardTransaction } from 'repositories/transactions'
+// import axios from 'axios'
+// import { updateClaimAndPendingRewardTransaction } from 'repositories/transactions'
 
 const userClaimRewardAPI = async (req, res) => {
   const { method } = req

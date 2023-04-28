@@ -82,7 +82,7 @@ export function Web3Provider({ session, children }) {
         addresses = await providerInstance.send('eth_requestAccounts', [])
         subscribeProvider(window.ethereum)
       } else if (walletType === Enums.WALLETCONNECT) {
-        const WalletConnectProvider = (await import('@walletconnect/web3-provider')).default
+        const WalletConnectProvider = await import('@walletconnect/web3-provider')
 
         const provider = new WalletConnectProvider({
           infuraId: process.env.NEXT_PUBLIC_INFURA_ID,
@@ -153,7 +153,7 @@ export function Web3Provider({ session, children }) {
       providerInstance = new ethers.providers.Web3Provider(window.ethereum)
       addresses = await providerInstance.send('eth_requestAccounts', [])
     } else if (walletType === Enums.WALLETCONNECT) {
-      const WalletConnectProvider = (await import('@walletconnect/web3-provider')).default
+      const WalletConnectProvider = await import('@walletconnect/web3-provider')
 
       const provider = new WalletConnectProvider({
         infuraId: process.env.NEXT_PUBLIC_INFURA_ID,
@@ -206,7 +206,7 @@ export function Web3Provider({ session, children }) {
   }, [])
 
   const unstoppableLogin = useCallback(async (redirectUri) => {
-    const UAuth = (await import('@uauth/js')).default
+    const UAuth = await import('@uauth/js')
 
     const uauth = new UAuth({
       clientID: process.env.NEXT_PUBLIC_UNSTOPPABLE_CLIENT_ID,

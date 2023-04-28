@@ -8,20 +8,22 @@ import withExceptionFilter from '@middlewares/withExceptionFilter'
 
 const { default: Resolution } = require('@unstoppabledomains/resolution')
 
-const submitUnstoppableAuthQuest = async (req, res) => {
-  const { method } = req
-  const whiteListUser = req.whiteListUser
+import { NextApiResponse } from 'next'
+import { WhiteListApiRequest } from 'types/common'
+import { UserQuest } from 'models/user-quest'
+
+const submitUnstoppableAuthQuest = async (req: WhiteListApiRequest, res: NextApiResponse) => {
+  if (req.method !== 'POST') {
+    return res.json({ isError: true, message: 'Only POST' })
+  }
+  const {userId} = req.whiteListUser
   const { questId, uauthUser } = req.body
   const currentQuest = req.currentQuest
   let userQuest
 
   // checking validity of uauthUser
   const resolution = new Resolution()
-  let walletOwner = await resolution.owner(uauthUser)
-
-  if (method !== "POST") {
-    throw new Error('Only for post request')
-  }
+  const walletOwner = await resolution.owner(uauthUser)
 
   if (!uauthUser) {
     throw new Error('Missing unstoppable domain account.')
@@ -29,8 +31,16 @@ const submitUnstoppableAuthQuest = async (req, res) => {
   if (currentQuest.type.name !== Enums.UNSTOPPABLE_AUTH) {
     throw new Error('Wrong route')
   }
+  const currentUserQuest: UserQuest = await prisma.userQuest.findUnique({
+    where: {
+      userId_questId: { userId, questId },
+    },
+  })
+  if (currentUserQuest) {
+    throw new Error('This quest has been submitted before')
+  }
 
-  let existingUnstoppableUser = await prisma.whiteList.findFirst({
+  const existingUnstoppableUser = await prisma.whiteList.findFirst({
     where: {
       uathUser: uauthUser,
     },
@@ -42,9 +52,9 @@ const submitUnstoppableAuthQuest = async (req, res) => {
 
   await fivePerMinuteRateLimit(req, res)
 
-  let entry = await prisma.UserQuest.findUnique({
+  const entry = await prisma.userQuest.findUnique({
     where: {
-      userId_questId: { userId: whiteListUser.userId, questId },
+      userId_questId: { userId: userId, questId },
     },
   })
 
@@ -52,9 +62,7 @@ const submitUnstoppableAuthQuest = async (req, res) => {
     throw new Error('This quest already submitted before')
   }
 
-
-  await updateUserUnstoppabbleTransaction(questId, whiteListUser?.userId, uauthUser)
-
+  await updateUserUnstoppabbleTransaction(questId, userId, uauthUser)
   res.status(200).json(userQuest)
 }
 

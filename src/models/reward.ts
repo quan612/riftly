@@ -32,6 +32,6 @@ export interface Reward {
   quantity: number,
   createdAt: Date,
   updatedAt: Date,
-  rewardType: RewardType,
+  rewardType?: RewardType,
   userId?: string,
 }

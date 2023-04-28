@@ -45,7 +45,7 @@ export interface UserQuest {
   createdAt: Date,
   rewardedQty?: number,
   rewardedTypeId?: number,
-  quest: Quest,
+  quest?: Quest,
   rewardType?: RewardType,
   updatedAt: Date,
   isHidden: boolean,

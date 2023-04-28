@@ -1,3 +1,5 @@
+import { QuestDuration, QuestStyle } from "@prisma/client";
+import { QuestType } from "./quest-type";
 import { RewardType } from "./reward-type";
 import { UserQuest } from "./user-quest";
 
@@ -47,7 +49,7 @@ import { UserQuest } from "./user-quest";
  * */
 export interface Quest {
   id: number,
-  // type: QuestType,
+  type?: QuestType,
   text: string,
   completedText: string,
   rewardTypeId: number,
@@ -60,10 +62,16 @@ export interface Quest {
   questId: string,
   createdAt: Date,
   updatedAt: Date,
-  rewardType: RewardType,
-  userQuests: UserQuest[],
+  rewardType?: RewardType,
+  userQuests?: UserQuest[],
   questTypeId: number,
-  // style: QuestStyle,
-  // duration: QuestDuration,
+  style: QuestStyle,
+  duration: QuestDuration,
   image?: string,
+}
+
+export interface QuestQuery extends Quest {
+  isClaimable?: boolean,
+  hasClaimed?: boolean,
+  rewardedQty?: number
 }

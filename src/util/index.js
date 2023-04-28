@@ -63,7 +63,7 @@ export const getUserName = (session) => {
 // these are configs that can be queried on client side
 export const getDiscordAuthLink = async () => {
   const discordIdConfig = await axios
-    .get(`${Enums.BASEPATH}/api/user/configs?type=discordId`)
+    .get(`${Enums.BASEPATH}/api/user/configs/query?type=discordId`)
     .then((r) => r.data)
 
   if (!discordIdConfig) {
@@ -75,7 +75,7 @@ export const getDiscordAuthLink = async () => {
 
 export const getTwitterAuthLink = async () => {
   const twitterIdConfig = await axios
-    .get(`${Enums.BASEPATH}/api/user/configs?type=twitterId`)
+    .get(`${Enums.BASEPATH}/api/user/configs/query?type=twitterId`)
     .then((r) => r.data)
 
   if (!twitterIdConfig) {

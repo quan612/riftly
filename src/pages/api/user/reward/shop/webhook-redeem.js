@@ -81,8 +81,8 @@ const handler = async (req, res) => {
     })
   }
 }
-export default handler
-// export default alchemyWebhookMiddleware(handler)
+// export default handler
+export default alchemyWebhookMiddleware(handler)
 
 
 /*alternative to decode

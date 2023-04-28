@@ -1,7 +1,8 @@
 import { prisma } from '../context/PrismaContext'
 import { utils } from 'ethers'
+import { Session } from 'next-auth'
 
-export const isWhiteListUser = async (session) => {
+export const isWhiteListUser = async (session: Session) => {
   if (!session) {
     return null
   }

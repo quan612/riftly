@@ -11,11 +11,12 @@ import { getShopRequirementCost } from 'repositories/shop'
 import { CURRENT_NETWORK } from 'const/GlobalData'
 import { redeemShopRateLimit } from '@middlewares/applyRateLimit'
 
+import { NextApiResponse } from 'next'
+import { WhiteListApiRequest } from 'types/common'
 
-const handler = async (req, res) => {
-  const { method } = req
+const handler = async (req: WhiteListApiRequest, res: NextApiResponse) => {
 
-  if (method !== 'POST') {
+  if (req.method !== 'POST') {
     return res.status(200).json({
       isError: true,
       message: `Post only`,
@@ -40,17 +41,17 @@ const handler = async (req, res) => {
     const { cost, rewardTypeId } = await getShopRequirementCost(shopItem.requirements);
 
     await prisma.$transaction(
-      async (tx) => {
+      async (tx:any) => {
         await tx.$executeRaw`select * from public."ShopItemRedeem" p where p."status"='AVAILABLE' FOR UPDATE;`;
         await sleep(3000)
 
-        let result = await tx.$executeRaw`UPDATE "ShopItemRedeem" SET "userId"=${userId}, "status"='PENDING' where "id" in (select id from public."ShopItemRedeem" p where p."status" = 'AVAILABLE' and p."shopItemId"=${shopItemId}limit 1);`;
+        const result = await tx.$executeRaw`UPDATE "ShopItemRedeem" SET "userId"=${userId}, "status"='PENDING' where "id" in (select id from public."ShopItemRedeem" p where p."status" = 'AVAILABLE' and p."shopItemId"=${shopItemId}limit 1);`;
 
         if (result === 0) {
           throw new Error(`${shopItem.title} is redeemed all`)
         }
 
-        await tx.Reward.update({
+        await tx.reward.update({
           where: {
             userId_rewardTypeId: { userId, rewardTypeId },
           },
@@ -74,8 +75,6 @@ const handler = async (req, res) => {
       NEXT_PUBLIC_INFURA_ID,
       INFURA_SECRET,
     } = process.env
-
-
 
     const redeemContractAddress = CURRENT_NETWORK.CONTRACT_ADDRESSES.REDEEM;
     const redeemedSlot = await prisma.shopItemRedeem.findFirst({
@@ -108,7 +107,9 @@ const handler = async (req, res) => {
       const decimal = await ercContract.decimals()
       const multiplier = shopItem.multiplier;
 
-      const amount = ethers.utils.parseUnits("1", decimal) * multiplier;
+      const parseDecimal =  ethers.utils.parseUnits("1", decimal);
+      // const amount: ethers.BigNumber = parseDecimal * multiplier;
+      const amount = parseDecimal.mul(multiplier);
       const slotId = redeemedSlot.id
       console.log("slot: ", slotId)
 
@@ -123,7 +124,7 @@ const handler = async (req, res) => {
 
       const transactionHash = tx.hash
 
-      let extendedRedeemData = {
+      const extendedRedeemData = {
         transactionHash: transactionHash
       }
 
@@ -153,7 +154,7 @@ const handler = async (req, res) => {
 
       const transactionHash = tx.hash
 
-      let extendedRedeemData = {
+      const extendedRedeemData = {
         transactionHash: transactionHash
       }
 
@@ -191,7 +192,7 @@ function getContract(signerWallet, contractAddress, contractAbi) {
 
 
 function getRedeemContract(signerWallet, redeemContractAddress) {
-  let redeemContractJson = require('./redeem-contract.json')
+  const redeemContractJson = require('./redeem-contract.json')
 
   return new ethers.Contract(
     utils.getAddress(redeemContractAddress),

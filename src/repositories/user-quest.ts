@@ -1,7 +1,7 @@
 import { prisma } from '@context/PrismaContext'
 
 export const getUserQuest = async (userId, questId) => {
-  return await prisma.UserQuest.findUnique({
+  return await prisma.userQuest.findUnique({
     where: {
       userId_questId: { userId, questId },
     },
@@ -9,7 +9,7 @@ export const getUserQuest = async (userId, questId) => {
 }
 
 export const trackCorrectCodeQuestSubmit = async (userId, questId, extendedUserQuestData) => {
-  return await prisma.UserQuest.upsert({
+  return await prisma.userQuest.upsert({
     where: {
       userId_questId: { userId, questId },
     },
@@ -27,7 +27,7 @@ export const trackCorrectCodeQuestSubmit = async (userId, questId, extendedUserQ
 }
 
 export const trackWrongCodeQuestSubmit = async (userId, questId, extendedUserQuestData) => {
-  return await prisma.UserQuest.upsert({
+  return await prisma.userQuest.upsert({
     where: {
       userId_questId: { userId, questId },
     },

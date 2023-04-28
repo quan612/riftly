@@ -1,9 +1,12 @@
 import whitelistUserMiddleware from 'middlewares/whitelistUserMiddleware'
 import { prisma } from '@context/PrismaContext'
-let cloudinary = require('cloudinary').v2
+const cloudinary = require('cloudinary').v2
+import { NextApiResponse } from 'next'
+import { WhiteListApiRequest } from 'types/common'
+
 
 //@TODO: rate limit
-const AvatarUploadAPI = async (req, res) => {
+const AvatarUploadAPI = async (req: WhiteListApiRequest, res: NextApiResponse) => {
   const { method } = req
 
   switch (method) {
@@ -12,7 +15,7 @@ const AvatarUploadAPI = async (req, res) => {
         const whiteListUser = req.whiteListUser
         const { data } = req.body
 
-        let variables = await prisma.configImageHosting.findFirst()
+        const variables = await prisma.configImageHosting.findFirst()
         const { cloudinaryKey, cloudinaryName, cloudinarySecret, avatarPreset } = variables
         if (!cloudinaryKey || !cloudinaryName || !cloudinarySecret) {
           throw new Error('Missing upload configurations')
@@ -24,7 +27,7 @@ const AvatarUploadAPI = async (req, res) => {
           api_secret: cloudinarySecret,
         })
 
-        let uploaded = await cloudinary.uploader.upload(data, {
+        const uploaded = await cloudinary.uploader.upload(data, {
           public_id: whiteListUser.userId,
           upload_preset: avatarPreset,
         })

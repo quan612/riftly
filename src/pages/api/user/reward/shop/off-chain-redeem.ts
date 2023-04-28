@@ -1,16 +1,15 @@
 import { prisma } from '@context/PrismaContext'
 import whitelistUserMiddleware from 'middlewares/whitelistUserMiddleware'
 
-import { Prisma, RedeemStatus } from '@prisma/client'
 import { sleep } from '@util/index'
 import redeemMiddleware from '@middlewares/redeemMiddleware'
 import { getShopRequirementCost } from 'repositories/shop'
-import { redeemShopRateLimit } from '@middlewares/applyRateLimit'
+import { NextApiResponse } from 'next'
+import { WhiteListApiRequest } from 'types/common'
 
-const handler = async (req, res) => {
-  const { method } = req
-  console.log("off-chain")
-  if (method !== 'POST') {
+const handler = async (req: WhiteListApiRequest, res: NextApiResponse) => {
+
+  if (req.method !== 'POST') {
     return res.status(200).json({
       isError: true,
       message: `Post only`,
@@ -24,19 +23,18 @@ const handler = async (req, res) => {
   const { cost, rewardTypeId } = await getShopRequirementCost(shopItem.requirements);
   try {
 
-    // let result;
     await prisma.$transaction(
-      async (tx) => {
+      async (tx: any) => {
         await tx.$executeRaw`select * from public."ShopItemRedeem" p where p."status"='AVAILABLE' FOR UPDATE;`;
         await sleep(3000)
 
-        let result = await tx.$executeRaw`UPDATE "ShopItemRedeem" SET "userId"=${userId}, "status"='REDEEMED' where "id" in (select id from public."ShopItemRedeem" p where p."status" = 'AVAILABLE' and p."shopItemId"=${shopItemId} limit 1);`;
+        const result = await tx.$executeRaw`UPDATE "ShopItemRedeem" SET "userId"=${userId}, "status"='REDEEMED' where "id" in (select id from public."ShopItemRedeem" p where p."status" = 'AVAILABLE' and p."shopItemId"=${shopItemId} limit 1);`;
 
         if (result === 0) {
           throw new Error("Redeem Slot is occupied. No more slot available")
         }
 
-        await tx.Reward.update({
+        await tx.reward.update({
           where: {
             userId_rewardTypeId: { userId, rewardTypeId },
           },

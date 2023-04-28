@@ -14,6 +14,7 @@ declare module "next-auth/jwt" {
 declare module 'next-auth' {
   export interface Session {
     user: {
+      id?: string
       wallet?: string
       twitter?: string
       discord?: string

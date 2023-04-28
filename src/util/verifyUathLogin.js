@@ -76,7 +76,6 @@ const verifyUathLogin = async (authorization, client_id) => {
       'https://auth.unstoppabledomains.com/.well-known/openid-configuration'
     );
     const { jwks_uri, issuer } = data;
-    console.log(authorization)
 
     const verifyIdTokenResponse = await verifyIdToken(
       jwks_uri, // OpenID arg

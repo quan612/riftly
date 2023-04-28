@@ -1,7 +1,10 @@
 import whitelistUserMiddleware from 'middlewares/whitelistUserMiddleware'
-let cloudinary = require('cloudinary').v2
+// let cloudinary = require('cloudinary').v2
+import { NextApiResponse } from 'next'
+import { WhiteListApiRequest } from 'types/common'
 
-const ImageUploadAPI = async (req, res) => {
+
+const handler = async (req: WhiteListApiRequest, res: NextApiResponse) => {
   const { method } = req
 
   switch (method) {
@@ -41,7 +44,7 @@ const ImageUploadAPI = async (req, res) => {
 //       res.status(405).end(`Method ${method} Not Allowed`)
 //   }
 // }
-export default whitelistUserMiddleware(ImageUploadAPI)
+export default whitelistUserMiddleware(handler)
 export const config = {
   api: {
     bodyParser: {

@@ -5,7 +5,7 @@ import { WhiteList } from "./whitelist";
 
 export interface ShopItemRedeem {
   id: number,
-  shopItem: ShopItem,
+  shopItem?: ShopItem,
   shopItemId: number,
   redeemedBy?: WhiteList,
   userId?: string,

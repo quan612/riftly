@@ -203,7 +203,7 @@ export const useImageUploadSubmit = () => {
   const { data, error, isLoading, mutateAsync } = useMutation(
     (quest) => {
       return axios
-        .post(`${Enums.BASEPATH}/api/user/quest/submit/image-upload`, quest)
+        .post(`${Enums.BASEPATH}/api/user/quest/submit/image-upload/general`, quest)
         .then((r) => r.data)
     },
     {

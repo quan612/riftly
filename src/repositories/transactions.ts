@@ -3,23 +3,23 @@ import { prisma } from 'context/PrismaContext'
 import { getAccountStatusToAdd } from './user'
 
 export const updateTwitterUserQuestTransaction = async (quest, userId, userInfo) => {
-  let { questId } = quest
+  const { questId } = quest
   const { id, username } = userInfo
 
   if (!id || !username) {
     throw new Error('Cannot get twitter id or twitter username from auth')
   }
-  let accountStatus = await getAccountStatusToAdd()
+  const accountStatus = await getAccountStatusToAdd()
 
   if (userId) {
-    let updatedUser = prisma.whiteList.update({
+    const updatedUser = prisma.whiteList.update({
       where: { userId },
       data: {
         twitterId: id,
         twitterUserName: username,
       },
     })
-    let userQuest = prisma.UserQuest.create({
+    const userQuest = prisma.userQuest.create({
       data: {
         userId,
         questId,
@@ -28,7 +28,7 @@ export const updateTwitterUserQuestTransaction = async (quest, userId, userInfo)
     })
     await prisma.$transaction([updatedUser, userQuest])
   } else {
-    let newUser = await prisma.whiteList.create({
+    const newUser = await prisma.whiteList.create({
       data: {
         twitterId: id,
         twitterUserName: username,
@@ -37,7 +37,7 @@ export const updateTwitterUserQuestTransaction = async (quest, userId, userInfo)
       },
     })
     if (newUser) {
-      await prisma.UserQuest.create({
+      await prisma.userQuest.create({
         data: {
           userId: newUser.userId,
           questId,
@@ -55,7 +55,7 @@ export const updateDiscordUserQuestTransaction = async (questId, userId, userInf
     throw new Error('Cannot get twitter id or twitter username from auth')
   }
   if (userId) {
-    let updatedUser = prisma.whiteList.update({
+    const updatedUser = prisma.whiteList.update({
       where: { userId },
       data: {
         discordId: id,
@@ -63,7 +63,7 @@ export const updateDiscordUserQuestTransaction = async (questId, userId, userInf
       },
     })
 
-    let userQuest = prisma.userQuest.create({
+    const userQuest = prisma.userQuest.create({
       data: {
         userId,
         questId,
@@ -73,8 +73,8 @@ export const updateDiscordUserQuestTransaction = async (questId, userId, userInf
 
     await prisma.$transaction([updatedUser, userQuest])
   } else {
-    let accountStatus = await getAccountStatusToAdd()
-    let newUser = await prisma.whiteList.create({
+    const accountStatus = await getAccountStatusToAdd()
+    const newUser = await prisma.whiteList.create({
       data: {
         discordId: id,
         discordUserDiscriminator: `${username}#${discriminator}`,
@@ -97,14 +97,14 @@ export const updateDiscordUserQuestTransaction = async (questId, userId, userInf
 export const updateUserWalletTransaction = async (questId, userId, wallet) => {
 
   if (userId) {
-    let updatedUser = prisma.whiteList.update({
+    const updatedUser = prisma.whiteList.update({
       where: { userId },
       data: {
         wallet,
       },
     })
 
-    let userQuest = prisma.userQuest.create({
+    const userQuest = prisma.userQuest.create({
       data: {
         userId,
         questId,
@@ -114,8 +114,8 @@ export const updateUserWalletTransaction = async (questId, userId, wallet) => {
 
     await prisma.$transaction([updatedUser, userQuest])
   } else {
-    let accountStatus = await getAccountStatusToAdd()
-    let newUser = await prisma.whiteList.create({
+    const accountStatus = await getAccountStatusToAdd()
+    const newUser = await prisma.whiteList.create({
       data: {
         wallet,
         status: accountStatus,
@@ -142,13 +142,13 @@ export const updateUserUnstoppabbleTransaction = async (
 ) => {
 
   if (userId) {
-    let updatedUser = prisma.whiteList.update({
+    const updatedUser = prisma.whiteList.update({
       where: { userId },
       data: {
         uathUser: uauthUser,
       },
     })
-    let userQuest = prisma.userQuest.create({
+    const userQuest = prisma.userQuest.create({
       data: {
         userId,
         questId,
@@ -159,8 +159,8 @@ export const updateUserUnstoppabbleTransaction = async (
     await prisma.$transaction([updatedUser, userQuest])
   } else {
     // this else may never happens as we only allow this quest to be summitted once login with other auth
-    let accountStatus = await getAccountStatusToAdd()
-    let newUser = await prisma.whiteList.create({
+    const accountStatus = await getAccountStatusToAdd()
+    const newUser = await prisma.whiteList.create({
       data: {
         uathUser: uauthUser,
         status: accountStatus,
@@ -213,12 +213,11 @@ export const submitUserDailyQuestTransaction = async (questId, extendedUserQuest
       extendedUserQuestData,
     },
   })
-
 }
 
 export const claimUserQuestTransaction = async (questId, rewardTypeId, quantity, userId) => {
 
-  let claimedReward = prisma.reward.upsert({
+  const claimedReward = prisma.reward.upsert({
     where: {
       userId_rewardTypeId: { userId, rewardTypeId },
     },
@@ -234,7 +233,7 @@ export const claimUserQuestTransaction = async (questId, rewardTypeId, quantity,
     },
   })
 
-  let userQuest = prisma.userQuest.update({
+  const userQuest = prisma.userQuest.update({
     where: {
       userId_questId: { userId, questId },
     },
@@ -257,10 +256,7 @@ export const claimUserDailyQuestTransaction = async (
   extendedUserQuestData,
   userId,
 ) => {
-
-  console.log(`**Upsert daily quest**`)
-
-  let claimedReward = prisma.Reward.upsert({
+  const claimedReward = prisma.reward.upsert({
     where: {
       userId_rewardTypeId: { userId, rewardTypeId },
     },
@@ -276,7 +272,7 @@ export const claimUserDailyQuestTransaction = async (
     },
   })
 
-  let userQuest = prisma.UserQuest.upsert({
+  const userQuest = prisma.userQuest.upsert({
     where: {
       userId_questId: { userId, questId },
     },
@@ -305,9 +301,9 @@ export const updateClaimAndPendingRewardTransaction = async (
   console.log(`** Claiming Reward ${generatedURL} **`)
   const { userId } = whiteListUser
 
-  let quantity = pendingReward.quantity
+  const quantity = pendingReward.quantity
 
-  let claimedReward = prisma.reward.upsert({
+  const claimedReward = prisma.reward.upsert({
     where: {
       userId_rewardTypeId: { userId, rewardTypeId },
     },
@@ -330,8 +326,8 @@ export const updateClaimAndPendingRewardTransaction = async (
     },
   })
 
-  console.log(`** Updating reward ${generatedURL} to claimed **`)
-  let updatePendingReward = prisma.pendingReward.update({
+
+  const updatePendingReward = prisma.pendingReward.update({
     where: {
       userId_rewardTypeId_generatedURL: {
         userId,
@@ -345,7 +341,5 @@ export const updateClaimAndPendingRewardTransaction = async (
   })
 
   await prisma.$transaction([claimedReward, updatePendingReward])
-
   return claimedReward
-
 }

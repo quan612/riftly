@@ -1,4 +1,4 @@
-import { AccountStatus, ItemType } from "@prisma/client"; // need to use enums from prisma
+import { AccountStatus, ContractType, ItemType } from "@prisma/client"; // need to use enums from prisma
 import { ShopItemRequirement } from "./shop-item-requirement";
 import { ShopItemRedeem } from "./shop-item-redeem";
 
@@ -11,10 +11,13 @@ export interface ShopItem {
   maxPerAccount: number,
   multiplier: number,
   isEnabled: boolean,
-  requirements: ShopItemRequirement[],
+  requirements?: ShopItemRequirement[],
   itemType: ItemType,
-  shopItemRedeem: ShopItemRedeem[],
+  shopItemRedeem?: ShopItemRedeem[],
   contractAddress?: string,
-  // contractType?: ContractType,
+  contractType?: ContractType,
   abi?: any,
+  isRedeemable?: boolean,
+  cost?: number,
+  redeemAvailable?: number
 }
