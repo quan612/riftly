@@ -34,7 +34,6 @@ function getLevel(points) {
 }
 
 const UserTierLevel = React.forwardRef(({ session }, levelProgress) => {
-  console.log(session)
   const [userRewards, userRewardLoading] = useUserRewardQuery(session)
   const [avatar] = useState(session?.user?.avatar)
 

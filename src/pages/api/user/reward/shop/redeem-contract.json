@@ -143,6 +143,29 @@
 		"inputs": [
 			{
 				"internalType": "address",
+				"name": "_nftContract",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "_receiver",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_slotId",
+				"type": "uint256"
+			}
+		],
+		"name": "redeemERC721A",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
 				"name": "_collection",
 				"type": "address"
 			}
@@ -463,11 +486,30 @@
 		"inputs": [
 			{
 				"internalType": "address",
-				"name": "account",
+				"name": "_nftContract",
 				"type": "address"
 			}
 		],
-		"name": "testBalanceOf",
+		"name": "testERC721ATokensOfOwner",
+		"outputs": [
+			{
+				"internalType": "uint256[]",
+				"name": "",
+				"type": "uint256[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_nftContract",
+				"type": "address"
+			}
+		],
+		"name": "testERC721BalanceOf",
 		"outputs": [
 			{
 				"internalType": "uint256",

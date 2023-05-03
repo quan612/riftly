@@ -186,7 +186,8 @@ const RewardCard = ({ image, item }) => {
               <Box color="white" p={3} bg="green.300" borderRadius={'16px'}>
                 <HeadingLg color="green.600">Successful</HeadingLg>
                 <Link
-                  href={`${CURRENT_NETWORK.explorer}/tx/${res?.message}`}
+                  // href={`${CURRENT_NETWORK.explorer}/tx/${res?.message}`}
+                  href={`${res?.message}`}
                   target="_blank"
                   color="black"
                   fontSize={'lg'}

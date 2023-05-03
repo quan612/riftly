@@ -19,5 +19,7 @@ export interface ShopItem {
   abi?: any,
   isRedeemable?: boolean,
   cost?: number,
-  redeemAvailable?: number
+  redeemAvailable?: number,
+  chain: string,
+  network: string
 }

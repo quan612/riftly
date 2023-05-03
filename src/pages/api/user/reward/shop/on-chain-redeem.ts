@@ -13,6 +13,7 @@ import { redeemShopRateLimit } from '@middlewares/applyRateLimit'
 
 import { NextApiResponse } from 'next'
 import { WhiteListApiRequest } from 'types/common'
+import { Chain, Network } from 'models/chain'
 
 const handler = async (req: WhiteListApiRequest, res: NextApiResponse) => {
 
@@ -43,7 +44,7 @@ const handler = async (req: WhiteListApiRequest, res: NextApiResponse) => {
     await prisma.$transaction(
       async (tx:any) => {
         await tx.$executeRaw`select * from public."ShopItemRedeem" p where p."status"='AVAILABLE' FOR UPDATE;`;
-        await sleep(3000)
+        await sleep(500)
 
         const result = await tx.$executeRaw`UPDATE "ShopItemRedeem" SET "userId"=${userId}, "status"='PENDING' where "id" in (select id from public."ShopItemRedeem" p where p."status" = 'AVAILABLE' and p."shopItemId"=${shopItemId}limit 1);`;
 
@@ -72,11 +73,10 @@ const handler = async (req: WhiteListApiRequest, res: NextApiResponse) => {
     /* actual redeeming on-chain */
     const {
       OPERATION_WALLET_PRIVATE_KEY,
-      NEXT_PUBLIC_INFURA_ID,
-      INFURA_SECRET,
+
     } = process.env
 
-    const redeemContractAddress = CURRENT_NETWORK.CONTRACT_ADDRESSES.REDEEM;
+    
     const redeemedSlot = await prisma.shopItemRedeem.findFirst({
       where: {
         shopItemId,
@@ -87,16 +87,24 @@ const handler = async (req: WhiteListApiRequest, res: NextApiResponse) => {
       }
     })
 
-    const infuraProvider = new ethers.providers.InfuraProvider('goerli', {
-      projectId: NEXT_PUBLIC_INFURA_ID,
-      projectSecret: INFURA_SECRET,
-    })
+    // const redeemContractAddress = CURRENT_NETWORK.CONTRACT_ADDRESSES.REDEEM;
+
+    const chain = shopItem?.chain;
+    const network = shopItem?.network;
+
+
+    const redeemContractAddress = getRedeemContractAddress(chain, network);
+    console.log("redeemContractAddress: ", redeemContractAddress)
+
+    const infuraProvider = getInfuraProvider(chain, network)
 
     const signerWallet = new ethers.Wallet(`0x${OPERATION_WALLET_PRIVATE_KEY}`, infuraProvider)
 
     const redeemContract = getRedeemContract(signerWallet, redeemContractAddress)
 
     const options = await getTransactionOption(infuraProvider)
+
+    console.log("gasPrice: ", options.gasPrice.toString())
 
     let tx;
 
@@ -140,10 +148,11 @@ const handler = async (req: WhiteListApiRequest, res: NextApiResponse) => {
     }
 
     if (shopItem.contractType === ContractType.ERC721) { // getting decimals of ERC20 contract
+      
       const contractAddress = shopItem?.contractAddress;
       const slotId = redeemedSlot.id
 
-      console.log("slot: ", slotId)
+      // console.log("slot: ", slotId)
 
       tx = await redeemContract.redeemERC721(
         contractAddress,
@@ -166,7 +175,46 @@ const handler = async (req: WhiteListApiRequest, res: NextApiResponse) => {
           extendedRedeemData
         }
       })
-      return res.status(200).json({ message: transactionHash })
+
+      // return res.status(200).json({ message: transactionHash })
+
+      const etherscanLink = getEtherscanLink(chain, network, transactionHash)
+      return res.status(200).json({ message: etherscanLink })
+    }
+    if (shopItem.contractType === ContractType.ERC721A) { 
+    console.log("handling erc721A")
+      const contractAddress = shopItem?.contractAddress;
+      const slotId = redeemedSlot.id
+
+      // console.log("slot: ", slotId)
+
+      tx = await redeemContract.redeemERC721A(
+        contractAddress,
+        wallet,
+        slotId,
+        options
+      )
+
+      const transactionHash = tx.hash
+
+      const extendedRedeemData = {
+        transactionHash: transactionHash
+      }
+
+      await prisma.shopItemRedeem.update({
+        where: {
+          id: redeemedSlot.id
+        },
+        data: {
+          extendedRedeemData
+        }
+      })
+      // return res.status(200).json({ message: transactionHash })
+
+      // const transactionHash="0x02fd9067e38fbd11758bd8c794f08aad9d04c233614625b6787886f1f34aea7b"
+
+      const etherscanLink = getEtherscanLink(chain, network, transactionHash)
+      return res.status(200).json({ message: etherscanLink })
     }
     return res.status(200).json({ isError: true, message: "Unhandled contract type" })
 
@@ -180,7 +228,6 @@ const handler = async (req: WhiteListApiRequest, res: NextApiResponse) => {
 }
 export default whitelistUserMiddleware(redeemMiddleware(handler))
 
-
 function getContract(signerWallet, contractAddress, contractAbi) {
 
   return new ethers.Contract(
@@ -192,7 +239,9 @@ function getContract(signerWallet, contractAddress, contractAbi) {
 
 
 function getRedeemContract(signerWallet, redeemContractAddress) {
+
   const redeemContractJson = require('./redeem-contract.json')
+
 
   return new ethers.Contract(
     utils.getAddress(redeemContractAddress),
@@ -200,14 +249,121 @@ function getRedeemContract(signerWallet, redeemContractAddress) {
     signerWallet,
   )
 }
-
 async function getTransactionOption(infuraProvider) {
   const feeData = await infuraProvider.getFeeData()
   return {
     gasPrice: feeData.gasPrice.mul(110).div(100), //ethers.utils.parseUnits('200', 'gwei'),//gasPrice,        //ethers.utils.parseUnits('255', 'gwei'),
   }
 }
-
 function parse(data) {
   return ethers.utils.parseUnits(Math.ceil(data) + '', 'gwei');
+}
+const getEtherscanLink = (chain, network, transactionHash) => {
+
+  if(chain === Chain.Ethereum){
+    if(network === Network.EthereumMainnet){
+      return `https://etherscan.io/tx/${transactionHash}`
+    }
+
+    if(network === Network.EthereumGoerli){
+      return `https://goerli.etherscan.io/tx/${transactionHash}`
+    }
+  }
+
+  if(chain === Chain.Polygon){
+    if(network === Network.PolygonMainnet){
+      return `https://polygonscan.com/tx/${transactionHash}`
+    }
+
+    if(network === Network.PolygonMumbai){
+      return `https://mumbai.polygonscan.com/tx/${transactionHash}`
+    }
+  }
+
+  if(chain === Chain.Arbitrum){
+    if(network === Network.ArbitrumMainnet){
+      return `https://arbiscan.io/tx/${transactionHash}`
+    }
+
+    if(network === Network.ArbitrumGoerli){
+      return `https://goerli.arbiscan.io/tx/${transactionHash}`
+    }
+  }
+
+  throw new Error(`Unsupported chain or network`)
+}
+
+const getRedeemContractAddress = (chain, network) => {
+
+  if(chain === Chain.Ethereum){
+    if(network === Network.EthereumMainnet){
+      return process.env.REDEEM_ETHEREUM_MAINNET;
+    }
+
+    if(network === Network.EthereumGoerli){
+      return process.env.REDEEM_ETHEREUM_GOERLI;
+    }
+  }
+
+  if(chain === Chain.Polygon){
+    if(network === Network.PolygonMainnet){
+      return process.env.REDEEM_POLYGON_MAINNET;
+    }
+
+    if(network === Network.PolygonMumbai){
+      return process.env.REDEEM_POLYGON_MUMBAI;
+    }
+  }
+
+  if(chain === Chain.Arbitrum){
+    if(network === Network.ArbitrumMainnet){
+      return process.env.REDEEM_ARBITRUM_MAINNET;
+    }
+
+    if(network === Network.ArbitrumGoerli){
+      return process.env.REDEEM_ARBITRUM_GOERLI="";
+    }
+  }
+
+  throw new Error(`Unsupported chain or network for getting redeem contract`)
+}
+
+const getInfuraProvider = (chain, network) => {
+
+  let infuraNetwork;
+  if(chain === Chain.Ethereum){
+    if(network === Network.EthereumMainnet){
+      infuraNetwork="homestead";
+    }
+
+    if(network === Network.EthereumGoerli){
+      infuraNetwork="goerli";
+    }
+  }
+
+  if(chain === Chain.Polygon){
+    if(network === Network.PolygonMainnet){
+      infuraNetwork="matic";
+    }
+
+    if(network === Network.PolygonMumbai){
+      infuraNetwork="maticmum";
+    }
+  }
+
+  if(chain === Chain.Arbitrum){
+    if(network === Network.ArbitrumMainnet){
+      infuraNetwork="arbitrum";
+    }
+
+    if(network === Network.ArbitrumGoerli){
+      infuraNetwork="arbitrum-goerli";
+    }
+  }
+
+  console.log("infuraNetwork", infuraNetwork)
+  return new ethers.providers.InfuraProvider(infuraNetwork, {
+      projectId: process.env.NEXT_PUBLIC_INFURA_ID,
+      projectSecret: process.env.INFURA_SECRET,
+    })
 }

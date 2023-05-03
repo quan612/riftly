@@ -270,7 +270,8 @@ enum ItemType {
 
 enum ContractType {
  ERC20       
- ERC721     
+ ERC721   
+ ERC721A  
 }
 
 model ShopItem {
@@ -288,6 +289,8 @@ model ShopItem {
   
   contractAddress             String?                   @unique
   contractType                ContractType?             @default(ERC20)
+  chain                       String?                   @default("Ethereum")
+  network                     String?                   @default("Ethereum Goerli")
   abi                         Json? 
 }
 
@@ -316,4 +319,12 @@ model ShopItemRedeem {
   extendedRedeemData          Json?
   createdAt                   DateTime            @default(now())
   updatedAt                   DateTime            @default(now()) @updatedAt         
+}
+
+model WebhookSubscriber {
+    id                          Int               @id @default(autoincrement())
+    description                 String? 
+    type                        String?
+    eventId                     Int?
+    url                         String?           @unique
 }
