@@ -17,11 +17,9 @@ export const getAllEnabledShopItems = async () => {
 }
 
 export const getShopItemByContractAddress = async (contract) => {
-  return prisma.shopItem.findUnique({
-    where: {
-      contractAddress: utils.getAddress(contract)
-    }
-  })
+  const shops = await prisma.shopItem.findMany();
+
+  return shops.filter(s => s.contractAddress === contract)[0]
 }
 
 

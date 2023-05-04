@@ -287,7 +287,7 @@ model ShopItem {
   itemType                    ItemType                  @default(OFFCHAIN)  
   shopItemRedeem              ShopItemRedeem[]      
   
-  contractAddress             String?                   @unique
+  contractAddress             String?                   
   contractType                ContractType?             @default(ERC20)
   chain                       String?                   @default("Ethereum")
   network                     String?                   @default("Ethereum Goerli")
