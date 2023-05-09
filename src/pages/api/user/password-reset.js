@@ -14,15 +14,7 @@ async function passwordReset(req, res) {
       try {
         const { email, password } = req.body
 
-        // const existingUser = await prisma.whiteList.findUnique({
-        //   where: {
-        //     email,
-        //   },
-        // })
 
-        // if (!existingUser) {
-        //   return res.status(200).json({ isError: true, message: 'Non existent user.' })
-        // }
         if (whiteListUser.email !== email) {
           return res.status(200).json({ isError: true, message: 'Wrong action.' })
         }

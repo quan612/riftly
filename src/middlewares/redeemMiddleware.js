@@ -41,11 +41,11 @@ const redeemMiddleware = (handler) => {
         shopItemId,
         redeemedBy: null,
         status: RedeemStatus.AVAILABLE
-        // we count PENDING status as redeemed already, if on PENDING and somehow it is not processed, then we would try to fix the issue later.
+        /*** we count PENDING / REDEEMED status as redeemed, track PENDING for in case something is wrong and need to manual fix ****/
       }
     })
 
-    if (!redeemSlotAvailable) { // we dont care the shop item availabe, as that number is used only to create Many ShopItemRedeem records initially from admin
+    if (!redeemSlotAvailable) { // we dont consider  the shop item availabe, as that number is used only to create Many ShopItemRedeem records initially from admin
       return res.status(200).json({
         isError: true,
         message: `${shopItem.title} is redeemed all`,
@@ -58,7 +58,7 @@ const redeemMiddleware = (handler) => {
         redeemedBy: {
           userId
         }
-        // we count PENDING / REDEEMED status as redeemed, track PENDING for in case something is wrong and need to manual fix
+        /*** we count PENDING / REDEEMED status as redeemed, track PENDING for in case something is wrong and need to manual fix ****/
       }
     })
     console.log("slots redeemed By This User", redeemedByThisUser.length);

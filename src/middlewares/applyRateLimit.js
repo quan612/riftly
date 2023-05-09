@@ -8,7 +8,6 @@ const applyMiddleware = (middleware) => (request, response) =>
     )
   })
 const getIP = (request) =>
-  // request.ip.replace(/:\d+[^:]*$/, '') ||
   request.ip ||
   request.headers['x-forwarded-for'] ||
   request.headers['x-real-ip'] ||
@@ -104,11 +103,6 @@ const redeemShop = ({
   delayMs = 2000,
 } = {}) => [
     slowDown({ keyGenerator: getIP, windowMs, delayAfter, delayMs }),
-    // rateLimit({
-    //   keyGenerator: getIP, windowMs, max: limit, handler: () => {
-    //     console.log("Limit reached")
-    //   }
-    // }),
     rateLimit({ keyGenerator: getIP, windowMs, max: limit }),
   ]
 const redeemShopMiddlewares = redeemShop()

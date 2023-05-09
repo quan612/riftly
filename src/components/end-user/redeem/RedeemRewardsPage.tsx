@@ -33,7 +33,6 @@ const RedeemRewardsPage = ({ session }) => {
   const { isMobile } = useDeviceDetect()
   const { data: shopItems, isLoading: isFetchingShopItems } = useShopItemQuery()
 
-  console.log('shopItems', shopItems)
   return (
     <>
       {isFetchingShopItems && <Loading />}
@@ -72,7 +71,6 @@ const RedeemRewardsPage = ({ session }) => {
                 )
               })}
             </SimpleGrid>
-            {/* </Flex> */}
           </ChakraBox>
         )}
       </AnimatePresence>

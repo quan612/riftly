@@ -1,9 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { signIn, signOut } from 'next-auth/react'
-
 import Enums from 'enums'
-// import WalletConnectProvider from '@walletconnect/web3-provider'
-// import UAuth from '@uauth/js'
 
 export const Web3Context = React.createContext()
 export function Web3Provider({ session, children }) {

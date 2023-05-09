@@ -20,7 +20,7 @@ const sendPhoneToSmsHandler = async (req, res) => {
     case 'POST':
 
       try {
-        //TODO: Apply rate limit or similar
+        //TODO: Apply rate limit
         if (!phoneNumber) {
           return res.status(200).json({
             isError: true,

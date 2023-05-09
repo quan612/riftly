@@ -58,12 +58,10 @@ const Settings = () => {
   useEffect(async () => {
     if ('serviceWorker' in navigator) {
       let existingRegistration = await navigator.serviceWorker.getRegistration()
-      // console.log('existingRegistration', existingRegistration)
       if (existingRegistration) {
         swRegistrationRef.current = existingRegistration
         let existingSubscription = await swRegistrationRef?.current?.pushManager?.getSubscription()
 
-        // console.log('existingSubscription', existingSubscription)
         if (existingSubscription) {
           switchSbSet(true)
         } else {
@@ -79,7 +77,6 @@ const Settings = () => {
               let existingSubscription =
                 await swRegistrationRef?.current?.pushManager?.getSubscription()
 
-              // console.log('existingSubscription', existingSubscription)
               if (existingSubscription) {
                 switchSbSet(true)
               } else {
@@ -96,12 +93,10 @@ const Settings = () => {
     } else {
       console.log('Not supporting service on this browser')
       setDisableNotification(true)
-      // window.alert("Not supporting service on this browser");
     }
   }, [])
 
   const handleOnSubscribeChange = async () => {
-    // console.log(swRegistrationRef)
     if (swRegistrationRef.current) {
       let existingSubscription = await swRegistrationRef?.current?.pushManager?.getSubscription()
 
@@ -114,7 +109,6 @@ const Settings = () => {
         // true, subscribe
 
         if (!existingSubscription) {
-          console.log('no subscription yet, going to subscribe one then save to database')
           switchSbSet(true)
           try {
             let pushSubscription = await swRegistrationRef?.current?.pushManager?.subscribe(
@@ -129,10 +123,8 @@ const Settings = () => {
               .catch((err) => {
                 throw err
               })
-            console.log(newSubscription)
             toast({
               title: 'Subscribed to new challenges!',
-              // description: `${res.message}`,
               position: 'bottom-right',
               status: 'success',
               duration: 3000,
@@ -146,7 +138,6 @@ const Settings = () => {
         }
         //false unsubscribe
         else {
-          console.log('unsubscribe')
           switchSbSet(false)
           let payload = existingSubscription
 
@@ -165,7 +156,6 @@ const Settings = () => {
 
           toast({
             title: 'Unsubscribed from new challenges!',
-            // description: `${res.message}`,
             position: 'bottom-right',
             status: 'success',
             duration: 3000,
@@ -220,8 +210,6 @@ const Settings = () => {
             <RiftlyTooltip label="The permission may be overridden by browser setting, under Privacy Security" />
           </FormLabel>
           <Switch
-            // isDisabled={checkSwitch()}
-
             isChecked={switchSb}
             id="quest-alerts"
             onChange={async (e) => {
@@ -303,26 +291,6 @@ const ConnectionsInfo = ({ session }) => {
     )
   })
 
-  // const getGoogleInfo = useCallback(() => {
-  //     if (twitter.length > 0) {
-  //         return (
-  //             <Input
-  //                 type="text"
-  //                 fontSize="md"
-  //                 variant="riftly"
-  //                 ms="4px"
-  //                 disabled={true}
-  //                 value={twitter}
-  //             />
-  //         );
-  //     }
-  //     return (
-  //         <Button w="100%" variant="outline">
-  //             Connect Twitter
-  //         </Button>
-  //     );
-  // });
-
   const getWalletInfo = useCallback(() => {
     if (wallet?.length > 0) {
       return (
@@ -398,14 +366,7 @@ const ConnectionsInfo = ({ session }) => {
             <Text ms="4px" mb="8px" fontSize="lg" fontWeight="400" color="red.300">
               Google
             </Text>
-            {/* <Input
-              type="text"
-              fontSize="md"
-              variant="riftly"
-              ms="4px"
-              disabled={true}
-              // value={'placeholder'}
-            /> */}
+
             <Button w="100%" variant="outline" disabled={true}>
               Connect Google
             </Button>

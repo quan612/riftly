@@ -22,7 +22,7 @@ const config = {
 
 const riftlyColor = {
   brand: {
-    neutral5: '#132436', // 1D3148
+    neutral5: '#132436',
     neutral4: '#1D3148',
     blue: '#1D63FF',
     cyan: '#00BBC7',

@@ -5,12 +5,11 @@ import { prisma } from '@context/PrismaContext'
 
 /** This middle apply to all quest to check for state*/
 
-/** Rate limit here */
 const userQuestSubmitMiddleware = (handler) => {
   return async (req, res) => {
 
     const { questId } = req.body
-    const { userId } = req.whiteListUser; //got from whitelistUserMiddleware
+    const { userId } = req.whiteListUser;
 
 
     if (!questId) {

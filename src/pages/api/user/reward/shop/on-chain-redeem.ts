@@ -3,7 +3,6 @@ import whitelistUserMiddleware from 'middlewares/whitelistUserMiddleware'
 
 import { ContractType, Prisma, RedeemStatus } from '@prisma/client'
 import { sleep } from '@util/index'
-import axios from 'axios'
 import Enums from '@enums/index'
 import { ethers, utils } from 'ethers'
 import redeemMiddleware from '@middlewares/redeemMiddleware'
@@ -23,8 +22,7 @@ const handler = async (req: WhiteListApiRequest, res: NextApiResponse) => {
       message: `Post only`,
     })
   }
-  console.log("ON-chain")
-  // await redeemShopRateLimit(req, res)
+
 
   const { userId, wallet } = req.whiteListUser
   const { id: shopItemId } = req.body
@@ -64,7 +62,6 @@ const handler = async (req: WhiteListApiRequest, res: NextApiResponse) => {
         })
       },
       {
-        // isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
         maxWait: 10000,
         timeout: 30000,
       },
@@ -87,14 +84,10 @@ const handler = async (req: WhiteListApiRequest, res: NextApiResponse) => {
       }
     })
 
-    // const redeemContractAddress = CURRENT_NETWORK.CONTRACT_ADDRESSES.REDEEM;
-
     const chain = shopItem?.chain;
     const network = shopItem?.network;
 
-
     const redeemContractAddress = getRedeemContractAddress(chain, network);
-    console.log("redeemContractAddress: ", redeemContractAddress)
 
     const infuraProvider = getInfuraProvider(chain, network)
 
@@ -116,10 +109,10 @@ const handler = async (req: WhiteListApiRequest, res: NextApiResponse) => {
       const multiplier = shopItem.multiplier;
 
       const parseDecimal =  ethers.utils.parseUnits("1", decimal);
-      // const amount: ethers.BigNumber = parseDecimal * multiplier;
+
       const amount = parseDecimal.mul(multiplier);
       const slotId = redeemedSlot.id
-      console.log("slot: ", slotId)
+
 
       tx = await redeemContract.redeemERC20(
         contractAddress,
@@ -128,7 +121,7 @@ const handler = async (req: WhiteListApiRequest, res: NextApiResponse) => {
         slotId,
         options
       )
-      // await tx.wait(1);
+  
 
       const transactionHash = tx.hash
 
@@ -147,12 +140,10 @@ const handler = async (req: WhiteListApiRequest, res: NextApiResponse) => {
       return res.status(200).json({ message: transactionHash })
     }
 
-    if (shopItem.contractType === ContractType.ERC721) { // getting decimals of ERC20 contract
+    if (shopItem.contractType === ContractType.ERC721) { 
       
       const contractAddress = shopItem?.contractAddress;
       const slotId = redeemedSlot.id
-
-      // console.log("slot: ", slotId)
 
       tx = await redeemContract.redeemERC721(
         contractAddress,
@@ -176,17 +167,16 @@ const handler = async (req: WhiteListApiRequest, res: NextApiResponse) => {
         }
       })
 
-      // return res.status(200).json({ message: transactionHash })
+
 
       const etherscanLink = getEtherscanLink(chain, network, transactionHash)
       return res.status(200).json({ message: etherscanLink })
     }
     if (shopItem.contractType === ContractType.ERC721A) { 
-    console.log("handling erc721A")
+   
       const contractAddress = shopItem?.contractAddress;
       const slotId = redeemedSlot.id
 
-      // console.log("slot: ", slotId)
 
       tx = await redeemContract.redeemERC721A(
         contractAddress,
@@ -209,9 +199,7 @@ const handler = async (req: WhiteListApiRequest, res: NextApiResponse) => {
           extendedRedeemData
         }
       })
-      // return res.status(200).json({ message: transactionHash })
-
-      // const transactionHash="0x02fd9067e38fbd11758bd8c794f08aad9d04c233614625b6787886f1f34aea7b"
+      
 
       const etherscanLink = getEtherscanLink(chain, network, transactionHash)
       return res.status(200).json({ message: etherscanLink })
@@ -219,7 +207,6 @@ const handler = async (req: WhiteListApiRequest, res: NextApiResponse) => {
     return res.status(200).json({ isError: true, message: "Unhandled contract type" })
 
   } catch (error) {
-    console.log(error)
     return res.status(200).json({
       isError: true,
       message: error.message,
@@ -252,7 +239,7 @@ function getRedeemContract(signerWallet, redeemContractAddress) {
 async function getTransactionOption(infuraProvider) {
   const feeData = await infuraProvider.getFeeData()
   return {
-    gasPrice: feeData.gasPrice.mul(110).div(100), //ethers.utils.parseUnits('200', 'gwei'),//gasPrice,        //ethers.utils.parseUnits('255', 'gwei'),
+    gasPrice: feeData.gasPrice.mul(110).div(100), 
   }
 }
 function parse(data) {

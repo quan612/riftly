@@ -14,7 +14,6 @@ const SUBMITTED = 2
 const ERROR = 3
 
 const UploadAvatarModal = ({ isOpen, onClose }) => {
-  // const [codeQuestData, isSubmittingQuest, submit] = useCodeQuestSubmit();
   const [currentView, setView] = useState(UPLOADABLE)
   const [error, errorSet] = useState(null)
   const [imageSrc, setImageSrc] = useState()
@@ -116,7 +115,6 @@ const UploadAvatarModal = ({ isOpen, onClose }) => {
                   }}
                   w="100%"
                   borderRadius="24px"
-                  // isLoading={isSubmittingQuest}
                 >
                   Select
                 </Button>
@@ -133,10 +131,6 @@ const UploadAvatarModal = ({ isOpen, onClose }) => {
         )}
         {currentView === SUBMITTABLE && (
           <>
-            {/* {!error && (
-                            <span className={s.board_imageUpload_imageName}>{imageFile.name}</span>
-                        )}
-                        {error && <span className={s.board_imageUpload_imageName}>{error}</span>} */}
             <ChakraBox w="100%" layout key="avatar-upload-heading">
               <Heading color="white" fontSize={'3xl'} lineHeight="4xl" align="center">
                 Confirm to upload as avatar

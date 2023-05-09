@@ -4,7 +4,6 @@ const cloudinary = require('cloudinary').v2
 import { NextApiResponse } from 'next'
 import { WhiteListApiRequest } from 'types/common'
 
-
 //@TODO: rate limit
 const AvatarUploadAPI = async (req: WhiteListApiRequest, res: NextApiResponse) => {
   const { method } = req

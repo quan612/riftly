@@ -4,6 +4,7 @@ import { Prisma, RedeemStatus } from '@prisma/client'
 import { ethers, utils } from 'ethers'
 import { getShopItemByContractAddress } from 'repositories/shop'
 
+/**This is from alchemy */
 const handler = async (req, res) => {
   const { method } = req
 
@@ -36,8 +37,6 @@ const handler = async (req, res) => {
       const receiver = eventDataReceived.args[1]
       const slotId = eventDataReceived.args[2]?.toString();
 
-
-      console.log("slotId", slotId)
       /* find shop item base on contract*/
       const shopItem = await getShopItemByContractAddress(contract)
 
@@ -59,8 +58,6 @@ const handler = async (req, res) => {
         }
       })
 
-      // save to error table when cannot find redeem item, (!shopItemRedeem) 
-
       await prisma.shopItemRedeem.update({
         where: {
           id: shopItemRedeem.id
@@ -81,22 +78,5 @@ const handler = async (req, res) => {
     })
   }
 }
-// export default handler
+
 export default alchemyWebhookMiddleware(handler)
-
-
-/*alternative to decode
-
-  // const data = webhookEvent.event.data.block.logs[0]?.transaction?.logs[1].data;
-  // const decodeData = ethers.utils.defaultAbiCoder.decode(
-  //   ['address', 'address'],
-  //   data
-  // );
-  // console.log("decodeData", decodeData);
-*/
-
-// export const config = {
-//   api: {
-//     bodyParser: true,
-//   },
-// };

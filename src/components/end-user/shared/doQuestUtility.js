@@ -15,7 +15,7 @@ export const doQuestUtility = async (router, quest, onSubmit) => {
   if (type.name === Enums.WALLET_AUTH) {
     return router.push('/auth-wallet')
   }
-  // sub directory quest, should RETURN
+
   if (type.name === Enums.OWNING_NFT_CLAIM) {
     let path = `/nft-quest?nft=${extendedQuestData.nft}`
     return router.push(path)

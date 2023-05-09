@@ -41,7 +41,6 @@ const handler = async (req: WhiteListApiRequest, res: NextApiResponse) => {
       }))
     }
 
-    // return res.status(200).json(shopItems.filter(s => s.isRedeemable === true))
     return res.status(200).json(shopItems)
   } catch (err) {
     console.log(err)

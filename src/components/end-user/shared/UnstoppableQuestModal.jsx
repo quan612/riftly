@@ -6,23 +6,13 @@ import { ChakraBox } from '@theme/additions/framer/FramerChakraComponent'
 const LINKABLE = 0
 const SUBMITTABLE = 1
 const SUBMITTED = 2
-const OVERDUE = 3
-const ERROR = 4
 
 import { AnimatePresence } from 'framer-motion'
-import { debounce } from 'util/index'
 import ModalWrapper from '../wrappers/ModalWrapper'
 
 import UAuth from '@uauth/js'
 import { useUnstoppableAuthQuestSubmit } from '@hooks/user/quest'
 const { default: Resolution } = require('@unstoppabledomains/resolution')
-const resolution = new Resolution()
-
-// const uauth = new UAuth({
-//   clientID: process.env.NEXT_PUBLIC_UNSTOPPABLE_CLIENT_ID,
-//   redirectUri: process.env.NEXT_PUBLIC_UNSTOPPABLE_REDIRECT_URI,
-//   scope: 'openid wallet',
-// })
 
 const UnstoppableQuestModal = ({ isOpen, onClose, currentQuest }) => {
   const [error, errorSet] = useState(null)
@@ -45,14 +35,12 @@ const UnstoppableQuestModal = ({ isOpen, onClose, currentQuest }) => {
       errorSet(null)
       try {
         const authorization = await uauth.loginWithPopup()
-        // console.log(authorization)
 
         if (authorization) {
           let user = await uauth.user()
           setUauthUser(user.sub)
           setView(SUBMITTABLE)
         } else {
-          // console.log(authorization);
           errorSet('Cannot get auth object from Unstoppable Login')
         }
       } catch (error) {
@@ -106,13 +94,7 @@ const UnstoppableQuestModal = ({ isOpen, onClose, currentQuest }) => {
             </ChakraBox>
           )}
           <ChakraBox w="100%" key="unstoppable-quest-submit" layout>
-            <Button
-              variant="blue"
-              onClick={handleUnstoppableLogin}
-              w="100%"
-
-              // isLoading={isSubmittingQuest}
-            >
+            <Button variant="blue" onClick={handleUnstoppableLogin} w="100%">
               Link
             </Button>
           </ChakraBox>

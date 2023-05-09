@@ -1,5 +1,4 @@
 import { prisma } from '@context/PrismaContext'
-import { utils } from 'ethers'
 const webpush = require('web-push')
 
 const vapidKeys = {
@@ -15,15 +14,14 @@ export default async function pushNotification(req, res) {
     case 'POST':
       try {
         const { text, description, action, tag } = req.body
-        // get all subscriptions
-        console.log(123)
-        let subscriptions = await prisma.WebPushSubscription.findMany()
 
-        let payload = {
+        const subscriptions = await prisma.WebPushSubscription.findMany()
+
+        const payload = {
           text,
           description,
           action,
-          // tag,
+
         }
 
         webpush.setVapidDetails(

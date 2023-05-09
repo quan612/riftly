@@ -82,14 +82,12 @@ export const globalStyles = {
       body: {
         overflowX: 'hidden',
         bg: 'brand.neutral5',
-        // fontFamily: "Inter",
         letterSpacing: '-0.5px',
       },
       input: {
         color: 'gray.700',
       },
       html: {
-        // fontFamily: "Inter",
       },
     }),
   },

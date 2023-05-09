@@ -110,7 +110,7 @@ const submitNftQuest = async (req: WhiteListApiRequest, res: NextApiResponse) =>
             tokenAddresses,
             cursor,
           })
-          .then((r) => r?.raw) //  .then((r) => r?.jsonResponse)
+          .then((r) => r?.raw) //  or r?.jsonResponse)
           .catch((err) => {
             throw err
           })

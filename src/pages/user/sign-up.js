@@ -42,7 +42,7 @@ function SignUp() {
         top="0"
         flex="1"
         w={{ base: '28%', md: '179px' }}
-        // h={{ base: "15%", md: "198px" }}
+
         display={'flex'}
         justifyContent={'center'}
       >

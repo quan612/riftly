@@ -68,16 +68,6 @@ export default function UserLayout({ session, children }) {
       </LayoutWrapper>
     )
   } else {
-    // if (router.pathname === '/') {
-    //   return (
-    //     <LayoutWrapper>
-    //       <RiftlyConnectBoard />
-    //     </LayoutWrapper>
-    //   )
-    // } else {
-    //   return <LayoutWrapper>{children}</LayoutWrapper>
-    // }
-
     return <LayoutWrapper>{children}</LayoutWrapper>
   }
 }
@@ -114,58 +104,5 @@ export const LayoutWrapper = ({ children }) => {
         {children}
       </Box>
     </Box>
-  )
-}
-
-function RiftlyConnectBoard() {
-  let router = useRouter()
-  return (
-    <ShortContainer>
-      <Box
-        w={{ base: '100px', md: '150px' }}
-        display={'flex'}
-        alignItems="center"
-        justifyContent={'center'}
-      >
-        <Box display={'flex'} alignItems="center">
-          <RiftlyLogoWhiteText />
-        </Box>
-      </Box>
-
-      <Flex flexDirection={'column'} alignItems={'center'}>
-        <Heading size="lg" color="#fff" mb="16px">
-          Welcome to Riftly
-        </Heading>
-        <Text fontSize="lg" color={'brand.neutral1'} textAlign="center">
-          Join Riftly or sign in to continue
-        </Text>
-      </Flex>
-      <ButtonGroup
-        w="100%"
-        gap="16px"
-        display={'flex'}
-        flexDirection={{ base: 'column', md: 'row' }}
-        justifyContent="center"
-        alignItems="center"
-      >
-        <Button
-          w={{ base: '100%', md: '192pz' }}
-          onClick={() => router.push('/user/sign-up')}
-          size="lg"
-          variant="blue"
-        >
-          Get Started
-        </Button>
-
-        <Button
-          w={{ base: '100%', md: '192pz' }}
-          onClick={() => router.push('/user/sign-in')}
-          size="lg"
-          variant="signIn"
-        >
-          Sign In
-        </Button>
-      </ButtonGroup>
-    </ShortContainer>
   )
 }

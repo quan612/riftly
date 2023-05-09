@@ -68,19 +68,16 @@ const UserTierLevel = React.forwardRef(({ session }, levelProgress) => {
         let currentLevel = getLevel(currentPoint)
         let currentLevelPoint = getPoints(currentLevel)
         let nextLevelPoint = getPoints(currentLevel + 1)
-        // console.log(currentLevelPoint);
-        // console.log(currentPoint);
-        // console.log(nextLevelPoint);
+
         let progress =
           ((currentPoint - currentLevelPoint) / (nextLevelPoint - currentLevelPoint)) * 100
 
-        // console.log(progress);
         let newTier = {
           currentLevel,
           nextLevel: currentLevel + 1,
           currentPoint,
         }
-        // levelProgressSet(progress);
+
         levelProgress.current = progress
         tierSet((prev) => newTier)
 
@@ -93,13 +90,8 @@ const UserTierLevel = React.forwardRef(({ session }, levelProgress) => {
       let nextLevelPoint = getPoints(currentLevel + 1)
       let progress = ((newPoint - currentLevelPoint) / (nextLevelPoint - currentLevelPoint)) * 100
 
-      // console.log(currentLevelPoint);
-      // console.log(newPoint);
-      // console.log(nextLevelPoint);
-
       let newTier
       if (newPoint > nextLevelPoint) {
-        // levelProgressSet(100);
         levelProgress.current = 100
         levelUpTimeout = setTimeout(() => {
           onOpen()
@@ -107,8 +99,7 @@ const UserTierLevel = React.forwardRef(({ session }, levelProgress) => {
           let currentLevelPoint = getPoints(currentLevel + 1)
           let nextLevelPoint = getPoints(tier.currentLevel + 2)
           let newProgress =
-            ((newPoint - currentLevelPoint) / (nextLevelPoint - currentLevelPoint)) * 100 // wrong here, when jump 2 levels up
-          // levelProgressSet(newProgress);
+            ((newPoint - currentLevelPoint) / (nextLevelPoint - currentLevelPoint)) * 100
           levelProgress.current = newProgress
           newTier = {
             currentLevel: currentLevel + 1,
@@ -119,7 +110,6 @@ const UserTierLevel = React.forwardRef(({ session }, levelProgress) => {
           clearTimeout(levelUpTimeout)
         }, 1350)
       } else {
-        // levelProgressSet(progress);
         levelProgress.current = progress
         newTier = {
           currentLevel: currentLevel,

@@ -24,10 +24,6 @@ export default async function emailSignUp(req, res) {
           return res.status(200).json({ isError: true, message: 'This email is used.' })
         }
 
-        // let checkMessage = await checkRequest(req, res)
-        // if (checkMessage !== "") {
-        //     return res.status(200).json({ isError: true, message: checkMessage });
-        // }
 
         if (!validateEmail(email)) {
           throw new Error('Invalid email.')

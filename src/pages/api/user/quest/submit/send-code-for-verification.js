@@ -93,8 +93,6 @@ const sendCodeToTwilioVerifyHandler = async (req, res) => {
 
         let phoneNumberSent = smsRecord.attemptedPhone
 
-        //check code from previous sid
-
         const client = require('twilio')(smsSid, smsAuthToken)
 
         let verificationOp = await client.verify.v2
