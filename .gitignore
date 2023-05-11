@@ -56,3 +56,4 @@ artifacts
 .npmrc
 bowl-owners.csv
 bowl-owners.xlsx
+.env.example

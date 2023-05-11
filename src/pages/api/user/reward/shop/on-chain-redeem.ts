@@ -39,33 +39,7 @@ const handler = async (req: WhiteListApiRequest, res: NextApiResponse) => {
 
     const { cost, rewardTypeId } = await getShopRequirementCost(shopItem.requirements);
 
-    await prisma.$transaction(
-      async (tx:any) => {
-        await tx.$executeRaw`select * from public."ShopItemRedeem" p where p."status"='AVAILABLE' FOR UPDATE;`;
-        await sleep(500)
-
-        const result = await tx.$executeRaw`UPDATE "ShopItemRedeem" SET "userId"=${userId}, "status"='PENDING' where "id" in (select id from public."ShopItemRedeem" p where p."status" = 'AVAILABLE' and p."shopItemId"=${shopItemId}limit 1);`;
-
-        if (result === 0) {
-          throw new Error(`${shopItem.title} is redeemed all`)
-        }
-
-        await tx.reward.update({
-          where: {
-            userId_rewardTypeId: { userId, rewardTypeId },
-          },
-          data: {
-            quantity: {
-              decrement: cost,
-            },
-          },
-        })
-      },
-      {
-        maxWait: 10000,
-        timeout: 30000,
-      },
-    )
+   
 
     /* actual redeeming on-chain */
     const {
@@ -100,6 +74,30 @@ const handler = async (req: WhiteListApiRequest, res: NextApiResponse) => {
     console.log("gasPrice: ", options.gasPrice.toString())
 
     let tx;
+
+
+    await prisma.$transaction(
+      async (tx:any) => {
+        await tx.$executeRaw`select * from public."ShopItemRedeem" p where p."status"='AVAILABLE' FOR UPDATE;`;
+        await sleep(500)
+
+        const result = await tx.$executeRaw`UPDATE "ShopItemRedeem" SET "userId"=${userId}, "status"='PENDING' where "id" in (select id from public."ShopItemRedeem" p where p."status" = 'AVAILABLE' and p."shopItemId"=${shopItemId}limit 1);`;
+
+        if (result === 0) {
+          throw new Error(`${shopItem.title} is redeemed all`)
+        }
+
+        await tx.reward.update({
+          where: {
+            userId_rewardTypeId: { userId, rewardTypeId },
+          },
+          data: {
+            quantity: {
+              decrement: cost,
+            },
+          },
+        })
+     
 
     if (shopItem.contractType === ContractType.ERC20) { // getting decimals of ERC20 contract
       const contractAddress = shopItem?.contractAddress;
@@ -173,10 +171,9 @@ const handler = async (req: WhiteListApiRequest, res: NextApiResponse) => {
       return res.status(200).json({ message: etherscanLink })
     }
     if (shopItem.contractType === ContractType.ERC721A) { 
-   
+    console.log("redeem erc721a")
       const contractAddress = shopItem?.contractAddress;
       const slotId = redeemedSlot.id
-
 
       tx = await redeemContract.redeemERC721A(
         contractAddress,
@@ -204,12 +201,27 @@ const handler = async (req: WhiteListApiRequest, res: NextApiResponse) => {
       const etherscanLink = getEtherscanLink(chain, network, transactionHash)
       return res.status(200).json({ message: etherscanLink })
     }
+  },
+  {
+    maxWait: 10000,
+    timeout: 30000,
+  },
+)
     return res.status(200).json({ isError: true, message: "Unhandled contract type" })
 
   } catch (error) {
+    // console.log(error?.error?.reason)
+    let errorMessage;
+
+    if(error?.error?.reason){
+      errorMessage = error?.error?.reason
+    }
+    else {
+      errorMessage = error.message
+    }
     return res.status(200).json({
       isError: true,
-      message: error.message,
+      message: errorMessage,
     })
   }
 }
