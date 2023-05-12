@@ -251,7 +251,7 @@ const RewardCard = ({ image, item }) => {
             </Flex>
           </Flex>
           {/* FOOTER */}
-          <Flex align="start" alignItems={'center'} justify="space-between" mt="25px">
+          <Flex align="start" alignItems={'center'} justify="space-between" mt="12px">
             <Flex alignItems={'center'} gap="5px">
               <Box maxH="24px" h="33%" position={'relative'} boxSize="16px">
                 <RiftlyIcon fill={'#1D63FF'} />
