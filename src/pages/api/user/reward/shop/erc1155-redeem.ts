@@ -84,10 +84,6 @@ const handler = async (req: WhiteListApiRequest, res: NextApiResponse) => {
     })
   }
 
-  let redeemedSlot
-  let tx
-
-  let etherscanLink
 
   const redeemContractAddress = getRedeemContractAddress(chain, network)
 
@@ -99,7 +95,7 @@ const handler = async (req: WhiteListApiRequest, res: NextApiResponse) => {
 
   const options = await getTransactionOption(infuraProvider)
 
-  redeemedSlot = await prisma.shopItemRedeem.findFirst({
+  const redeemedSlot = await prisma.shopItemRedeem.findFirst({
     where: {
       shopItemId,
       redeemedBy: {
@@ -116,6 +112,9 @@ const handler = async (req: WhiteListApiRequest, res: NextApiResponse) => {
   const slotId = redeemedSlot.id
 
   console.log("redeemed Slot", redeemedSlot)
+
+  let tx
+
   try {
   
     tx = await redeemContract.redeemERC1155(
@@ -179,7 +178,7 @@ const handler = async (req: WhiteListApiRequest, res: NextApiResponse) => {
     },
   })
 
-  etherscanLink = getEtherscanLink(chain, network, transactionHash)
+  const etherscanLink = getEtherscanLink(chain, network, transactionHash)
 
   return res.status(200).json({ message: etherscanLink })
 }
