@@ -23,11 +23,9 @@ const handler = async (req: WhiteListApiRequest, res: NextApiResponse) => {
     })
   }
 
-
   const { userId, wallet } = req.whiteListUser
   const { id: shopItemId } = req.body
   const shopItem = req.shopItem
-
 
   if (!wallet || wallet.length < 16 || !utils.getAddress(wallet)) {
     return res
@@ -39,12 +37,9 @@ const handler = async (req: WhiteListApiRequest, res: NextApiResponse) => {
 
     const { cost, rewardTypeId } = await getShopRequirementCost(shopItem.requirements);
 
-   
-
     /* actual redeeming on-chain */
     const {
       OPERATION_WALLET_PRIVATE_KEY,
-
     } = process.env
 
     
@@ -339,7 +334,6 @@ const getInfuraProvider = (chain, network) => {
       infuraNetwork="goerli";
     }
   }
-
   if(chain === Chain.Polygon){
     if(network === Network.PolygonMainnet){
       infuraNetwork="matic";
@@ -349,7 +343,6 @@ const getInfuraProvider = (chain, network) => {
       infuraNetwork="maticmum";
     }
   }
-
   if(chain === Chain.Arbitrum){
     if(network === Network.ArbitrumMainnet){
       infuraNetwork="arbitrum";
@@ -359,7 +352,6 @@ const getInfuraProvider = (chain, network) => {
       infuraNetwork="arbitrum-goerli";
     }
   }
-
   console.log("infuraNetwork", infuraNetwork)
   return new ethers.providers.InfuraProvider(infuraNetwork, {
       projectId: process.env.NEXT_PUBLIC_INFURA_ID,

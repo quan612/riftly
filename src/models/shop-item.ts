@@ -21,5 +21,6 @@ export interface ShopItem {
   cost?: number,
   redeemAvailable?: number,
   chain: string,
-  network: string
+  network: string,
+  tokenId: number
 }

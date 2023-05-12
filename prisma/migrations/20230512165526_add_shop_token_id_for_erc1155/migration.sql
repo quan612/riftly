@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "ShopItem" ADD COLUMN     "tokenId" INTEGER NOT NULL DEFAULT 0;
