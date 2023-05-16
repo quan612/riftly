@@ -1,8 +1,8 @@
 // UI
 import { Box } from '@chakra-ui/react'
 
-// Utils
-import { getColor } from '@components/end-user/achievement/helpers'
+// Hooks
+import useGetColor from '../useGetColor'
 
 // Types
 import { IDesktopVerticalLine } from './DesktopVerticalLine'
@@ -11,6 +11,8 @@ interface IMobileVerticalLineBottom extends IDesktopVerticalLine {}
 
 const MobileVerticalLineBottom = (props: IMobileVerticalLineBottom) => {
   const { index, achievementsArray, achievement } = props
+
+  const { getColor } = useGetColor()
 
   return (
     <Box

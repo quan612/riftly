@@ -7,8 +7,8 @@ import { HeadingSm, TextSm } from '@components/shared/Typography'
 // UI
 import { Box, Button, Flex, useTheme, useToast } from '@chakra-ui/react'
 
-// Utils
-import { getColor } from '@components/end-user/achievement/helpers'
+// Hooks
+import useGetColor from '../useGetColor'
 
 // Types
 import { AchievementType } from '../types'
@@ -22,6 +22,8 @@ const TripBox = ({ id, item }: ITripBox) => {
   const toast = useToast()
   const queryClient = useQueryClient()
   const theme = useTheme()
+
+  const { getColor } = useGetColor()
 
   const getClaimButton = () => {
     if (!item) return null

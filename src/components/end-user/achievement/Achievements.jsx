@@ -17,12 +17,10 @@ import { achievementsArray } from './constants'
 
 // Hooks
 import useDeviceDetect from '@hooks/useDeviceDetect'
+import useGetColor from './useGetColor'
 
 // UI
 import { Heading, Box, Flex, Grid, GridItem, useTheme } from '@chakra-ui/react'
-
-// Utils
-import { getColor } from './helpers'
 
 const AchievementHeader = () => {
   const theme = useTheme()
@@ -37,6 +35,7 @@ const AchievementHeader = () => {
 
 const Achievements = ({ session }) => {
   const { isMobile } = useDeviceDetect()
+  const { getColor } = useGetColor()
 
   const levelProgress = useRef(0)
   const templateColumns = isMobile ? '1fr' : '1fr 3fr'
