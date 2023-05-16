@@ -14,7 +14,8 @@ import useGetColor from '../useGetColor'
 import { AchievementType } from '../types'
 
 interface ITripBox {
-  id: string
+  id: number
+  index?: number
   item: AchievementType
 }
 
