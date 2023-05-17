@@ -19,6 +19,8 @@ const userQuestQueryHandler = async (req: WhiteListApiRequest, res: NextApiRespo
     const availableQuests: QuestQuery[] = await getAllEnableQuestsForUser()
     const finishedQuest: UserQuest[] = await getQuestsStartedByThisUser(userId)
 
+    // console.log(availableQuests)
+
     const todayISO = new Date().toISOString()
 
     const quests = availableQuests
@@ -57,29 +59,27 @@ const userQuestQueryHandler = async (req: WhiteListApiRequest, res: NextApiRespo
       .map((aq) => {
         const relatedQuest = finishedQuest.find((q) => q.questId === aq.questId)
         if (aq.type.name === Enums.DAILY_SHELL) {
-          //Enums.DAILY_SHELL
+          if (relatedQuest) {
+            const lastClaimed = moment
+              .utc(relatedQuest?.extendedUserQuestData?.lastClaimed)
+              .format('yyyy-MM-DD')
+            const today = moment.utc(new Date().toISOString()).format('yyyy-MM-DD')
+            aq.isClaimable = true
 
-          // if (relatedQuest?.extendedUserQuestData?.frequently === Enums.DAILY) {
-          // let lastStarted = relatedQuest?.extendedUserQuestData?.lastStarted
-
-          const lastClaimed = moment
-            .utc(relatedQuest?.extendedUserQuestData?.lastClaimed as Prisma.JsonObject)
-            .format('yyyy-MM-DD')
-          // let [today] = new Date().toISOString().split('T')
-          const today = moment.utc(new Date().toISOString()).format('yyyy-MM-DD')
-          aq.isClaimable = true
-
-          console.log('today', today)
-          console.log('lastClaimed', lastClaimed)
-          if (today > lastClaimed || !lastClaimed) {
-            aq.hasClaimed = false
-          } else {
-            aq.hasClaimed = true
+            if (today > lastClaimed || !lastClaimed) {
+              aq.hasClaimed = false
+            } else {
+              aq.hasClaimed = true
+            }
           }
+          else{
+            aq.hasClaimed = false;
+            aq.isClaimable = true
+          }
+
           return aq
         } else {
           // THE REST
-
           if (relatedQuest) {
             aq.isClaimable = relatedQuest.isClaimable
             aq.hasClaimed = relatedQuest.hasClaimed
@@ -89,7 +89,7 @@ const userQuestQueryHandler = async (req: WhiteListApiRequest, res: NextApiRespo
             aq.hasClaimed = false
             aq.rewardedQty = 0
           }
-          if (relatedQuest?.quest.type.name === Enums.CODE_QUEST) {
+          if (aq?.type.name === Enums.CODE_QUEST) {
             //remove the answer from querying
             delete aq.extendedQuestData
           }

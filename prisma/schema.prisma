@@ -137,15 +137,6 @@ model LogError {
     content           Json?
     createdAt         DateTime            @default(now())
 }
-model logRegister {
-    id                Int                 @id @default(autoincrement())
-    url               String
-    referer           String?
-    userAgent         String?
-    wallet            String?             
-    ip                String?
-    createdAt         DateTime            @default(now())
-}
 model QuestVariables{
   id                          Int                 @id @default(autoincrement())
   vercel_env                  String
@@ -229,31 +220,6 @@ model ConfigImageHosting{
   updatedAt                   DateTime            @default(now()) @updatedAt
 }
 
-model ConfigRedeemableContract {
-  id                          Int                 @id @default(autoincrement())
-  contract                    String              @unique
-  maxRedeemable               Int                 @default(0)
-  totalRedeemable             Int                 @default(0)
-  text                        String              @default("")
-  description                 String              @default("")
-  image                       String?             @default("")
-  nftType                     String?             @default("")
-  isEnabled                   Boolean             @default(true)
-  requirements                RedeemRequirement[]
-  contractAbi                 Json?               
-}
-
-model RedeemRequirement {
-  id                Int                           @id @default(autoincrement())
-  requirementId     String                        @unique
-  kind              String                        @default("")
-  relationId        Int
-  conditional       Json?                         
-
-  redeem            ConfigRedeemableContract?     @relation(fields: [redeemId], references: [id], onDelete: Cascade)
-  redeemId          Int?      
-}
-
 model NftContractData {
   id                          Int                 @id @default(autoincrement())
   name                        String              
@@ -271,7 +237,8 @@ enum ItemType {
 enum ContractType {
  ERC20       
  ERC721   
- ERC721A  
+ ERC721A
+ ERC1155  
 }
 
 model ShopItem {
@@ -292,6 +259,7 @@ model ShopItem {
   chain                       String?                   @default("Ethereum")
   network                     String?                   @default("Ethereum Goerli")
   abi                         Json? 
+  tokenId                     Int                       @default(-1)
 }
 
 model ShopItemRequirement {
@@ -327,4 +295,36 @@ model WebhookSubscriber {
     type                        String?
     eventId                     Int?
     url                         String?           @unique
+}
+
+
+
+model AchievementItem {
+  id                          Int                       @id @default(autoincrement())
+  title                       String                    @default("")
+  description                 String                    @default("")
+  image                       String?                   @default("")
+  rewardId                    Int?                      @default(0)
+  rewardQty                   Int                       @default(1)
+  onChainMultiplier           Int?                      @default(1)
+  isEnabled                   Boolean                   @default(true)
+  requirements                AchievementRequirement[]
+  itemType                    ItemType                  @default(OFFCHAIN)     
+  
+  contractAddress             String?                   
+  contractType                ContractType?             @default(ERC20)
+  chain                       String?                   @default("Ethereum")
+  network                     String?                   @default("Ethereum Goerli")
+  abi                         Json? 
+  order                       Float?                      @default(1.00)
+}
+
+model AchievementRequirement {
+  id                          Int                       @id @default(autoincrement())
+  requirementId               String                    @unique
+  requirementType             String                    @default("")
+  relationId                  Int 
+  conditional                 Json?                           
+  achievementItem             AchievementItem?          @relation(fields: [achievementItemId], references: [id], onDelete: Cascade)
+  achievementItemId           Int?      
 }

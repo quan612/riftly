@@ -25,7 +25,6 @@ const variants = {
 }
 
 function Home({ session }) {
-  console.log(session)
   return (
     <>
       <Head>

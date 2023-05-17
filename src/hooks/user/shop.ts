@@ -54,3 +54,20 @@ export const useOnChainShopItemRedeemMutation = () => {
   return [data, isLoading, mutateAsync]
 }
 
+export const useERC1155RedeemMutation = () => {
+  const queryClient = useQueryClient()
+
+  const { data, error, isError, isLoading, isSuccess, mutate, mutateAsync } = useMutation(
+    (payload) => {
+      return axios.post(`${Enums.BASEPATH}/api/user/reward/shop/erc1155-redeem`, payload).then((r) => r.data)
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(SHOP_ITEM_QUERY);
+        queryClient.invalidateQueries(QUERY_USER_REWARD);
+      },
+    },
+  )
+
+  return [data, isLoading, mutateAsync]
+}

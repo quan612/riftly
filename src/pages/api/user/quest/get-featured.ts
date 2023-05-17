@@ -1,7 +1,7 @@
 import { getAllEnableQuestsForUser, getQuestsStartedByThisUser } from 'repositories/quest'
 import whitelistUserMiddleware from 'middlewares/whitelistUserMiddleware'
 import Enums from 'enums'
-import { QuestStyle, QuestDuration } from '@prisma/client'
+import { QuestStyle, QuestDuration, Prisma } from '@prisma/client'
 import moment from 'moment'
 
 import { NextApiResponse } from 'next'
@@ -54,17 +54,24 @@ const handler = async (req: WhiteListApiRequest, res: NextApiResponse) => {
         const relatedQuest = finishedQuest.find((q) => q.questId === aq.questId)
 
         if (aq.type.name === Enums.DAILY_SHELL) {
-          const lastClaimed = moment
-            .utc(relatedQuest?.extendedUserQuestData?.lastClaimed)
-            .format('yyyy-MM-DD')
-          const today = moment.utc(new Date().toISOString()).format('yyyy-MM-DD')
-          aq.isClaimable = true
+          if (relatedQuest) {
+            const lastClaimed = moment
+              .utc(relatedQuest?.extendedUserQuestData?.lastClaimed)
+              .format('yyyy-MM-DD')
+            const today = moment.utc(new Date().toISOString()).format('yyyy-MM-DD')
+            aq.isClaimable = true
 
-          if (today > lastClaimed || !lastClaimed) {
-            aq.hasClaimed = false
-          } else {
-            aq.hasClaimed = true
+            if (today > lastClaimed || !lastClaimed) {
+              aq.hasClaimed = false
+            } else {
+              aq.hasClaimed = true
+            }
           }
+          else{
+            aq.hasClaimed = false;
+            aq.isClaimable = true
+          }
+
           return aq
         } else {
           if (relatedQuest) {
@@ -76,7 +83,7 @@ const handler = async (req: WhiteListApiRequest, res: NextApiResponse) => {
             aq.hasClaimed = false
             aq.rewardedQty = 0
           }
-          if (relatedQuest?.quest.type.name === Enums.CODE_QUEST) {
+          if (aq?.type.name === Enums.CODE_QUEST) {
             //remove the answer from querying
             delete aq.extendedQuestData
           }

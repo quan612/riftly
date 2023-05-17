@@ -20,6 +20,7 @@ import { RiftlyIcon } from '@components/shared/Icons'
 
 import { useUserRewardQuery } from '@hooks/user/reward'
 import {
+  useERC1155RedeemMutation,
   useOffChainShopItemRedeemMutation,
   useOnChainShopItemRedeemMutation,
   useShopItemQuery,
@@ -137,8 +138,12 @@ const RewardCard = ({ image, item }) => {
   const [onchainRedeemData, isRedeemingOnchain, onChainRedeemAsync] =
     useOnChainShopItemRedeemMutation()
 
+    const [erc1155RedeemData, isRedeemingERC1155, erc1155RedeemAsync] =
+    useERC1155RedeemMutation()
+    
+
   const handleRedeem = useCallback(async (item) => {
-    const { itemType, contract, id, title } = item
+    const { itemType, contract, id, title, contractType, description } = item
 
     let res;
 
@@ -148,7 +153,12 @@ const RewardCard = ({ image, item }) => {
           res = await offChainRedeemAsync({ id })
           break
         case ItemType.ONCHAIN:
-          res = await onChainRedeemAsync({ id })
+          if(contractType === ContractType.ERC1155){
+            res = await erc1155RedeemAsync({ id })
+          }else {
+            res = await onChainRedeemAsync({ id })
+          }
+         
           break
         default:
           throw new Error(`Invalid item type`)
@@ -231,9 +241,9 @@ const RewardCard = ({ image, item }) => {
                 {title}
               </HeadingSm>
 
-              {/* <TextSm color="whiteAlpha.700" opacity="0.64" fontWeight="400" noOfLines={2}>
+              <TextSm color="whiteAlpha.700" opacity="0.64" fontWeight="400" noOfLines={2}>
                  {description} 
-              </TextSm> */}
+              </TextSm>
               <TextSm color="white" noOfLines={2} fontStyle="italic">
                 {/* {description} */}
                 Available: {redeemAvailable}
@@ -241,7 +251,7 @@ const RewardCard = ({ image, item }) => {
             </Flex>
           </Flex>
           {/* FOOTER */}
-          <Flex align="start" alignItems={'center'} justify="space-between" mt="25px">
+          <Flex align="start" alignItems={'center'} justify="space-between" mt="12px">
             <Flex alignItems={'center'} gap="5px">
               <Box maxH="24px" h="33%" position={'relative'} boxSize="16px">
                 <RiftlyIcon fill={'#1D63FF'} />
@@ -254,8 +264,8 @@ const RewardCard = ({ image, item }) => {
             <Button
               variant="blue"
               onClick={() => handleRedeem(item)}
-              isLoading={isRedeemingOffchain || isRedeemingOnchain}
-              disabled={isRedeemingOffchain || isRedeemingOnchain}
+              isLoading={isRedeemingOffchain || isRedeemingOnchain || isRedeemingERC1155}
+              disabled={isRedeemingOffchain || isRedeemingOnchain || isRedeemingERC1155}
             >
               Redeem
             </Button>

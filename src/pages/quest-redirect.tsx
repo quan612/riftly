@@ -45,7 +45,7 @@ function QuestRedirectPage() {
           </Heading>
         )}
 
-        <Button w={'100%'} size="lg" variant="blue" onClick={() => router.push('/')}>
+        <Button w={'100%'} variant="blue" onClick={() => router.push('/')}>
           {session ? 'Back to Challenges' : 'Back'}
         </Button>
       </ShortContainer>

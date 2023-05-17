@@ -5,7 +5,8 @@ export const buttonStyles = {
     Button: {
       baseStyle: {
         w: 'auto',
-        height: { 'xs': '24px', '2xs': '32px', 'md': '40px', 'lg': '48px' },
+        h: { base: "48px", 'xs': '24px', '2xs': '32px', 'md': '40px', 'lg': '48px' },
+        minH: { base: "48px", 'xs': '24px', '2xs': '32px', 'md': '40px', 'lg': '48px' },
         paddingX: { xs: '8px', '2xs': '12px', '2sm': '16px', 'lg': '20px', '2xl': '24px' },
         fontSize: { xs: '12px', '2xs': '14px', '2sm': '16px', 'lg': '18px' },
         fontWeight: 'semibold',
@@ -146,7 +147,6 @@ export const buttonStyles = {
           borderColor: 'transparent',
           bg: 'brand.blue',
           color: '#fff',
-
           _hover: {
             transition: '0.8s',
             bg: '#fff',
@@ -172,13 +172,10 @@ export const buttonStyles = {
           },
           _active: {
             bg: '#fff',
-
             borderColor: 'brand.blue',
             color: 'brand.blue',
           },
         }),
-
-
 
         cyan: (props) => ({
           borderColor: 'transparent',
