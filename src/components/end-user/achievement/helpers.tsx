@@ -4,8 +4,8 @@ import { useTheme } from '@chakra-ui/react'
 // Types
 import { AchievementType } from './types'
 
-export const getColor = (achievement: AchievementType) => {
-  const theme = useTheme()
+export const getColor = (theme, achievement: AchievementType) => {
+  // const theme = useTheme()
 
   if (!achievement) return theme.colors.white
 

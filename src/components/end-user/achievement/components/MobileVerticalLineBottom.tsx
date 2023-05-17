@@ -1,5 +1,5 @@
 // UI
-import { Box } from '@chakra-ui/react'
+import { Box, useTheme } from '@chakra-ui/react'
 
 // Utils
 import { getColor } from '@components/end-user/achievement/helpers'
@@ -11,7 +11,8 @@ interface IMobileVerticalLineBottom extends IDesktopVerticalLine {}
 
 const MobileVerticalLineBottom = (props: IMobileVerticalLineBottom) => {
   const { index, achievementsArray, achievement } = props
-
+const theme = useTheme()
+const bgColor = getColor(theme, achievement)
   return (
     <Box
       className="middle-vertical-line-below-circle"
@@ -21,7 +22,7 @@ const MobileVerticalLineBottom = (props: IMobileVerticalLineBottom) => {
       zIndex="-1"
     >
       <Box
-        bg={index === achievementsArray.length - 1 ? 'brand.neutral3' : getColor(achievement)}
+        bg={index === achievementsArray.length - 1 ?  'brand.neutral3' : bgColor} //getColor(achievement)
         h="120px"
         position="absolute"
         w="1px"

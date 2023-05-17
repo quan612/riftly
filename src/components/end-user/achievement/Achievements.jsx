@@ -41,6 +41,8 @@ const Achievements = ({ session }) => {
   const levelProgress = useRef(0)
   const templateColumns = isMobile ? '1fr' : '1fr 3fr'
 
+  const theme = useTheme()
+
   return (
     <>
       <UserTierLevel ref={levelProgress} session={session} />
@@ -52,6 +54,7 @@ const Achievements = ({ session }) => {
           {achievementsArray &&
             achievementsArray.map((achievement, index) => {
               const { id, isLocked, progress } = achievement
+              const bg = getColor(theme, achievement)
               return (
                 <Box position="relative" key={index}>
                   {isMobile && index > 0 && (
@@ -65,7 +68,7 @@ const Achievements = ({ session }) => {
                   >
                     <GridItem className="left-wrapper">
                       <Box position="relative" w="100%" h="100%" display="flex" alignItems="center">
-                        {!isMobile && <DesktopHorizontalLine bg={getColor(achievement)} />}
+                        {!isMobile && <DesktopHorizontalLine bg={bg} />}
 
                         <Box
                           alignItems="center"

@@ -23,6 +23,8 @@ const TripBox = ({ id, item }: ITripBox) => {
   const queryClient = useQueryClient()
   const theme = useTheme()
 
+  const borderColor = getColor(theme, item)
+
   const getClaimButton = () => {
     if (!item) return null
     const { isClaimed, isLocked } = item
@@ -55,7 +57,7 @@ const TripBox = ({ id, item }: ITripBox) => {
       alignItems="center"
       bg="brand.neutral4"
       border="1px solid"
-      borderColor={getColor(item)}
+      borderColor={borderColor}
       borderRadius="16px"
       display="flex"
       h={{ base: '112px', md: '96px' }}
