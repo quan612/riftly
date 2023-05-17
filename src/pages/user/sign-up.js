@@ -21,7 +21,7 @@ function SignUp() {
         <title>Riftly Challenger</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta property="og:title" content="DeepSea Challenger" />
-        <meta property="og:description" content="Complete quests, earn $SHELL, unlock prizes" />
+        <meta property="og:description" content="Complete quests, earn Point, unlock prizes" />
         <meta
           property="og:image"
           content="https://anomuragame.com/DeepSeaChallengerThumbnail_2.png"

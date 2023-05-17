@@ -264,8 +264,8 @@ const RewardCard = ({ image, item }) => {
             <Button
               variant="blue"
               onClick={() => handleRedeem(item)}
-              isLoading={isRedeemingOffchain || isRedeemingOnchain}
-              disabled={isRedeemingOffchain || isRedeemingOnchain}
+              isLoading={isRedeemingOffchain || isRedeemingOnchain || isRedeemingERC1155}
+              disabled={isRedeemingOffchain || isRedeemingOnchain || isRedeemingERC1155}
             >
               Redeem
             </Button>
