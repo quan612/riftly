@@ -53,7 +53,7 @@ const handler = async (req: WhiteListApiRequest, res: NextApiResponse) => {
       .map((aq) => {
         const relatedQuest = finishedQuest.find((q) => q.questId === aq.questId)
 
-        if (aq.type.name === Enums.DAILY_QUEST) {
+        if (aq.type.name === Enums.DAILY_SHELL) {
           if (relatedQuest) {
             const lastClaimed = moment
               .utc(relatedQuest?.extendedUserQuestData?.lastClaimed)
