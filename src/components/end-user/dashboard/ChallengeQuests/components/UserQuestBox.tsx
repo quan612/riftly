@@ -1,154 +1,33 @@
-import React, { useEffect, useState, useCallback, useContext } from 'react'
-
-import { Heading, Box, Flex, Text, Button, useToast } from '@chakra-ui/react'
-import { ChakraBox } from '@theme/additions/framer/FramerChakraComponent'
-
+// Modules
+import { useEffect, useState, useCallback, useContext } from 'react'
 import { AnimatePresence } from 'framer-motion'
 import { useQueryClient } from 'react-query'
 
+// UI
+import { Box, Flex, Text, Button, useToast, useTheme } from '@chakra-ui/react'
+import { ChakraBox } from '@theme/additions/framer/FramerChakraComponent'
+
+// Components
 import { HeadingLg, HeadingSm, TextSm } from '@components/shared/Typography'
 import { RiftlyIcon } from '@components/shared/Icons'
-import Loading from '@components/shared/LoadingContainer/Loading'
 
+// Hooks
 import { QUERY_USER_QUEST, useUserQuestClaim, useUserQuestQuery } from '@hooks/user/quest'
-import { UserQuestContext } from '@context/UserQuestContext'
 import { QUERY_USER_REWARD } from '@hooks/user/reward'
 
-const ChallengeQuests = () => {
-  const [filterCompleted, filterCompletedSet] = useState(false)
-  const { data: userQuests, isLoading: isFetchingUserQuests } = useUserQuestQuery()
+// Store
+import { UserQuestContext } from '@context/UserQuestContext'
 
-
-  return (
-    <Box display="flex" flexDirection={'column'} gap={'16px'} position={'relative'} minH="auto">
-      {(isFetchingUserQuests  )&& <Loading />}
-      <ChallengesHeader filterCompleted={filterCompleted} filterCompletedSet={filterCompletedSet} />
-
-      <Box h="auto" display={'flex'} flexDirection={'column'} gap={'16px'}>
-        {userQuests &&
-          userQuests.length > 0 &&
-          userQuests
-            ?.filter((q) => {
-              if (filterCompleted) {
-                return q.hasClaimed === true
-              } else {
-                return q.hasClaimed === false
-              }
-            })
-            .map((quest, index) => {
-              return (
-                <Box
-                  key={quest.id}
-                  h={{ base: '112px', md: '96px' }}
-                  maxH={{ base: '112px', md: '96px' }}
-                  w="100%"
-                  bg="brand.neutral4"
-                  border="1px solid"
-                  borderColor="brand.neutral3"
-                  borderRadius={'16px'}
-                >
-                  <Box display="flex" flexDirection={'row'} w="100%">
-                    <UserQuestBox quest={quest} filterCompleted={filterCompleted} key={index} />
-                  </Box>
-                </Box>
-              )
-            })}
-      </Box>
-    </Box>
-  )
+interface IUserQuestBox {
+  filterCompleted: boolean
+  // TODO: add type for quest
+  quest?: any
 }
 
-export default ChallengeQuests
-
-const ChallengesHeader = ({ filterCompleted, filterCompletedSet }) => {
-  return (
-    <Box display={'flex'} justifyContent="space-between">
-      <Heading color="white" fontWeight="600" size="md">
-        Challenges
-      </Heading>
-      <Flex align="end">
-        <Box
-          display={'flex'}
-          flexDirection="row"
-          border={'1px solid'}
-          bg="brand.neutral4"
-          p="3px"
-          w="200px"
-          h="32px"
-          borderRadius="48px"
-        >
-          <Flex
-            w="100%"
-            justifyContent={filterCompleted ? 'flex-end' : 'flex-start'}
-            onClick={() => filterCompletedSet(!filterCompleted)}
-            alignItems="center"
-            position="relative"
-          >
-            <>
-              <ChakraBox
-                layoutId="challenges-filter"
-                w="50%"
-                h="100%"
-                bg="brand.neutral3"
-                borderRadius="48px"
-              />
-              <Box
-                h="100%"
-                w="50%"
-                position={'absolute'}
-                top="0"
-                left="0"
-                alignItems={'center'}
-                display="flex"
-                _hover={{
-                  cursor: 'pointer',
-                }}
-                key="new"
-              >
-                <Text
-                  transitionDuration="1s"
-                  color={!filterCompleted ? 'white' : 'whiteAlpha.500'}
-                  w="100%"
-                  align={'center'}
-                  fontSize="xs"
-                >
-                  New
-                </Text>
-              </Box>
-              <Box
-                h="100%"
-                w="50%"
-                position={'absolute'}
-                top="0"
-                right="0"
-                alignItems={'center'}
-                display="flex"
-                _hover={{
-                  cursor: 'pointer',
-                }}
-                key="completed"
-              >
-                <Text
-                  transitionDuration="1s"
-                  color={filterCompleted ? 'white' : 'whiteAlpha.500'}
-                  w="100%"
-                  align={'center'}
-                  fontSize="xs"
-                >
-                  Completed
-                </Text>
-              </Box>
-            </>
-            {/* </AnimateSharedLayout> */}
-          </Flex>
-        </Box>
-      </Flex>
-    </Box>
-  )
-}
-
-const UserQuestBox = ({ quest, filterCompleted }) => {
+const UserQuestBox = ({ quest, filterCompleted }: IUserQuestBox) => {
   const { isSubmittingQuest, isSubmittingDaily, doQuest } = useContext(UserQuestContext)
+
+  const theme = useTheme()
 
   const [, isClaimingUserQuest, onUserQuestClaim] = useUserQuestClaim()
   const { data: userQuests, isLoading: isFetchingUserQuests } = useUserQuestQuery()
@@ -210,26 +89,28 @@ const UserQuestBox = ({ quest, filterCompleted }) => {
   return (
     <>
       <Box
-        className="reward-quantity-per-quest"
-        w="96px"
-        h={{ base: '112px', md: '96px' }}
-        borderRight={'1px solid'}
-        borderRightColor={'brand.neutral3'}
-        display="flex"
-        justifyContent="center"
         alignItems="center"
+        borderRight="1px solid"
+        borderRightColor="brand.neutral3"
+        className="reward-quantity-per-quest"
+        display="flex"
+        h={{ base: '112px', md: '96px' }}
+        justifyContent="center"
+        w="96px"
       >
         <Box
-          h="60%"
+          alignItems="center"
           display="flex"
-          flexDirection={'column'}
+          flexDirection="column"
+          h="60%"
           justifyContent="space-evenly"
-          alignItems={'center'}
         >
-          <Box maxH="36px" h="33%" position={'relative'} boxSize="20px">
-            <RiftlyIcon fill={filterCompleted ? '#132436' : '#1D63FF'} />
+          <Box maxH="36px" h="33%" position="relative" boxSize="20px">
+            <RiftlyIcon
+              fill={filterCompleted ? theme.colors.brand.neutral5 : theme.colors.brand.blue}
+            />
           </Box>
-          <HeadingLg color={filterCompleted ? 'whiteAlpha.400' : '#fff'}>
+          <HeadingLg color={filterCompleted ? 'whiteAlpha.400' : theme.colors.white}>
             {quest.quantity}
           </HeadingLg>
         </Box>
@@ -237,20 +118,20 @@ const UserQuestBox = ({ quest, filterCompleted }) => {
 
       <Box display="flex" flex="1">
         <Box
-          className="user-quest-claim"
-          h="100%"
-          display="flex"
-          flexDirection={'row'}
-          flex="1"
-          px={{ base: '12px', md: '16px' }}
           alignItems="center"
+          className="user-quest-claim"
+          display="flex"
+          flex="1"
+          flexDirection="row"
+          h="100%"
+          px={{ base: '12px', md: '16px' }}
         >
-          <Box h="60%" display={'flex'} flex="1">
-            <Flex flexDirection="row" justifyContent={'space-between'} flex="1" alignItems="center">
-              <Flex display={'flex'} flexDirection="column" flex="80%" me="2px">
+          <Box h="60%" display="flex" flex="1">
+            <Flex flexDirection="row" justifyContent="space-between" flex="1" alignItems="center">
+              <Flex display="flex" flexDirection="column" flex="80%" me="2px">
                 {!filterCompleted && (
                   <>
-                    <HeadingSm color="#fff" noOfLines={2}>
+                    <HeadingSm color={theme.colors.white} noOfLines={2}>
                       {quest.text}
                     </HeadingSm>
                     <TextSm color="whiteAlpha.700" opacity={0.64} noOfLines={2}>
@@ -268,17 +149,17 @@ const UserQuestBox = ({ quest, filterCompleted }) => {
                 )}
               </Flex>
               <Flex
-                position="relative"
+                alignItems="center"
                 h="100%"
-                alignItems={'center'}
+                position="relative"
                 // flex="20%"
               >
                 {filterCompleted && (
                   <Text
                     color="brand.neutral0"
-                    opacity={0.4}
-                    fontWeight="600"
                     fontSize={{ base: 'sm', md: 'md' }}
+                    fontWeight="600"
+                    opacity={0.4}
                   >
                     Completed
                   </Text>
@@ -288,7 +169,7 @@ const UserQuestBox = ({ quest, filterCompleted }) => {
                     {showScore && (
                       <ChakraBox
                         key={quest.id}
-                        position={'absolute'}
+                        position="absolute"
                         top="-4"
                         left="0"
                         variants={{
@@ -319,9 +200,9 @@ const UserQuestBox = ({ quest, filterCompleted }) => {
                       >
                         <Text
                           className="score"
-                          size="xl"
                           color="brand.cyan"
-                          fontWeight={'700'}
+                          fontWeight="700"
+                          size="xl"
                           textAlign="center"
                         >
                           +{quest.quantity}
@@ -330,7 +211,7 @@ const UserQuestBox = ({ quest, filterCompleted }) => {
                     )}
                     <Button
                       variant={quest.isClaimable ? 'cyan' : 'blue'}
-                      transitionDuration={'0.5s'}
+                      transitionDuration="0.5s"
                       onClick={() => {
                         if (!quest.isClaimable) {
                           doQuest(quest)
@@ -354,3 +235,5 @@ const UserQuestBox = ({ quest, filterCompleted }) => {
     </>
   )
 }
+
+export default UserQuestBox

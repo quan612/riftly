@@ -1,14 +1,19 @@
-import React, { useRef, useContext } from 'react'
+// Moules
+import { useRef, useContext, useCallback } from 'react'
 import { AnimatePresence } from 'framer-motion'
+
+// Components
 import UserTierLevel from './UserTierLevel'
 import FeatureQuests from './FeaturedQuests'
 import ChallengeQuests from './ChallengeQuests'
-import { UserQuestContext } from '@context/UserQuestContext'
 import { CodeQuestModal, NftOwnerQuestModal, WalletAuthQuestModal } from '../shared'
 import UnstoppableQuestModal from '../shared/UnstoppableQuestModal'
 
+// Store
+import { UserQuestContext } from '@context/UserQuestContext'
+
 const RiftlyIndividualQuestBoard = ({ session }) => {
-  let levelProgress = useRef(0)
+  const levelProgress = useRef(0)
   const {
     codeQuestModal,
     walletAuthQuestModal,
@@ -16,6 +21,20 @@ const RiftlyIndividualQuestBoard = ({ session }) => {
     unstoppableQuestModal,
     questSelected,
   } = useContext(UserQuestContext)
+
+  const onCloseCodeQuestModal = useCallback(() => codeQuestModal.onClose(), [codeQuestModal])
+
+  const onCloseNftOwnQuestModal = useCallback(() => nftOwnQuestModal.onClose(), [nftOwnQuestModal])
+
+  const onCloseUnstoppableQuestModal = useCallback(
+    () => unstoppableQuestModal.onClose(),
+    [unstoppableQuestModal],
+  )
+
+  const onCloseWalletAuthQuestModal = useCallback(
+    () => walletAuthQuestModal.onClose(),
+    [walletAuthQuestModal],
+  )
 
   return (
     <>
@@ -29,7 +48,7 @@ const RiftlyIndividualQuestBoard = ({ session }) => {
       {codeQuestModal && (
         <CodeQuestModal
           isOpen={codeQuestModal.isOpen}
-          onClose={() => codeQuestModal.onClose()}
+          onClose={onCloseCodeQuestModal}
           currentQuest={questSelected}
         />
       )}
@@ -37,22 +56,20 @@ const RiftlyIndividualQuestBoard = ({ session }) => {
       {walletAuthQuestModal.isOpen && (
         <WalletAuthQuestModal
           isOpen={walletAuthQuestModal.isOpen}
-          onClose={() => {
-            walletAuthQuestModal.onClose()
-          }}
+          onClose={onCloseWalletAuthQuestModal}
         />
       )}
       {nftOwnQuestModal.isOpen && (
         <NftOwnerQuestModal
           isOpen={nftOwnQuestModal.isOpen}
-          onClose={() => nftOwnQuestModal.onClose()}
+          onClose={onCloseNftOwnQuestModal}
           currentQuest={questSelected}
         />
       )}
       {unstoppableQuestModal.isOpen && (
         <UnstoppableQuestModal
           isOpen={unstoppableQuestModal.isOpen}
-          onClose={() => unstoppableQuestModal.onClose()}
+          onClose={onCloseUnstoppableQuestModal}
           currentQuest={questSelected}
         />
       )}
