@@ -1,8 +1,8 @@
 // UI
-import { Box, useTheme } from '@chakra-ui/react'
+import { Box } from '@chakra-ui/react'
 
-// Utils
-import { getColor } from '@components/end-user/achievement/helpers'
+// Hooks
+import useGetColor from '../useGetColor'
 
 // Types
 import { AchievementType } from '../types'
@@ -14,20 +14,21 @@ export interface IDesktopVerticalLine {
 }
 
 const DesktopVerticalLine = ({ index, achievementsArray, achievement }: IDesktopVerticalLine) => {
-  const theme = useTheme();
-  const bgColor = getColor(theme, achievement)
+  const { getColor } = useGetColor()
+
   return (
-  <Box
-    bg={index === achievementsArray.length - 1 ? 'brand.neutral3' : bgColor } //getColor(achievement)
-    className="desktop-vertical-line"
-    display="block"
-    h="160px"
-    left="39.5px"
-    position="absolute"
-    top="32px"
-    w="1px"
-    zIndex="0"
-  />
-)}
+    <Box
+      bg={index === achievementsArray.length - 1 ? 'brand.neutral3' : getColor(achievement)}
+      className="desktop-vertical-line"
+      display="block"
+      h="160px"
+      left="39.5px"
+      position="absolute"
+      top="32px"
+      w="1px"
+      zIndex="0"
+    />
+  )
+}
 
 export default DesktopVerticalLine

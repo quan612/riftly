@@ -1,8 +1,8 @@
-import { Icon, Tooltip, Flex } from '@chakra-ui/react'
+import { Icon, Tooltip, Flex, useTheme } from '@chakra-ui/react'
 import { Image } from '@chakra-ui/react'
 import { BiEdit } from 'react-icons/bi'
 
-import { AiFillStar } from "react-icons/ai";
+import { AiFillStar } from 'react-icons/ai'
 import { BsTwitter, BsDiscord, BsGoogle, BsCheckLg, BsInfoCircle } from 'react-icons/bs'
 
 export const IconBox = (props) => {
@@ -26,16 +26,13 @@ export const UnstoppableIcon = () => {
   )
 }
 
-export const RiftlyIcon = ({ fill = '#1D63FF' }) => {
+export const RiftlyIcon = (props) => {
+  const theme = useTheme()
+  const { fill = theme.colors.brand.blue } = props
+
   return (
-    <svg
-      width="100%"
-      height="100%"
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 70 70"
-      fill="none"
-    >
-      <defs></defs>
+    <svg width="100%" height="100%" viewBox="0 0 70 70" fill="none">
+      <defs />
       <g>
         <path
           fill={fill}
@@ -159,14 +156,7 @@ export const MetamaskIcon = ({ width = '24px', height = '24px' }) => {
 }
 
 export const StarIcon = ({ width = '19px', height = '18px' }) => {
-  return (
-    <Icon
-      transition="0.8s"
-      color={'green.300'}
-      as={AiFillStar}
-      boxSize='5'
-    />
-  )
+  return <Icon transition="0.8s" color={'green.300'} as={AiFillStar} boxSize="5" />
 }
 
 export const WalletConnectIcon = ({ width = '24px', height = '24px' }) => {
@@ -218,13 +208,7 @@ export const RiftlyCheckMark = () => {
 }
 
 export const DiscordIcon = ({ fill = true }) => {
-  return (
-    <Icon
-      transition="0.8s"
-      color={'purple.300'}
-      as={BsDiscord}
-    />
-  )
+  return <Icon transition="0.8s" color={'purple.300'} as={BsDiscord} />
 }
 
 export const TransparentDiscordIcon = () => {

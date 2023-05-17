@@ -7,14 +7,15 @@ import { HeadingSm, TextSm } from '@components/shared/Typography'
 // UI
 import { Box, Button, Flex, useTheme, useToast } from '@chakra-ui/react'
 
-// Utils
-import { getColor } from '@components/end-user/achievement/helpers'
+// Hooks
+import useGetColor from '../useGetColor'
 
 // Types
 import { AchievementType } from '../types'
 
 interface ITripBox {
-  id: string
+  id: number
+  index?: number
   item: AchievementType
 }
 
@@ -23,7 +24,7 @@ const TripBox = ({ id, item }: ITripBox) => {
   const queryClient = useQueryClient()
   const theme = useTheme()
 
-  const borderColor = getColor(theme, item)
+  const { getColor } = useGetColor()
 
   const getClaimButton = () => {
     if (!item) return null
@@ -57,7 +58,7 @@ const TripBox = ({ id, item }: ITripBox) => {
       alignItems="center"
       bg="brand.neutral4"
       border="1px solid"
-      borderColor={borderColor}
+      borderColor={getColor(item)}
       borderRadius="16px"
       display="flex"
       h={{ base: '112px', md: '96px' }}

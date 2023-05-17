@@ -13,6 +13,7 @@
   ],
   "rules": {
     // "quotes": ["warn", "single", { "avoidEscape": true }],
+    "@typescript-eslint/ban-ts-comment": "off",
     "react/no-unescaped-entities": 0,
     "@typescript-eslint/no-var-requires": "off",
     "@typescript-eslint/no-empty-function": "off",
