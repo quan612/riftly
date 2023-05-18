@@ -48,13 +48,13 @@ const handler = async (req: WhiteListApiRequest, res: NextApiResponse) => {
   try {
     await prisma.$transaction(
       async (tx: any) => {
-        await tx.$executeRaw`select * from public."ShopItemRedeem" p where p."status"='AVAILABLE' and p."shopItemId"=${shopItemId} FOR UPDATE;`
+        await tx.$executeRaw`select * from public."ShopItemRedeem" p where p."status"='AVAILABLE' and p."shopItemId"=${shopItemId} ORDER BY id ASC LIMIT 1 FOR UPDATE SKIP LOCKED;`
         // await sleep(500)
 
         const currentTime = new Date().toISOString().split('Z')[0].replace('T', ' ').toString()
 
         const result =
-          await tx.$executeRaw`UPDATE "ShopItemRedeem" SET "userId"=${userId}, "status"='PENDING', "updatedAt"=CAST(${currentTime} AS timestamp) where "id" in (select id from public."ShopItemRedeem" p where p."status" = 'AVAILABLE' and p."shopItemId"=${shopItemId} limit 1);`
+          await tx.$executeRaw`UPDATE "ShopItemRedeem" SET "userId"=${userId}, "status"='PENDING', "updatedAt"=CAST(${currentTime} AS timestamp) where "id" in (select id from public."ShopItemRedeem" p where p."status" = 'AVAILABLE' and p."shopItemId"=${shopItemId} ORDER BY id ASC LIMIT 1);`
 
         if (result === 0) {
           throw new Error(`${shopItem.title} is redeemed all`)
