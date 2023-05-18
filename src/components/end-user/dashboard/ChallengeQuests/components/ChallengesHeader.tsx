@@ -1,8 +1,11 @@
 // Modules
 import { useCallback } from 'react'
 
+// Components
+import BlockTitle from '@components/end-user/shared/BlockTitle'
+
 // UI
-import { Heading, Box, Flex, Text } from '@chakra-ui/react'
+import { Box, Flex, Text } from '@chakra-ui/react'
 import { ChakraBox } from '@theme/additions/framer/FramerChakraComponent'
 
 interface IChallengesHeader {
@@ -15,9 +18,7 @@ const ChallengesHeader = ({ filterCompleted, filterCompletedSet }: IChallengesHe
 
   return (
     <Box display="flex" justifyContent="space-between">
-      <Heading color="white" fontWeight="600" size="md">
-        Challenges
-      </Heading>
+      <BlockTitle title="Challenges" />
       <Flex align="end">
         <Box
           bg="brand.neutral4"
