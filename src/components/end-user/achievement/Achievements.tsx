@@ -1,5 +1,6 @@
 // Modules
 import { useRef } from 'react'
+import { Session } from 'next-auth'
 
 // Components
 import UserTierLevel from '../dashboard/UserTierLevel'
@@ -33,7 +34,11 @@ const AchievementHeader = () => {
   )
 }
 
-const Achievements = ({ session }) => {
+interface IAchievements {
+  session: Session
+}
+
+const Achievements = ({ session }: IAchievements) => {
   const { isMobile } = useDeviceDetect()
   const { getColor } = useGetColor()
 

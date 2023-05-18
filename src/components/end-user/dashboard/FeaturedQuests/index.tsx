@@ -3,12 +3,13 @@ import { AnimatePresence } from 'framer-motion'
 
 // Components
 import FeatureCard from './components/FeatureCard'
+import BlockTitle from '@components/end-user/shared/BlockTitle'
 
 // Hooks
 import { useUserFeatureQuestQuery } from '@hooks/user/quest'
 
 // UI
-import { Heading, Box } from '@chakra-ui/react'
+import { Box } from '@chakra-ui/react'
 import { ChakraBox } from '@theme/additions/framer/FramerChakraComponent'
 
 const FeaturedQuests = () => {
@@ -17,10 +18,8 @@ const FeaturedQuests = () => {
   return (
     <AnimatePresence>
       {featureQuests && featureQuests?.length > 0 && (
-        <ChakraBox display="flex" flexDirection={'column'} exit={{ opacity: 0 }} gap={'16px'}>
-          <Heading color="white" fontWeight="600" size="md">
-            Featured
-          </Heading>
+        <ChakraBox display="flex" flexDirection="column" exit={{ opacity: 0 }} gap="16px">
+          <BlockTitle title="Featured" />
 
           <Box display="flex" overflowX="auto" position="relative" gap="16px">
             {featureQuests.map((quest) => (
