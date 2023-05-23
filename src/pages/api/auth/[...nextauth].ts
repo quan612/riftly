@@ -160,7 +160,7 @@ export const authOptions = {
     TwitterProvider({
       clientId: await getVariableConfig('twitterId'),
       clientSecret: await getVariableConfig('twitterSecret'),
-      // version: '2.0',
+      version: '2.0',
     }),
   ],
   debug: false,
