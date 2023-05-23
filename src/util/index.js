@@ -89,7 +89,7 @@ const getHostName = () => {
   let hostname
   if (process.env.NODE_ENV !== 'development') {
     // hostname = 'https://' + window.location.hostname
-    hostname = 'https://' + window.location.host
+    hostname = window.location.host //
   } else {
     hostname = 'http://' + window.location.host
   }
