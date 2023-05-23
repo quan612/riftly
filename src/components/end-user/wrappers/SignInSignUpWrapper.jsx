@@ -150,7 +150,7 @@ export const SignInSignUpWrapper = ({ isSignIn = false }) => {
                     })
                   }
                   let twitterLink = await getTwitterAuthLink()
-                  return window.open(twitterLink, '_self')
+                  return window.open(twitterLink, '_blank')
                 }
               }}
               variant="twitter"

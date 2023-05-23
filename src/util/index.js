@@ -78,6 +78,7 @@ export const getTwitterAuthLink = async () => {
     .get(`${Enums.BASEPATH}/api/user/configs/query?type=twitterId`)
     .then((r) => r.data)
 
+  console.log(1233)
   if (!twitterIdConfig) {
     throw new Error('Cannot find Twitter Id from Config.')
   }
@@ -88,8 +89,7 @@ export const getTwitterAuthLink = async () => {
 const getHostName = () => {
   let hostname
   if (process.env.NODE_ENV !== 'development') {
-    // hostname = 'https://' + window.location.hostname
-    hostname = window.location.host //
+    hostname = 'https://' + window.location.hostname
   } else {
     hostname = 'http://' + window.location.host
   }
