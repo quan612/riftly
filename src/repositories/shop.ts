@@ -3,6 +3,7 @@ import { RequirementType } from 'models/requirement-type'
 import {  utils } from 'ethers'
 import { Reward } from 'models/reward'
 import { ShopItemRequirement } from 'models/shop-item-requirement'
+import { RewardType } from 'models/reward-type'
 
 export const getAllEnabledShopItems = async () => {
   return await prisma.shopItem.findMany({
