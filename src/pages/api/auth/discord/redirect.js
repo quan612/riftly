@@ -1,11 +1,11 @@
 import { prisma } from '@context/PrismaContext'
 import axios from 'axios'
 import url from 'url'
-import { getSession } from 'next-auth/react'
 import Enums from 'enums'
 import { isWhiteListUser } from 'repositories/session-auth'
 import { getQuestType, getQuestByTypeId } from 'repositories/quest'
 import { updateDiscordUserQuestTransaction } from 'repositories/transactions'
+import { getServerSession } from 'next-auth'
 
 const TOKEN_DISCORD_AUTH_URL = 'https://discord.com/api/oauth2/token'
 const USERINFO_DISCORD_AUTH_URL = 'https://discord.com/api/users/@me'
@@ -17,8 +17,7 @@ export default async function discordRedirect(req, res) {
   switch (method) {
     case 'GET':
       try {
-        const session = await getSession({ req })
-        console.log("discord redirect runnning")
+        const session = await getServerSession(req, res, authOptions)
         let whiteListUser = await isWhiteListUser(session)
 
         const { code } = req.query

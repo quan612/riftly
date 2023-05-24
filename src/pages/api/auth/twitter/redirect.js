@@ -1,11 +1,11 @@
 import axios from 'axios'
 import url from 'url'
-import { getSession } from 'next-auth/react'
 import Enums from 'enums'
 import { isWhiteListUser } from 'repositories/session-auth'
 import { getQuestType, getQuestByTypeId } from 'repositories/quest'
 import { updateTwitterUserQuestTransaction } from 'repositories/transactions'
 import { prisma } from '@context/PrismaContext'
+import { getServerSession } from 'next-auth'
 
 const TOKEN_TWITTER_AUTH_URL = 'https://api.twitter.com/2/oauth2/token'
 const USERINFO_TWITTER_URL = 'https://api.twitter.com/2/users/me'
@@ -18,7 +18,7 @@ export default async function twitterRedirect(req, res) {
   }
 
   try {
-    const session = await getSession({ req })
+    const session = await getServerSession(req, res, authOptions)
     const whiteListUser = await isWhiteListUser(session)
     const { code } = req.query
 
