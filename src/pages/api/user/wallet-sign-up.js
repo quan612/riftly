@@ -8,6 +8,7 @@ import { updateUserWalletTransaction } from 'repositories/transactions'
 import { isWhiteListUser } from 'repositories/session-auth'
 import { signUpRateLimit } from '@middlewares/applyRateLimit'
 import { getServerSession } from 'next-auth'
+import { authOptions } from '../auth/[...nextauth]'
 
 export default async function walletSignUp(req, res) {
   const { method } = req

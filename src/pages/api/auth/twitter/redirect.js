@@ -6,6 +6,7 @@ import { getQuestType, getQuestByTypeId } from 'repositories/quest'
 import { updateTwitterUserQuestTransaction } from 'repositories/transactions'
 import { prisma } from '@context/PrismaContext'
 import { getServerSession } from 'next-auth'
+import { authOptions } from '../[...nextauth]'
 
 const TOKEN_TWITTER_AUTH_URL = 'https://api.twitter.com/2/oauth2/token'
 const USERINFO_TWITTER_URL = 'https://api.twitter.com/2/users/me'

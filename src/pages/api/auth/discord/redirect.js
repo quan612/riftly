@@ -6,6 +6,7 @@ import { isWhiteListUser } from 'repositories/session-auth'
 import { getQuestType, getQuestByTypeId } from 'repositories/quest'
 import { updateDiscordUserQuestTransaction } from 'repositories/transactions'
 import { getServerSession } from 'next-auth'
+import { authOptions } from '../[...nextauth]'
 
 const TOKEN_DISCORD_AUTH_URL = 'https://discord.com/api/oauth2/token'
 const USERINFO_DISCORD_AUTH_URL = 'https://discord.com/api/users/@me'
