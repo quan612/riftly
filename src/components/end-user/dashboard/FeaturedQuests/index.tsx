@@ -3,7 +3,7 @@ import { AnimatePresence } from 'framer-motion'
 
 // Components
 import FeatureCard from './components/FeatureCard'
-import BlockTitle from '@components/end-user/shared/BlockTitle'
+import { BlockTitle } from '@components/end-user/shared'
 
 // Hooks
 import { useUserFeatureQuestQuery } from '@hooks/user/quest'

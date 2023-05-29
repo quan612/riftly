@@ -7,7 +7,7 @@ import BalanceInfo from './components/BalanceInfo'
 import RewardCard from './components/RewardCard'
 import Loading from '@components/shared/LoadingContainer/Loading'
 import { ChakraBox } from '@theme/additions/framer/FramerChakraComponent'
-import BlockTitle from '@components/end-user/shared/BlockTitle'
+import { BlockTitle } from '@components/end-user/shared'
 
 // Hooks
 import { useShopItemQuery } from '@hooks/user/shop'

@@ -4,7 +4,7 @@ import axios from 'axios'
 
 // Components
 import { RiftlyTooltip } from '@components/shared/Icons'
-import BlockTitle from '@components/end-user/shared/BlockTitle'
+import { BlockTitle } from '@components/end-user/shared'
 
 // UI
 import {

@@ -6,8 +6,12 @@ import { AnimatePresence } from 'framer-motion'
 import UserTierLevel from './UserTierLevel'
 import FeatureQuests from './FeaturedQuests'
 import ChallengeQuests from './ChallengeQuests'
-import { CodeQuestModal, NftOwnerQuestModal, WalletAuthQuestModal } from '../shared'
-import UnstoppableQuestModal from '../shared/UnstoppableQuestModal'
+import {
+  CodeQuestModal,
+  NftOwnerQuestModal,
+  WalletAuthQuestModal,
+  UnstoppableQuestModal,
+} from '../shared'
 
 // Store
 import { UserQuestContext } from '@context/UserQuestContext'

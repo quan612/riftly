@@ -8,7 +8,7 @@ import { RiftlyFace } from '@components/shared/Logo'
 import UploadAvatarModal from '@components/end-user/shared/UploadAvatarModal'
 import UploadIcon from './UploadIcon'
 import FormikInput from './FormikInput'
-import BlockTitle from '@components/end-user/shared/BlockTitle'
+import { BlockTitle } from '@components/end-user/shared'
 
 // UI
 import {

@@ -2,7 +2,7 @@
 import { useCallback } from 'react'
 
 // Components
-import BlockTitle from '@components/end-user/shared/BlockTitle'
+import { BlockTitle } from '@components/end-user/shared'
 
 // UI
 import { Box, Flex, Text } from '@chakra-ui/react'

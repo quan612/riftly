@@ -6,7 +6,7 @@ import { Session } from 'next-auth'
 import { WalletAuthQuestModal } from '../../../shared'
 import ConnectionButton from './ConnectionButton'
 import ConnectionInput from './ConnectionInput'
-import BlockTitle from '@components/end-user/shared/BlockTitle'
+import { BlockTitle } from '@components/end-user/shared'
 
 // UI
 import { Box, SimpleGrid, GridItem, Text, useDisclosure } from '@chakra-ui/react'

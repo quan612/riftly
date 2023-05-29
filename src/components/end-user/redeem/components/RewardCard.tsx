@@ -35,7 +35,7 @@ const RewardCard = ({ image, item }: IRewardCard) => {
 
   const [erc1155RedeemData, isRedeemingERC1155, erc1155RedeemAsync] = useERC1155RedeemMutation()
 
-  const handleRedeem = useCallback(async (item) => {
+  const handleRedeem = useCallback(async () => {
     const { itemType, id, title, contractType } = item
 
     let res
@@ -110,7 +110,7 @@ const RewardCard = ({ image, item }: IRewardCard) => {
         isClosable: true,
       })
     }
-  }, [])
+  }, [item])
 
   const isLoading = isRedeemingOffchain || isRedeemingOnchain || isRedeemingERC1155
 
@@ -159,7 +159,7 @@ const RewardCard = ({ image, item }: IRewardCard) => {
             <Button
               disabled={isLoading}
               isLoading={isLoading}
-              onClick={() => handleRedeem(item)}
+              onClick={handleRedeem}
               variant="blue"
             >
               Redeem

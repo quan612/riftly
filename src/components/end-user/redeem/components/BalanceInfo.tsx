@@ -20,8 +20,6 @@ const BalanceInfo = ({ session }: IBalanceInfo) => {
 
   const theme = useTheme()
 
-  console.log(theme?.colors)
-
   return (
     <ChakraBox
       animate={{ opacity: 1, zIndex: 1 }}
