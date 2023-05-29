@@ -7,17 +7,9 @@ const Enums = {
   WALLETCONNECT: 'WALLETCONNET',
   EMAIL: 'Email',
   GOOGLE: 'Google',
-  REWARDTYPE: {
-    MYSTERYBOWL: 'Mystery Bowl',
-    NUDE: 'Nude',
-    BOREDAPE: 'Bored Ape',
-    MINTLIST: 'Mint List',
-    SHELL: '$Shell',
-  },
+
   ADMIN_SIGN_MSG: 'Sign to authenticate as admin',
-  USER_SIGN_MSG: 'Welcome to Riftly!\nSign in to start earning treasure.',
-
-
+  USER_SIGN_MSG: 'Welcome to Qu3st!\nSign in to start earning treasure.',
 
   DAILY: 'daily',
   HOURLY: 'hourly',
@@ -42,16 +34,14 @@ const Enums = {
   TWITTER_RETWEET: 'Retweet a Tweet',
   FOLLOW_TWITTER: 'Follow Twitter Account',
   FOLLOW_INSTAGRAM: 'Follow Instagram Account',
-  LIMITED_FREE_SHELL: 'Limited Free $SHELL',
+  LIMITED_FREE_POINT: 'Limited Free Point',
 
-  DAILY_SHELL: 'Daily Shell Quest',
+  DAILY_QUEST: 'Daily Quest',
 
-  OWNING_NFT_CLAIM: 'Claim Reward For Owning NFT', //nft quest
-  IMAGE_UPLOAD_QUEST: 'Image Upload Quest', // image quest
+  OWNING_NFT_CLAIM: 'Claim Reward For Owning NFT',
+  IMAGE_UPLOAD_QUEST: 'Image Upload Quest',
 
-
-  CODE_QUEST: 'Code Quest', // code
-
+  CODE_QUEST: 'Code Quest',
 
   UNSTOPPABLE_AUTH: 'Unstoppable Domain Authenticate',
   DISCORD_AUTH: 'Discord Authenticate',

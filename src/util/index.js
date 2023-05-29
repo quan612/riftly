@@ -78,6 +78,7 @@ export const getTwitterAuthLink = async () => {
     .get(`${Enums.BASEPATH}/api/user/configs/query?type=twitterId`)
     .then((r) => r.data)
 
+  console.log(1233)
   if (!twitterIdConfig) {
     throw new Error('Cannot find Twitter Id from Config.')
   }

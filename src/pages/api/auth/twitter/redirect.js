@@ -1,11 +1,12 @@
 import axios from 'axios'
 import url from 'url'
-import { getSession } from 'next-auth/react'
 import Enums from 'enums'
 import { isWhiteListUser } from 'repositories/session-auth'
 import { getQuestType, getQuestByTypeId } from 'repositories/quest'
 import { updateTwitterUserQuestTransaction } from 'repositories/transactions'
 import { prisma } from '@context/PrismaContext'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '../[...nextauth]'
 
 const TOKEN_TWITTER_AUTH_URL = 'https://api.twitter.com/2/oauth2/token'
 const USERINFO_TWITTER_URL = 'https://api.twitter.com/2/users/me'
@@ -18,7 +19,7 @@ export default async function twitterRedirect(req, res) {
   }
 
   try {
-    const session = await getSession({ req })
+    const session = await getServerSession(req, res, authOptions)
     const whiteListUser = await isWhiteListUser(session)
     const { code } = req.query
 
@@ -45,24 +46,15 @@ export default async function twitterRedirect(req, res) {
       redirect_uri: `${hostUrl}/api/auth/twitter/redirect`,
       code_verifier: 'challenge',
     })
-
     const response = await axios.post(TOKEN_TWITTER_AUTH_URL, formData.toString(), {
       headers: {
         'Content-type': `application/x-www-form-urlencoded`,
       },
     })
-
     if (!response || !response?.data?.access_token) {
       const error = "Couldn't authenticate with Twitter Auth Oath2. Please contact administrator."
       return res.status(200).redirect(`/quest-redirect?error=${error}`)
     }
-
-    console.log("response.data.access_token", response.data.access_token)
-
-    //teest
-
-    // const error = "Couldn't authenticate with Twitter Auth Oath2. Please contact administrator."
-    // return res.status(200).redirect(`/quest-redirect?error=${error}`)
 
     const userInfo = await axios.get(USERINFO_TWITTER_URL, {
       headers: {

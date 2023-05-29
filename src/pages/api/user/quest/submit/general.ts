@@ -38,7 +38,7 @@ const submitIndividualQuestAPI = async (req: WhiteListApiRequest, res: NextApiRe
       case Enums.TWITTER_RETWEET:
       case Enums.FOLLOW_TWITTER:
       case Enums.FOLLOW_INSTAGRAM:
-      case Enums.LIMITED_FREE_SHELL:
+      case Enums.LIMITED_FREE_POINT:
         userQuest = await submitUserQuestTransaction(questId, userId)
         break
       default:
