@@ -6,8 +6,9 @@ import { bufferToHex } from 'ethereumjs-util'
 import { getQuestByTypeId, getQuestType } from 'repositories/quest'
 import { updateUserWalletTransaction } from 'repositories/transactions'
 import { isWhiteListUser } from 'repositories/session-auth'
-import { getSession } from 'next-auth/react'
 import { signUpRateLimit } from '@middlewares/applyRateLimit'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '../auth/[...nextauth]'
 
 export default async function walletSignUp(req, res) {
   const { method } = req
@@ -17,7 +18,7 @@ export default async function walletSignUp(req, res) {
       try {
         const { address, signature } = req.body
 
-        const session = await getSession({ req })
+        const session = await getServerSession(req, res, authOptions)
         let whiteListUser = await isWhiteListUser(session)
 
         // let checkMessage = await checkRequest(req, res)

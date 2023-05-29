@@ -42,7 +42,7 @@ const claimIndividualQuestAPI = async (req: WhiteListApiRequest, res: NextApiRes
           },
         })
 
-        if (type.name === Enums.DAILY_SHELL) {
+        if (type.name === Enums.DAILY_QUEST) {
           let extendedUserQuestData:any = {}
           const today = moment.utc(new Date().toISOString()).format("yyyy-MM-DD")
 

@@ -3,6 +3,7 @@ import { RequirementType } from 'models/requirement-type'
 import {  utils } from 'ethers'
 import { Reward } from 'models/reward'
 import { ShopItemRequirement } from 'models/shop-item-requirement'
+import { RewardType } from 'models/reward-type'
 
 export const getAllEnabledShopItems = async () => {
   return await prisma.shopItem.findMany({
@@ -23,33 +24,37 @@ export const getShopItemByContractAddress = async (contract) => {
 }
 
 
-export const getShopRequirementCost = async (requirements: ShopItemRequirement[]): Promise<{cost: number, rewardTypeId:number}> => {
-  const reward: Reward = await prisma.reward.findFirst({
+export const getShopRequirementCost = async (
+  requirements: ShopItemRequirement[],
+): Promise<{ cost: number; rewardTypeId: number }> => {
+  const rewardType: RewardType = await prisma.rewardType.findFirst({
     where: {
-      rewardType: {
-        OR: [
-          {
-            reward: "Points",
-          },
-          {
-            reward: "Point",
-          },
-        ]
-
-      }
-    }
+      OR: [
+        {
+          reward: 'Points',
+        },
+        {
+          reward: 'Point',
+        },
+      ],
+    },
   })
 
-  if (!reward) {
-    return { cost: 0, rewardTypeId: -1 };
+  if (!rewardType) {
+    return { cost: 0, rewardTypeId: -1 }
   }
 
-  let cost = 0;
-  await Promise.all(requirements.map(r => {
-    if (r.requirementType === RequirementType.REWARD && parseInt(r.relationId.toString()) === parseInt(reward.rewardTypeId.toString())) {
-      cost = r?.conditional?.has
-    }
-  }))
+  let cost = 0
+  await Promise.all(
+    requirements.map((r) => {
+      if (
+        r.requirementType === RequirementType.REWARD &&
+        parseInt(r.relationId.toString()) === parseInt(rewardType.id.toString())
+      ) {
+        cost = r?.conditional?.has
+      }
+    }),
+  )
 
-  return { cost, rewardTypeId: reward.rewardTypeId };
+  return { cost, rewardTypeId: rewardType.id }
 }

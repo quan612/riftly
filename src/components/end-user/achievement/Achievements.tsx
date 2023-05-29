@@ -1,5 +1,6 @@
 // Modules
 import { useRef } from 'react'
+import { Session } from 'next-auth'
 
 // Components
 import UserTierLevel from '../dashboard/UserTierLevel'
@@ -17,12 +18,10 @@ import { achievementsArray } from './constants'
 
 // Hooks
 import useDeviceDetect from '@hooks/useDeviceDetect'
+import useGetColor from './useGetColor'
 
 // UI
 import { Heading, Box, Flex, Grid, GridItem, useTheme } from '@chakra-ui/react'
-
-// Utils
-import { getColor } from './helpers'
 
 const AchievementHeader = () => {
   const theme = useTheme()
@@ -35,13 +34,16 @@ const AchievementHeader = () => {
   )
 }
 
-const Achievements = ({ session }) => {
+interface IAchievements {
+  session: Session
+}
+
+const Achievements = ({ session }: IAchievements) => {
   const { isMobile } = useDeviceDetect()
+  const { getColor } = useGetColor()
 
   const levelProgress = useRef(0)
   const templateColumns = isMobile ? '1fr' : '1fr 3fr'
-
-  const theme = useTheme()
 
   return (
     <>
@@ -54,7 +56,6 @@ const Achievements = ({ session }) => {
           {achievementsArray &&
             achievementsArray.map((achievement, index) => {
               const { id, isLocked, progress } = achievement
-              const bg = getColor(theme, achievement)
               return (
                 <Box position="relative" key={index}>
                   {isMobile && index > 0 && (
@@ -68,7 +69,7 @@ const Achievements = ({ session }) => {
                   >
                     <GridItem className="left-wrapper">
                       <Box position="relative" w="100%" h="100%" display="flex" alignItems="center">
-                        {!isMobile && <DesktopHorizontalLine bg={bg} />}
+                        {!isMobile && <DesktopHorizontalLine bg={getColor(achievement)} />}
 
                         <Box
                           alignItems="center"
