@@ -42,7 +42,7 @@ const UnstoppableQuestModal = ({ isOpen, onClose, currentQuest }) => {
         const authorization = await uauth.loginWithPopup()
 
         if (authorization) {
-          let user = await uauth.user()
+          const user = await uauth.user()
           setUauthUser(user.sub)
           setView(ViewStatus.SUBMITTABLE)
         } else {
@@ -62,7 +62,7 @@ const UnstoppableQuestModal = ({ isOpen, onClose, currentQuest }) => {
     }
 
     const { questId } = currentQuest
-    let payload = {
+    const payload = {
       questId,
       uauthUser,
     }
